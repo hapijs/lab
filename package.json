@@ -1,0 +1,27 @@
+{
+  "name": "lab",
+  "description": "Test utility",
+  "version": "0.0.0",
+  "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
+  "contributors": [],
+  "repository": "git://github.com/spumko/lab",
+  "main": "index",
+  "keywords": [
+    "test"
+  ],
+  "engines": {
+    "node": "0.8.x"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "http://github.com/spumko/lab/raw/master/LICENSE"
+    }
+  ]
+}
