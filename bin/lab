@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+
+var Execute = require('../lib/execute');
+Execute.execute();
