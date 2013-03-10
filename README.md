@@ -12,7 +12,7 @@ Node test utility
 rich functionality and extensibility. In fact, this project started as a fork off [mocha](http://visionmedia.github.com/mocha/) and was
 repeatedly refactored until only the very basic functionality was left which was then rewritten into a handful of functions.
 
-**lab**'s primary goal is to support the narrow use cases of the (**spumko**)[https://github.com/spumko] modules. If you give it a try
+**lab**'s primary goal is to support the narrow use cases of the [**spumko**](https://github.com/spumko) modules. If you give it a try
 and find a missing feature, you are better off giving [mocha](http://visionmedia.github.com/mocha/) a try. We are unlikely to add
 functionality to it. It is not meant to be a framework, just a handy utility.
 
@@ -20,7 +20,7 @@ functionality to it. It is not meant to be a framework, just a handy utility.
 
 **lab** borrows heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render the coverage report
 into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk and published under the
-(MIT license)[https://github.com/visionmedia/mocha/blob/master/LICENSE].
+[MIT license](https://github.com/visionmedia/mocha/blob/master/LICENSE).
 
 ## Usage
 
@@ -53,9 +53,9 @@ Lab.test('returns true when 1 + 1 equals 2', function (done) {
 ```
 
 When a test is completed, 'done()' must be called, otherwise the test will time out (2 seconds by default) and will fail.
-The test passes if 'done()' is call once before the timeout, and no exception was thrown.
+The test passes if 'done()' is call once before the timeout, and no exception thrown.
 
-**lab** works with any test utility that throws error when a condition isn't met. It uses the same error interface as
+**lab** works with any test utility that throws an error when a condition isn't met. It uses the same error interface as
 [mocha](http://visionmedia.github.com/mocha/) and already includes (chai)[http://chaijs.com/]'s 'expect()' in its exported
 interface as shown above.
 
@@ -147,4 +147,10 @@ suite('math', function () {
 - `-t` - minimum code test coverage percentage (`threshold` only), defaults to 100%
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'
 
+## Motivation
+
+**lab** was developed to provide a minimal layer above writing simple node test cases. In contrast with other
+test frameworks, **lab** does not modify any prototypes, globals, and uses node
+[domains](http://nodejs.org/api/domain.html) to capture test errors. We've used other test frameworks and utilities
+but at some point needed greater control over the tools, especially around domains and error handling in node.
 
