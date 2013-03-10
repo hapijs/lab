@@ -147,4 +147,10 @@ suite('math', function () {
 - `-t` - minimum code test coverage percentage (`threshold` only), defaults to 100%
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'
 
+## Motivation
+
+**lab** was developed to provide a minimal layer above writing simple node test cases. In contrast with other
+test frameworks, **lab** does not modify any prototypes, globals, and uses node
+[domains](http://nodejs.org/api/domain.html) to capture test errors. We've used other test frameworks and utilities
+but at some point needed greater control over the tools, especially around domains and error handling in node.
 
