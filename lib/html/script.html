@@ -1,5 +1,4 @@
 <script>
-
 headings = [];
 
 onload = function(){
@@ -14,9 +13,7 @@ onscroll = function(e){
 
   for (var i = 0, len = links.length; i < len; ++i) {
     link = links[i];
-    link.className = link.getAttribute('href') == '#' + heading.id
-      ? 'active'
-      : '';
+    link.className = link.getAttribute('href') == '#' + heading.id ? 'active' : '';
   }
 };
 

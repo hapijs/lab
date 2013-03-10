@@ -6,9 +6,20 @@ html
     include style.html
   body
     #coverage
-      h1#overview Coverage
-      include menu
-
+      h1#overview Code Coverage Report
+      #menu
+        li
+          a(href='#overview') overview
+        for file in cov.files
+          li
+            span.cov(class=coverageClass(file.coverage)) #{file.coverage | 0}
+            a(href='##{file.filename}')
+              segments = file.filename.split('/')
+              basename = segments.pop()
+              if segments.length
+                span.dirname= segments.join('/') + '/'
+              span.basename= basename
+      
       #stats(class=coverageClass(cov.coverage))
         .percentage #{cov.coverage | 0}%
         .sloc= cov.sloc
