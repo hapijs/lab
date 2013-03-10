@@ -20,7 +20,7 @@ functionality to it. It is not meant to be a framework, just a handy utility.
 
 **lab** borrows heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render the coverage report
 into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk and published under the
-(MIT license)[https://github.com/visionmedia/mocha/blob/master/LICENSE].
+[MIT license](https://github.com/visionmedia/mocha/blob/master/LICENSE).
 
 ## Usage
 
