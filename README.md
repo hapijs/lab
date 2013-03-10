@@ -12,7 +12,7 @@ Node test utility
 rich functionality and extensibility. In fact, this project started as a fork off [mocha](http://visionmedia.github.com/mocha/) and was
 repeatedly refactored until only the very basic functionality was left which was then rewritten into a handful of functions.
 
-**lab**'s primary goal is to support the narrow use cases of the (spumko)[https://github.com/spumko] modules. If you give it a try
+**lab**'s primary goal is to support the narrow use cases of the [**spumko**](https://github.com/spumko) modules. If you give it a try
 and find a missing feature, you are better off giving [mocha](http://visionmedia.github.com/mocha/) a try. We are unlikely to add
 functionality to it. It is not meant to be a framework, just a handy utility.
 
