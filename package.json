@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "optimist": "0.3.x",
-    "blanket": "1.0.x",
+    "blanket": "git://github.com/wpreul/blanket-fork.git",
     "chai": "1.x.x",
     "jade": "0.26.3",
     "async": "0.1.x",
