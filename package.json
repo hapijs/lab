@@ -16,9 +16,9 @@
     "optimist": "0.3.x",
     "blanket": "1.0.x",
     "chai": "1.x.x",
-    "jade": "0.26.3",
-    "async": "0.1.x",
-    "diff": "1.0.2"
+    "jade": "0.28.x",
+    "async": "0.2.x",
+    "diff": "1.0.x"
   },
   "devDependencies": {
   },
