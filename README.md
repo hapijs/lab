@@ -56,7 +56,7 @@ When a test is completed, 'done()' must be called, otherwise the test will time 
 The test passes if 'done()' is call once before the timeout, and no exception thrown.
 
 **lab** works with any test utility that throws an error when a condition isn't met. It uses the same error interface as
-[mocha](http://visionmedia.github.com/mocha/) and already includes (chai)[http://chaijs.com/]'s 'expect()' in its exported
+[mocha](http://visionmedia.github.com/mocha/) and already includes [chai](http://chaijs.com/)'s 'expect()' in its exported
 interface as shown above.
 
 Tests can be organized into experiments:
