@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "optimist": "0.3.x",
-    "blanket": "1.0.x",
+    "blanket": ">=1.0.9",
     "chai": "1.x.x",
     "jade": "0.28.x",
     "async": "0.2.x",
