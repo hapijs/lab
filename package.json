@@ -16,7 +16,7 @@
     "optimist": "0.4.x",
     "blanket": "1.x.x",
     "chai": "1.x.x",
-    "jade": "0.30.x",
+    "handlebars": "1.0.x",
     "async": "0.2.x",
     "diff": "1.0.x"
   },
