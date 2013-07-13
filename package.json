@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
   "repository": "git://github.com/spumko/lab",
@@ -13,9 +13,9 @@
     "node": "0.10.x"
   },
   "dependencies": {
-    "optimist": "0.4.x",
-    "blanket": "1.x.x",
-    "chai": "1.x.x",
+    "optimist": "0.6.x",
+    "blanket": "1.1.x",
+    "chai": "1.7.x",
     "handlebars": "1.0.x",
     "async": "0.2.x",
     "diff": "1.0.x"
