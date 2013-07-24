@@ -64,7 +64,7 @@ Tests can be organized into experiments:
 var Lab = require('lab');
 
 Lab.experiment('math', function () {
-    
+
     Lab.test('returns true when 1 + 1 equals 2', function (done) {
 
         Lab.expect(1+1).to.equal(2);
@@ -81,10 +81,10 @@ var Lab = require('lab');
 Lab.experiment('math', function () {
 
     Lab.before(function (done) {
-        
+
         // Wait 1 second
         setTimeout(function () { done(); }, 1000);
-    });    
+    });
 
     Lab.test('returns true when 1 + 1 equals 2', function (done) {
 
@@ -105,7 +105,7 @@ var before = Lab.before;
 var after = Lab.after;
 
 describe('math', function () {
-    
+
     it('returns true when 1 + 1 equals 2', function (done) {
 
         expect(1+1).to.equal(2);
@@ -125,7 +125,7 @@ var setup = Lab.before;
 ver suite = Lab.after;
 
 suite('math', function () {
-    
+
     test('returns true when 1 + 1 equals 2', function (done) {
 
         expect(1+1).to.equal(2);
@@ -146,6 +146,7 @@ suite('math', function () {
 - `-o` - file to save the report to (`html` only), otherwise sent to stdout
 - `-t` - minimum code test coverage percentage (`threshold` only), defaults to 100%
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'
+- `-g` - determines if global variable leak checking is enabled or not.  To disable pass 0 and to enable pass 1.  Defaults to enabled.
 
 ## Motivation
 
