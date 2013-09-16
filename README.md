@@ -121,8 +121,8 @@ var Lab = require('lab');
 var suite = Lab.experiment;
 var test = Lab.test;
 var expect = Lab.expect;
-var setup = Lab.before;
-ver suite = Lab.after;
+var before = Lab.before;
+var after = Lab.after;
 
 suite('math', function () {
 
