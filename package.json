@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
   "repository": "git://github.com/spumko/lab",
@@ -16,7 +16,7 @@
     "optimist": "0.6.x",
     "blanket": "1.1.x",
     "chai": "1.8.x",
-    "handlebars": "1.0.x",
+    "handlebars": "1.1.x",
     "async": "0.2.x",
     "diff": "1.0.x"
   },
