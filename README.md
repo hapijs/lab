@@ -74,7 +74,7 @@ Lab.experiment('math', function () {
 ```
 
 If you need to perform some asynch actions before or after executing the tests inside an experiment, the 'before()' and
-'after()' methods can be used:
+'after()' methods can be used. You can also make use of 'beforeEach()' and 'afterEach()' to run some asynch code before or after **each single test**.
 ```javascript
 var Lab = require('lab');
 
@@ -84,6 +84,12 @@ Lab.experiment('math', function () {
 
         // Wait 1 second
         setTimeout(function () { done(); }, 1000);
+    });
+
+    Lab.beforeEach(function (done) {
+
+        // Run before every single test
+        done();
     });
 
     Lab.test('returns true when 1 + 1 equals 2', function (done) {
