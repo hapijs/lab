@@ -27,7 +27,7 @@ into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test
 To install **lab**:
 
 ```bash
-$ npm install lab
+$ npm install -G lab
 ```
 
 To start:
