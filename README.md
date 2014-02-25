@@ -41,7 +41,7 @@ different directories or files, pass those as arguments:
 $ lab unit.js
 ```
 
-Test files must require the **lab** module, and add tests using the 'test()' method:
+Test files must require the **lab** module, and add tests using the `test()` method:
 ```javascript
 var Lab = require('lab');
 
@@ -52,11 +52,11 @@ Lab.test('returns true when 1 + 1 equals 2', function (done) {
 });
 ```
 
-When a test is completed, 'done()' must be called, otherwise the test will time out (2 seconds by default) and will fail.
-The test passes if 'done()' is call once before the timeout, and no exception thrown.
+When a test is completed, `done()` must be called, otherwise the test will time out (2 seconds by default) and will fail.
+The test passes if `done()` is call once before the timeout, and no exception thrown.
 
 **lab** works with any test utility that throws an error when a condition isn't met. It uses the same error interface as
-[mocha](http://visionmedia.github.com/mocha/) and already includes [chai](http://chaijs.com/)'s 'expect()' in its exported
+[mocha](http://visionmedia.github.com/mocha/) and already includes [chai](http://chaijs.com/)'s `expect()` in its exported
 interface as shown above.
 
 Tests can be organized into experiments:
@@ -73,8 +73,9 @@ Lab.experiment('math', function () {
 });
 ```
 
-If you need to perform some asynch actions before or after executing the tests inside an experiment, the 'before()' and
-'after()' methods can be used. You can also make use of 'beforeEach()' and 'afterEach()' to run some asynch code before or after **each single test**.
+If you need to perform some asynch actions before or after executing the tests inside an experiment, the `before()` and
+`after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
+
 ```javascript
 var Lab = require('lab');
 
