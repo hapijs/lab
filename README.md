@@ -149,6 +149,7 @@ suite('math', function () {
     - `coverage` - JSON code coverage report
     - `html` - HTML code coverage report
     - `threshold` - Code coverage percentage check
+    - `spec` - Specification reporter
 - `-m` - individual tests timeout in milliseconds, defaults to 2 seconds
 - `-o` - file to save the report to (`html` only), otherwise sent to stdout
 - `-t` - minimum code test coverage percentage (`threshold` only), defaults to 100%
