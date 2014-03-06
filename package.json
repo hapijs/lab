@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
   "repository": "git://github.com/spumko/lab",
@@ -10,7 +10,7 @@
     "test"
   ],
   "engines": {
-    "node": ">=0.10.21"
+    "node": ">=0.10.22"
   },
   "dependencies": {
     "optimist": "0.6.x",
