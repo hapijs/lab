@@ -277,11 +277,11 @@
                     <tbody>
                 {{#each this.source }}
                     {{#if this.miss }}
-                        {{#if this.branch }}
-                            <tr class="branch">
+                        {{#if this.chunks }}
+                            <tr class="chunks">
                                 <td class="line">{{@key}}</td>
                                 <td class="hits">{{ this.coverage }}</td>
-                                <td class="source">{{#each this.branch}}{{#if this.miss}}<div class="miss">{{ this.source }}</div>{{else}}<div>{{ this.source }}</div>{{/if}}{{/each}}</td>
+                                <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss">{{ this.source }}</div>{{else}}<div>{{ this.source }}</div>{{/if}}{{/each}}</td>
                             </tr>
                         {{else}}
                             <tr class="miss">
