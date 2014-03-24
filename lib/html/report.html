@@ -233,7 +233,15 @@
         display: inline-block;
     }
 
-    td.source div.miss {
+    td.source div.true {
+        background: #bae8bf;
+    }
+
+    td.source div.false {
+        background: #e8e5ba;
+    }
+
+    td.source div.never {
         background: #f8d5d8;
     }
     </style>
@@ -281,7 +289,7 @@
                             <tr class="chunks">
                                 <td class="line">{{@key}}</td>
                                 <td class="hits">{{ this.coverage }}</td>
-                                <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss">{{ this.source }}</div>{{else}}<div>{{ this.source }}</div>{{/if}}{{/each}}</td>
+                                <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{ this.miss }}">{{ this.source }}</div>{{else}}<div>{{ this.source }}</div>{{/if}}{{/each}}</td>
                             </tr>
                         {{else}}
                             <tr class="miss">
