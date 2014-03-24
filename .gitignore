@@ -13,6 +13,7 @@ config.json
 ._*
 */._*
 */*/._*
-coverage.*
+coverage.json
+coverage.html
 lib-cov
 
