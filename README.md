@@ -151,6 +151,8 @@ suite('math', function () {
     - `html` - HTML code coverage report
     - `threshold` - Code coverage percentage check
     - `spec` - Specification reporter
+    - `summary` - Test results summary 
+    - `tap` - TAP reporter
 - `-m` - individual tests timeout in milliseconds, defaults to 2 seconds
 - `-o` - file to save the report to (`html` only), otherwise sent to stdout
 - `-t` - minimum code test coverage percentage (`threshold` only), defaults to 100%
