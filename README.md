@@ -146,6 +146,7 @@ suite('math', function () {
 **lab** supports the following command line options:
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - simple text output to console
+    - `spec` - specification output to console
     - `coverage` - JSON code coverage report
     - `html` - HTML code coverage report
     - `threshold` - Code coverage percentage check
