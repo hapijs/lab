@@ -144,6 +144,7 @@ suite('math', function () {
 ## Command Line
 
 **lab** supports the following command line options:
+- `-i` - only run the test for the given identifier
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - simple text output to console
     - `coverage` - JSON code coverage report
@@ -155,6 +156,8 @@ suite('math', function () {
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'
 - `-g` - determines if global variable leak checking is enabled or not.  To disable pass 0 and to enable pass 1.  Defaults to enabled.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
+- `-s` - silence test output, defaults to false.
+- `-v` - verbose test output, defaults to false.
 
 ## Motivation
 
