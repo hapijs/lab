@@ -15,11 +15,11 @@ keep the execution engine as simple as possible, and not try to build an extensi
 ## Command Line
 
 **lab** supports the following command line options:
-- `-c` - enable code coverage analysis.
+- `-c` - enables code coverage analysis.
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
-- `-g` - determines if global variable leak checking is enabled or not.  To disable pass 0 and to enable pass 1.  Defaults to enabled.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
 - `-i` - only run the test for the given identifier.
+- `-l` - disables global variable leak detection.
 - `-m` - individual tests timeout in milliseconds, defaults to 2 seconds.
 - `-o` - file to save the report to (`html` only), otherwise sent to stdout.
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
