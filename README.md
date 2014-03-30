@@ -109,12 +109,12 @@ Lab.experiment('math', function () {
 
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
-- `serial` - requires the test to run in serial. Defaults `false` which sets parallel execution of tests within each experiment level.
+- `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
 
 ```javascript
 Lab.experiment('math', { timeout: 1000 }, function () {
 
-    Lab.test('returns true when 1 + 1 equals 2', { serial: true }, function (done) {
+    Lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
