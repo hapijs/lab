@@ -8,19 +8,16 @@ Node test utility
 
 ## Introduction
 
-**lab** is a simple test utility for node. Unlike other test frameworks, **lab** does not attempt to cover many use cases or provide
-rich functionality and extensibility. In fact, this project started as a fork off [mocha](http://visionmedia.github.com/mocha/) and was
-repeatedly refactored until only the very basic functionality was left which was then rewritten into a handful of functions.
-
-**lab**'s primary goal is to support the narrow use cases of the [**spumko**](https://github.com/spumko) modules. If you give it a try
-and find a missing feature, you are better off giving [mocha](http://visionmedia.github.com/mocha/) a try. We are unlikely to add
-functionality to it. It is not meant to be a framework, just a handy utility.
+**lab** is a simple test utility for node. Unlike other test utilities, lab uses domains instead of uncaught exception and other
+global manipulation which created conflicts with some [**spumko**](https://github.com/spumko) modules. Our goal with **lab** is to
+keep the execution engine as simple as possible, and not try to build an extensible framework.
 
 ## Acknowledgements
 
 **lab** borrows heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render the coverage report
-into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk and published under the
-[MIT license](https://github.com/visionmedia/mocha/blob/master/LICENSE).
+into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk. **lab** coverage code
+was originally adapted from [blanket](https://github.com/alex-seville/blanket) which in turn uses
+[falafel](https://github.com/substack/node-falafel).
 
 ## Usage
 
@@ -161,11 +158,4 @@ suite('math', function () {
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
 - `-s` - silence test output, defaults to false.
 - `-v` - verbose test output, defaults to false.
-
-## Motivation
-
-**lab** was developed to provide a minimal layer above writing simple node test cases. In contrast with other
-test frameworks, **lab** does not modify any prototypes, globals, and uses node
-[domains](http://nodejs.org/api/domain.html) to capture test errors. We've used other test frameworks and utilities
-but at some point needed greater control over the tools, especially around domains and error handling in node.
 
