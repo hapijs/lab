@@ -12,12 +12,25 @@ Node test utility
 global manipulation which created conflicts with some [**spumko**](https://github.com/spumko) modules. Our goal with **lab** is to
 keep the execution engine as simple as possible, and not try to build an extensible framework.
 
-## Acknowledgements
+## Command Line
 
-**lab** borrows heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render the coverage report
-into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk. **lab** coverage code
-was originally adapted from [blanket](https://github.com/alex-seville/blanket) which in turn uses
-[falafel](https://github.com/substack/node-falafel).
+**lab** supports the following command line options:
+- `-c` - enable code coverage analysis.
+- `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
+- `-g` - determines if global variable leak checking is enabled or not.  To disable pass 0 and to enable pass 1.  Defaults to enabled.
+- `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
+- `-i` - only run the test for the given identifier.
+- `-m` - individual tests timeout in milliseconds, defaults to 2 seconds.
+- `-o` - file to save the report to (`html` only), otherwise sent to stdout.
+- `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
+    - `console` - simple text output to console.
+    - `html` - HTML code coverage report (sets `-c`).
+    - `json` - output results in JSON format.
+    - `spec` - Specification reporter.
+    - `summary` - Test results summary. 
+    - `tap` - TAP reporter.
+- `-s` - silence test output, defaults to false.
+- `-t` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 
 ## Usage
 
@@ -138,23 +151,9 @@ suite('math', function () {
 });
 ```
 
-## Command Line
+## Acknowledgements
 
-**lab** supports the following command line options:
-- `-i` - only run the test for the given identifier
-- `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
-    - `console` - simple text output to console
-    - `coverage` - JSON code coverage report
-    - `html` - HTML code coverage report
-    - `threshold` - Code coverage percentage check
-    - `spec` - Specification reporter
-    - `summary` - Test results summary 
-    - `tap` - TAP reporter
-- `-m` - individual tests timeout in milliseconds, defaults to 2 seconds
-- `-o` - file to save the report to (`html` only), otherwise sent to stdout
-- `-t` - minimum code test coverage percentage (`threshold` only), defaults to 100%
-- `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'
-- `-g` - determines if global variable leak checking is enabled or not.  To disable pass 0 and to enable pass 1.  Defaults to enabled.
-- `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
-- `-s` - silence test output, defaults to false.
-
+**lab** borrows heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render the coverage report
+into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk. **lab** coverage code
+was originally adapted from [blanket](https://github.com/alex-seville/blanket) which in turn uses
+[falafel](https://github.com/substack/node-falafel).
