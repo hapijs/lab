@@ -35,7 +35,7 @@
     </script>
     <style>
     body {
-        font: 14px/1.6 "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font: 14px/1.6 Helvetica, Arial, sans-serif;
         margin: 0;
         color: #2c2c2c;
     }
@@ -253,26 +253,26 @@
             <li><a href="#overview">overview</a></li>
             {{#each cov.files}}
             <li>
-                <span class="cov {{ this.coverageClass }}">{{ this.coverage }}</span>
-                <a href="#{{ this.filename }}">{{#if this.dirname }}<span class="dirname">{{ this.dirname }}</span>{{/if}}<span class="basename">{{ this.basename }}</span></a>
+                <span class="cov {{this.percentClass}}">{{this.percent}}</span>
+                <a href="#{{this.filename}}">{{#if this.dirname}}<span class="dirname">{{this.dirname}}</span>{{/if}}<span class="basename">{{this.basename}}</span></a>
             </li>
             {{/each}}
         </div>
-        <div class="stats {{ coverageClass }}">
-            <div class="percentage">{{ cov.coverage }}%</div>
-            <div class="sloc">{{ cov.sloc }}</div>
-            <div class="hits">{{ cov.hits }}</div>
-            <div class="misses">{{ cov.misses }}</div>
+        <div class="stats {{percentClass}}">
+            <div class="percentage">{{percent}}%</div>
+            <div class="sloc">{{cov.sloc}}</div>
+            <div class="hits">{{cov.hits}}</div>
+            <div class="misses">{{cov.misses}}</div>
         </div>
         <div id="files">
             {{#each cov.files}}
             <div class="file">
-                <h2 id="{{ this.filename }}">{{ this.filename }}</h2>
-                <div class="stats {{ this.coverageClass }}">
-                    <div class="percentage">{{ this.coverage }}%</div>
-                    <div class="sloc">{{ this.sloc }}</div>
-                    <div class="hits">{{ this.hits }}</div>
-                    <div class="misses">{{ this.misses }}</div>
+                <h2 id="{{this.filename}}">{{this.filename}}</h2>
+                <div class="stats {{this.percentClass}}">
+                    <div class="percentage">{{this.percent}}%</div>
+                    <div class="sloc">{{this.sloc}}</div>
+                    <div class="hits">{{this.hits}}</div>
+                    <div class="misses">{{this.misses}}</div>
                 </div>
                 <table>
                     <thead>
@@ -283,26 +283,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                {{#each this.source }}
-                    {{#if this.miss }}
-                        {{#if this.chunks }}
+                {{#each this.source}}
+                    {{#if this.miss}}
+                        {{#if this.chunks}}
                             <tr class="chunks">
                                 <td class="line">{{@key}}</td>
-                                <td class="hits">{{ this.coverage }}</td>
-                                <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{ this.miss }}">{{ this.source }}</div>{{else}}<div>{{ this.source }}</div>{{/if}}{{/each}}</td>
+                                <td class="hits">{{this.percent}}</td>
+                                <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{this.miss}}">{{this.source}}</div>{{else}}<div>{{this.source}}</div>{{/if}}{{/each}}</td>
                             </tr>
                         {{else}}
                             <tr class="miss">
                                 <td class="line">{{@key}}</td>
-                                <td class="hits">{{ this.coverage }}</td>
-                                <td class="source">{{ this.source }}</td>
+                                <td class="hits">{{this.percent}}</td>
+                                <td class="source">{{this.source}}</td>
                             </tr>
                         {{/if}}
                     {{else}}
                         <tr class="hit">
                             <td class="line">{{@key}}</td>
-                            <td class="hits">{{ this.coverage }}</td>
-                            <td class="source">{{ this.source }}</td>
+                            <td class="hits">{{hits this.hits}}</td>
+                            <td class="source">{{this.source}}</td>
                         </tr>
                     {{/if}}
                 {{/each}}
