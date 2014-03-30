@@ -71,8 +71,6 @@ interface as shown above.
 
 Tests can be organized into experiments:
 ```javascript
-var Lab = require('lab');
-
 Lab.experiment('math', function () {
 
     Lab.test('returns true when 1 + 1 equals 2', function (done) {
@@ -87,8 +85,6 @@ If you need to perform some asynch actions before or after executing the tests i
 `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
 
 ```javascript
-var Lab = require('lab');
-
 Lab.experiment('math', function () {
 
     Lab.before(function (done) {
@@ -104,6 +100,21 @@ Lab.experiment('math', function () {
     });
 
     Lab.test('returns true when 1 + 1 equals 2', function (done) {
+
+        Lab.expect(1+1).to.equal(2);
+        done();
+    });
+});
+```
+
+Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
+- `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
+- `serial` - requires the test to run in serial. Defaults `false` which sets parallel execution of tests within each experiment level.
+
+```javascript
+Lab.experiment('math', { timeout: 1000 }, function () {
+
+    Lab.test('returns true when 1 + 1 equals 2', { serial: true }, function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
