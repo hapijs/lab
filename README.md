@@ -157,5 +157,4 @@ suite('math', function () {
 - `-g` - determines if global variable leak checking is enabled or not.  To disable pass 0 and to enable pass 1.  Defaults to enabled.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
 - `-s` - silence test output, defaults to false.
-- `-v` - verbose test output, defaults to false.
 
