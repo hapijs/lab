@@ -22,6 +22,7 @@ keep the execution engine as simple as possible, and not try to build an extensi
 - `-l` - disables global variable leak detection.
 - `-m` - individual tests timeout in milliseconds, defaults to 2 seconds.
 - `-o` - file to save the report to (`html` only), otherwise sent to stdout.
+- `-p` - sets parallel execution as default test option. Defaults to serial execution.
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - simple text output to console.
     - `html` - HTML code coverage report (sets `-c`).
