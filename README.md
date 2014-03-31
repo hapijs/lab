@@ -16,6 +16,7 @@ keep the execution engine as simple as possible, and not try to build an extensi
 
 **lab** supports the following command line options:
 - `-c` - enables code coverage analysis.
+- `-d` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
 - `-i` - only run the test for the given identifier.
@@ -110,6 +111,7 @@ Lab.experiment('math', function () {
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
 - `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
+- `skip` - skip execution. Cannot be overriden in children once parent is set to skip.
 
 ```javascript
 Lab.experiment('math', { timeout: 1000 }, function () {
