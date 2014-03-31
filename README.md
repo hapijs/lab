@@ -24,14 +24,13 @@ keep the execution engine as simple as possible, and not try to build an extensi
 - `-o` - file to save the report to (`html` only), otherwise sent to stdout.
 - `-p` - sets parallel execution as default test option. Defaults to serial execution.
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
-    - `console` - simple text output to console.
+    - `console` - text report.
     - `html` - HTML code coverage report (sets `-c`).
     - `json` - output results in JSON format.
-    - `spec` - Specification reporter.
-    - `summary` - Test results summary. 
-    - `tap` - TAP reporter.
+    - `tap` - TAP protocol report.
 - `-s` - silence test output, defaults to false.
 - `-t` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
+- `-v` - verbose test output, defaults to false.
 
 ## Usage
 
