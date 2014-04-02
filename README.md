@@ -35,11 +35,22 @@ keep the execution engine as simple as possible, and not try to build an extensi
 
 ## Usage
 
-To install **lab**:
+To install **lab** globally:
 
 ```bash
-$ npm install lab
+$ npm install -g lab
 ```
+
+To use locally:
+```bash
+$ npm install --save-dev lab
+```
+
+Then in further examples you will have to call lab like so:
+``` bash
+$ ./node_modules/.bin/lab
+```
+
 
 To start:
 ```bash
