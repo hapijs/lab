@@ -15,7 +15,7 @@
   "dependencies": {
     "optimist": "0.6.x",
     "esprima": "1.0.x",
-    "chai": "1.9.1",
+    "chai": "1.9.x",
     "handlebars": "1.2.x",
     "async": "0.2.x",
     "diff": "1.0.x"
