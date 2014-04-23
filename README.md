@@ -16,6 +16,7 @@ keep the execution engine as simple as possible, and not try to build an extensi
 
 **lab** supports the following command line options:
 - `-c` - enables code coverage analysis.
+- `-C` - forces color output
 - `-d` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
