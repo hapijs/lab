@@ -95,7 +95,7 @@ Lab.experiment('math', function () {
 });
 ```
 
-If you need to perform some asynch actions before or after executing the tests inside an experiment, the `before()` and
+If you need to perform some async actions before or after executing the tests inside an experiment, the `before()` and
 `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
 
 ```javascript
