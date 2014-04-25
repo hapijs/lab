@@ -74,9 +74,9 @@ Lab.test('returns true when 1 + 1 equals 2', function (done) {
 });
 ```
 
-When a test is completed, `done()` must be called, otherwise the test will time out (2 seconds by default) and will fail.
-The test passes if `done()` is call once before the timeout, and no exception thrown. If no callback function is provided,
-the test is considered a TODO reminder and will be skipped.
+When a test is completed, `done(err)` must be called, otherwise the test will time out (2 seconds by default) and will fail.
+The test passes if `done()` is call once before the timeout, no exception thrown, and no arguments are passed to `done()`.
+If no callback function is provided, the test is considered a TODO reminder and will be skipped.
 
 **lab** works with any test utility that throws an error when a condition isn't met. It uses the same error interface as
 [mocha](http://visionmedia.github.com/mocha/) and already includes [chai](http://chaijs.com/)'s `expect()` in its exported
