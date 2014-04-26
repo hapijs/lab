@@ -134,8 +134,8 @@ Lab.experiment('Examples', function () {
 
         ChildProcess.exec('./bin/lab examples/singleExperimentErrors.js', function (error, stdout, stderr) {
 
-            Lab.expect(error).to.not.exist;
-            Lab.expect(stdout).to.contain('1 tests complete');
+            Lab.expect(error).to.exist;
+            Lab.expect(stdout).to.contain('1 of 1 tests failed');
             Lab.expect(stdout).to.contain('No global variable leaks detected');
             done();
         });
