@@ -176,10 +176,18 @@ suite('math', function () {
 ```
 
 ## Running lab's tests
-The **lab** project contains tests, written using **lab**, which can be run using **make**.
-To run the tests included in this project, locally clone the repository then run:
+To run the tests included in this project, locally clone the repository then install the dependencies:
 ```bash
 $ npm update
+```
+
+To run the tests:
+```bash
+$ node ./bin/lab
+```
+
+Or using **make**:
+```bash
 $ make test
 ```
 
@@ -189,12 +197,7 @@ test:
     @node ./node_modules/lab/bin/lab
 ```
 
-Which can be triggered using:
-```bash
-$ make test
-``` 
-
-Alternatively you may want to leverage npm's scripts section of your package.json
+Alternatively you may want to leverage npm's scripts section of your package.json:
 ```json
 "scripts": {
     "test": "node ./node_modules/lab/bin/lab"
