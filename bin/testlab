@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+
+var child = require('child_process');
+
+child.exec("cp -rf lib metalab", function (err) {
+
+    if (err) {
+        console.log('Error: ', err);
+        return;
+    }
+});
