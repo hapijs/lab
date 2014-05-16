@@ -200,7 +200,7 @@ test:
 Alternatively you may want to leverage npm's scripts section of your package.json:
 ```json
 "scripts": {
-    "test": "node ./node_modules/lab/bin/lab"
+    "test": "lab"
   }
 ```
 
