@@ -22,6 +22,7 @@ keep the execution engine as simple as possible, and not try to build an extensi
 - `-g` - only run tests matching the given pattern which is internally compiled to a RegExp.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
 - `-i` - only run the test for the given identifier.
+- `-I` - ignore a list of globals for the leak detection (comma separated)
 - `-l` - disables global variable leak detection.
 - `-m` - individual tests timeout in milliseconds, defaults to 2 seconds.
 - `-o` - file to write the report to, otherwise sent to stdout.
