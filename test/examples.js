@@ -1,7 +1,9 @@
 // Load modules
 
-var Lab = require('../lib');
 var ChildProcess = require('child_process');
+
+var Lab = require('../lib');
+var Metalab = require('../metalab');
 
 // Declare internals
 

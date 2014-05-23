@@ -1,0 +1,316 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Coverage</title>
+    <script>
+      headings = [];
+
+      onload = function(){
+          headings = document.querySelectorAll('h2');
+      };
+
+      onscroll = function(e){
+          var heading = find(window.scrollY);
+          if (!heading) return;
+          var links = document.querySelectorAll('#menu a')
+                  , link;
+
+          for (var i = 0, len = links.length; i < len; ++i) {
+              link = links[i];
+              link.className = link.getAttribute('href') == '#' + heading.id ? 'active' : '';
+          }
+      };
+
+      function find(y) {
+          var i = headings.length
+                  , heading;
+
+          while (i--) {
+              heading = headings[i];
+              if (y >= heading.offsetTop) {
+                  return heading;
+              }
+          }
+      }
+    </script>
+    <style>
+    body {
+        font: 14px/1.6 Helvetica, Arial, sans-serif;
+        margin: 0;
+        color: #2c2c2c;
+    }
+
+    #coverage {
+        padding: 60px;
+    }
+
+    h1 a:hover {
+        text-decoration: none;
+    }
+
+    h2 {
+        width: 80%;
+        margin-top: 80px;
+        margin-bottom: 0;
+        font-weight: 100;
+        letter-spacing: 1px;
+    }
+
+    ul {
+        margin-top: 20px;
+        padding: 0 15px;
+        width: 100%;
+    }
+
+    ul li {
+        float: left;
+        width: 40%;
+        margin-top: 5px;
+        margin-right: 60px;
+        list-style: none;
+        padding: 5px 0;
+        font-size: 12px;
+    }
+
+    #menu {
+        position: fixed;
+        font-size: 12px;
+        overflow-y: auto;
+        top: 0;
+        right: 0;
+        margin: 0;
+        height: 100%;
+        padding: 15px 15px;
+        border-left: 1px solid #eee;
+        background-color: #666;
+    }
+
+    #menu::after {
+        display: block;
+        content: '';
+        padding-top: 80px;
+    }
+
+    #menu li a {
+        display: block;
+        color: white;
+        padding: 0 5px 0 35px;
+        transition: background 300ms;
+        text-decoration: none;
+    }
+
+    #menu li {
+        position: relative;
+        list-style: none;
+    }
+
+    #menu a:hover,
+    #menu a.active {
+        text-decoration: none;
+        background: rgba(255,255,255,.4);
+    }
+
+    #menu li:hover .cov {
+        opacity: 1;
+    }
+
+    #menu li .dirname {
+        opacity: .60;
+        padding-right: 2px;
+    }
+
+    #menu li .basename {
+        opacity: 1;
+    }
+
+    #menu .cov {
+        background: rgba(0,0,0,.3);
+        position: absolute;
+        top: 0;
+        font-size: 9px;
+        text-align: center;
+        opacity: .8;
+        width: 22px;
+        border-radius: 10px;
+        padding: 2px 3px;
+    }
+
+    .stats:nth-child(2n) {
+        display: inline-block;
+        margin-top: 15px;
+        border: 1px solid #eee;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .stats div {
+        float: left;
+        padding: 0 5px;
+    }
+
+    .stats::after {
+        display: block;
+        content: '';
+        clear: both;
+    }
+
+    .stats .sloc::after {
+        content: ' SLOC';
+        color: #b6b6b6;
+    }
+
+    .stats .percentage::after {
+        content: ' coverage';
+        color: #b6b6b6;
+    }
+
+    .stats .hits,
+    .stats .misses {
+        display: none;
+    }
+
+    .high {
+        color: #00d4b4;
+    }
+    .medium {
+        color: #e87d0d;
+    }
+    .low {
+        color: #d4081a;
+    }
+    .terrible {
+        color: #d4081a;
+        font-weight: bold;
+    }
+
+    table {
+        width: 80%;
+        margin-top: 10px;
+        border-collapse: collapse;
+        border: 1px solid #cbcbcb;
+        color: #363636;
+        border-radius: 3px;
+    }
+
+    table thead {
+        display: none;
+    }
+
+    table td.line,
+    table td.hits {
+        width: 20px;
+        background: #eaeaea;
+        text-align: center;
+        font-size: 11px;
+        padding: 0 10px;
+        color: #949494;
+    }
+
+    table td.hits {
+        width: 10px;
+        padding: 2px 5px;
+        color: rgba(0,0,0,.2);
+        background: #f0f0f0;
+    }
+
+    tr.miss td.line,
+    tr.miss td.hits {
+        background: #e6c3c7;
+    }
+
+    tr.miss td {
+        background: #f8d5d8;
+    }
+
+    td.source {
+        padding-left: 15px;
+        line-height: 15px;
+        white-space: pre;
+        font: 12px monaco, monospace;
+    }
+
+    td.source div {
+        display: inline-block;
+    }
+
+    td.source div.true {
+        background: #bae8bf;
+    }
+
+    td.source div.false {
+        background: #e8e5ba;
+    }
+
+    td.source div.never {
+        background: #f8d5d8;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="coverage">
+        <h1 id="overview">Code Coverage Report</h1>
+        <div id="menu">
+            <li><a href="#overview">overview</a></li>
+            {{#each cov.files}}
+            <li>
+                <span class="cov {{this.percentClass}}">{{this.percent}}</span>
+                <a href="#{{this.filename}}">{{#if this.dirname}}<span class="dirname">{{this.dirname}}</span>{{/if}}<span class="basename">{{this.basename}}</span></a>
+            </li>
+            {{/each}}
+        </div>
+        <div class="stats {{percentClass}}">
+            <div class="percentage">{{percent}}%</div>
+            <div class="sloc">{{cov.sloc}}</div>
+            <div class="hits">{{cov.hits}}</div>
+            <div class="misses">{{cov.misses}}</div>
+        </div>
+        <div id="files">
+            {{#each cov.files}}
+            <div class="file">
+                <h2 id="{{this.filename}}">{{this.filename}}</h2>
+                <div class="stats {{this.percentClass}}">
+                    <div class="percentage">{{this.percent}}%</div>
+                    <div class="sloc">{{this.sloc}}</div>
+                    <div class="hits">{{this.hits}}</div>
+                    <div class="misses">{{this.misses}}</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Line</th>
+                            <th>Hits</th>
+                            <th>Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {{#each this.source}}
+                    {{#if this.miss}}
+                        {{#if this.chunks}}
+                            <tr class="chunks">
+                                <td class="line">{{@key}}</td>
+                                <td class="hits">{{this.percent}}</td>
+                                <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{this.miss}}">{{this.source}}</div>{{else}}<div>{{this.source}}</div>{{/if}}{{/each}}</td>
+                            </tr>
+                        {{else}}
+                            <tr class="miss">
+                                <td class="line">{{@key}}</td>
+                                <td class="hits">{{this.percent}}</td>
+                                <td class="source">{{this.source}}</td>
+                            </tr>
+                        {{/if}}
+                    {{else}}
+                        <tr class="hit">
+                            <td class="line">{{@key}}</td>
+                            <td class="hits">{{hits this.hits}}</td>
+                            <td class="source">{{this.source}}</td>
+                        </tr>
+                    {{/if}}
+                {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+  </body>
+</html>
