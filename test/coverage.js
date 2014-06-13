@@ -1,29 +1,25 @@
 var Fs = require('fs');
 var Lab = require('../lib');
 
-var experiment = Lab.experiment;
-var test = Lab.test;
+//No tests required for this file.  Intended to load all Lab files for coverage purposes only.
 
-experiment('Errors', function () {
+var internals = {
+    //list of files to be excluded from coverage
+    exclusions: []
+};
 
-    test('throws when 1 does not equal 2', function (done) {
+internals.loadFiles = function () {
+    var files = internals.findAllJSFiles('./metalab', []);
+    var coverage = [];
 
-        var files = internals.findAllJSFiles('./metalab', []);
-        var coverage = [];
+    for (var i = 0, il = files.length; i < il; ++i) {
+        var file = files[i];
 
-        for (var i = 0, il = files.length; i < il; ++i) {
-            var file = files[i];
+        coverage.push(require('.' + file));
+    }
+};
 
-            coverage.push(require('.' + file));
-        }
-        done();
-    });
-});
-
-
-var internals = {};
-
-internals.findAllJSFiles = function (root, exclusions) {
+internals.findAllJSFiles = function (root) {
 
     var files = Fs.readdirSync(root);
     var filesToBeReturned = [];
@@ -31,9 +27,9 @@ internals.findAllJSFiles = function (root, exclusions) {
     for (var i = 0, il = files.length; i < il; ++i) {
         var file = root + '/' + files[i];
 
-        if (!internals.isInList(file, exclusions)) {
+        if (!internals.isInList(file)) {
             try {
-                var subfiles = internals.findAllJSFiles(file, exclusions);
+                var subfiles = internals.findAllJSFiles(file);
                 filesToBeReturned = filesToBeReturned.concat(subfiles);
             } catch (e) {
                 var pattern = /\.js$/;
@@ -46,9 +42,17 @@ internals.findAllJSFiles = function (root, exclusions) {
     }
 
     return filesToBeReturned;
-}
+};
 
 internals.isInList = function (which, list) {
+
+    if (!list) {
+        list = internals.exclusions;
+    }
+
+    if (!list || !list.length) {
+        return false;
+    }
 
     for (var i = 0, il = list.length; i < il; ++i) {
         if (which === list[i]) {
@@ -57,4 +61,6 @@ internals.isInList = function (which, list) {
     }
 
     return false;
-}
+};
+
+internals.loadFiles();
