@@ -1,8 +1,7 @@
 // Load modules
 
-var ChildProcess = require('child_process');
-
 var Lab = require('../lib');
+var ChildProcess = require('child_process');
 
 // Declare internals
 
