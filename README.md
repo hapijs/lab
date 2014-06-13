@@ -19,6 +19,7 @@ keep the execution engine as simple as possible, and not try to build an extensi
 - `-C` - forces color output
 - `-d` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
+- `-g` - only run tests matching the given pattern which is internally compiled to a RegExp.
 - `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
 - `-i` - only run the test for the given identifier.
 - `-l` - disables global variable leak detection.
@@ -37,7 +38,6 @@ keep the execution engine as simple as possible, and not try to build an extensi
 ## Usage
 
 To install **lab** globally:
-
 ```bash
 $ npm install -g lab
 ```
@@ -51,7 +51,6 @@ Then in further examples you will have to call lab like so:
 ``` bash
 $ ./node_modules/.bin/lab
 ```
-
 
 To start:
 ```bash
@@ -175,6 +174,40 @@ suite('math', function () {
         done();
     });
 });
+```
+
+## Running lab's tests
+To run the tests included in this project, locally clone the repository then install the dependencies:
+```bash
+$ npm update
+```
+
+To run the tests:
+```bash
+$ node ./bin/lab
+```
+
+Or using **make**:
+```bash
+$ make test
+```
+
+To use this pattern in your own project install **lab** as a dev dependency and include a **make** file containing a target like this:
+```make
+test:
+    @node ./node_modules/lab/bin/lab
+```
+
+Alternatively you may want to leverage npm's scripts section of your package.json:
+```json
+"scripts": {
+    "test": "lab"
+  }
+```
+
+Which can be triggered using:
+```bash
+$ npm test
 ```
 
 ## Acknowledgements
