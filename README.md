@@ -49,7 +49,7 @@ $ npm install --save-dev lab
 
 Then in further examples you will have to call lab like so:
 ``` bash
-$ ./node_modules/.bin/lab
+$ node ./node_modules/lab/bin/lab -c
 ```
 
 To start:
