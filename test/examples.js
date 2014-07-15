@@ -162,4 +162,30 @@ Lab.experiment('Examples', function () {
             done();
         });
     });
+
+    Lab.test('onlyExperiment.js', function (done) {
+
+        ChildProcess.exec('./bin/lab -v examples/onlyExperiment.js', function (error, stdout, stderr) {
+
+            Lab.expect(error).to.not.exist;
+            Lab.expect(stdout).to.contain('2 tests complete');
+            Lab.expect(stdout).to.contain('3) returns true when 3 + 3 equals 6');
+            Lab.expect(stdout).to.contain('4) returns true when 4 + 4 equals 8');
+            Lab.expect(stdout).to.contain('No global variable leaks detected');
+            done();
+        });
+    });
+
+    Lab.test('onlyTest.js', function (done) {
+
+        ChildProcess.exec('./bin/lab -v examples/onlyTest.js', function (error, stdout, stderr) {
+
+            Lab.expect(error).to.not.exist;
+            Lab.expect(stdout).to.contain('1 tests complete');
+            Lab.expect(stdout).to.contain('4) returns true when 4 + 4 equals 8');
+            Lab.expect(stdout).to.contain('No global variable leaks detected');
+            done();
+        });
+    });
+
 });
