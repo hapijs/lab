@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+
+var Child = require('child_process');
+
+Child.exec('rm -rf metalab', function (err) {
+
+    if (err) {
+        console.log('Error: ', err);
+        return;
+    }
+    
+    Child.exec('cp -rf lib metalab', function (err) {
+
+        if (err) {
+            console.log('Error: ', err);
+            return;
+        }
+
+        Child.exec('cp -f config.js metalab/', function (err) {
+
+            if (err) {
+                console.log('Error: ', err);
+                return;
+            }
+        });
+    });
+});

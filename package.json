@@ -18,7 +18,8 @@
     "chai": "1.x.x",
     "handlebars": "1.x.x",
     "async": "0.8.x",
-    "diff": "1.x.x"
+    "diff": "1.x.x",
+    "hoek": "2.x.x"
   },
   "devDependencies": {
   },
