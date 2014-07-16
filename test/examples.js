@@ -141,4 +141,54 @@ Lab.experiment('Examples', function () {
         });
     });
 
+    Lab.test('skip.js', function (done) {
+
+        ChildProcess.exec('./bin/lab examples/skip.js', function (error, stdout, stderr) {
+
+            Lab.expect(error).to.not.exist;
+            Lab.expect(stdout).to.contain('1 tests complete (1 tests skipped)');
+            Lab.expect(stdout).to.contain('No global variable leaks detected');
+            done();
+        });
+    });
+
+    Lab.test('skipFails.js', function (done) {
+
+        ChildProcess.exec('./bin/lab examples/skipFails.js', function (error, stdout, stderr) {
+
+            Lab.expect(error).to.exist;
+            Lab.expect(stdout).to.contain('1 of 1 (1 tests skipped) tests failed');
+            Lab.expect(stdout).to.contain('No global variable leaks detected');
+            done();
+        });
+    });
+
+    Lab.test('onlyExperiment.js', function (done) {
+
+        ChildProcess.exec('./bin/lab -v examples/onlyExperiment.js', function (error, stdout, stderr) {
+
+            Lab.expect(error).to.not.exist;
+            Lab.expect(stdout).to.contain('2 tests complete');
+            Lab.expect(stdout).to.contain('3) returns true when 3 + 3 equals 6');
+            Lab.expect(stdout).to.contain('4) returns true when 4 + 4 equals 8');
+            Lab.expect(stdout).to.contain('No global variable leaks detected');
+            Lab.expect(stdout).to.contain('Should execute before');
+            done();
+        });
+    });
+
+    Lab.test('onlyTest.js', function (done) {
+
+        ChildProcess.exec('./bin/lab -v examples/onlyTest.js', function (error, stdout, stderr) {
+
+            Lab.expect(error).to.not.exist;
+            Lab.expect(stdout).to.contain('1 tests complete');
+            Lab.expect(stdout).to.contain('4) returns true when 4 + 4 equals 8');
+            Lab.expect(stdout).to.contain('No global variable leaks detected');
+            Lab.expect(stdout).to.contain('Should execute before');
+            Lab.expect(stdout).to.contain('Should also execute before');
+            done();
+        });
+    });
+
 });
