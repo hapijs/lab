@@ -172,6 +172,7 @@ Lab.experiment('Examples', function () {
             Lab.expect(stdout).to.contain('3) returns true when 3 + 3 equals 6');
             Lab.expect(stdout).to.contain('4) returns true when 4 + 4 equals 8');
             Lab.expect(stdout).to.contain('No global variable leaks detected');
+            Lab.expect(stdout).to.contain('Should execute before');
             done();
         });
     });
@@ -184,6 +185,8 @@ Lab.experiment('Examples', function () {
             Lab.expect(stdout).to.contain('1 tests complete');
             Lab.expect(stdout).to.contain('4) returns true when 4 + 4 equals 8');
             Lab.expect(stdout).to.contain('No global variable leaks detected');
+            Lab.expect(stdout).to.contain('Should execute before');
+            Lab.expect(stdout).to.contain('Should also execute before');
             done();
         });
     });

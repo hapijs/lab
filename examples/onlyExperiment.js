@@ -10,6 +10,12 @@ describe('math', function() {
 
   describe('addition', function () {
 
+      before(function(done) {
+
+        console.log('Should execute before');
+        done();
+      });
+
       it('returns true when 1 + 1 equals 2', function (done) {
 
           expect(1+1).to.equal(2);
@@ -52,6 +58,11 @@ describe('math', function() {
 
   describe('subtract', function () {
 
+      before(function() {
+
+          throw new Error('Should not execute');
+      });
+
       it('returns true when 1 - 1 equals 0', function (done) {
 
           expect(1-1).to.equal(0);
@@ -65,6 +76,11 @@ describe('math', function() {
       });
 
       describe.only('nested subtract', function () {
+
+        before(function() {
+
+            throw new Error('Should not execute');
+        });
 
         it('returns true when 3 - 1 equals 2', function (done) {
 
