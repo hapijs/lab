@@ -11,13 +11,18 @@ var internals = {};
 // Test shortcuts
 
 var lab = exports.lab = new Lab();
+var describe = lab.describe.bind(lab);
+var it = lab.it.bind(lab);
+var before = lab.before.bind(lab);
+var after = lab.after.bind(lab);
+var expect = Lab.expect;
 
 
-lab.describe('math', function () {
+describe('math', function () {
 
-    lab.it('returns true when 1 + 1 equals 2', function (done) {
+    it('returns true when 1 + 1 equals 2', function (done) {
 
-        Lab.expect(1+1).to.equal(2);
+        expect(1+1).to.equal(2);
         done();
     });
 });
