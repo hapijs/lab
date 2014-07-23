@@ -13,9 +13,9 @@ var internals = {};
 var lab = exports.lab = new Lab();
 var suite = lab.experiment.bind(lab);
 var test = lab.test.bind(lab);
-var expect = Lab.expect;
 var before = lab.before.bind(lab);
 var after = lab.after.bind(lab);
+var expect = Lab.expect;
 
 
 suite('math', function () {
