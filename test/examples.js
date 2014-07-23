@@ -1,15 +1,22 @@
 // Load modules
 
-var Lab = require('../lib');
 var ChildProcess = require('child_process');
+var Lab = require('../');
+
 
 // Declare internals
 
 var internals = {};
 
-Lab.experiment('Examples', function () {
 
-    Lab.test('empty.js', function (done) {
+// Test shortcuts
+
+var lab = exports.lab = new Lab();
+
+
+lab.experiment('Examples', function () {
+
+    lab.test('empty.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/empty.js', function (error, stdout, stderr) {
 
@@ -20,7 +27,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('bdd.js', function (done) {
+    lab.test('bdd.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/bdd.js', function (error, stdout, stderr) {
 
@@ -31,7 +38,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('tdd.js', function (done) {
+    lab.test('tdd.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/tdd.js', function (error, stdout, stderr) {
 
@@ -42,7 +49,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('after.js', function (done) {
+    lab.test('after.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/after.js', function (error, stdout, stderr) {
 
@@ -53,7 +60,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('before.js', function (done) {
+    lab.test('before.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/before.js', function (error, stdout, stderr) {
 
@@ -64,7 +71,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('singleTest.js', function (done) {
+    lab.test('singleTest.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/singleTest.js', function (error, stdout, stderr) {
 
@@ -75,7 +82,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('singleExperiment.js', function (done) {
+    lab.test('singleExperiment.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/singleExperiment.js', function (error, stdout, stderr) {
 
@@ -86,7 +93,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('singleExperimentFails.js', function (done) {
+    lab.test('singleExperimentFails.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/singleExperimentFails.js', function (error, stdout, stderr) {
 
@@ -97,7 +104,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('nestedExperiments.js', function (done) {
+    lab.test('nestedExperiments.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/nestedExperiments.js', function (error, stdout, stderr) {
 
@@ -108,7 +115,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('afterError.js', function (done) {
+    lab.test('afterError.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/afterError.js', function (error, stdout, stderr) {
 
@@ -119,7 +126,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('beforeError.js', function (done) {
+    lab.test('beforeError.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/beforeError.js', function (error, stdout, stderr) {
 
@@ -130,7 +137,7 @@ Lab.experiment('Examples', function () {
         });
     });
 
-    Lab.test('singleExperimentErrors.js', function (done) {
+    lab.test('singleExperimentErrors.js', function (done) {
 
         ChildProcess.exec('./bin/lab examples/singleExperimentErrors.js', function (error, stdout, stderr) {
 
@@ -140,5 +147,4 @@ Lab.experiment('Examples', function () {
             done();
         });
     });
-
 });

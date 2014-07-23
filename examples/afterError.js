@@ -1,13 +1,26 @@
-var Lab = require('../lib');
+// Load modules
 
-Lab.experiment('math', function () {
+var Lab = require('../');
 
-    Lab.after(function (done) {
+
+// Declare internals
+
+var internals = {};
+
+
+// Test shortcuts
+
+var lab = exports.lab = new Lab();
+
+
+lab.experiment('math', function () {
+
+    lab.after(function (done) {
 
         done(new Error('error'));
     });
 
-    Lab.test('returns true when 1 + 1 equals 2', function (done) {
+    lab.test('returns true when 1 + 1 equals 2', function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();

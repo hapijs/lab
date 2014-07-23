@@ -1,10 +1,22 @@
-var Lab = require('../lib');
+// Load modules
 
-var suite = Lab.experiment;
-var test = Lab.test;
+var Lab = require('../');
+
+
+// Declare internals
+
+var internals = {};
+
+
+// Test shortcuts
+
+var lab = exports.lab = new Lab();
+var suite = lab.experiment.bind(lab);
+var test = lab.test.bind(lab);
 var expect = Lab.expect;
-var before = Lab.before;
-var after = Lab.after;
+var before = lab.before.bind(lab);
+var after = lab.after.bind(lab);
+
 
 suite('math', function () {
 
