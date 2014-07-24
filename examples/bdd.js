@@ -10,11 +10,11 @@ var internals = {};
 
 // Test shortcuts
 
-var lab = exports.lab = new Lab();
-var describe = lab.describe.bind(lab);
-var it = lab.it.bind(lab);
-var before = lab.before.bind(lab);
-var after = lab.after.bind(lab);
+var lab = exports.lab = Lab.script();
+var describe = lab.describe;
+var it = lab.it;
+var before = lab.before;
+var after = lab.after;
 var expect = Lab.expect;
 
 

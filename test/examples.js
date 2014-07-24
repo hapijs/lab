@@ -11,7 +11,7 @@ var internals = {};
 
 // Test shortcuts
 
-var lab = exports.lab = new Lab();
+var lab = exports.lab = Lab.script();
 
 
 lab.experiment('Examples', function () {

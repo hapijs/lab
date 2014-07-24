@@ -10,7 +10,7 @@ var internals = {};
 
 // Test shortcuts
 
-var lab = exports.lab = new Lab();
+var lab = exports.lab = Lab.script();
 
 
 lab.test('returns true when 1 + 1 equals 2', function (done) {
