@@ -1,7 +1,7 @@
 test:
 	@node ./bin/_lab
 test-cov:
-	@node ./bin/_lab -t 100
+	@node ./bin/_lab -t 85
 test-cov-html:
 	@node ./bin/_lab -r html -o coverage.html
 

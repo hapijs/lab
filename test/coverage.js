@@ -24,7 +24,7 @@ describe('Coverage', function () {
 
     it('instruments and measures coverage', function (done) {
 
-        var options = { global: '__$$testCov' };
+        var options = { global: '__$$testCov1' };
         Lab.coverage.instrument(options);
         var Test = require('../coverage-test/basic');
 
@@ -43,8 +43,66 @@ describe('Coverage', function () {
             expect(notebook.failures).to.equal(0);
             var report = Lab.coverage.analyze(notebook, options);
             expect(report.percent).to.equal(100);
-            delete global.__$$testCov;
+            delete global.__$$testCov1;
 			done();
 		});
+    });
+
+    it('identifies lines with partial coverage', function (done) {
+
+        var options = { global: '__$$testCov2' };
+        Lab.coverage.instrument(options);
+        var Test = require('../coverage-test/partial');
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
+
+            script.test('value of a', function (finished) {
+
+                Test.method(1, 2, 3);
+                finished();
+            });
+        });
+
+        Lab.execute(script, { coverage: true }, null, function (err, notebook) {
+
+            expect(notebook.failures).to.equal(0);
+            var report = Lab.coverage.analyze(notebook, options);
+            expect(Math.floor(report.percent)).to.equal(69);
+            expect(report.sloc).to.equal(13);
+            expect(report.misses).to.equal(4);
+            expect(report.hits).to.equal(9);
+            delete global.__$$testCov2;
+            done();
+        });
+    });
+
+    it('bypasses marked code', function (done) {
+
+        var options = { global: '__$$testCov3' };
+        Lab.coverage.instrument(options);
+        var Test = require('../coverage-test/bypass');
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
+
+            script.test('value of a', function (finished) {
+
+                Test.method(1, 2, 3);
+                finished();
+            });
+        });
+
+        Lab.execute(script, { coverage: true }, null, function (err, notebook) {
+
+            expect(notebook.failures).to.equal(0);
+            var report = Lab.coverage.analyze(notebook, options);
+            expect(Math.floor(report.percent)).to.equal(100);
+            expect(report.sloc).to.equal(15);
+            expect(report.misses).to.equal(0);
+            expect(report.hits).to.equal(15);
+            delete global.__$$testCov3;
+            done();
+        });
     });
 });

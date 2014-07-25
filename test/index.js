@@ -180,6 +180,86 @@ describe('Lab', function () {
 		});
     });
 
+    it('executes multiple pre/post processors', function (done) {
+
+        var a = 0;
+        var b = 0;
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
+
+            script.before(function (finished) {
+
+                ++a;
+                finished();
+            });
+
+            script.before(function (finished) {
+
+                ++a;
+                finished();
+            });
+
+            script.beforeEach(function (finished) {
+
+                ++b;
+                finished();
+            });
+
+            script.beforeEach(function (finished) {
+
+                ++b;
+                finished();
+            });
+
+            script.test('value of a', function (finished) {
+
+                Lab.expect(a).to.equal(2);
+                Lab.expect(b).to.equal(2);
+                finished();
+            });
+
+            script.test('value of b', function (finished) {
+
+                Lab.expect(a).to.equal(2);
+                Lab.expect(b).to.equal(6);
+                finished();
+            });
+
+            script.after(function (finished) {
+
+                ++a;
+                finished();
+            });
+
+            script.after(function (finished) {
+
+                ++a;
+                finished();
+            });
+
+            script.afterEach(function (finished) {
+
+                ++b;
+                finished();
+            });
+
+            script.afterEach(function (finished) {
+
+                ++b;
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(a).to.equal(4);
+            expect(b).to.equal(8);
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('reports errors', function (done) {
 
         var script = Lab.script({ schedule: false });
@@ -198,5 +278,83 @@ describe('Lab', function () {
             expect(notebook.failures).to.equal(1);
             done();
         });
+    });
+
+    it('multiple experiments', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].id).to.equal(1);
+            expect(notebook.tests[1].id).to.equal(2);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips experiment', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', { skip: true }, function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('schedules automatic execution', { parallel: false }, function (done) {
+
+        var script = Lab.script({ level: 0, output: false });
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        var orig = process.exit;
+        process.exit = function (code) {
+
+            process.exit = orig;
+            expect(code).to.equal(0);
+            done();
+        };
     });
 });
