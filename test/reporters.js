@@ -1,7 +1,11 @@
 // Load modules
 
+var Crypto = require('crypto');
+var Fs = require('fs');
+var Os = require('os');
 var Path = require('path');
 var Stream = require('stream');
+var Tty = require('tty');
 var NodeUtil = require('util');
 var _Lab = require('../test_runner');
 var Lab = require('../');
@@ -23,7 +27,101 @@ var after = lab.after;
 var expect = _Lab.expect;
 
 
-describe('Reporters', function () {
+describe('Reporter', function () {
+
+    it('outputs to a stream', function (done) {
+
+        var Recorder = function () {
+
+            Stream.Writable.call(this);
+
+            this.content = '';
+        };
+
+        NodeUtil.inherits(Recorder, Stream.Writable);
+
+        Recorder.prototype._write = function (chunk, encoding, next) {
+
+            this.content += chunk.toString();
+            next();
+        };
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        var recorder = new Recorder();
+        Lab.report(script, { output: recorder }, function (err, code, output) {
+
+            expect(err).to.not.exist;
+            expect(code).to.equal(0);
+            expect(output).to.equal(recorder.content);
+            done();
+        });
+    });
+
+    it('outputs to a file', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        var filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+        Lab.report(script, { output: filename }, function (err, code, output) {
+
+            expect(err).to.not.exist;
+            expect(code).to.equal(0);
+            expect(output).to.equal(Fs.readFileSync(filename).toString());
+            Fs.unlinkSync(filename);
+            done();
+        });
+    });
+
+    it('exists with error code when coverage threshold is not met', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', coverage: true, threshold: 50 });
+        var notebook = {
+            tests: [],
+            coverage: {
+                percent: 30,
+                files: []
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            done();
+        });
+    });
+
+    it('exists with success code when coverage threshold is met', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', coverage: true, threshold: 50 });
+        var notebook = {
+            tests: [],
+            coverage: {
+                percent: 60,
+                files: []
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(0);
+            done();
+        });
+    });
 
     describe('console', function () {
 
@@ -39,11 +137,11 @@ describe('Reporters', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', output: false, level: 0 }, function (err, code, output) {
+            Lab.report(script, { reporter: 'console' }, function (err, code, output) {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(0);
-                expect(output).to.match(/^Test duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
+                expect(output).to.match(/^\n  \n  \.\n\nTest duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -60,11 +158,284 @@ describe('Reporters', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', output: false, level: 0 }, function (err, code, output) {
+            global.x1 = true;
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                delete global.x1;
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works\:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal false\n\n      at \<trace\>\n\n\n The following leaks were detected:\n\nx1\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with multiline diff', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(['a', 'b']).to.deep.equal(['a', 'c']);
+                    finished();
+                });
+            });
+
+            global.x1 = true;
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                delete global.x1;
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works\:\n\n      actual expected\n\n      \[\n        "a",\n        "cb"\n      \]\n\n      expected \[ \'a\', \'b\' \] to deeply equal \[ \'a\', \'c\' \]\n\n      at <trace>\n\n\n The following leaks were detected:\n\nx1\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with caught error', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(function () {
+
+                        throw new Error('boom');
+                    }).to.not.throw();
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, function (err, code, output) {
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nTest duration: \d+ ms\n\n1 of 1 tests failed:\n\n  1\) test works:\n\n      AssertionError: expected \[Function\] to not throw an error but \'Error: boom\' was thrown\n\n      at <trace>\n\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with plain Error', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    throw new Error();
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                expect(output).to.contain('expected true to equal false');
+                var result = output.replace(/at .+\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works\:\n\n      \n\n  Error\n      at <trace>\n      at <trace>\n      at <trace>\n      at <trace>\n      at <trace>\n      at <trace>\n\n\n No global variable leaks detected\.\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with timeout', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {});
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false, timeout: 1 }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works:\n\n      Error\: Timed out \(\d+ms\)\n\n\n\n No global variable leaks detected\.\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report without progress', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', progress: 0 }, function (err, code, output) {
+
+                expect(output).to.match(/^Test duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with verbose progress', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
+
+                expect(output).to.match(/^test\n  \u001b\[32m\u2714\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\nTest duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a coverage report (verbose)', function (done) {
+
+            var options = { global: '__$$testCovConsole' };
+            Lab.coverage.instrument(options);
+            var Test = require('../coverage-test/console');
+            var Full = require('../coverage-test/console-full');
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(1, 2, 3);
+                    Full.method(1);
+                    finished();
+                });
+
+                script.test('diff', function (finished) {
+
+                    Lab.expect('abcd').to.equal('cdfg');
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', coverage: true, coverageGlobal: '__$$testCovConsole' }, function (err, code, output) {
+
+                expect(output).to.contain('__$$testCovConsole');
+                expect(output).to.contain('Coverage: 78.95%');
+                expect(output).to.contain('coverage-test/console.js missing coverage on line(s): 12, 15, 16, 19');
+                expect(output).to.not.contain('console-full');
+                delete global.__$$testCovConsole;
+                done();
+            });
+        });
+
+        it('reports 100% coverage', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'console', coverage: true });
+            var notebook = {
+                tests: [],
+                coverage: {
+                    percent: 100,
+                    files: []
+                }
+            };
+
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('Coverage: 100.00%');
+                done();
+            });
+        });
+
+        it('generates a report with multiline progress', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                for (var i = 0; i < 30; ++i) {
+                    script.test('works', function (finished) {
+
+                        Lab.expect(true).to.equal(true);
+                        finished();
+                    });
+
+                    script.test('fails', function (finished) {
+
+                        Lab.expect(true).to.equal(false);
+                        finished();
+                    });
+
+                    script.test('skips', { skip: true }, function (finished) {
+
+                        finished();
+                    });
+                }
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                expect(output).to.contain('.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x\n  -.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-');
+                done();
+            });
+        });
+
+        it('generates a report with verbose progress', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+               script.test('works', function (finished) {
+
+                    finished();
+                });
+
+                script.test('fails', function (finished) {
+
+                    finished('boom');
+                });
+
+                script.test('skips', { skip: true }, function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false, progress: 2 }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                expect(output).to.match(/test\n  ✔ 1\) works \(\d+ ms\)\n  ✖2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
+                done();
+            });
+        });
+
+        it('excludes colors when terminal does not support', { parallel: false }, function (done) {
+
+            var orig = Tty.isatty;
+            Tty.isatty = function () {
+
+                Tty.isatty = orig;
+                return false;
+            };
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(true).to.equal(true);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console' }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(0);
+                expect(output).to.match(/^\n  \n  \.\n\nTest duration\: \d+ ms\n\n1 tests complete\n\n No global variable leaks detected\.\n\n$/);
                 done();
             });
         });
@@ -95,7 +466,7 @@ describe('Reporters', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'json', output: false, level: 0 }, function (err, code, output) {
+            Lab.report(script, { reporter: 'json' }, function (err, code, output) {
 
                 var result = JSON.parse(output);
                 expect(err).to.not.exist;
@@ -129,7 +500,7 @@ describe('Reporters', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'json', output: false, level: 0, coverage: true, coverageGlobal: '__$$testCovJson' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'json', coverage: true, coverageGlobal: '__$$testCovJson' }, function (err, code, output) {
 
                 var result = JSON.parse(output);
                 expect(result.coverage.percent).to.equal(100);
@@ -157,7 +528,7 @@ describe('Reporters', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', output: false, level: 0, coverage: true, coverageGlobal: '__$$testCovHtml' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'html', coverage: true, coverageGlobal: '__$$testCovHtml' }, function (err, code, output) {
 
                 expect(output).to.contain('<div class="stats medium">');
                 expect(output).to.contain('<span class="cov medium">69.23</span>');
@@ -193,12 +564,14 @@ describe('Reporters', function () {
                 }
             };
 
-            var output = reporter.end(notebook);
-            expect(output).to.contain('<span class="cov terrible">10</span>');
-            expect(output).to.contain('<span class="cov terrible">10.12</span>');
-            expect(output).to.contain('<span class="cov high">76</span>');
-            expect(output).to.contain('<span class="cov low">26</span>');
-            done();
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('<span class="cov terrible">10</span>');
+                expect(output).to.contain('<span class="cov terrible">10.12</span>');
+                expect(output).to.contain('<span class="cov high">76</span>');
+                expect(output).to.contain('<span class="cov low">26</span>');
+                done();
+            });
         });
 
         it('tags total percentile (terrible)', function (done) {
@@ -216,9 +589,11 @@ describe('Reporters', function () {
                 }
             };
 
-            var output = reporter.end(notebook);
-            expect(output).to.contain('<span class="cov terrible">10</span>');
-            done();
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('<span class="cov terrible">10</span>');
+                done();
+            });
         });
 
         it('tags total percentile (high)', function (done) {
@@ -236,9 +611,11 @@ describe('Reporters', function () {
                 }
             };
 
-            var output = reporter.end(notebook);
-            expect(output).to.contain('<span class="cov high">80</span>');
-            done();
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('<span class="cov high">80</span>');
+                done();
+            });
         });
     });
 
@@ -274,33 +651,14 @@ describe('Reporters', function () {
                 });
             });
 
-            var recorder = new internals.Recorder();
-            Lab.report(script, { reporter: 'tap', output: recorder, level: 0 }, function (err, code, output) {
+            Lab.report(script, { reporter: 'tap' }, function (err, code, output) {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                expect(output).to.equal('');
-                var result = recorder.content.replace(/  .*\n/g, '<trace>');
+                var result = output.replace(/  .*\n/g, '<trace>');
                 expect(result).to.equal('1..0\nok 1 (1) test works\nok 2 SKIP (2) test skip\nok 3 TODO (3) test todo\nnot ok 4 (4) test fails\n<trace><trace><trace><trace><trace><trace><trace><trace><trace>not ok 5 (5) test fails with non-error\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
                 done();
             });
         });
     });
 });
-
-
-internals.Recorder = function () {
-
-    Stream.Writable.call(this);
-
-    this.content = '';
-};
-
-NodeUtil.inherits(internals.Recorder, Stream.Writable);
-
-internals.Recorder.prototype._write = function (chunk, encoding, next) {
-
-    this.content += chunk.toString();
-    next();
-};
-

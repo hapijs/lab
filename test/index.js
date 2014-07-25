@@ -340,7 +340,7 @@ describe('Lab', function () {
 
     it('schedules automatic execution', { parallel: false }, function (done) {
 
-        var script = Lab.script({ level: 0, output: false });
+        var script = Lab.script();
         script.experiment('test', function () {
 
             script.test('works', function (finished) {
