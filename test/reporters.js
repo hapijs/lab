@@ -69,6 +69,75 @@ describe('Reporters', function () {
         });
     });
 
+    describe('json', function () {
+
+        it('generates a report', function (done) {
+
+            var script = Lab.script();
+            script.experiment('group', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(true).to.equal(true);
+                    finished();
+                });
+
+                script.test('fails', function (finished) {
+
+                    Lab.expect(true).to.equal(false);
+                    finished();
+                });
+
+                script.test('fails with non-error', function (finished) {
+
+                    finished('boom');
+                });
+            });
+
+            Lab.report(script, { reporter: 'json', output: false, level: 0 }, function (err, code, output) {
+
+                var result = JSON.parse(output);
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+                expect(result.tests.group.length).to.equal(3);
+                expect(result.tests.group[0].title).to.equal('works');
+                expect(result.tests.group[0].err).to.equal(false);
+                expect(result.tests.group[1].title).to.equal('fails');
+                expect(result.tests.group[1].err).to.equal('expected true to equal false');
+                expect(result.tests.group[2].title).to.equal('fails with non-error');
+                expect(result.tests.group[2].err).to.equal(true);
+                expect(result.leaks.length).to.equal(0);
+                expect(result.duration).to.exist;
+                done();
+            });
+        });
+
+        it('generates a report with coverage', function (done) {
+
+            var options = { global: '__$$testCovJson' };
+            Lab.coverage.instrument(options);
+            var Test = require('../coverage-test/json');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('value of a', function (finished) {
+
+                    Lab.expect(Test.method(1)).to.equal(1);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'json', output: false, level: 0, coverage: true, coverageGlobal: '__$$testCovJson' }, function (err, code, output) {
+
+                var result = JSON.parse(output);
+                expect(result.coverage.percent).to.equal(100);
+                delete global.__$$testCovJson;
+                done();
+            });
+        });
+    });
+
     describe('tap', function () {
 
         var Recorder = function () {
