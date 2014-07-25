@@ -5,6 +5,7 @@ var Stream = require('stream');
 var NodeUtil = require('util');
 var _Lab = require('../test_runner');
 var Lab = require('../');
+var Reporters = require('../lib/reporters');
 
 
 // Declare internals
@@ -138,22 +139,110 @@ describe('Reporters', function () {
         });
     });
 
+    describe('html', function () {
+
+        it('generates a coverage report', function (done) {
+
+            var options = { global: '__$$testCovHtml' };
+            Lab.coverage.instrument(options);
+            var Test = require('../coverage-test/html');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(1, 2, 3);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', output: false, level: 0, coverage: true, coverageGlobal: '__$$testCovHtml' }, function (err, code, output) {
+
+                expect(output).to.contain('<div class="stats medium">');
+                expect(output).to.contain('<span class="cov medium">69.23</span>');
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('tags file percentile based on levels', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'html' });
+            var notebook = {
+                coverage: {
+                    percent: 30,
+                    files: [
+                        {
+                            filename: 'a',
+                            percent: 10
+                        },
+                        {
+                            filename: 'b',
+                            percent: 10.1234
+                        },
+                        {
+                            filename: 'c',
+                            percent: 76
+                        },
+                        {
+                            filename: 'd',
+                            percent: 26
+                        }
+                    ]
+                }
+            };
+
+            var output = reporter.end(notebook);
+            expect(output).to.contain('<span class="cov terrible">10</span>');
+            expect(output).to.contain('<span class="cov terrible">10.12</span>');
+            expect(output).to.contain('<span class="cov high">76</span>');
+            expect(output).to.contain('<span class="cov low">26</span>');
+            done();
+        });
+
+        it('tags total percentile (terrible)', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'html' });
+            var notebook = {
+                coverage: {
+                    percent: 10,
+                    files: [
+                        {
+                            filename: 'a',
+                            percent: 10
+                        }
+                    ]
+                }
+            };
+
+            var output = reporter.end(notebook);
+            expect(output).to.contain('<span class="cov terrible">10</span>');
+            done();
+        });
+
+        it('tags total percentile (high)', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'html' });
+            var notebook = {
+                coverage: {
+                    percent: 80,
+                    files: [
+                        {
+                            filename: 'a',
+                            percent: 80
+                        }
+                    ]
+                }
+            };
+
+            var output = reporter.end(notebook);
+            expect(output).to.contain('<span class="cov high">80</span>');
+            done();
+        });
+    });
+
     describe('tap', function () {
-
-        var Recorder = function () {
-
-            Stream.Writable.call(this);
-
-            this.content = '';
-        };
-
-        NodeUtil.inherits(Recorder, Stream.Writable);
-
-        Recorder.prototype._write = function (chunk, encoding, next) {
-
-            this.content += chunk.toString();
-            next();
-        };
 
         it('generates a report', function (done) {
 
@@ -185,7 +274,7 @@ describe('Reporters', function () {
                 });
             });
 
-            var recorder = new Recorder();
+            var recorder = new internals.Recorder();
             Lab.report(script, { reporter: 'tap', output: recorder, level: 0 }, function (err, code, output) {
 
                 expect(err).to.not.exist;
@@ -198,3 +287,20 @@ describe('Reporters', function () {
         });
     });
 });
+
+
+internals.Recorder = function () {
+
+    Stream.Writable.call(this);
+
+    this.content = '';
+};
+
+NodeUtil.inherits(internals.Recorder, Stream.Writable);
+
+internals.Recorder.prototype._write = function (chunk, encoding, next) {
+
+    this.content += chunk.toString();
+    next();
+};
+
