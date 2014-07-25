@@ -179,4 +179,24 @@ describe('Lab', function () {
 			done();
 		});
     });
+
+    it('reports errors', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                Lab.expect(0).to.equal(1);
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            done();
+        });
+    });
 });

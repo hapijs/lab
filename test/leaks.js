@@ -26,8 +26,8 @@ describe('Leaks', function () {
 
         global.abc = 1;
         var leaks = Lab.leaks.detect();
-        expect(leaks.length).to.equal(1);
         delete global.abc;
+        expect(leaks.length).to.equal(1);
         done();
     });
 
@@ -42,8 +42,8 @@ describe('Leaks', function () {
 
         global.DTRACE_HTTP_SERVER_RESPONSE = 1;
         var leaks = Lab.leaks.detect();
-        expect(leaks.length).to.equal(0);
         delete global.DTRACE_HTTP_SERVER_RESPONSE;
+        expect(leaks.length).to.equal(0);
         done();
     });
 
@@ -51,8 +51,8 @@ describe('Leaks', function () {
 
         global.COUNTER_NET_SERVER_CONNECTION = 1;
         var leaks = Lab.leaks.detect();
-        expect(leaks.length).to.equal(0);
         delete global.COUNTER_NET_SERVER_CONNECTION;
+        expect(leaks.length).to.equal(0);
         done();
     });
 
@@ -60,8 +60,8 @@ describe('Leaks', function () {
 
         global.abc = 1;
         var leaks = Lab.leaks.detect(['abc']);
-        expect(leaks.length).to.equal(0);
         delete global.abc;
+        expect(leaks.length).to.equal(0);
         done();
     });
 });
