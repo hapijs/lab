@@ -1,5 +1,6 @@
 // Load modules
 
+var Os = require('os');
 var Path = require('path');
 var _Lab = require('../test_runner');
 var Lab = require('../');
@@ -81,6 +82,7 @@ describe('Coverage', function () {
 
         var options = { coverageVar: '__$$testCov3' };
         var Test = Lab.coverage.load(Path.join(__dirname, './coverage/bypass.js'), options);
+        Lab.coverage.cleanup();
         Test.method(1, 2, 3);
 
         var report = Lab.coverage.analyze(options);
@@ -89,6 +91,34 @@ describe('Coverage', function () {
         expect(report.misses).to.equal(0);
         expect(report.hits).to.equal(15);
         delete global.__$$testCov3;
+        done();
+    });
+
+    it('ignores non-matching files', function (done) {
+
+        var options = { coverageVar: '__$$testCov4', path: Path.join(__dirname, './coverage/never_match') };
+        Lab.coverage.instrument(options);
+
+        var Test = require('./coverage/ignore');
+        var report = Lab.coverage.analyze(options);
+        expect(Math.floor(report.percent)).to.equal(0);
+        expect(report.files).to.have.length(0);
+        delete global.__$$testCov4;
+        done();
+    });
+
+    it('load using defaults', function (done) {
+
+        var Test = Lab.coverage.load(Path.join(__dirname, './coverage/bypass.js'));
+        Lab.coverage.cleanup();
+        var files = Object.keys(global.__$$labCov.files);
+        var temps = files.filter(function (file) {
+
+            return file.indexOf(Os.tmpDir()) === 0;
+        });
+
+        expect(temps).to.have.length(1);
+        delete global.__$$labCov.files[temps[0]];
         done();
     });
 });

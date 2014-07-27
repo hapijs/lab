@@ -13,7 +13,7 @@ exports.method = function (a, b, c) {
 		d += 1;
 	}
 	else if (c > 10) {
-		d += 1;
+		d += (a ? b : c);
 	}
 
 	return d + (a || b || c);
