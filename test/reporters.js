@@ -246,7 +246,7 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-                script.test('works', function (finished) {});
+                script.test('works', function (finished) { });
             });
 
             Lab.report(script, { reporter: 'console', colors: false, timeout: 1 }, function (err, code, output) {
@@ -297,10 +297,10 @@ describe('Reporter', function () {
 
         it('generates a coverage report (verbose)', function (done) {
 
-            var options = { global: '__$$testCovConsole' };
+            var options = { coverageVar: '__$$testCovConsole', path: Path.join(__dirname, './coverage/console') };
             Lab.coverage.instrument(options);
-            var Test = require('../coverage-test/console');
-            var Full = require('../coverage-test/console-full');
+            var Test = require('./coverage/console');
+            var Full = require('./coverage/console-full');
 
             var script = Lab.script();
             script.experiment('test', function () {
@@ -319,11 +319,11 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coverageGlobal: '__$$testCovConsole' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'console', coverage: true, coverageVar: '__$$testCovConsole' }, function (err, code, output) {
 
                 expect(output).to.contain('__$$testCovConsole');
                 expect(output).to.contain('Coverage: 78.95%');
-                expect(output).to.contain('coverage-test/console.js missing coverage on line(s): 12, 15, 16, 19');
+                expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 12, 15, 16, 19');
                 expect(output).to.not.contain('console-full');
                 delete global.__$$testCovConsole;
                 done();
@@ -387,7 +387,7 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-               script.test('works', function (finished) {
+                script.test('works', function (finished) {
 
                     finished();
                 });
@@ -486,9 +486,9 @@ describe('Reporter', function () {
 
         it('generates a report with coverage', function (done) {
 
-            var options = { global: '__$$testCovJson' };
+            var options = { coverageVar: '__$$testCovJson', path: Path.join(__dirname, './coverage/json') };
             Lab.coverage.instrument(options);
-            var Test = require('../coverage-test/json');
+            var Test = require('./coverage/json');
 
             var script = Lab.script({ schedule: false });
             script.experiment('test', function () {
@@ -500,7 +500,7 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'json', coverage: true, coverageGlobal: '__$$testCovJson' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'json', coverage: true, coverageVar: '__$$testCovJson' }, function (err, code, output) {
 
                 var result = JSON.parse(output);
                 expect(result.coverage.percent).to.equal(100);
@@ -514,9 +514,9 @@ describe('Reporter', function () {
 
         it('generates a coverage report', function (done) {
 
-            var options = { global: '__$$testCovHtml' };
+            var options = { coverageVar: '__$$testCovHtml', path: Path.join(__dirname, './coverage/html') };
             Lab.coverage.instrument(options);
-            var Test = require('../coverage-test/html');
+            var Test = require('./coverage/html');
 
             var script = Lab.script({ schedule: false });
             script.experiment('test', function () {
@@ -528,7 +528,7 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coverageGlobal: '__$$testCovHtml' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'html', coverage: true, coverageVar: '__$$testCovHtml' }, function (err, code, output) {
 
                 expect(output).to.contain('<div class="stats medium">');
                 expect(output).to.contain('<span class="cov medium">69.23</span>');

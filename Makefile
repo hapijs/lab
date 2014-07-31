@@ -1,8 +1,8 @@
 test:
-	@node ./bin/_lab
+	@node ./bin/_lab -f
 test-cov:
-	@node ./bin/_lab -t 85
+	@node ./bin/_lab -f -t 85
 test-cov-html:
-	@node ./bin/_lab -r html -o coverage.html
+	@node ./bin/_lab -f -r html -o coverage.html
 
 .PHONY: test test-cov test-cov-html

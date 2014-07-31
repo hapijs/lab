@@ -23,161 +23,161 @@ describe('Lab', function () {
 
     it('creates a script and executes', function (done) {
 
-		var a = 0;
-    	var script = Lab.script({ schedule: false });
-    	script.experiment('test', function () {
+        var a = 0;
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
 
-    		script.before(function (finished) {
+            script.before(function (finished) {
 
-    			++a;
-    			finished();
-    		});
+                ++a;
+                finished();
+            });
 
-    		script.test('value of a', function (finished) {
+            script.test('value of a', function (finished) {
 
-    			Lab.expect(a).to.equal(1);
-    			finished();
-    		});
+                Lab.expect(a).to.equal(1);
+                finished();
+            });
 
-    		script.after(function (finished) {
+            script.after(function (finished) {
 
-    			++a;
-    			finished();
-    		});
-    	});
+                ++a;
+                finished();
+            });
+        });
 
-    	Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, function (err, notebook) {
 
-    		expect(a).to.equal(2);
-    		expect(notebook.tests).to.have.length(1);
-    		expect(notebook.tests[0].id).to.equal(1);
-    		expect(notebook.failures).to.equal(0);
-			done();
-		});
+            expect(a).to.equal(2);
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.tests[0].id).to.equal(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
     });
 
     it('creates a script and executes (BDD)', function (done) {
 
-		var a = 0;
-    	var script = Lab.script({ schedule: false });
-    	script.describe('test', function () {
+        var a = 0;
+        var script = Lab.script({ schedule: false });
+        script.describe('test', function () {
 
-    		script.before(function (finished) {
+            script.before(function (finished) {
 
-    			++a;
-    			finished();
-    		});
+                ++a;
+                finished();
+            });
 
-    		script.it('value of a', function (finished) {
+            script.it('value of a', function (finished) {
 
-    			Lab.expect(a).to.equal(1);
-    			finished();
-    		});
+                Lab.expect(a).to.equal(1);
+                finished();
+            });
 
-    		script.after(function (finished) {
+            script.after(function (finished) {
 
-    			++a;
-    			finished();
-    		});
-    	});
+                ++a;
+                finished();
+            });
+        });
 
-    	Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, function (err, notebook) {
 
-    		expect(a).to.equal(2);
-    		expect(notebook.tests).to.have.length(1);
-    		expect(notebook.failures).to.equal(0);
-			done();
-		});
+            expect(a).to.equal(2);
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
     });
 
     it('creates a script and executes (TDD)', function (done) {
 
-		var a = 0;
-    	var script = Lab.script({ schedule: false });
-    	script.suite('test', function () {
+        var a = 0;
+        var script = Lab.script({ schedule: false });
+        script.suite('test', function () {
 
-    		script.before(function (finished) {
+            script.before(function (finished) {
 
-    			++a;
-    			finished();
-    		});
+                ++a;
+                finished();
+            });
 
-    		script.test('value of a', function (finished) {
+            script.test('value of a', function (finished) {
 
-    			Lab.expect(a).to.equal(1);
-    			finished();
-    		});
+                Lab.expect(a).to.equal(1);
+                finished();
+            });
 
-    		script.after(function (finished) {
+            script.after(function (finished) {
 
-    			++a;
-    			finished();
-    		});
-    	});
+                ++a;
+                finished();
+            });
+        });
 
-    	Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, function (err, notebook) {
 
-    		expect(a).to.equal(2);
-    		expect(notebook.tests).to.have.length(1);
-    		expect(notebook.failures).to.equal(0);
-			done();
-		});
+            expect(a).to.equal(2);
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
     });
 
     it('executes beforeEach and afterEach', function (done) {
 
-		var a = 0;
-		var b = 0;
-    	var script = Lab.script({ schedule: false });
-    	script.experiment('test', function () {
+        var a = 0;
+        var b = 0;
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
 
-    		script.before(function (finished) {
+            script.before(function (finished) {
 
-    			++a;
-    			finished();
-    		});
+                ++a;
+                finished();
+            });
 
-    		script.beforeEach(function (finished) {
+            script.beforeEach(function (finished) {
 
-    			++b;
-    			finished();
-    		});
+                ++b;
+                finished();
+            });
 
-    		script.test('value of a', function (finished) {
+            script.test('value of a', function (finished) {
 
-    			Lab.expect(a).to.equal(1);
-    			Lab.expect(b).to.equal(1);
-    			finished();
-    		});
+                Lab.expect(a).to.equal(1);
+                Lab.expect(b).to.equal(1);
+                finished();
+            });
 
-    		script.test('value of b', function (finished) {
+            script.test('value of b', function (finished) {
 
-    			Lab.expect(a).to.equal(1);
-    			Lab.expect(b).to.equal(3);
-    			finished();
-    		});
+                Lab.expect(a).to.equal(1);
+                Lab.expect(b).to.equal(3);
+                finished();
+            });
 
-    		script.after(function (finished) {
+            script.after(function (finished) {
 
-    			++a;
-    			finished();
-    		});
+                ++a;
+                finished();
+            });
 
-    		script.afterEach(function (finished) {
+            script.afterEach(function (finished) {
 
-    			++b;
-    			finished();
-    		});
-    	});
+                ++b;
+                finished();
+            });
+        });
 
-    	Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, function (err, notebook) {
 
-    		expect(a).to.equal(2);
-    		expect(b).to.equal(4);
-    		expect(notebook.tests).to.have.length(2);
-    		expect(notebook.failures).to.equal(0);
-			done();
-		});
+            expect(a).to.equal(2);
+            expect(b).to.equal(4);
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
     });
 
     it('executes multiple pre/post processors', function (done) {
