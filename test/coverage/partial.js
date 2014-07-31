@@ -32,9 +32,27 @@ exports.method = function (a, b, c) {
 
     var h = false || a;
 
-    for (var i = 0; i < 3; ++i) {
+    for (var i = 0;
+        i < 3;
+        ++i) {
 
     }
+
+    if (a ||
+        b ||
+        (c ? 
+        d :
+        e)) {
+
+        ++a;
+    }
+
+    var n = false ?
+        a
+        +
+        b
+        :
+        0;
 
     var j = [1, 2, 3];
     var l = 0;

@@ -22,15 +22,16 @@ var expect = _Lab.expect;
 
 describe('Coverage', function () {
 
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage'), coverageExclude: 'exclude' });
+    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+    require('./coverage/prime');        // Initialize global container
 
     it('instruments and measures coverage', function (done) {
 
         var Test = require('./coverage/basic');
         Test.method(1);
 
-        var report = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, './coverage/basic') });
-        expect(report.percent).to.equal(100);
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/basic') });
+        expect(cov.percent).to.equal(100);
         done();
     });
 
@@ -39,11 +40,11 @@ describe('Coverage', function () {
         var Test = require('./coverage/partial');
         Test.method(1, 2, 3);
 
-        var report = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, './coverage/partial') });
-        expect(Math.floor(report.percent)).to.equal(65);
-        expect(report.sloc).to.equal(32);
-        expect(report.misses).to.equal(11);
-        expect(report.hits).to.equal(21);
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
+        expect(Math.floor(cov.percent)).to.equal(59);
+        expect(cov.sloc).to.equal(47);
+        expect(cov.misses).to.equal(19);
+        expect(cov.hits).to.equal(28);
         done();
     });
 
@@ -52,11 +53,11 @@ describe('Coverage', function () {
         var Test = require('./coverage/bypass');
         Test.method(1, 2, 3);
 
-        var report = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, './coverage/bypass') });
-        expect(Math.floor(report.percent)).to.equal(100);
-        expect(report.sloc).to.equal(15);
-        expect(report.misses).to.equal(0);
-        expect(report.hits).to.equal(15);
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(15);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(15);
         done();
     });
 
@@ -64,9 +65,31 @@ describe('Coverage', function () {
 
         var Test = require('./coverage/exclude/ignore');
 
-        var report = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, './coverage/exclude/ignore') });
-        expect(Math.floor(report.percent)).to.equal(0);
-        expect(report.files).to.have.length(0);
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/exclude/ignore') });
+        expect(Math.floor(cov.percent)).to.equal(0);
+        expect(cov.files).to.have.length(0);
         done();
+    });
+
+    describe('#analyze', function () {
+
+        it('sorts file paths in report', function (done) {
+
+            var files = global.__$$labCov.files;
+            var paths = ['/a/b', '/a/b/c', '/a/c/b', '/a/c', '/a/b/c', '/a/b/a'];
+            paths.forEach(function (path) {
+
+                files[path] = { source: [] };
+            });
+
+            var cov = Lab.coverage.analyze({ coveragePath: '/a' });
+            var sorted = cov.files.map(function (file) {
+
+                return file.filename;
+            });
+
+            expect(sorted).to.deep.equal(['/a/b', '/a/c', '/a/b/a', '/a/b/c', '/a/c/b']);
+            done();
+        });
     });
 });
