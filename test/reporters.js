@@ -29,6 +29,8 @@ var expect = _Lab.expect;
 
 describe('Reporter', function () {
 
+    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage/'), coverageExclude: 'exclude' });
+
     it('outputs to a stream', function (done) {
 
         var Recorder = function () {
@@ -83,6 +85,25 @@ describe('Reporter', function () {
             expect(code).to.equal(0);
             expect(output).to.equal(Fs.readFileSync(filename).toString());
             Fs.unlinkSync(filename);
+            done();
+        });
+    });
+
+    it('exists with error code when leak detected', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console' });
+        var notebook = {
+            tests: [],
+            coverage: {
+                percent: 30,
+                files: []
+            },
+            leaks: ['something']
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(1);
             done();
         });
     });
@@ -297,8 +318,6 @@ describe('Reporter', function () {
 
         it('generates a coverage report (verbose)', function (done) {
 
-            var options = { coverageVar: '__$$testCovConsole', path: Path.join(__dirname, './coverage/console') };
-            Lab.coverage.instrument(options);
             var Test = require('./coverage/console');
             var Full = require('./coverage/console-full');
 
@@ -319,13 +338,11 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coverageVar: '__$$testCovConsole' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console') }, function (err, code, output) {
 
-                expect(output).to.contain('__$$testCovConsole');
                 expect(output).to.contain('Coverage: 78.95%');
                 expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 12, 15, 16, 19');
                 expect(output).to.not.contain('console-full');
-                delete global.__$$testCovConsole;
                 done();
             });
         });
@@ -486,8 +503,6 @@ describe('Reporter', function () {
 
         it('generates a report with coverage', function (done) {
 
-            var options = { coverageVar: '__$$testCovJson', path: Path.join(__dirname, './coverage/json') };
-            Lab.coverage.instrument(options);
             var Test = require('./coverage/json');
 
             var script = Lab.script({ schedule: false });
@@ -500,11 +515,10 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'json', coverage: true, coverageVar: '__$$testCovJson' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json') }, function (err, code, output) {
 
                 var result = JSON.parse(output);
                 expect(result.coverage.percent).to.equal(100);
-                delete global.__$$testCovJson;
                 done();
             });
         });
@@ -514,8 +528,6 @@ describe('Reporter', function () {
 
         it('generates a coverage report', function (done) {
 
-            var options = { coverageVar: '__$$testCovHtml', path: Path.join(__dirname, './coverage/html') };
-            Lab.coverage.instrument(options);
             var Test = require('./coverage/html');
 
             var script = Lab.script({ schedule: false });
@@ -528,7 +540,7 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coverageVar: '__$$testCovHtml' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html') }, function (err, code, output) {
 
                 expect(output).to.contain('<div class="stats medium">');
                 expect(output).to.contain('<span class="cov medium">69.23</span>');
