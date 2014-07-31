@@ -40,10 +40,10 @@ describe('Coverage', function () {
         Test.method(1, 2, 3);
 
         var report = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, './coverage/partial') });
-        expect(Math.floor(report.percent)).to.equal(69);
-        expect(report.sloc).to.equal(13);
-        expect(report.misses).to.equal(4);
-        expect(report.hits).to.equal(9);
+        expect(Math.floor(report.percent)).to.equal(65);
+        expect(report.sloc).to.equal(32);
+        expect(report.misses).to.equal(11);
+        expect(report.hits).to.equal(21);
         done();
     });
 
