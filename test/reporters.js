@@ -162,7 +162,7 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(0);
-                expect(output).to.match(/^\n  \n  \.\n\nTest duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
+                expect(output).to.match(/^\n  \n  .\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -186,7 +186,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works\:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal false\n\n      at \<trace\>\n\n\n The following leaks were detected:\n\nx1\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -210,7 +210,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works\:\n\n      actual expected\n\n      \[\n        "a",\n        "cb"\n      \]\n\n      expected \[ \'a\', \'b\' \] to deeply equal \[ \'a\', \'c\' \]\n\n      at <trace>\n\n\n The following leaks were detected:\n\nx1\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"cb\"\n      \]\n\n      expected \[ 'a', 'b' \] to deeply equal \[ 'a', 'c' \]\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -235,7 +235,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                expect(result).to.match(/^\n  \n  x\n\nTest duration: \d+ ms\n\n1 of 1 tests failed:\n\n  1\) test works:\n\n      AssertionError: expected \[Function\] to not throw an error but \'Error: boom\' was thrown\n\n      at <trace>\n\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      AssertionError: expected \[Function\] to not throw an error but 'Error: boom' was thrown\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
                 done();
             });
         });
@@ -247,7 +247,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    throw new Error();
+                    throw new Error('Error Message');
                     finished();
                 });
             });
@@ -257,7 +257,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
                 var result = output.replace(/at .+\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works\:\n\n      \n\n  Error\n      at <trace>\n      at <trace>\n      at <trace>\n      at <trace>\n      at <trace>\n      at <trace>\n\n\n No global variable leaks detected\.\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Error Message\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -275,7 +275,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                expect(result).to.match(/^\n  \n  x\n\nTest duration\: \d+ ms\n\n1 of 1 tests failed\:\n\n  1\) test works:\n\n      Error\: Timed out \(\d+ms\)\n\n\n\n No global variable leaks detected\.\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Timed out \(\d+ms\)\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -293,7 +293,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', progress: 0 }, function (err, code, output) {
 
-                expect(output).to.match(/^Test duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
+                expect(output).to.match(/^\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -311,7 +311,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
 
-                expect(output).to.match(/^test\n  \u001b\[32m\u2714\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\nTest duration\: \d+ ms\n\n\u001b\[32m1 tests complete\u001b\[0m\n\n\u001b\[32m No global variable leaks detected\.\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -452,7 +452,7 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(0);
-                expect(output).to.match(/^\n  \n  \.\n\nTest duration\: \d+ ms\n\n1 tests complete\n\n No global variable leaks detected\.\n\n$/);
+                expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -670,7 +670,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
                 var result = output.replace(/  .*\n/g, '<trace>');
-                expect(result).to.equal('1..5\nok 1 (1) test works\nok 2 SKIP (2) test skip\nok 3 TODO (3) test todo\nnot ok 4 (4) test fails\n<trace><trace><trace><trace><trace><trace><trace><trace><trace>not ok 5 (5) test fails with non-error\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
+                expect(result).to.equal('1..5\nok 1 (1) test works\nok 2 SKIP (2) test skip\nok 3 TODO (3) test todo\nnot ok 4 (4) test fails\n<trace><trace><trace><trace><trace><trace>not ok 5 (5) test fails with non-error\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
                 done();
             });
         });
