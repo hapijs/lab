@@ -31,6 +31,15 @@ describe('Leaks', function () {
         done();
     });
 
+    it('identifies global leaks for non-enumerable properties', function (done) {
+
+        Object.defineProperty(global, 'abc', { enumerable: false, configurable: true });
+        var leaks = Lab.leaks.detect();
+        delete global.abc;
+        expect(leaks.length).to.equal(1);
+        done();
+    });
+
     it('verifies no leaks', function (done) {
 
         var leaks = Lab.leaks.detect();
@@ -40,10 +49,30 @@ describe('Leaks', function () {
 
     it('ignores DTrace globals', function (done) {
 
+        var currentGlobal = global.DTRACE_HTTP_SERVER_RESPONSE;
+
         global.DTRACE_HTTP_SERVER_RESPONSE = 1;
         var leaks = Lab.leaks.detect();
-        delete global.DTRACE_HTTP_SERVER_RESPONSE;
         expect(leaks.length).to.equal(0);
+
+        global.DTRACE_HTTP_SERVER_RESPONSE = currentGlobal;
+        done();
+    });
+
+    it('works with missing DTrace globals', function (done) {
+
+        delete global.DTRACE_HTTP_SERVER_RESPONSE;
+        delete global.DTRACE_HTTP_CLIENT_REQUEST;
+        delete global.DTRACE_NET_STREAM_END;
+        delete global.DTRACE_HTTP_SERVER_REQUEST;
+        delete global.DTRACE_NET_SOCKET_READ;
+        delete global.DTRACE_HTTP_CLIENT_RESPONSE;
+        delete global.DTRACE_NET_SOCKET_WRITE;
+        delete global.DTRACE_NET_SERVER_CONNECTION;
+
+        var leaks = Lab.leaks.detect();
+        expect(leaks.length).to.equal(0);
+
         done();
     });
 
@@ -53,6 +82,24 @@ describe('Leaks', function () {
         var leaks = Lab.leaks.detect();
         delete global.COUNTER_NET_SERVER_CONNECTION;
         expect(leaks.length).to.equal(0);
+        done();
+    });
+
+    it('ignores Harmony globals', function (done) {
+
+        global.Promise = 1;
+        global.Proxy = 1;
+        global.Symbol = 1;
+        global.WeakMap = 1;
+
+        var leaks = Lab.leaks.detect();
+        expect(leaks.length).to.equal(0);
+
+        delete global.Promise;
+        delete global.Proxy;
+        delete global.Symbol;
+        delete global.WeakMap;
+
         done();
     });
 
