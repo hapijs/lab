@@ -1,1 +1,0 @@
-var Lab = require('../lib');

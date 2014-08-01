@@ -1,5 +1,3 @@
 #!/usr/bin/env node
 
-
-var Execute = require('../lib/execute');
-Execute.execute();
+require('../lib/cli').run();
