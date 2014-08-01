@@ -59,6 +59,23 @@ describe('Leaks', function () {
         done();
     });
 
+    it('works with missing DTrace globals', function (done) {
+
+        delete global.DTRACE_HTTP_SERVER_RESPONSE;
+        delete global.DTRACE_HTTP_CLIENT_REQUEST;
+        delete global.DTRACE_NET_STREAM_END;
+        delete global.DTRACE_HTTP_SERVER_REQUEST;
+        delete global.DTRACE_NET_SOCKET_READ;
+        delete global.DTRACE_HTTP_CLIENT_RESPONSE;
+        delete global.DTRACE_NET_SOCKET_WRITE;
+        delete global.DTRACE_NET_SERVER_CONNECTION;
+
+        var leaks = Lab.leaks.detect();
+        expect(leaks.length).to.equal(0);
+
+        done();
+    });
+
     it('ignores Counter globals', function (done) {
 
         global.COUNTER_NET_SERVER_CONNECTION = 1;
