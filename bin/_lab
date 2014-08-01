@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+var ChildProcess = require('child_process');
+
+
+ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
+
+	require('../test_runner/cli').run();
+});
+
+process.on('exit', function (code) {
+
+	ChildProcess.exec('rm -rf test_runner', function (err) {});
+});

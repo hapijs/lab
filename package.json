@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
   "contributors": [],
   "repository": "git://github.com/spumko/lab",
@@ -17,7 +17,7 @@
     "esprima": "1.x.x",
     "chai": "1.x.x",
     "handlebars": "1.x.x",
-    "async": "0.8.x",
+    "async": "0.9.x",
     "diff": "1.x.x"
   },
   "devDependencies": {
@@ -26,6 +26,7 @@
     "lab": "./bin/lab"
   },
   "scripts": {
+    "test": "make test-cov"
   },
   "licenses": [
     {
