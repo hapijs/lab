@@ -309,6 +309,53 @@ describe('Lab', function () {
         });
     });
 
+    it('nested experiments', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('a', function (finished) {
+
+                finished();
+            });
+
+            script.experiment('test2', function () {
+
+                script.test('b', function (finished) {
+
+                    finished();
+                });
+            });
+
+            script.test('c', function (finished) {
+
+                finished();
+            });
+
+            script.experiment('test3', function () {
+
+                script.test('d', function (finished) {
+
+                    finished();
+                });
+            });
+
+            script.test('e', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(5);
+            expect(notebook.tests[0].id).to.equal(1);
+            expect(notebook.tests[1].id).to.equal(2);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('skips experiment', function (done) {
 
         var script = Lab.script({ schedule: false });
