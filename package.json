@@ -1,16 +1,16 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "4.0.0",
-  "author": "Eran Hammer <eran@hueniverse.com> (http://hueniverse.com)",
+  "version": "3.2.2",
+  "author": "Eran Hammer <eran@hammer.io> (http://hueniverse.com)",
   "contributors": [],
-  "repository": "git://github.com/spumko/lab",
+  "repository": "git://github.com/hapijs/lab",
   "main": "index",
   "keywords": [
     "test"
   ],
   "engines": {
-    "node": ">=0.10.22"
+    "node": ">=0.10.30"
   },
   "dependencies": {
     "optimist": "0.6.x",
@@ -31,7 +31,7 @@
   "licenses": [
     {
       "type": "BSD",
-      "url": "http://github.com/spumko/lab/raw/master/LICENSE"
+      "url": "http://github.com/hapijs/lab/raw/master/LICENSE"
     }
   ]
 }

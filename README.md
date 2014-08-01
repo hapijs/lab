@@ -1,16 +1,14 @@
-<a href="https://github.com/spumko"><img src="https://raw.github.com/spumko/spumko/master/images/from.png" align="right" /></a>
-![lab Logo](https://raw.github.com/spumko/lab/master/images/lab.png)
+![lab Logo](https://raw.github.com/hapijs/lab/master/images/lab.png)
 
 Node test utility
 
-[![Build Status](https://secure.travis-ci.org/spumko/lab.png)](http://travis-ci.org/spumko/lab)
+[![Build Status](https://secure.travis-ci.org/hapijs/lab.png)](http://travis-ci.org/hapijs/lab)
 
 
 ## Introduction
 
 **lab** is a simple test utility for node. Unlike other test utilities, lab uses domains instead of uncaught exception and other
-global manipulation which created conflicts with some [**spumko**](https://github.com/spumko) modules. Our goal with **lab** is to
-keep the execution engine as simple as possible, and not try to build an extensible framework.
+global manipulation. Our goal with **lab** is to keep the execution engine as simple as possible, and not try to build an extensible framework.
 
 ## Command Line
 
