@@ -11,20 +11,22 @@ Lead Maintainer: [Eran Hammer](https://github.com/hueniverse)
 
 **lab** is a simple test utility for node. Unlike other test utilities, lab uses domains instead of uncaught exception and other
 global manipulation. Our goal with **lab** is to keep the execution engine as simple as possible, and not try to build an extensible framework.
+**lab** works with any assertion library that throws an error when a condition isn't met.
 
 ## Command Line
 
 **lab** supports the following command line options:
 - `-c` - enables code coverage analysis.
-- `-C` - forces color output
+- `-C` - enables or disables color output. Defaults to console capabilities.
 - `-d` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
+- `-f` - do not perform a recursive load of test files within the test directory.
 - `-g` - only run tests matching the given pattern which is internally compiled to a RegExp.
-- `-G` - export `Lab` as a global. Defaults to disabled. If you enable this, make sure to remove any `require('lab')` lines from your tests.
-- `-i` - only run the test for the given identifier.
+- `-h` - show command line usage.
+- `-i` - only run the test for the given identifier (or identifiers range).
 - `-I` - ignore a list of globals for the leak detection (comma separated)
 - `-l` - disables global variable leak detection.
-- `-m` - individual tests timeout in milliseconds, defaults to 2 seconds.
+- `-m` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-o` - file to write the report to, otherwise sent to stdout.
 - `-p` - sets parallel execution as default test option. Defaults to serial execution.
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
@@ -48,27 +50,18 @@ To use locally:
 $ npm install --save-dev lab
 ```
 
-Then in further examples you will have to call lab like so:
-``` bash
-$ ./node_modules/.bin/lab
-```
-
-To start:
-```bash
-$ lab
-```
-
 By default, **lab** loads all the '*.js' files inside the local 'test' directory and executes the tests found. To start **lab** using
 different directories or files, pass those as arguments:
 ```bash
 $ lab unit.js
 ```
 
-Test files must require the **lab** module, and add tests using the `test()` method:
+Test files must require the **lab** module, and export a test script:
 ```javascript
 var Lab = require('lab');
+var lab = exports.lab = Lab.script();
 
-Lab.test('returns true when 1 + 1 equals 2', function (done) {
+lab.test('returns true when 1 + 1 equals 2', function (done) {
 
     Lab.expect(1+1).to.equal(2);
     done();
@@ -79,15 +72,11 @@ When a test is completed, `done(err)` must be called, otherwise the test will ti
 The test passes if `done()` is call once before the timeout, no exception thrown, and no arguments are passed to `done()`.
 If no callback function is provided, the test is considered a TODO reminder and will be skipped.
 
-**lab** works with any test utility that throws an error when a condition isn't met. It uses the same error interface as
-[mocha](http://visionmedia.github.com/mocha/) and already includes [chai](http://chaijs.com/)'s `expect()` in its exported
-interface as shown above.
-
 Tests can be organized into experiments:
 ```javascript
-Lab.experiment('math', function () {
+lab.experiment('math', function () {
 
-    Lab.test('returns true when 1 + 1 equals 2', function (done) {
+    lab.test('returns true when 1 + 1 equals 2', function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
@@ -99,21 +88,21 @@ If you need to perform some async actions before or after executing the tests in
 `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
 
 ```javascript
-Lab.experiment('math', function () {
+lab.experiment('math', function () {
 
-    Lab.before(function (done) {
+    lab.before(function (done) {
 
         // Wait 1 second
         setTimeout(function () { done(); }, 1000);
     });
 
-    Lab.beforeEach(function (done) {
+    lab.beforeEach(function (done) {
 
         // Run before every single test
         done();
     });
 
-    Lab.test('returns true when 1 + 1 equals 2', function (done) {
+    lab.test('returns true when 1 + 1 equals 2', function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
@@ -125,11 +114,12 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
 - `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
 - `skip` - skip execution. Cannot be overriden in children once parent is set to skip.
+- `only` - marks all other tests or experiments with `skip`.
 
 ```javascript
-Lab.experiment('math', { timeout: 1000 }, function () {
+lab.experiment('math', { timeout: 1000 }, function () {
 
-    Lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
+    lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
@@ -140,12 +130,13 @@ Lab.experiment('math', { timeout: 1000 }, function () {
 To make **lab** look like BDD:
 ```javascript
 var Lab = require('lab');
+var lab = exports.lab = Lab.script();
 
-var describe = Lab.experiment;
-var it = Lab.test;
+var describe = lab.describe;
+var it = lab.it;
+var before = lab.before;
+var after = lab.after;
 var expect = Lab.expect;
-var before = Lab.before;
-var after = Lab.after;
 
 describe('math', function () {
 
@@ -160,12 +151,13 @@ describe('math', function () {
 To make **lab** look like TDD:
 ```javascript
 var Lab = require('lab');
+var lab = exports.lab = Lab.script();
 
-var suite = Lab.experiment;
-var test = Lab.test;
+var suite = lab.suite;
+var test = lab.test;
+var before = lab.before;
+var after = lab.after;
 var expect = Lab.expect;
-var before = Lab.before;
-var after = Lab.after;
 
 suite('math', function () {
 
@@ -177,43 +169,62 @@ suite('math', function () {
 });
 ```
 
-## Running lab's tests
-To run the tests included in this project, locally clone the repository then install the dependencies:
+## Best practices
+
+- Install **lab** as a global module:
+
 ```bash
-$ npm update
+$ npm install -g lab
 ```
 
-To run the tests:
-```bash
-$ node ./bin/lab
-```
+- Add lab as a dev dependecy to your project's `package.json` along with a `test` script:
 
-Or using **make**:
-```bash
-$ make test
-```
-
-To use this pattern in your own project install **lab** as a dev dependency and include a **make** file containing a target like this:
-```make
-test:
-    @node ./node_modules/lab/bin/lab
-```
-
-Alternatively you may want to leverage npm's scripts section of your package.json:
 ```json
-"scripts": {
-    "test": "lab"
-  }
+{
+  "name": "example",
+  "version": "1.0.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "lab": "4.x.x"
+  },
+  "scripts": {
+    "test": "make test-cov"
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "http://github.com/hapijs/lab/raw/master/LICENSE"
+    }
+  ]
+}
 ```
 
-Which can be triggered using:
+- Add a `Makefile` to your project:
+
+```bash
+test:
+    @node node_modules/lab/bin/lab
+test-cov:
+    @node node_modules/lab/bin/lab -t 100
+test-cov-html:
+    @node node_modules/lab/bin/lab -r html -o coverage.html
+
+.PHONY: test test-cov test-cov-html
+```
+
+Note that `npm test` will execute **lab** with the `-t 100` option which will require 100% code coverage. Change or remove
+this option if you just cannot be bothered with producing quality code. Run `make test-cov-html` and check the `coverage.html`
+file to figure out where coverage is lacking.
+
+- Run your tests with
+
 ```bash
 $ npm test
 ```
 
 ## Acknowledgements
 
-**lab** borrows heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render the coverage report
-into HTML. [mocha](http://visionmedia.github.com/mocha/) is a comprehensive test framework created by TJ Holowaychuk. **lab** coverage code
-was originally adapted from [blanket](https://github.com/alex-seville/blanket) which in turn uses
-[falafel](https://github.com/substack/node-falafel).
+**lab** initial code borrowed heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render
+the coverage report into HTML. **lab** coverage code was originally adapted from [blanket](https://github.com/alex-seville/blanket)
+which in turn uses [falafel](https://github.com/substack/node-falafel).
