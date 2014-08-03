@@ -182,6 +182,41 @@ describe('Runner', function () {
                 finished();
             });
 
+            script.test('skips', { skip: true }, function (finished) {
+
+                steps.push('test');
+                finished();
+            });
+
+            script.test('todo');
+
+            script.experiment('inner', { skip: true }, function () {
+
+                script.test('works', function (finished) {
+
+                    steps.push('test');
+                    finished();
+                });
+
+                script.experiment('inner', function () {
+
+                    script.test('works', function (finished) {
+
+                        steps.push('test');
+                        finished();
+                    });
+                });
+            });
+
+            script.experiment('inner2', function () {
+
+                script.test('works', { skip: true }, function (finished) {
+
+                    steps.push('test');
+                    finished();
+                });
+            });
+
             script.after(function (finished) {
 
                 steps.push('after');
@@ -191,6 +226,7 @@ describe('Runner', function () {
 
         Lab.execute(script, null, null, function (err, notebook) {
 
+            expect(notebook.tests[0].err).to.equal('\'before\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
