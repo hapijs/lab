@@ -385,6 +385,151 @@ describe('Lab', function () {
         });
     });
 
+    it('skips experiment using helper (2 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment.skip('test2', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips experiment using helper (3 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment.skip('test2', {}, function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips test', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', function () {
+
+            script.test('works', { skip: true }, function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips test using helper (2 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', function () {
+
+            script.test.skip('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips test using helper (3 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', function () {
+
+            script.test.skip('works', {}, function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('schedules automatic execution', { parallel: false }, function (done) {
 
         var script = Lab.script();
