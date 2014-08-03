@@ -456,6 +456,26 @@ describe('Reporter', function () {
                 done();
             });
         });
+
+        it('displays custom error messages in expect', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(true).to.equal(false, 'Not working right');
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                done();
+            });
+        });
     });
 
     describe('json', function () {
