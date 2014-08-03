@@ -259,6 +259,7 @@ describe('Runner', function () {
 
         Lab.execute(script, null, null, function (err, notebook) {
 
+            expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
