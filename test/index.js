@@ -443,6 +443,122 @@ describe('Lab', function () {
         });
     });
 
+    it('runs only one experiment (only first)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', { only: true }, function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one experiment (only not first)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment('test2', { only: true }, function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.equal(true);
+            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one experiment using helper (2 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment.only('test2', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.equal(true);
+            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one experiment using helper (3 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        script.experiment.only('test2', {}, function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.equal(true);
+            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('skips test', function (done) {
 
         var script = Lab.script({ schedule: false });
@@ -525,6 +641,110 @@ describe('Lab', function () {
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist;
             expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one test (only first)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('a', { only: true }, function (finished) {
+
+                finished();
+            });
+
+            script.test('b', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.equal(true);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one test (only not first)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('a', function (finished) {
+
+                finished();
+            });
+
+            script.test('b', { only: true }, function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.equal(true);
+            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one test using helper (2 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('a', function (finished) {
+
+                finished();
+            });
+
+            script.test.only('b', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.equal(true);
+            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('runs only one test using helper (3 args)', function (done) {
+
+        var script = Lab.script({ schedule: false });
+        script.experiment('test1', function () {
+
+            script.test('a', function (finished) {
+
+                finished();
+            });
+
+            script.test.only('b', {}, function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests[0].skipped).to.equal(true);
+            expect(notebook.tests[1].skipped).to.not.exist;
             expect(notebook.failures).to.equal(0);
             done();
         });
