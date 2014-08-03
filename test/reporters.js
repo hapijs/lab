@@ -340,7 +340,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console') }, function (err, code, output) {
 
-                expect(output).to.contain('Coverage: 78.95%');
+                expect(output).to.contain('Coverage: 78.95% (4/19)');
                 expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 12, 15, 16, 19');
                 expect(output).to.not.contain('console-full');
                 done();
@@ -365,7 +365,7 @@ describe('Reporter', function () {
             });
         });
 
-        it('generates a report with multiline progress', function (done) {
+        it('generates a report with multi-line progress', function (done) {
 
             var script = Lab.script();
             script.experiment('test', function () {
