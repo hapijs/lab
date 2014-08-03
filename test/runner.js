@@ -412,4 +412,26 @@ describe('Runner', function () {
             done();
         });
     });
+
+    it('disable test timeout', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', { timeout: 5 }, function () {
+
+            script.test('timeout', { timeout: 0 }, function (finished) {
+
+                setTimeout(function () {
+
+                    finished();
+                }, 10);
+            });
+        });
+
+        var now = Date.now();
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(Date.now() - now).to.be.above(9);
+            done();
+        });
+    });
 });
