@@ -16,17 +16,17 @@ var it = lab.it;
 var expect = _Lab.expect;
 
 
-describe('Test CLI', function () {
+describe('Test CLI 3', function () {
 
-    it('adds two numbers together', function (done) {
+    it('supports negative numbers', function (done) {
 
-        expect(1+1).to.equal(2);
+        expect(1-2).to.equal(-1);
         done();
     });
 
-    it('subtracts two numbers', function (done) {
+    it('supports infinity', function (done) {
 
-        expect(2-2).to.equal(0);
+        expect(Infinity + 1).to.equal(Infinity);
         done();
     });
 });
