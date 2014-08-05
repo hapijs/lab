@@ -61,4 +61,23 @@ describe('Utils', function () {
         expect(merged).to.deep.equal({ b: 3, c: 4 });
         done();
     });
+
+    it('ignores parent options', function (done) {
+
+        var parent = {
+            a: 1,
+            b: 2,
+            e: 5,
+            f: 6
+        };
+
+        var child = {
+            b: 3,
+            c: 4
+        };
+
+        var merged = Utils.mergeOptions(parent, child, ['e', 'f']);
+        expect(merged).to.deep.equal({ a: 1, b: 3, c: 4 });
+        done();
+    });
 });

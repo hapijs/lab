@@ -182,6 +182,41 @@ describe('Runner', function () {
                 finished();
             });
 
+            script.test('skips', { skip: true }, function (finished) {
+
+                steps.push('test');
+                finished();
+            });
+
+            script.test('todo');
+
+            script.experiment('inner', { skip: true }, function () {
+
+                script.test('works', function (finished) {
+
+                    steps.push('test');
+                    finished();
+                });
+
+                script.experiment('inner', function () {
+
+                    script.test('works', function (finished) {
+
+                        steps.push('test');
+                        finished();
+                    });
+                });
+            });
+
+            script.experiment('inner2', function () {
+
+                script.test('works', { skip: true }, function (finished) {
+
+                    steps.push('test');
+                    finished();
+                });
+            });
+
             script.after(function (finished) {
 
                 steps.push('after');
@@ -191,6 +226,7 @@ describe('Runner', function () {
 
         Lab.execute(script, null, null, function (err, notebook) {
 
+            expect(notebook.tests[0].err).to.equal('\'before\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
@@ -223,6 +259,7 @@ describe('Runner', function () {
 
         Lab.execute(script, null, null, function (err, notebook) {
 
+            expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
@@ -372,6 +409,28 @@ describe('Runner', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(Date.now() - now).to.be.below(100);
+            done();
+        });
+    });
+
+    it('disable test timeout', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', { timeout: 5 }, function () {
+
+            script.test('timeout', { timeout: 0 }, function (finished) {
+
+                setTimeout(function () {
+
+                    finished();
+                }, 10);
+            });
+        });
+
+        var now = Date.now();
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(Date.now() - now).to.be.above(9);
             done();
         });
     });

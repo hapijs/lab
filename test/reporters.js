@@ -340,7 +340,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console') }, function (err, code, output) {
 
-                expect(output).to.contain('Coverage: 78.95%');
+                expect(output).to.contain('Coverage: 78.95% (4/19)');
                 expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 12, 15, 16, 19');
                 expect(output).to.not.contain('console-full');
                 done();
@@ -365,7 +365,7 @@ describe('Reporter', function () {
             });
         });
 
-        it('generates a report with multiline progress', function (done) {
+        it('generates a report with multi-line progress', function (done) {
 
             var script = Lab.script();
             script.experiment('test', function () {
@@ -453,6 +453,26 @@ describe('Reporter', function () {
                 expect(err).to.not.exist;
                 expect(code).to.equal(0);
                 expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                done();
+            });
+        });
+
+        it('displays custom error messages in expect', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(true).to.equal(false, 'Not working right');
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
