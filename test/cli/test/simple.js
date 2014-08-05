@@ -18,15 +18,15 @@ var expect = _Lab.expect;
 
 describe('Test CLI', function () {
 
-	it('adds two numbers together', function (done) {
+    it('adds two numbers together', function (done) {
 
-		expect(1+1).to.equal(2);
-		done();
-	});
+        expect(1+1).to.equal(2);
+        done();
+    });
 
-	it('subtracts two numbers', function (done) {
+    it('subtracts two numbers', function (done) {
 
-		expect(2-2).to.equal(0);
-		done();
-	});
+        expect(2-2).to.equal(0);
+        done();
+    });
 });
