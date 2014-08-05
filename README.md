@@ -59,9 +59,8 @@ $ lab unit.js
 Test files must require the **lab** module, and export a test script:
 ```javascript
 var Lab = require('lab');
-var lab = exports.lab = Lab.script();
 
-lab.test('returns true when 1 + 1 equals 2', function (done) {
+Lab.test('returns true when 1 + 1 equals 2', function (done) {
 
     Lab.expect(1+1).to.equal(2);
     done();
@@ -74,9 +73,9 @@ If no callback function is provided, the test is considered a TODO reminder and 
 
 Tests can be organized into experiments:
 ```javascript
-lab.experiment('math', function () {
+Lab.experiment('math', function () {
 
-    lab.test('returns true when 1 + 1 equals 2', function (done) {
+    Lab.test('returns true when 1 + 1 equals 2', function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
@@ -88,21 +87,21 @@ If you need to perform some async actions before or after executing the tests in
 `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
 
 ```javascript
-lab.experiment('math', function () {
+Lab.experiment('math', function () {
 
-    lab.before(function (done) {
+    Lab.before(function (done) {
 
         // Wait 1 second
         setTimeout(function () { done(); }, 1000);
     });
 
-    lab.beforeEach(function (done) {
+    Lab.beforeEach(function (done) {
 
         // Run before every single test
         done();
     });
 
-    lab.test('returns true when 1 + 1 equals 2', function (done) {
+    Lab.test('returns true when 1 + 1 equals 2', function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
@@ -117,9 +116,9 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 - `only` - marks all other tests or experiments with `skip`.
 
 ```javascript
-lab.experiment('math', { timeout: 1000 }, function () {
+Lab.experiment('math', { timeout: 1000 }, function () {
 
-    lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
+    Lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
 
         Lab.expect(1+1).to.equal(2);
         done();
@@ -130,16 +129,15 @@ lab.experiment('math', { timeout: 1000 }, function () {
 To make **lab** look like BDD:
 ```javascript
 var Lab = require('lab');
-var lab = exports.lab = Lab.script();
 
-var describe = lab.describe;
-var it = lab.it;
-var before = lab.before;
-var after = lab.after;
+var describe = Lab.describe;
+var it = Lab.it;
+var before = Lab.before;
+var after = Lab.after;
 var expect = Lab.expect;
 
 describe('math', function () {
-
+    
     it('returns true when 1 + 1 equals 2', function (done) {
 
         expect(1+1).to.equal(2);
@@ -151,12 +149,11 @@ describe('math', function () {
 To make **lab** look like TDD:
 ```javascript
 var Lab = require('lab');
-var lab = exports.lab = Lab.script();
 
-var suite = lab.suite;
-var test = lab.test;
-var before = lab.before;
-var after = lab.after;
+var suite = Lab.suite;
+var test = Lab.test;
+var before = Lab.before;
+var after = Lab.after;
 var expect = Lab.expect;
 
 suite('math', function () {
