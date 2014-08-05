@@ -17,3 +17,4 @@ coverage.json
 coverage.html
 lib-cov
 test_runner
+test/cli/test/leaks.js
