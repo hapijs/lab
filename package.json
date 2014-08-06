@@ -2,8 +2,6 @@
   "name": "lab",
   "description": "Test utility",
   "version": "4.0.0",
-  "author": "Eran Hammer <eran@hammer.io> (http://hueniverse.com)",
-  "contributors": [],
   "repository": "git://github.com/hapijs/lab",
   "main": "index",
   "keywords": [
