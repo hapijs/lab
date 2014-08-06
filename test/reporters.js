@@ -185,7 +185,7 @@ describe('Reporter', function () {
                 delete global.x1;
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
@@ -209,7 +209,7 @@ describe('Reporter', function () {
                 delete global.x1;
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"cb\"\n      \]\n\n      expected \[ 'a', 'b' \] to deeply equal \[ 'a', 'c' \]\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
@@ -232,9 +232,10 @@ describe('Reporter', function () {
             });
 
             Lab.report(script, { reporter: 'console', colors: false, leaks: false }, function (err, code, output) {
+
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      AssertionError: expected \[Function\] to not throw an error but 'Error: boom' was thrown\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
                 done();
             });
@@ -256,7 +257,7 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                var result = output.replace(/at .+\:\d+\:\d+\)?/g, 'at <trace>');
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Error Message\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
@@ -471,7 +472,8 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
-                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
+
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
