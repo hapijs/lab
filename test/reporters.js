@@ -352,6 +352,7 @@ describe('Reporter', function () {
             var reporter = Reporters.generate({ reporter: 'console', coverage: true });
             var notebook = {
                 tests: [],
+
                 coverage: {
                     percent: 100,
                     files: []
@@ -511,7 +512,7 @@ describe('Reporter', function () {
 
                 script.afterEach(function (done) {
 
-                    done(new Error('there was an error in the afterEach function'));
+                    done('there was an error in the afterEach function');
                 });
 
                 script.test('works', function (finished) {
@@ -525,7 +526,7 @@ describe('Reporter', function () {
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
 
                 expect(code).to.equal(1);
-                expect(result).to.contain('There were 2 session error(s).');
+                expect(result).to.contain('There were 1 session error(s).');
                 expect(result).to.contain('there was an error in the afterEach function');
                 done();
             });
