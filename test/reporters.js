@@ -352,7 +352,6 @@ describe('Reporter', function () {
             var reporter = Reporters.generate({ reporter: 'console', coverage: true });
             var notebook = {
                 tests: [],
-
                 coverage: {
                     percent: 100,
                     files: []
