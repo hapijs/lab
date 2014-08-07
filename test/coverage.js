@@ -71,6 +71,16 @@ describe('Coverage', function () {
         done();
     });
 
+    it('measures missing while statement coverage', function (done) {
+
+        var Test = require('./coverage/while');
+        Test.method(false);
+
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/while') });
+        expect(cov.percent).to.be.lessThan(100);
+        done();
+    });
+
     describe('#analyze', function () {
 
         it('sorts file paths in report', function (done) {
