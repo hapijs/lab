@@ -1,9 +1,12 @@
 // Load modules
-var _Lab = require('../test_runner');
-var Path = require('path');
-var Lab = require('../');
+
 var ChildProcess = require('child_process');
 var Fs = require('fs');
+var Path = require('path');
+var Stream = require('stream');
+var Lab = require('../');
+var _Lab = require('../test_runner');
+
 
 // Declare internals
 
@@ -19,7 +22,8 @@ var before = lab.before;
 var after = lab.after;
 var expect = _Lab.expect;
 
-describe('Cli', function () {
+
+describe('CLI', function () {
 
     var labPath = Path.join(__dirname, '..', 'bin', '_lab');
 
@@ -66,7 +70,7 @@ describe('Cli', function () {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
-            expect(output).to.contain('6 tests complete');
+            expect(output).to.contain('8 tests complete');
             done();
         });
     });
@@ -213,6 +217,78 @@ describe('Cli', function () {
             expect(signal).to.not.exist;
             expect(output).to.contain('4 tests complete');
             done();
-    	});
+        });
+    });
+
+    it('runs in color mode with (-C)', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-C']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('\u001b[');
+            done();
+        });
+    });
+
+    it('disables color output when tty doesn\'t support it', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.not.contain('\u001b[');
+            done();
+        });
+    });
+
+    it('defaults to color output when tty supports it', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simpleTty.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('\u001b[');
+            done();
+        });
     });
 });
