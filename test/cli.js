@@ -312,6 +312,7 @@ describe('CLI', function () {
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
             expect(output).to.contain('2 tests complete');
+            expect(output).to.contain('Coverage: 0.00%');
             done();
         });
     });
