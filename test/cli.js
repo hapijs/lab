@@ -291,4 +291,28 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('doesn\'t fail with coverage when no external file is being tested', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-t 10']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('2 tests complete');
+            done();
+        });
+    });
 });
