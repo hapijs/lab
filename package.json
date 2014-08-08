@@ -15,7 +15,7 @@
     "esprima": "1.x.x",
     "chai": "1.x.x",
     "handlebars": "1.x.x",
-    "async": "0.9.x",
+    "items": "1.x.x",
     "diff": "1.x.x"
   },
   "devDependencies": {
