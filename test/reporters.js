@@ -500,7 +500,7 @@ describe('Reporter', function () {
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
 
                 expect(code).to.equal(1);
-                expect(result).to.contain('There were 1 session error(s).');
+                expect(result).to.contain('There were 1 test script error(s).');
                 expect(result).to.contain('there was an error in the before function');
                 done();
             });
@@ -527,7 +527,7 @@ describe('Reporter', function () {
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
 
                 expect(code).to.equal(1);
-                expect(result).to.contain('There were 1 session error(s).');
+                expect(result).to.contain('There were 1 test script error(s).');
                 expect(result).to.contain('there was an error in the afterEach function');
                 done();
             });
