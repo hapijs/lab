@@ -340,4 +340,28 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('changes the NODE_ENV based on -e param', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js', '-e lab']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('1 tests complete');
+            done();
+        });
+    });
 });
