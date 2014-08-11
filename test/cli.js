@@ -70,7 +70,7 @@ describe('CLI', function () {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
-            expect(output).to.contain('8 tests complete');
+            expect(output).to.contain('9 tests complete');
             done();
         });
     });
@@ -313,6 +313,30 @@ describe('CLI', function () {
             expect(signal).to.not.exist;
             expect(output).to.contain('2 tests complete');
             expect(output).to.contain('Coverage: 0.00%');
+            done();
+        });
+    });
+
+    it('defaults NODE_ENV environment variable to test', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('1 tests complete');
             done();
         });
     });

@@ -44,6 +44,52 @@ describe('Runner', function () {
         });
     });
 
+    it('won\'t set the environment when passing null', { parallel: false }, function (done) {
+
+        var orig = process.env.NODE_ENV;
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                Lab.expect(process.env.NODE_ENV).to.equal(orig);
+                process.env.NODE_ENV = orig;
+                finished();
+            });
+        });
+
+        Lab.execute(script, { environment: null }, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('the environment defaults to test', { parallel: false }, function (done) {
+
+        var orig = process.env.NODE_ENV;
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                Lab.expect(process.env.NODE_ENV).to.equal('test');
+                process.env.NODE_ENV = orig;
+                finished();
+            });
+        });
+
+        Lab.execute(script, {}, null, function (err, notebook) {
+
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('filters on ids', function (done) {
 
         var script = Lab.script();
