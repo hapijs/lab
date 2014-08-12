@@ -16,7 +16,13 @@ describe('Test CLI', function () {
 
     it('Node Environment defaults to test', function (done) {
 
-        expect(env).to.equal('test');
+        if (process.argv[3] && process.argv[3].indexOf('-e') >= 0) {
+            expect(env).to.equal('lab');
+        }
+        else {
+            expect(env).to.equal('test');
+        }
+
         done();
     });
 });
