@@ -343,7 +343,7 @@ describe('CLI', function () {
 
     it('changes the NODE_ENV based on -e param', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js', '-e lab']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js', '-e', 'lab']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
