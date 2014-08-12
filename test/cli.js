@@ -70,7 +70,7 @@ describe('CLI', function () {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
-            expect(output).to.contain('9 tests complete');
+            expect(output).to.contain('10 tests complete');
             done();
         });
     });
@@ -196,9 +196,10 @@ describe('CLI', function () {
         });
     });
 
-    it ('runs a range of tests (-i 1-4)', function (done) {
+    it ('runs a range of tests (-i 3-4)', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-i', '1-4']);
+        // The range may need to adjust as new tests are added (if they are skipped for example)
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-i', '3-4']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
@@ -215,7 +216,7 @@ describe('CLI', function () {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
-            expect(output).to.contain('4 tests complete');
+            expect(output).to.contain('2 tests complete');
             done();
         });
     });
@@ -344,6 +345,30 @@ describe('CLI', function () {
     it('changes the NODE_ENV based on -e param', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js', '-e', 'lab']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('1 tests complete');
+            done();
+        });
+    });
+
+    it('Runs tests with "only" method when set and reports correct test count', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/only.js']);
         var output = '';
 
         cli.stdout.on('data', function (data) {

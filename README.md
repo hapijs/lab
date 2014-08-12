@@ -177,7 +177,7 @@ suite('math', function () {
 $ npm install -g lab
 ```
 
-- Add lab as a dev dependecy to your project's `package.json` along with a `test` script:
+- Add lab as a dev dependency to your project's `package.json` along with a `test` script:
 
 ```json
 {
