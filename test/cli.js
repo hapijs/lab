@@ -389,4 +389,28 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('Displays error message when a script is detected without an exports.lab', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/missingExports.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('Missing exports.lab found.  Please fix and run again.');
+            done();
+        });
+    });
 });
