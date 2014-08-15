@@ -413,4 +413,28 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('Displays error message when a script is missing exports and other scripts contain them', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('includes a lab script that is not exported via exports.lab');
+            done();
+        });
+    });
 });
