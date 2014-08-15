@@ -407,10 +407,57 @@ describe('CLI', function () {
 
         cli.on('close', function (code, signal) {
 
-            console.log(output)
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
             expect(output).to.contain('1 tests complete');
+            done();
+        });
+    });
+
+    it('Displays error message when a script is detected without an exports.lab', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/missingExports.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('includes a lab script that is not exported via exports.lab');
+            done();
+        });
+    });
+
+    it('Displays error message when a script is missing exports and other scripts contain them', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('includes a lab script that is not exported via exports.lab');
             done();
         });
     });
