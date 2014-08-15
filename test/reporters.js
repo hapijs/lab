@@ -746,8 +746,8 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                var result = output.replace(/  .*\n/g, '<trace>');
-                expect(result).to.equal('1..5\nok 1 (1) test works\nok 2 SKIP (2) test skip\nok 3 TODO (3) test todo\nnot ok 4 (4) test fails\n<trace><trace><trace><trace><trace><trace>not ok 5 (5) test fails with non-error\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
+                var result = output.replace(/      .*\n/g, '      <trace>\n').replace(/  duration_ms: .*\n/g, "  duration_ms: 123\n");
+                expect(result).to.equal('TAP version 13\n1..5\nok 1 (1) test works\n  ---\n  duration_ms: 123\n  ...\nok 2 # SKIP (2) test skip\nok 3 # TODO (3) test todo\nnot ok 4 (4) test fails\n  ---\n  duration_ms: 123\n  stack: |-\n    AssertionError: expected true to equal false\n      <trace>\n      <trace>\n      <trace>\n      <trace>\n      <trace>\n  ...\nnot ok 5 (5) test fails with non-error\n  ---\n  duration_ms: 123\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
                 done();
             });
         });
