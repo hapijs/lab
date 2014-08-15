@@ -409,7 +409,7 @@ describe('CLI', function () {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
-            expect(output).to.contain('Missing exports.lab found.  Please fix and run again.');
+            expect(output).to.contain('Missing exports.lab.  Update the test script to include: exports.lab = lab.script()');
             done();
         });
     });
