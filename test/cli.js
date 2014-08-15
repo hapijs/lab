@@ -409,7 +409,7 @@ describe('CLI', function () {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
-            expect(output).to.contain('includes a lab script that is not exported via exports.lab   ');
+            expect(output).to.contain('includes a lab script that is not exported via exports.lab');
             done();
         });
     });
