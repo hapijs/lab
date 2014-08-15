@@ -113,7 +113,7 @@ lab.experiment('math', function () {
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
 - `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
-- `skip` - skip execution. Cannot be overriden in children once parent is set to skip.
+- `skip` - skip execution. Cannot be overridden in children once parent is set to skip.
 - `only` - marks all other tests or experiments with `skip`.  This doesn't mark all other experiments and tests in a suite of scripts as skipped, instead it works within a single test script.
 
 ```javascript
@@ -126,6 +126,15 @@ lab.experiment('math', { timeout: 1000 }, function () {
     });
 });
 ```
+
+The `script([options])` method takes an optional `options` argument where which is an object with the following optional keys:
+- `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly
+  with node without having to use the cli (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
+  can be turned off by setting `schedule` to `false`. Defaults to `true`.
+- `cli` - allows setting command line options within the scrip. Note that the last script file loaded wins and usage of this is recommended
+  only for temporarily changing the execution of tests. This option is useful when code working with an automatic test engine that runs test
+  on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute
+  the first test loaded.
 
 To make **lab** look like BDD:
 ```javascript

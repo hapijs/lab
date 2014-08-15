@@ -366,7 +366,7 @@ describe('CLI', function () {
         });
     });
 
-    it('Runs tests with "only" method when set and reports correct test count', function (done) {
+    it('runs tests with "only" method when set and reports correct test count', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/only.js']);
         var output = '';
@@ -383,6 +383,31 @@ describe('CLI', function () {
 
         cli.on('close', function (code, signal) {
 
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('1 tests complete');
+            done();
+        });
+    });
+
+    it('overrides cli options using script', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/override/cli.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            console.log(output)
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
             expect(output).to.contain('1 tests complete');
