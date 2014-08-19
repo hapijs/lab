@@ -26,6 +26,7 @@ var setImmediate = global.setImmediate;
 
 describe('Runner', function () {
     var poisonPill = function () {
+
         throw new Error("Don't use global time-related stuff.");
     };
     // We can't poison global.Date because the normal implementation of
@@ -33,12 +34,14 @@ describe('Runner', function () {
     // global.setTimeout (like it's supposed to), that will blow up.
     // [1]: https://github.com/joyent/node/blob/7fc835afe362ebd30a0dbec81d3360bd24525222/lib/timers.js#L74
     var setupPoisonPills = function (finished) {
+
         global.setTimeout = poisonPill;
         global.clearTimeout = poisonPill;
         global.setImmediate = poisonPill;
         finished();
     };
     var teardownPoisonPills = function (finished) {
+
         global.setTimeout = setTimeout;
         global.clearTimeout = clearTimeout;
         global.setImmediate = setImmediate;
