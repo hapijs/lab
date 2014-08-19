@@ -33,6 +33,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `console` - text report.
     - `html` - HTML code coverage report (sets `-c`).
     - `json` - output results in JSON format.
+    - `junit` - output results in JUnit XML format.
     - `tap` - TAP protocol report.
 - `-s` - silence test output, defaults to false.
 - `-t` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
