@@ -25,10 +25,12 @@ var clearTimeout = global.clearTimeout;
 var setImmediate = global.setImmediate;
 
 describe('Runner', function () {
+
     var poisonPill = function () {
 
         throw new Error("Don't use global time-related stuff.");
     };
+
     // We can't poison global.Date because the normal implementation of
     // global.setTimeout uses it [1] so if the runnable.js keeps a copy of
     // global.setTimeout (like it's supposed to), that will blow up.
@@ -40,6 +42,7 @@ describe('Runner', function () {
         global.setImmediate = poisonPill;
         finished();
     };
+
     var teardownPoisonPills = function (finished) {
 
         global.setTimeout = setTimeout;
