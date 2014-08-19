@@ -18,8 +18,35 @@ var before = lab.before;
 var after = lab.after;
 var expect = _Lab.expect;
 
+// save references to timer globals
+
+var setTimeout = global.setTimeout;
+var clearTimeout = global.clearTimeout;
+var setImmediate = global.setImmediate;
 
 describe('Runner', function () {
+    var poisonPill = function () {
+
+        throw new Error("Don't use global time-related stuff.");
+    };
+    // We can't poison global.Date because the normal implementation of
+    // global.setTimeout uses it [1] so if the runnable.js keeps a copy of
+    // global.setTimeout (like it's supposed to), that will blow up.
+    // [1]: https://github.com/joyent/node/blob/7fc835afe362ebd30a0dbec81d3360bd24525222/lib/timers.js#L74
+    var setupPoisonPills = function (finished) {
+
+        global.setTimeout = poisonPill;
+        global.clearTimeout = poisonPill;
+        global.setImmediate = poisonPill;
+        finished();
+    };
+    var teardownPoisonPills = function (finished) {
+
+        global.setTimeout = setTimeout;
+        global.clearTimeout = clearTimeout;
+        global.setImmediate = setImmediate;
+        finished();
+    };
 
     it('sets environment', { parallel: false }, function (done) {
 
@@ -420,6 +447,10 @@ describe('Runner', function () {
     it('ignores second error', function (done) {
 
         var script = Lab.script();
+        script.before(setupPoisonPills);
+
+        script.after(teardownPoisonPills);
+
         script.experiment('test', function () {
 
             script.test('1', function (finished) {
@@ -443,6 +474,10 @@ describe('Runner', function () {
     it('override test timeout', function (done) {
 
         var script = Lab.script();
+        script.before(setupPoisonPills);
+
+        script.after(teardownPoisonPills);
+
         script.experiment('test', function () {
 
             script.test('timeout', { timeout: 5 }, function (finished) {
@@ -462,6 +497,10 @@ describe('Runner', function () {
     it('disable test timeout', function (done) {
 
         var script = Lab.script();
+        script.before(setupPoisonPills);
+
+        script.after(teardownPoisonPills);
+
         script.experiment('test', { timeout: 5 }, function () {
 
             script.test('timeout', { timeout: 0 }, function (finished) {
