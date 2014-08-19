@@ -752,4 +752,53 @@ describe('Reporter', function () {
             });
         });
     });
+
+    describe('junit', function () {
+
+        it('generates a report', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    Lab.expect(true).to.equal(true);
+                    finished();
+                });
+
+                script.test('skip', { skip: true }, function (finished) {
+
+                    finished();
+                });
+
+                script.test('todo');
+
+                script.test('fails', function (finished) {
+
+                    Lab.expect(true).to.equal(false);
+                    finished();
+                });
+
+                script.test('fails with non-error', function (finished) {
+
+                    finished('boom');
+                });
+            });
+
+            Lab.report(script, { reporter: 'junit' }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(1);
+
+                expect(output).to.contain('tests="5"');
+                expect(output).to.contain('errors="0"');
+                expect(output).to.contain('skipped="2"');
+                expect(output).to.contain('failures="2"');
+                expect(output).to.contain('failures="2"');
+                expect(output).to.contain('<failure message="expected true to equal false" type="AssertionError">');
+
+                done();
+            });
+        });
+    });
 });

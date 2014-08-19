@@ -1,0 +1,12 @@
+<testsuite tests="{{this.count}}" skipped="{{this.skipped}}" errors="{{this.errors}}" failures="{{this.failures}}" time="{{this.time}}">
+    {{#each this.tests~}}
+    <testcase classname="{{this.title}}" name="{{this.title}}" time="{{this.time}}">
+      {{#if this.err~}}
+      <failure message="{{this.err.message}}" type="{{this.err.name}}">
+        <![CDATA[{{this.err.details}}]]>
+      </failure>
+      {{~/if~}}
+      {{~#if this.skipped~}}<skipped/>{{/if}}
+    </testcase>
+    {{/each}}
+</testsuite>
