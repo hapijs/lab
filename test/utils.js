@@ -80,4 +80,23 @@ describe('Utils', function () {
         expect(merged).to.deep.equal({ a: 1, b: 3, c: 4 });
         done();
     });
+
+    it('copy child keys onto parent', function (done) {
+
+        var parent = {
+            a: 1,
+            b: 2,
+            e: 5,
+            f: 6
+        };
+
+        var child = {
+            b: 3,
+            c: 4
+        };
+
+        Utils.applyOptions(parent, child);
+        expect(parent).to.deep.equal({ a: 1, b: 3, c: 4, e: 5, f: 6 });
+        done();
+    });
 });
