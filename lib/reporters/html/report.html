@@ -164,9 +164,19 @@
         color: #b6b6b6;
     }
 
-    .stats .hits,
-    .stats .misses {
-        display: none;
+    .stats .hits::before {
+        content: '(';
+        color: #b6b6b6;
+    }
+
+    .stats .hits::after {
+        content: ' Covered';
+        color: #b6b6b6;
+    }
+
+    .stats .misses::after {
+        content: ' Not Covered)';
+        color: #b6b6b6;
     }
 
     .high {
