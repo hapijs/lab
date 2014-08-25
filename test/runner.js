@@ -26,31 +26,6 @@ var setImmediate = global.setImmediate;
 
 describe('Runner', function () {
 
-    var poisonPill = function () {
-
-        throw new Error("Don't use global time-related stuff.");
-    };
-
-    // We can't poison global.Date because the normal implementation of
-    // global.setTimeout uses it [1] so if the runnable.js keeps a copy of
-    // global.setTimeout (like it's supposed to), that will blow up.
-    // [1]: https://github.com/joyent/node/blob/7fc835afe362ebd30a0dbec81d3360bd24525222/lib/timers.js#L74
-    var setupPoisonPills = function (finished) {
-
-        global.setTimeout = poisonPill;
-        global.clearTimeout = poisonPill;
-        global.setImmediate = poisonPill;
-        finished();
-    };
-
-    var teardownPoisonPills = function (finished) {
-
-        global.setTimeout = setTimeout;
-        global.clearTimeout = clearTimeout;
-        global.setImmediate = setImmediate;
-        finished();
-    };
-
     it('sets environment', { parallel: false }, function (done) {
 
         var orig = process.env.NODE_ENV;
@@ -447,79 +422,99 @@ describe('Runner', function () {
         });
     });
 
-    it('ignores second error', function (done) {
 
-        var script = Lab.script();
-        script.before(setupPoisonPills);
+    describe('Changing global timeout functions', function () {
 
-        script.after(teardownPoisonPills);
+        // We can't poison global.Date because the normal implementation of
+        // global.setTimeout uses it [1] so if the runnable.js keeps a copy of
+        // global.setTimeout (like it's supposed to), that will blow up.
+        // [1]: https://github.com/joyent/node/blob/7fc835afe362ebd30a0dbec81d3360bd24525222/lib/timers.js#L74
+        var overrideGlobals = function (finished) {
 
-        script.experiment('test', function () {
+            var fn = function () {};
+            global.setTimeout = fn;
+            global.clearTimeout = fn;
+            global.setImmediate = fn;
+            finished();
+        };
 
-            script.test('1', function (finished) {
+        var resetGlobals = function (finished) {
 
-                setImmediate(function () {
+            global.setTimeout = setTimeout;
+            global.clearTimeout = clearTimeout;
+            global.setImmediate = setImmediate;
+            finished();
+        };
 
-                    throw new Error('second');
+        it('setImmediate still functions correctly', function (done) {
+
+            var script = Lab.script();
+            script.before(overrideGlobals);
+
+            script.after(resetGlobals);
+
+            script.experiment('test', function () {
+
+                script.test('1', function (finished) {
+
+                    setImmediate(finished);
                 });
+            });
 
-                throw new Error('first');
+            Lab.report(script, { output: false }, function (err, code, output) {
+
+                expect(code).to.equal(0);
+                done();
             });
         });
 
-        Lab.report(script, { output: false }, function (err, code, output) {
+        it('test timeouts still function correctly', function (done) {
 
-            expect(code).to.equal(1);
-            done();
-        });
-    });
+            var script = Lab.script();
+            script.before(overrideGlobals);
 
-    it('override test timeout', function (done) {
+            script.after(resetGlobals);
 
-        var script = Lab.script();
-        script.before(setupPoisonPills);
+            script.experiment('test', function () {
 
-        script.after(teardownPoisonPills);
-
-        script.experiment('test', function () {
-
-            script.test('timeout', { timeout: 5 }, function (finished) {
-
-                finished();
-            });
-        });
-
-        var now = Date.now();
-        Lab.execute(script, null, null, function (err, notebook) {
-
-            expect(Date.now() - now).to.be.below(100);
-            done();
-        });
-    });
-
-    it('disable test timeout', function (done) {
-
-        var script = Lab.script();
-        script.before(setupPoisonPills);
-
-        script.after(teardownPoisonPills);
-
-        script.experiment('test', { timeout: 5 }, function () {
-
-            script.test('timeout', { timeout: 0 }, function (finished) {
-
-                setTimeout(function () {
+                script.test('timeout', { timeout: 5 }, function (finished) {
 
                     finished();
-                }, 10);
+                });
+            });
+
+            var now = Date.now();
+            Lab.execute(script, null, null, function (err, notebook) {
+
+                expect(Date.now() - now).to.be.below(100);
+                done();
             });
         });
 
-        var now = Date.now();
-        Lab.execute(script, null, null, function (err, notebook) {
+        it('setTimeout still functions correctly', function (done) {
 
-            expect(Date.now() - now).to.be.above(9);
-            done();
+            var script = Lab.script();
+            script.before(overrideGlobals);
+
+            script.after(resetGlobals);
+
+            script.experiment('test', { timeout: 5 }, function () {
+
+                script.test('timeout', { timeout: 0 }, function (finished) {
+
+                    setTimeout(function () {
+
+                        finished();
+                    }, 10);
+                });
+            });
+
+            var now = Date.now();
+            Lab.execute(script, null, null, function (err, notebook) {
+
+                expect(Date.now() - now).to.be.above(9);
+                done();
+            });
         });
     });
 });
