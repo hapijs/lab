@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Tests & Coverage</title>
+    <title>Tests &amp; Coverage</title>
     <script>
       headings = [];
 
@@ -40,9 +40,8 @@
 
           for (var i = 0, il = elements.length; i < il; ++i) {
               var element = elements[i];
-              element.className = element.className.replace('hide', '', 'gi');
-              element.className = element.className.replace('show', '', 'gi');
-              element.className += ' show';
+              element.classList.remove('hide');
+              element.classList.add('show');
           };
       }
 
@@ -52,22 +51,18 @@
 
           for (var i = 0, il = elements.length; i < il; ++i) {
               var element = elements[i];
-              element.className = element.className.replace('show', '', 'gi');
-              element.className = element.className.replace('hide', '', 'gi');
-              element.className += ' hide';
+              element.classList.remove('show');
+              element.classList.add('hide');
           };
       }
 
       function reset () {
 
           var shownElements = document.getElementsByClassName('show');
-          var filterElements = document.getElementsByTagName('input');
+          var filterElements = document.querySelectorAll('input[type=checkbox]');
 
           for (var i = 0, il = filterElements.length; i < il; ++i) {
-              var filterElement = filterElements[i];
-              if (filterElement.type === 'checkbox') {
-                  filterElement.checked = false;
-              }
+              filterElements[i].checked = false;
           }
 
           // Check any filters with visible elements
@@ -367,6 +362,10 @@
 
     #tests .failure  {
         background: #FF9E9E;
+    }
+
+    #tests .skipped  {
+        background: #AA82FF;
     }
 
     #tests .success {
