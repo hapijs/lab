@@ -708,6 +708,38 @@ describe('Reporter', function () {
                 done();
             });
         });
+
+        it('includes test run data', function (done) {
+
+            var Test = require('./coverage/html');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.describe('lab', function () {
+
+                    script.test('something', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+
+                    script.test('something else', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coveragePath: Path.join(__dirname, './coverage/html') }, function (err, code, output) {
+
+                expect(output).to.contain('Test Report');
+                expect(output).to.contain('test-title');
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
     });
 
     describe('tap', function () {

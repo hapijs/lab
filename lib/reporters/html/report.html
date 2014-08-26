@@ -1,15 +1,16 @@
 <!doctype html>
 <html>
   <head>
-    <title>Coverage</title>
+    <title>Tests &amp; Coverage</title>
     <script>
       headings = [];
 
-      onload = function(){
+      onload = function () {
           headings = document.querySelectorAll('h2');
+          reset();
       };
 
-      onscroll = function(e){
+      onscroll = function (e) {
           var heading = find(window.scrollY);
           if (!heading) return;
           var links = document.querySelectorAll('#menu a')
@@ -21,7 +22,7 @@
           }
       };
 
-      function find(y) {
+      function find (y) {
           var i = headings.length
                   , heading;
 
@@ -31,6 +32,52 @@
                   return heading;
               }
           }
+      }
+
+      function toggle (className) {
+
+          var elements = document.getElementsByClassName(className);
+
+          for (var i = 0, il = elements.length; i < il; ++i) {
+              var element = elements[i];
+
+              if (element.classList.contains('hide')) {
+                  element.classList.remove('hide');
+                  element.classList.add('show');
+              }
+              else {
+                  element.classList.remove('show');
+                  element.classList.add('hide');
+              }
+          };
+      }
+
+      function reset () {
+
+          var shownElements = document.getElementsByClassName('show');
+          var filterElements = document.querySelectorAll('input[type=checkbox]');
+
+          for (var i = 0, il = filterElements.length; i < il; ++i) {
+              filterElements[i].checked = false;
+          }
+
+          // Check any filters with visible elements
+          for (i = 0, il = shownElements.length; i < il; ++i) {
+              var shownElement = shownElements[i];
+              var classNames = shownElement.className.split(' ');
+              for (var ci = 0, cl = classNames.length; ci < cl; ++ci){
+                  var element = document.getElementById('show-' + classNames[ci]);
+                  if (element) {
+                      element.checked = true;
+                  }
+              }
+          }
+      };
+
+      function filter (element) {
+
+          toggle(element.value);
+          reset();
       }
     </script>
     <style>
@@ -135,7 +182,7 @@
         padding: 2px 3px;
     }
 
-    .stats:nth-child(2n) {
+    #files .stats:nth-child(2n) {
         display: inline-block;
         margin-top: 15px;
         border: 1px solid #eee;
@@ -179,6 +226,31 @@
         color: #b6b6b6;
     }
 
+    .stats .failures::after {
+        content: ' Failures';
+        color: #b6b6b6;
+    }
+
+    .stats .skipped::after {
+        content: ' Skipped';
+        color: #b6b6b6;
+    }
+
+    .stats .test-count::after {
+        content: ' Tests';
+        color: #b6b6b6;
+    }
+
+    .stats .duration::before {
+        content: '(';
+        color: #b6b6b6;
+    }
+
+    .stats .duration::after {
+        content: ' ms)';
+        color: #b6b6b6;
+    }
+
     .high {
         color: #00d4b4;
     }
@@ -193,7 +265,7 @@
         font-weight: bold;
     }
 
-    table {
+    #files table {
         width: 80%;
         margin-top: 10px;
         border-collapse: collapse;
@@ -202,7 +274,7 @@
         border-radius: 3px;
     }
 
-    table thead {
+    #files thead {
         display: none;
     }
 
@@ -254,13 +326,124 @@
     td.source div.never {
         background: #f8d5d8;
     }
+
+    #tests {
+        padding: 60px;
+    }
+
+    #tests table {
+        width: 80%;
+        margin-top: 10px;
+        border-collapse: collapse;
+        border: 1px solid #cbcbcb;
+        color: #363636;
+        border-radius: 3px;
+    }
+
+    #tests thead {
+        background: #F5F5F5;
+    }
+
+    #tests tr {
+        border: 1px solid #ccc;
+    }
+
+    #tests td {
+        padding-left: 8px;
+    }
+
+    #tests .success:nth-child(2n) {
+        background: #F5F5F5;
+    }
+
+    #tests .failure  {
+        background: #FF9E9E;
+    }
+
+    #tests table .skipped  {
+        background: #AA82FF;
+    }
+
+    #tests .success {
+        color: #949494;
+    }
+
+    #tests .failure .test-title  {
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    #tests .stack {
+        margin-top: 4px;
+        padding-left: 15px;
+        margin-bottom: 12px;
+        font: 12px monaco, monospace;
+        white-space: pre;
+        line-height: 15px;
+    }
+
+    .hide {
+        position: absolute;
+        left: -9999em;
+    }
+
+    .show {
+        position: relative;
+    }
+
+    #filters {
+        width: 75%;
+        margin-top: 25px;
+    }
+
+    #filters label {
+        margin-right: 10px;
+    }
     </style>
   </head>
   <body>
+  <div id="tests">
+      <h1>Test Report</h1>
+      <div class="stats {{#if failures.length}}terrible{{else}}{{#if skipped.length}}low{{else}}high{{/if}}{{/if}}">
+          <div class="failures">{{failures.length}}</div>
+          <div class="skipped">{{skipped.length}}</div>
+          <div class="test-count">{{tests.length}}</div>
+          <div class="duration">{{duration}}</div>
+      </div>
+      <div id="filters">
+          <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success"><label for="show-success">Show Success</label></input>
+          <input type="checkbox" checked="" onchange="filter(this)" value="failure" id="show-failure"><label for="show-failure">Show Failure</label></input>
+          {{#each paths}}
+          <input type="checkbox" checked="" onchange="filter(this)" value="{{this}}" id="show-{{this}}"><label for="show-{{this}}">{{replace this "\_" " " "gi"}}</label></input>
+          {{/each}}
+      </div>
+      <table>
+          <thead>
+          <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Duration (ms)</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each tests}}
+          <tr class="show {{join this.path " "}} {{#if this.err}}failure{{else}}success{{/if}}">
+              <td class="test-id">{{this.id}}</td>
+              <td class="test-title">{{this.title}}
+                  {{#if this.err}}<div class="stack">{{this.err.stack}}</div>{{/if}}
+              </td>
+              <td class="test-duration">{{this.duration}}</td>
+          </tr>
+          {{/each}}
+          </tbody>
+      </table>
+  </div>
+
     <div id="coverage">
-        <h1 id="overview">Code Coverage Report</h1>
+        <h1>Code Coverage Report</h1>
         <div id="menu">
-            <li><a href="#overview">overview</a></li>
+            <li><a href="#tests">Test Report</a></li>
+            <li><a href="#coverage">Coverage Report</a></li>
             {{#each cov.files}}
             <li>
                 <span class="cov {{this.percentClass}}">{{this.percent}}</span>

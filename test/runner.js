@@ -423,7 +423,7 @@ describe('Runner', function () {
     });
 
 
-    describe('Changing global timeout functions', function () {
+    describe('global timeout functions', function () {
 
         // We can't poison global.Date because the normal implementation of
         // global.setTimeout uses it [1] so if the runnable.js keeps a copy of
