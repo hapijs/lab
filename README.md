@@ -31,7 +31,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-p` - sets parallel execution as default test option. Defaults to serial execution.
 - `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - text report.
-    - `html` - HTML code coverage report (sets `-c`).
+    - `html` - HTML test and code coverage report (sets `-c`).
     - `json` - output results in JSON format.
     - `junit` - output results in JUnit XML format.
     - `tap` - TAP protocol report.
