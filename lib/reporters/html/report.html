@@ -34,25 +34,21 @@
           }
       }
 
-      function show (className) {
+      function toggle (className) {
 
           var elements = document.getElementsByClassName(className);
 
           for (var i = 0, il = elements.length; i < il; ++i) {
               var element = elements[i];
-              element.classList.remove('hide');
-              element.classList.add('show');
-          };
-      }
 
-      function hide (className) {
-
-          var elements = document.getElementsByClassName(className);
-
-          for (var i = 0, il = elements.length; i < il; ++i) {
-              var element = elements[i];
-              element.classList.remove('show');
-              element.classList.add('hide');
+              if (element.classList.contains('hide')) {
+                  element.classList.remove('hide');
+                  element.classList.add('show');
+              }
+              else {
+                  element.classList.remove('show');
+                  element.classList.add('hide');
+              }
           };
       }
 
@@ -80,7 +76,7 @@
 
       function filter (element) {
 
-          element.checked ? show(element.value) : hide(element.value);
+          toggle(element.value);
           reset();
       }
     </script>
@@ -364,7 +360,7 @@
         background: #FF9E9E;
     }
 
-    #tests .skipped  {
+    #tests table .skipped  {
         background: #AA82FF;
     }
 
