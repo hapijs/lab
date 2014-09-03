@@ -81,6 +81,23 @@ describe('Coverage', function () {
         done();
     });
 
+    it('measures when errors are thrown', function (done) {
+
+        var Test = require('./coverage/throws');
+
+        var fn = function () {
+
+            Test.method(true);
+            Test.method(false);
+        };
+
+        expect(fn).to.throw(Error);
+
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/throws') });
+        expect(cov.percent).to.equal(100);
+        done();
+    });
+
     describe('#analyze', function () {
 
         it('sorts file paths in report', function (done) {
