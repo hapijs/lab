@@ -51,8 +51,8 @@ To use locally:
 $ npm install --save-dev lab
 ```
 
-By default, **lab** loads all the '*.js' files inside the local 'test' directory and executes the tests found. To start **lab** using
-different directories or files, pass those as arguments:
+By default, **lab** loads all the '\*.js' files inside the local 'test' directory and executes the tests found.  To use different directories or files, pass the file or directories as arguments:
+
 ```bash
 $ lab unit.js
 ```
