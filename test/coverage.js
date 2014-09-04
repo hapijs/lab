@@ -23,7 +23,6 @@ var expect = _Lab.expect;
 describe('Coverage', function () {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
-    require('./coverage/prime');        // Initialize global container
 
     it('instruments and measures coverage', function (done) {
 

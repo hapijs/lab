@@ -833,4 +833,61 @@ describe('Reporter', function () {
             });
         });
     });
+
+    describe('lcov', function () {
+
+        it('generates a lcov report', function (done) {
+
+            var Test = require('./coverage/html');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(1, 2, 3);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'lcov', coverage: true }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(0);
+
+                expect(output).to.contain('coverage/html.js');
+                expect(output).to.contain('DA:1,1');                    // Check that line is marked as covered
+                expect(output).to.contain('LF:13');                     // Total Lines
+                expect(output).to.contain('LH:9');                      // Lines Hit
+                expect(output).to.contain('end_of_record');
+
+                done();
+            });
+        });
+
+        it('runs without coverage but doesn\'t generate output', function (done) {
+
+            var Test = require('./coverage/html');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(1, 2, 3);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'lcov', coverage: false }, function (err, code, output) {
+
+                expect(err).to.not.exist;
+                expect(code).to.equal(0);
+
+                expect(output).to.be.empty;
+
+                done();
+            });
+        });
+    });
 });
