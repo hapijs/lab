@@ -35,6 +35,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `json` - output results in JSON format.
     - `junit` - output results in JUnit XML format.
     - `tap` - TAP protocol report.
+    - `lcov` - output to [lcov](http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php) format.
 - `-s` - silence test output, defaults to false.
 - `-t` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 - `-v` - verbose test output, defaults to false.
