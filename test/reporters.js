@@ -366,6 +366,49 @@ describe('Reporter', function () {
             });
         });
 
+        it('reports correct lines with sourcemaps enabled', function (done) {
+
+            var Test = require('./coverage/sourcemaps-external');
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, function (err, code, output) {
+
+                expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
+                expect(output).to.contain('test/coverage/while.js on line(s): 11, 12');
+                done();
+            });
+        });
+
+        it('doesn\'t report lines on a fully covered file with sourcemaps enabled', function (done) {
+
+            var Test = require('./coverage/sourcemaps-covered');
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/'), sourcemaps: true }, function (err, code, output) {
+
+                expect(output).to.not.contain('sourcemaps-covered');
+                done();
+            });
+        });
+
         it('generates a report with multi-line progress', function (done) {
 
             var script = Lab.script();
@@ -623,6 +666,37 @@ describe('Reporter', function () {
 
                 expect(output).to.contain('<div class="stats medium">');
                 expect(output).to.contain('<span class="cov medium">69.23</span>');
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('generates a coverage report including sourcemaps information', function (done) {
+
+            var Test = require('./coverage/sourcemaps-external');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, function (err, code, output) {
+
+                expect(output).to.contain('<th>Original filename</th>')
+                    .and.to.contain('<th>Original line</th>')
+                    .and.to.contain('<td class="sourcemaps file">test/coverage/sourcemaps-external.js</td>')
+                    .and.to.contain('<td class="sourcemaps line">1</td>')
+                    .and.to.contain('<td class="sourcemaps line">6</td>')
+                    .and.to.contain('<td class="sourcemaps line">9</td>')
+                    .and.to.contain('<td class="sourcemaps line">11</td>')
+                    .and.to.contain('<td class="sourcemaps line">12</td>')
+                    .and.to.contain('<td class="sourcemaps line">13</td>')
+                    .and.to.contain('<td class="sourcemaps line">16</td>');
                 delete global.__$$testCovHtml;
                 done();
             });

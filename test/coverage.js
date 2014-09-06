@@ -47,6 +47,64 @@ describe('Coverage', function () {
         done();
     });
 
+    it('identifies lines with partial coverage when having external sourcemap', function (done) {
+
+        var Test = require('./coverage/sourcemaps-external');
+        Test.method(false);
+
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-external'), sourcemaps: true });
+
+        var source = cov.files[0].source;
+        var missedLines = [];
+        Object.keys(source).forEach(function (lineNumber) {
+
+            var line = source[lineNumber];
+            if (line.miss) {
+                missedLines.push({
+                    filename: line.originalFilename,
+                    lineNumber: lineNumber,
+                    originalLineNumber: line.originalLine
+                });
+            }
+        });
+
+        expect(missedLines).to.deep.include.members([
+            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
+            { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
+        ]);
+
+        done();
+    });
+
+    it('identifies lines with partial coverage when having inline sourcemap', function (done) {
+
+        var Test = require('./coverage/sourcemaps-inline');
+        Test.method(false);
+
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-inline'), sourcemaps: true });
+
+        var source = cov.files[0].source;
+        var missedLines = [];
+        Object.keys(source).forEach(function (lineNumber) {
+
+            var line = source[lineNumber];
+            if (line.miss) {
+                missedLines.push({
+                    filename: line.originalFilename,
+                    lineNumber: lineNumber,
+                    originalLineNumber: line.originalLine
+                });
+            }
+        });
+
+        expect(missedLines).to.deep.include.members([
+            { filename: './while.js', lineNumber: '5', originalLineNumber: 11 },
+            { filename: './while.js', lineNumber: '6', originalLineNumber: 12 }
+        ]);
+
+        done();
+    });
+
     it('bypasses marked code', function (done) {
 
         var Test = require('./coverage/bypass');

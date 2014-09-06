@@ -295,6 +295,16 @@
         background: #f0f0f0;
     }
 
+    table td.sourcemaps {
+        width: 1%;
+        border-left: 1px solid #cbcbcb;
+        padding: 0 10px;
+    }
+
+    td.sourcemaps.file {
+        background: #f0f0f0;
+    }
+
     tr.miss td.line,
     tr.miss td.hits {
         background: #e6c3c7;
@@ -473,6 +483,10 @@
                             <th>Line</th>
                             <th>Hits</th>
                             <th>Source</th>
+                            {{#if this.sourcemaps}}
+                                <th>Original filename</th>
+                                <th>Original line</th>
+                            {{/if}}
                         </tr>
                     </thead>
                     <tbody>
@@ -483,12 +497,20 @@
                                 <td class="line">{{@key}}</td>
                                 <td class="hits">{{this.percent}}</td>
                                 <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{this.miss}}">{{this.source}}</div>{{else}}<div>{{this.source}}</div>{{/if}}{{/each}}</td>
+                                {{#if ../../../sourcemaps}}
+                                    <td class="sourcemaps file">{{this.originalFilename}}</td>
+                                    <td class="sourcemaps line">{{this.originalLine}}</td>
+                                {{/if}}
                             </tr>
                         {{else}}
                             <tr class="miss">
                                 <td class="line">{{@key}}</td>
                                 <td class="hits">{{this.percent}}</td>
                                 <td class="source">{{this.source}}</td>
+                                {{#if ../../../sourcemaps}}
+                                    <td class="sourcemaps file">{{this.originalFilename}}</td>
+                                    <td class="sourcemaps line">{{this.originalLine}}</td>
+                                {{/if}}
                             </tr>
                         {{/if}}
                     {{else}}
@@ -496,6 +518,10 @@
                             <td class="line">{{@key}}</td>
                             <td class="hits">{{hits this.hits}}</td>
                             <td class="source">{{this.source}}</td>
+                            {{#if ../../sourcemaps}}
+                                <td class="sourcemaps file">{{this.originalFilename}}</td>
+                                <td class="sourcemaps line">{{this.originalLine}}</td>
+                            {{/if}}
                         </tr>
                     {{/if}}
                 {{/each}}
