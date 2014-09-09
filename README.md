@@ -36,6 +36,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `junit` - output results in JUnit XML format.
     - `tap` - TAP protocol report.
     - `lcov` - output to [lcov](http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php) format.
+    - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
 - `-s` - silence test output, defaults to false.
 - `-t` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 - `-v` - verbose test output, defaults to false.

@@ -890,4 +890,143 @@ describe('Reporter', function () {
             });
         });
     });
+
+    describe('clover', function () {
+
+        it('generates a report', function (done) {
+
+            var Test = require('./coverage/clover');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.describe('lab', function () {
+
+                    script.test('something', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+
+                    script.test('something else', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+                });
+            });
+
+            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover') }, function (err, code, output) {
+
+                expect(output).to.contain('clover.test.coverage');
+                expect(output).to.contain('<line num="9" count="1" type="stmt"/>');
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('correctly defaults a package root name', function (done) {
+
+            var reporter = Reporters.generate({reporter: 'clover', coveragePath: null});
+
+            expect(reporter.settings.packageRoot).to.eql('root');
+
+            var Test = require('./coverage/clover');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.describe('lab', function () {
+
+                    script.test('something', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+
+                    script.test('something else', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+                });
+            });
+
+            var origCwd = process.cwd();
+            process.chdir(Path.join(__dirname, './coverage/'));
+
+            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover') }, function (err, code, output) {
+
+                expect(output).to.not.contain('clover.test.coverage');
+                expect(output).to.contain('<coverage generated=');
+                delete global.__$$testCovHtml;
+                process.chdir(origCwd);
+                done();
+            });
+        });
+
+        it('correctly determines a package root name', function (done) {
+
+            var reporter = Reporters.generate({reporter: 'clover', coveragePath: Path.join(__dirname, './somepath')});
+
+            expect(reporter.settings.packageRoot).to.eql('somepath');
+            done();
+        });
+
+        it('results in an empty generation', function (done) {
+
+            var Test = require('./coverage/clover');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.describe('lab', function () {
+
+                    script.test('something', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+
+                    script.test('something else', function (finished) {
+
+                        Test.method(1, 2, 3);
+                        finished();
+                    });
+                });
+            });
+
+            Lab.report(script, { reporter: 'clover', coverage: false, coveragePath: Path.join(__dirname, './coverage/clover') }, function (err, code, output) {
+
+                expect(output).to.not.contain('clover.test.coverage');
+                expect(output).to.contain('<coverage generated=');
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('should generate a report with multiple files', function (done) {
+
+            var reporter = Reporters.generate({reporter: 'clover'}),
+                output = '';
+
+            reporter.report = function (text) {
+                output += text;
+            };
+
+            reporter.end({
+                coverage: {
+                    files: [
+                        { filename: 'fileA.js', hits: 0, misses: 0, sloc: 0 },
+                        { filename: 'fileB.js', hits: 0, misses: 0, sloc: 0 }
+                    ]
+                }
+            });
+
+            expect(output).to.contain('<package name="root">');
+            expect(output).to.contain('<file name="fileA.js"');
+            expect(output).to.contain('<file name="fileB.js"');
+            done();
+        });
+    });
 });

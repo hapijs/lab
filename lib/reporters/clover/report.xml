@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="{{now}}">
+    <project timestamp="{{now}}" name="All Files">
+        <metrics statements="{{cov.sloc}}" coveredstatements="{{hits cov.hits}}" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="{{cov.sloc}}" coveredelements="{{hits cov.hits}}" complexity="0" packages="{{packageCount}}" files="{{fileCount}}" classes="{{fileCount}}" loc="{{cov.sloc}}" ncloc="{{cov.sloc}}"/>
+        {{#each packages}}
+        <package name="{{@key}}">
+            <metrics statements="{{this.sloc}}" coveredstatements="{{hits this.hits}}"/>
+            {{#each this.files}}
+            <file name="{{this.basename}}" path="{{this.filename}}">
+                <metrics statements="{{this.sloc}}" coveredstatements="{{hits this.hits}}"/>
+                {{#each this.source}}
+                <line num="{{@key}}" count="{{hits this.hits}}" type="stmt"/>
+                {{/each}}
+            </file>
+            {{/each}}
+        </package>
+        {{/each}}
+    </project>
+</coverage>
