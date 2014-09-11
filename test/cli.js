@@ -3,7 +3,6 @@
 var ChildProcess = require('child_process');
 var Fs = require('fs');
 var Path = require('path');
-var Stream = require('stream');
 var Lab = require('../');
 var _Lab = require('../test_runner');
 
@@ -29,7 +28,7 @@ describe('CLI', function () {
 
     it('runs a single test from the command line', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
@@ -53,7 +52,7 @@ describe('CLI', function () {
 
     it('runs a directory of tests from the command line', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath,'test/cli']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
@@ -80,7 +79,7 @@ describe('CLI', function () {
         var cli = ChildProcess.spawn('node', [labPath,'-h']);
         var output = '';
 
-        cli.stderr.on('data', function (data) {
+        cli.stdout.on('data', function (data) {
 
             output+= data;
         });
@@ -295,7 +294,7 @@ describe('CLI', function () {
 
     it('doesn\'t fail with coverage when no external file is being tested', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-t 10']);
+        var cli = ChildProcess.spawn(labPath, ['test/cli/simple.js', '-t', '10']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
