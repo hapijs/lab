@@ -564,4 +564,32 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('outputs to file passed with -o argument', function (done) {
+
+        var outputPath = __dirname + '/_no_exist';
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-o', outputPath]);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+
+            var file = Fs.readFileSync(outputPath);
+            expect(file.toString()).to.contain('No global variable leaks detected');
+            Fs.unlinkSync(outputPath);
+            done();
+        });
+    });
 });
