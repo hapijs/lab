@@ -123,6 +123,36 @@ describe('CLI', function () {
         });
     });
 
+    it('ignores the list of predefined globals when using --ignore', function (done) {
+
+        var output = '';
+        var scriptFile = 'global.foo = 1; global.bar = 2';
+
+        Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
+
+        var cli = ChildProcess.spawn('node', [labPath,'test/cli/leaks.js', '--ignore', 'foo,bar']);
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('No global variable leaks detected');
+
+            Fs.unlinkSync('./test/cli/leaks.js');
+            done();
+        });
+    });
+
     it('silences output (-s)', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-s']);

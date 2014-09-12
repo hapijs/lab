@@ -16,20 +16,20 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 ## Command Line
 
 **lab** supports the following command line options:
-- `-c` - enables code coverage analysis.
-- `-C` - enables or disables color output. Defaults to console capabilities.
-- `-d` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
-- `-e` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
-- `-f` - do not perform a recursive load of test files within the test directory.
-- `-g` - only run tests matching the given pattern which is internally compiled to a RegExp.
-- `-h` - show command line usage.
-- `-i` - only run the test for the given identifier (or identifiers range).
-- `-I` - ignore a list of globals for the leak detection (comma separated)
-- `-l` - disables global variable leak detection.
-- `-m` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
-- `-o` - file to write the report to, otherwise sent to stdout.
-- `-p` - sets parallel execution as default test option. Defaults to serial execution.
-- `-r` - the reporter used to generate the test results. Defaults to `console`. Options are:
+- `-c`, `--coverage` - enables code coverage analysis.
+- `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
+- `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
+- `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
+- `-f`, `--flat` - do not perform a recursive load of test files within the test directory.
+- `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
+- `-h`, `--help` - show command line usage.
+- `-i`, `--id` - only run the test for the given identifier (or identifiers range).
+- `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
+- `-l`, `--leaks` - disables global variable leak detection.
+- `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
+- `-o`, `--output` - file to write the report to, otherwise sent to stdout.
+- `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
+- `-r`, `--reporter` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - text report.
     - `html` - HTML test and code coverage report (sets `-c`).
     - `json` - output results in JSON format.
@@ -37,9 +37,9 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `tap` - TAP protocol report.
     - `lcov` - output to [lcov](http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php) format.
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
-- `-s` - silence test output, defaults to false.
-- `-t` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
-- `-v` - verbose test output, defaults to false.
+- `-s`, `--silence` - silence test output, defaults to false.
+- `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
+- `-v`, `--verbose` - verbose test output, defaults to false.
 
 ## Usage
 
