@@ -540,4 +540,28 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('supports junit reporter', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/only.js', '-r', 'junit']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('<testsuite tests="2"');
+            done();
+        });
+    });
 });
