@@ -485,4 +485,29 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('displays error message when an unknown argument is specified', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-z']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            output += data;
+            expect(data).to.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('Unknown option: z');
+            done();
+        });
+    });
 });
