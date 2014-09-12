@@ -570,8 +570,9 @@ describe('CLI', function () {
         var outputPath = __dirname + '/_no_exist';
         try {
             Fs.unlinkSync(outputPath);
-        } catch (err) {
-            
+        }
+        catch (err) {
+            // Error is ok here
         }
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-o', outputPath]);
