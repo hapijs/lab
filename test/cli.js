@@ -568,6 +568,12 @@ describe('CLI', function () {
     it('outputs to file passed with -o argument', function (done) {
 
         var outputPath = __dirname + '/_no_exist';
+        try {
+            Fs.unlinkSync(outputPath);
+        } catch (err) {
+            
+        }
+
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-o', outputPath]);
         var output = '';
 
