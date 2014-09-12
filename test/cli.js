@@ -413,7 +413,7 @@ describe('CLI', function () {
         });
     });
 
-    it('Displays error message when a script is detected without an exports.lab', function (done) {
+    it('displays error message when a script is detected without an exports.lab', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/missingExports.js']);
         var output = '';
@@ -437,7 +437,7 @@ describe('CLI', function () {
         });
     });
 
-    it('Displays error message when a script is missing exports and other scripts contain them', function (done) {
+    it('displays error message when a script is missing exports and other scripts contain them', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/']);
         var output = '';
@@ -457,6 +457,31 @@ describe('CLI', function () {
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
             expect(output).to.contain('includes a lab script that is not exported via exports.lab');
+            done();
+        });
+    });
+
+    it('displays error message when an unknown reporter is specified', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-r', 'unknown']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            output += data;
+            expect(data).to.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('Invalid');
             done();
         });
     });
