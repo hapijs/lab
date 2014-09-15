@@ -50,6 +50,30 @@ describe('CLI', function () {
         });
     });
 
+    it('runs multiple tests from the command line', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', 'test/cli/simple2.js', '-m', '2000']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist;
+        });
+
+        cli.on('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist;
+            expect(output).to.contain('4 tests complete');
+            done();
+        });
+    });
+
     it('runs a directory of tests from the command line', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli']);
