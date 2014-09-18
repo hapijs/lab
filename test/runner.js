@@ -422,6 +422,24 @@ describe('Runner', function () {
         });
     });
 
+    it('uses provided linter', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('1', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.report(script, { output: false, lint: 'eslint', lintingPath: 'test/lint' }, function (err, code, output) {
+
+            expect(code).to.equal(0);
+            expect(output).to.contain('eslint/').and.to.contain('no-unused-vars');
+            done();
+        });
+    });
 
     describe('global timeout functions', function () {
 

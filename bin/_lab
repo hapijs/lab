@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 
-var ChildProcess = require('child_process');
+if (process.env.ROOT_SPAWN) {
+    require('../test_runner/cli').run();
+}
+else {
+    var ChildProcess = require('child_process');
 
+    ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
 
-ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
+        process.env.ROOT_SPAWN = true;
+        require('../test_runner/cli').run();
+	});
 
-	require('../test_runner/cli').run();
-});
+    process.on('exit', function (code) {
 
-process.on('exit', function (code) {
-
-	ChildProcess.exec('rm -rf test_runner', function (err) {});
-});
+        ChildProcess.exec('rm -rf test_runner', function (err) {});
+    });
+}
