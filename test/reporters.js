@@ -263,21 +263,84 @@ describe('Reporter', function () {
             });
         });
 
-        it('generates a report with timeout', function (done) {
+        describe('timeouts', function () {
 
-            var script = Lab.script();
-            script.experiment('test', function () {
+            it('generates a report with timeout', function (done) {
 
-                script.test('works', function (finished) { });
+                var script = Lab.script();
+                script.experiment('test', function () {
+
+                    script.test('works', function (finished) { });
+                });
+
+                Lab.report(script, { reporter: 'console', colors: false, timeout: 1 }, function (err, code, output) {
+
+                    expect(err).to.not.exist;
+                    expect(code).to.equal(1);
+                    var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                    expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Timed out \(\d+ms\)\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                    done();
+                });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, timeout: 1 }, function (err, code, output) {
+            var tests = [
+                {
+                    type: 'before',
+                    expect: /^\n  \n  x\n\nTest script errors:\n\nTimed out \(1ms\) - Before test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\nFailed tests:\n\n  1\) test works:\n\n      \n\n  \n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                },
+                {
+                    type: 'after',
+                    expect: /^\n  \n  \.\n\nTest script errors:\n\nTimed out \(1ms\) - After test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                },
+                {
+                    type: 'beforeEach',
+                    expect: /^\n  \n  x\n\nTest script errors:\n\nTimed out \(1ms\) - Before each test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\nFailed tests:\n\n  1\) test works:\n\n      \n\n  \n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                },
+                {
+                    type: 'afterEach',
+                    expect: /^\n  \n  \.\n\nTest script errors:\n\nTimed out \(1ms\) - After each test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                }
+            ];
 
-                expect(err).to.not.exist;
-                expect(code).to.equal(1);
-                var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Timed out \(\d+ms\)\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                done();
+            tests.forEach(function (test) {
+
+                it('generates a report with timeout on ' + test.type, function (done) {
+
+                    var script = Lab.script();
+                    script.experiment('test', function () {
+
+                        script[test.type](function (finished) { });
+                        script.test('works', function (finished) { finished() });
+                    });
+
+                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1 }, function (err, code, output) {
+
+                        expect(err).to.not.exist;
+                        expect(code).to.equal(1);
+                        var result = output.replace(/\/?[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                        expect(result).to.match(test.expect);
+                        done();
+                    });
+                });
+
+                it('generates a report with inline timeout on ' + test.type, function (done) {
+
+                    var script = Lab.script();
+                    script.experiment('test', function () {
+
+                        script[test.type]({ timeout: 1 }, function (finished) { });
+                        script.test('works', function (finished) { finished() });
+                    });
+
+                    Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                        expect(err).to.not.exist;
+                        expect(code).to.equal(1);
+                        var result = output.replace(/\/?[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                        expect(result).to.match(test.expect);
+                        done();
+                    });
+                });
             });
         });
 

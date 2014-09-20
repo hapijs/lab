@@ -27,6 +27,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
+- `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
 - `-r`, `--reporter` - the reporter used to generate the test results. Defaults to `console`. Options are:
@@ -119,8 +120,17 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 - `skip` - skip execution. Cannot be overridden in children once parent is set to skip.
 - `only` - marks all other tests or experiments with `skip`.  This doesn't mark all other experiments and tests in a suite of scripts as skipped, instead it works within a single test script.
 
+`before()`, `after()`, `beforeEach()`, `afterEach()` accept an optional `options` argument which must be an object with the following optional keys:
+- `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
+
 ```javascript
 lab.experiment('math', { timeout: 1000 }, function () {
+
+    lab.before({ timeout: 500 }, function (done) {
+
+        doSomething();
+        done();
+    });
 
     lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
 
