@@ -38,6 +38,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `lcov` - output to [lcov](http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php) format.
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
 - `-s`, `--silence` - silence test output, defaults to false.
+- `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 - `-v`, `--verbose` - verbose test output, defaults to false.
 
