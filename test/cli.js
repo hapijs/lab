@@ -41,7 +41,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -65,7 +65,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -89,7 +89,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -108,7 +108,7 @@ describe('CLI', function () {
             output+= data;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -136,7 +136,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -166,7 +166,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -192,7 +192,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -216,7 +216,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -240,7 +240,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -265,7 +265,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -289,7 +289,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -313,7 +313,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -337,7 +337,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -361,7 +361,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
@@ -386,7 +386,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -410,7 +410,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -434,7 +434,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -458,7 +458,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -482,7 +482,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
@@ -506,7 +506,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
@@ -531,7 +531,7 @@ describe('CLI', function () {
             expect(data).to.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
@@ -556,7 +556,7 @@ describe('CLI', function () {
             expect(data).to.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
             expect(signal).to.not.exist;
@@ -580,7 +580,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;
@@ -612,7 +612,7 @@ describe('CLI', function () {
             expect(data).to.not.exist;
         });
 
-        cli.on('close', function (code, signal) {
+        cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
             expect(signal).to.not.exist;

@@ -286,19 +286,19 @@ describe('Reporter', function () {
             var tests = [
                 {
                     type: 'before',
-                    expect: /^\n  \n  x\n\nTest script errors:\n\nTimed out \(1ms\) - Before test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\nFailed tests:\n\n  1\) test works:\n\n      \n\n  \n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                    expect: 'Timed out (1ms) - Before test'
                 },
                 {
                     type: 'after',
-                    expect: /^\n  \n  \.\n\nTest script errors:\n\nTimed out \(1ms\) - After test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                    expect: 'Timed out (1ms) - After test'
                 },
                 {
                     type: 'beforeEach',
-                    expect: /^\n  \n  x\n\nTest script errors:\n\nTimed out \(1ms\) - Before each test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\nFailed tests:\n\n  1\) test works:\n\n      \n\n  \n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                    expect: 'Timed out (1ms) - Before each test'
                 },
                 {
                     type: 'afterEach',
-                    expect: /^\n  \n  \.\n\nTest script errors:\n\nTimed out \(1ms\) - After each test\n      at null\.<anonymous> \(<trace>\)\n      at Timer\.listOnTimeout \[as ontimeout\] \(<trace>\)\n\nThere were 1 test script error\(s\)\.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/
+                    expect:'Timed out (1ms) - After each test'
                 }
             ];
 
@@ -317,8 +317,7 @@ describe('Reporter', function () {
 
                         expect(err).to.not.exist;
                         expect(code).to.equal(1);
-                        var result = output.replace(/\/?[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                        expect(result).to.match(test.expect);
+                        expect(output).to.contain(test.expect);
                         done();
                     });
                 });
@@ -336,8 +335,7 @@ describe('Reporter', function () {
 
                         expect(err).to.not.exist;
                         expect(code).to.equal(1);
-                        var result = output.replace(/\/?[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                        expect(result).to.match(test.expect);
+                        expect(output).to.contain(test.expect);
                         done();
                     });
                 });
