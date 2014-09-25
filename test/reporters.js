@@ -322,6 +322,23 @@ describe('Reporter', function () {
                     });
                 });
 
+                it('doesn\'t generates a report with timeout on ' + test.type, function (done) {
+
+                    var script = Lab.script();
+                    script.experiment('test', function () {
+
+                        script[test.type](function (finished) { setTimeout(finished, 500); });
+                        script.test('works', function (finished) { finished() });
+                    });
+
+                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000 }, function (err, code, output) {
+
+                        expect(err).to.not.exist;
+                        expect(code).to.equal(0);
+                        done();
+                    });
+                });
+
                 it('generates a report with inline timeout on ' + test.type, function (done) {
 
                     var script = Lab.script();
