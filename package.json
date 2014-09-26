@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "bossy": "1.x.x",
-    "esprima": "1.x.x",
     "chai": "1.x.x",
+    "diff": "1.x.x",
+    "esprima": "1.x.x",
+    "growl": "^1.8.1",
     "handlebars": "1.x.x",
     "items": "1.x.x",
-    "diff": "1.x.x",
     "source-map-support": "0.2.x"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "bin": {
     "lab": "./bin/lab"
   },
