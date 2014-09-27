@@ -517,4 +517,25 @@ describe('Runner', function () {
             });
         });
     });
+
+    it('notifies', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('1', function (finished) {
+
+                finished();
+            });
+        });
+
+        Lab.report(script, { notify: true }, function (err, code, output) {
+            expect(code).to.equal(0);
+            Lab.report(script, { notify: false }, function (err, code, output) {
+                expect(code).to.equal(0);
+                done();
+            });
+        });
+    });
+
 });
