@@ -10,6 +10,7 @@ var NodeUtil = require('util');
 var _Lab = require('../test_runner');
 var Lab = require('../');
 var Reporters = require('../lib/reporters');
+var Symbols = require('../lib/reporters/symbols')();
 var NonWindowsSymbols = require('../lib/reporters/symbols')('notwin');
 var Win32Symbols = require('../lib/reporters/symbols')('win32');
 
@@ -172,6 +173,29 @@ describe('Reporter', function () {
 
             done();
         });
+
+        it('creates the correct symbol from process.platform', function (done) {
+
+            Lab.expect(Symbols.terse.ok).to.equal('.');
+            Lab.expect(Symbols.terse.err).to.equal('x');
+            Lab.expect(Symbols.terse.skipped).to.equal('-');
+            Lab.expect(Symbols.verbose.skipped).to.equal('-');
+
+            if(process.platform === 'win32'){
+                Lab.expect(Symbols.verbose.ok).to.equal(Win32Symbols.verbose.ok);
+                Lab.expect(Symbols.verbose.err).to.equal(Win32Symbols.verbose.err);
+            }
+            else {
+                Lab.expect(Symbols.verbose.ok).to.equal(NonWindowsSymbols.verbose.ok);
+                Lab.expect(Symbols.verbose.err).to.equal(NonWindowsSymbols.verbose.err);
+            }
+
+
+
+            done();
+        });
+
+
     });
 
     describe('console', function () {
