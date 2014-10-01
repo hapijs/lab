@@ -190,8 +190,6 @@ describe('Reporter', function () {
                 Lab.expect(Symbols.verbose.err).to.equal(NonWindowsSymbols.verbose.err);
             }
 
-
-
             done();
         });
 
