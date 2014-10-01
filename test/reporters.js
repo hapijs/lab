@@ -10,7 +10,8 @@ var NodeUtil = require('util');
 var _Lab = require('../test_runner');
 var Lab = require('../');
 var Reporters = require('../lib/reporters');
-
+var NonWindowsSymbols = require('../lib/reporters/symbols')('notwin');
+var Win32Symbols = require('../lib/reporters/symbols')('win32');
 
 // Declare internals
 
@@ -140,6 +141,35 @@ describe('Reporter', function () {
         reporter.finalize(notebook, function (err, code, output) {
 
             expect(code).to.equal(0);
+            done();
+        });
+    });
+
+    describe('symbols', function () {
+
+        it('creates the correct symbol for non windows', function (done) {
+
+            Lab.expect(NonWindowsSymbols.terse.ok).to.equal('.');
+            Lab.expect(NonWindowsSymbols.terse.err).to.equal('x');
+            Lab.expect(NonWindowsSymbols.terse.skipped).to.equal('-');
+
+            Lab.expect(NonWindowsSymbols.verbose.ok).to.equal('\u2714');
+            Lab.expect(NonWindowsSymbols.verbose.err).to.equal('\u2716');
+            Lab.expect(NonWindowsSymbols.verbose.skipped).to.equal('-');
+
+            done();
+        });
+
+        it('creates the correct symbol for windows', function (done) {
+
+            Lab.expect(Win32Symbols.terse.ok).to.equal('.');
+            Lab.expect(Win32Symbols.terse.err).to.equal('x');
+            Lab.expect(Win32Symbols.terse.skipped).to.equal('-');
+
+            Lab.expect(Win32Symbols.verbose.ok).to.equal('\u221A');
+            Lab.expect(Win32Symbols.verbose.err).to.equal('\u00D7');
+            Lab.expect(Win32Symbols.verbose.skipped).to.equal('-');
+
             done();
         });
     });
