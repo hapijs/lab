@@ -395,6 +395,30 @@ describe('Reporter', function () {
             });
         });
 
+        it('generates a report with verbose progress that displays well on windows', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            var oldProcess = global.process;
+            process = Hoek.clone(process);
+            process.platform = 'win32';
+
+            Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
+
+                process = oldProcess;
+                expect(output).to.contain('\u221A');
+
+                done();
+            });
+        });
+
         it('generates a coverage report (verbose)', function (done) {
 
             var Test = require('./coverage/console');
