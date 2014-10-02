@@ -6,7 +6,7 @@ var Os = require('os');
 var Path = require('path');
 var Stream = require('stream');
 var Tty = require('tty');
-var NodeUtil = require('util');
+var Hoek = require('hoek');
 var _Lab = require('../test_runner');
 var Lab = require('../');
 var Reporters = require('../lib/reporters');
@@ -40,7 +40,7 @@ describe('Reporter', function () {
             this.content = '';
         };
 
-        NodeUtil.inherits(Recorder, Stream.Writable);
+        Hoek.inherits(Recorder, Stream.Writable);
 
         Recorder.prototype._write = function (chunk, encoding, next) {
 

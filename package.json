@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "repository": "git://github.com/hapijs/lab",
   "main": "index",
   "keywords": [
@@ -20,6 +20,7 @@
     "source-map-support": "0.2.x"
   },
   "devDependencies": {
+    "hoek": "2.x.x"
   },
   "bin": {
     "lab": "./bin/lab"
