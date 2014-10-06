@@ -8,5 +8,5 @@ var internals = {};
 
 exports.method = function (value) {
 
-	return value;
+	return value
 };
