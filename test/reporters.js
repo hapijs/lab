@@ -677,6 +677,33 @@ describe('Reporter', function () {
             });
         });
 
+        it('generates a report with linting enabled', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'console', coverage: true });
+            var notebook = {
+                tests: [],
+                lint: {
+                    'eslint': [
+                        {
+                            filename: 'test.js',
+                            errors: [
+                                {
+                                    severity: 'ERROR',
+                                    line: 10,
+                                    message: 'missing ;'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            };
+
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('missing ;');
+                done();
+            });
+        });
     });
 
     describe('json', function () {
