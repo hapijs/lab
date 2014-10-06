@@ -406,13 +406,12 @@ describe('Reporter', function () {
                 });
             });
 
-            var oldProcess = global.process;
-            process = Hoek.clone(process);
-            process.platform = 'win32';
+            var oldPlatform = process.platform;
+            Object.defineProperty(process, 'platform', { writable: true, value: 'win32'});
 
             Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
 
-                process = oldProcess;
+                process.platform = oldPlatform;
                 expect(output).to.contain('\u221A');
 
                 done();
