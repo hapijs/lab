@@ -17,7 +17,9 @@
     "handlebars": "1.x.x",
     "items": "1.x.x",
     "diff": "1.x.x",
-    "source-map-support": "0.2.x"
+    "source-map-support": "0.2.x",
+    "eslint": "0.8.x",
+    "hoek": "2.x.x"
   },
   "devDependencies": {
     "hoek": "2.x.x"
