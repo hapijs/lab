@@ -44,7 +44,7 @@ describe('Linters', function () {
             var checkedFile = eslintResults[0];
             expect(checkedFile).to.have.property('filename', 'fail.js');
             expect(checkedFile.errors).to.deep.include.members([
-                { line: 6, severity: 'WARNING', message: 'no-unused-vars internals is defined but never used' },
+                { line: 11, severity: 'ERROR', message: 'semi Missing semicolon.' },
                 { line: 12, severity: 'WARNING', message: 'eol-last Newline required at end of file but not found.' }
             ]);
 
