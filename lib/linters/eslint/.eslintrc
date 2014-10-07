@@ -4,6 +4,7 @@
         "one-var": 0,
         "strict": 0,
         "new-cap": 0,
+        "no-console": 0,
         "no-native-reassign": 0,
         "no-underscore-dangle": 0,
         "no-undef": 0,
