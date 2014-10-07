@@ -108,7 +108,6 @@ describe('Runner', function () {
             script.test('2', function (finished) {
 
                 throw new Error();
-                finished();
             });
 
             script.test('3', function (finished) {
@@ -119,7 +118,6 @@ describe('Runner', function () {
             script.test('4', function (finished) {
 
                 throw new Error();
-                finished();
             });
         });
 
@@ -150,7 +148,6 @@ describe('Runner', function () {
             script.test('a', function (finished) {
 
                 throw new Error();
-                finished();
             });
 
             script.test('3', function (finished) {
@@ -161,7 +158,6 @@ describe('Runner', function () {
             script.test('b', function (finished) {
 
                 throw new Error();
-                finished();
             });
         });
 
@@ -192,7 +188,6 @@ describe('Runner', function () {
             script.test('a', function (finished) {
 
                 throw new Error();
-                finished();
             });
 
             script.test('3', function (finished) {
@@ -203,7 +198,6 @@ describe('Runner', function () {
             script.test('b', function (finished) {
 
                 throw new Error();
-                finished();
             });
         });
 
@@ -429,7 +423,7 @@ describe('Runner', function () {
 
             script.test('1', function (finished) {
 
-                finished()
+                finished();
             });
         });
 
