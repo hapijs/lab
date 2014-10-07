@@ -1,16 +1,18 @@
 {
-    "env": {
-        "node": true
-    },
     "rules": {
         "vars-on-top": 0,
         "one-var": 0,
         "strict": 0,
         "new-cap": 0,
+        "no-console": 0,
         "no-native-reassign": 0,
         "no-underscore-dangle": 0,
         "no-undef": 0,
         "no-process-exit": 0,
+        "no-unused-vars": 0,
+        "no-use-before-define": 0,
+        "no-unused-expressions": 0,
+        "no-regex-spaces": 0,
         "dot-notation": 1,
         "eol-last": 1,
         "camelcase": 1,
@@ -18,16 +20,11 @@
         "no-eq-null": 1,
         "no-extend-native": 1,
         "no-redeclare": 1,
+        "no-loop-func": 1,
         "handle-callback-err": 1,
         "yoda": [1, "never"],
-        "no-unused-vars": 0,
-        "no-use-before-define": 0,
         "sort-vars": 1,
-        "space-in-brackets": [1, "always", {
-            "singleValue": true,
-            "objectsInArrays": true,
-            "arraysInArrays": true
-        }],
+        "space-in-brackets": 0,
         "brace-style": [2, "stroustrup"],
         "quotes": [2, "single"],
         "consistent-this": [2, "self"],

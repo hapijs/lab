@@ -249,7 +249,6 @@ describe('Reporter', function () {
                 script.test('works', function (finished) {
 
                     throw new Error('Error Message');
-                    finished();
                 });
             });
 
@@ -310,7 +309,10 @@ describe('Reporter', function () {
                     script.experiment('test', function () {
 
                         script[test.type](function (finished) { });
-                        script.test('works', function (finished) { finished() });
+                        script.test('works', function (finished) {
+
+                            finished();
+                        });
                     });
 
                     Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1 }, function (err, code, output) {
@@ -327,8 +329,15 @@ describe('Reporter', function () {
                     var script = Lab.script();
                     script.experiment('test', function () {
 
-                        script[test.type](function (finished) { setTimeout(finished, 500); });
-                        script.test('works', function (finished) { finished() });
+                        script[test.type](function (finished) {
+
+                            setTimeout(finished, 500);
+                        });
+
+                        script.test('works', function (finished) {
+
+                            finished();
+                        });
                     });
 
                     Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000 }, function (err, code, output) {
@@ -345,7 +354,10 @@ describe('Reporter', function () {
                     script.experiment('test', function () {
 
                         script[test.type]({ timeout: 1 }, function (finished) { });
-                        script.test('works', function (finished) { finished() });
+                        script.test('works', function (finished) {
+
+                            finished();
+                        });
                     });
 
                     Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
@@ -980,7 +992,7 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(1);
-                var result = output.replace(/      .*\n/g, '      <trace>\n').replace(/  duration_ms: .*\n/g, "  duration_ms: 123\n");
+                var result = output.replace(/      .*\n/g, '      <trace>\n').replace(/  duration_ms: .*\n/g, '  duration_ms: 123\n');
                 expect(result).to.equal('TAP version 13\n1..5\nok 1 (1) test works\n  ---\n  duration_ms: 123\n  ...\nok 2 # SKIP (2) test skip\nok 3 # TODO (3) test todo\nnot ok 4 (4) test fails\n  ---\n  duration_ms: 123\n  stack: |-\n    AssertionError: expected true to equal false\n      <trace>\n      <trace>\n      <trace>\n      <trace>\n      <trace>\n  ...\nnot ok 5 (5) test fails with non-error\n  ---\n  duration_ms: 123\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
                 done();
             });

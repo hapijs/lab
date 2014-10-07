@@ -105,7 +105,7 @@ describe('CLI', function () {
 
         cli.stdout.on('data', function (data) {
 
-            output+= data;
+            output += data;
         });
 
         cli.once('close', function (code, signal) {
@@ -249,7 +249,7 @@ describe('CLI', function () {
         });
     });
 
-    it ('runs a range of tests (-i 3-4)', function (done) {
+    it('runs a range of tests (-i 3-4)', function (done) {
 
         // The range may need to adjust as new tests are added (if they are skipped for example)
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-i', '3-4']);
