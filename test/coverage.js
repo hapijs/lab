@@ -68,7 +68,7 @@ describe('Coverage', function () {
             }
         });
 
-        expect(missedLines).to.deep.include.members([
+        expect(missedLines).to.deep.include([
             { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
             { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
         ]);
@@ -97,7 +97,7 @@ describe('Coverage', function () {
             }
         });
 
-        expect(missedLines).to.deep.include.members([
+        expect(missedLines).to.deep.include([
             { filename: './while.js', lineNumber: '5', originalLineNumber: 11 },
             { filename: './while.js', lineNumber: '6', originalLineNumber: 12 }
         ]);

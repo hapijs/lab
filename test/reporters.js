@@ -60,7 +60,7 @@ describe('Reporter', function () {
         var recorder = new Recorder();
         Lab.report(script, { output: recorder }, function (err, code, output) {
 
-            expect(err).to.not.exist;
+            expect(err).to.not.exist();
             expect(code).to.equal(0);
             expect(output).to.equal(recorder.content);
             done();
@@ -81,7 +81,7 @@ describe('Reporter', function () {
         var filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
         Lab.report(script, { output: filename }, function (err, code, output) {
 
-            expect(err).to.not.exist;
+            expect(err).to.not.exist();
             expect(code).to.equal(0);
             expect(output).to.equal(Fs.readFileSync(filename).toString());
             Fs.unlinkSync(filename);
@@ -160,7 +160,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console' }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(0);
                 expect(output).to.contain('1 tests complete');
                 expect(output).to.contain('Test duration:');
@@ -185,10 +185,10 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
                 delete global.x1;
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal false\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -209,10 +209,10 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
                 delete global.x1;
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"cb\"\n      \]\n\n      expected \[ 'a', 'b' \] to deeply equal \[ 'a', 'c' \]\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"cb\"\n      \]\n\n      expected \[ 'a', 'b' \] to deeply equal \[ 'a', 'c' \]\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -235,10 +235,10 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false, leaks: false }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      AssertionError: expected \[Function\] to not throw an error but 'Error: boom' was thrown\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: expected \[Function\] to not throw an error but 'Error: boom' was thrown\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
                 done();
             });
         });
@@ -256,10 +256,10 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Error Message\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Error Message\n\n(?:      at <trace>\n)+(?:      at <trace>\n)+(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -276,7 +276,7 @@ describe('Reporter', function () {
 
                 Lab.report(script, { reporter: 'console', colors: false, timeout: 1 }, function (err, code, output) {
 
-                    expect(err).to.not.exist;
+                    expect(err).to.not.exist();
                     expect(code).to.equal(1);
                     var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
                     expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Timed out \(\d+ms\)\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
@@ -299,7 +299,7 @@ describe('Reporter', function () {
                 },
                 {
                     type: 'afterEach',
-                    expect:'Timed out (1ms) - After each test'
+                    expect: 'Timed out (1ms) - After each test'
                 }
             ];
 
@@ -319,7 +319,7 @@ describe('Reporter', function () {
 
                     Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1 }, function (err, code, output) {
 
-                        expect(err).to.not.exist;
+                        expect(err).to.not.exist();
                         expect(code).to.equal(1);
                         expect(output).to.contain(test.expect);
                         done();
@@ -344,7 +344,7 @@ describe('Reporter', function () {
 
                     Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000 }, function (err, code, output) {
 
-                        expect(err).to.not.exist;
+                        expect(err).to.not.exist();
                         expect(code).to.equal(0);
                         done();
                     });
@@ -364,7 +364,7 @@ describe('Reporter', function () {
 
                     Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
-                        expect(err).to.not.exist;
+                        expect(err).to.not.exist();
                         expect(code).to.equal(1);
                         expect(output).to.contain(test.expect);
                         done();
@@ -421,7 +421,7 @@ describe('Reporter', function () {
             });
 
             var oldPlatform = process.platform;
-            Object.defineProperty(process, 'platform', { writable: true, value: 'win32'});
+            Object.defineProperty(process, 'platform', { writable: true, value: 'win32' });
 
             Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
 
@@ -551,7 +551,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 expect(output).to.contain('.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x\n  -.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-');
                 done();
@@ -581,7 +581,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false, progress: 2 }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 expect(output).to.match(/test\n  ✔ 1\) works \(\d+ ms\)\n  ✖2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
                 done();
@@ -609,7 +609,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console' }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(0);
                 expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
@@ -630,9 +630,9 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
-                var result = output.replace(/at.*\.js\:\d+\:\d+/g, 'at <trace>');
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
 
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: expected true to equal false\n\n      at <trace>\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: expected true to equal false\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -793,7 +793,7 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: 'json' }, function (err, code, output) {
 
                 var result = JSON.parse(output);
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 expect(result.tests.group.length).to.equal(3);
                 expect(result.tests.group[0].title).to.equal('works');
@@ -803,7 +803,7 @@ describe('Reporter', function () {
                 expect(result.tests.group[2].title).to.equal('fails with non-error');
                 expect(result.tests.group[2].err).to.equal(true);
                 expect(result.leaks.length).to.equal(0);
-                expect(result.duration).to.exist;
+                expect(result.duration).to.exist();
                 expect(result.errors).to.have.length(1);
                 done();
             });
@@ -873,16 +873,18 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, function (err, code, output) {
 
-                expect(output).to.contain('<th>Original filename</th>')
-                    .and.to.contain('<th>Original line</th>')
-                    .and.to.contain('<td class="sourcemaps file">test/coverage/sourcemaps-external.js</td>')
-                    .and.to.contain('<td class="sourcemaps line">1</td>')
-                    .and.to.contain('<td class="sourcemaps line">6</td>')
-                    .and.to.contain('<td class="sourcemaps line">9</td>')
-                    .and.to.contain('<td class="sourcemaps line">11</td>')
-                    .and.to.contain('<td class="sourcemaps line">12</td>')
-                    .and.to.contain('<td class="sourcemaps line">13</td>')
-                    .and.to.contain('<td class="sourcemaps line">16</td>');
+                expect(output).to.contain([
+                    '<th>Original filename</th>',
+                    '<th>Original line</th>',
+                    '<td class="sourcemaps file">test/coverage/sourcemaps-external.js</td>',
+                    '<td class="sourcemaps line">1</td>',
+                    '<td class="sourcemaps line">6</td>',
+                    '<td class="sourcemaps line">9</td>',
+                    '<td class="sourcemaps line">11</td>',
+                    '<td class="sourcemaps line">12</td>',
+                    '<td class="sourcemaps line">13</td>',
+                    '<td class="sourcemaps line">16</td>'
+                ]);
                 delete global.__$$testCovHtml;
                 done();
             });
@@ -1036,10 +1038,10 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'tap' }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                var result = output.replace(/      .*\n/g, '      <trace>\n').replace(/  duration_ms: .*\n/g, '  duration_ms: 123\n');
-                expect(result).to.equal('TAP version 13\n1..5\nok 1 (1) test works\n  ---\n  duration_ms: 123\n  ...\nok 2 # SKIP (2) test skip\nok 3 # TODO (3) test todo\nnot ok 4 (4) test fails\n  ---\n  duration_ms: 123\n  stack: |-\n    AssertionError: expected true to equal false\n      <trace>\n      <trace>\n      <trace>\n      <trace>\n      <trace>\n  ...\nnot ok 5 (5) test fails with non-error\n  ---\n  duration_ms: 123\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n');
+                var result = output.replace(/      .*\n/g, '      <trace>\n');
+                expect(result).to.match(/^TAP version 13\n1..5\nok 1 \(1\) test works\n  ---\n  duration_ms: \d+\n  ...\nok 2 # SKIP \(2\) test skip\nok 3 # TODO \(3\) test todo\nnot ok 4 \(4\) test fails\n  ---\n  duration_ms: \d+\n  stack: |-\n    Error: expected true to equal false\n(?:      <trace>\n)+  ...\nnot ok 5 \(5\) test fails with non-error\n  ---\n  duration_ms: \d+\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n$/);
                 done();
             });
         });
@@ -1079,15 +1081,15 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'junit' }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(1);
-
-                expect(output).to.contain('tests="5"');
-                expect(output).to.contain('errors="0"');
-                expect(output).to.contain('skipped="2"');
-                expect(output).to.contain('failures="2"');
-                expect(output).to.contain('failures="2"');
-                expect(output).to.contain('<failure message="expected true to equal false" type="AssertionError">');
+                expect(output).to.contain([
+                    'tests="5"',
+                    'errors="0"',
+                    'skipped="2"',
+                    'failures="2"',
+                    '<failure message="expected true to equal false" type="Error">'
+                ]);
 
                 done();
             });
@@ -1112,7 +1114,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'lcov', coverage: true }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(0);
 
                 expect(output).to.contain('coverage/html.js');
@@ -1141,10 +1143,10 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'lcov', coverage: false }, function (err, code, output) {
 
-                expect(err).to.not.exist;
+                expect(err).to.not.exist();
                 expect(code).to.equal(0);
 
-                expect(output).to.be.empty;
+                expect(output).to.be.empty();
 
                 done();
             });
@@ -1187,9 +1189,9 @@ describe('Reporter', function () {
 
         it('correctly defaults a package root name', function (done) {
 
-            var reporter = Reporters.generate({reporter: 'clover', coveragePath: null});
+            var reporter = Reporters.generate({ reporter: 'clover', coveragePath: null });
 
-            expect(reporter.settings.packageRoot).to.eql('root');
+            expect(reporter.settings.packageRoot).to.equal('root');
 
             var Test = require('./coverage/clover');
 
@@ -1227,9 +1229,9 @@ describe('Reporter', function () {
 
         it('correctly determines a package root name', function (done) {
 
-            var reporter = Reporters.generate({reporter: 'clover', coveragePath: Path.join(__dirname, './somepath')});
+            var reporter = Reporters.generate({ reporter: 'clover', coveragePath: Path.join(__dirname, './somepath') });
 
-            expect(reporter.settings.packageRoot).to.eql('somepath');
+            expect(reporter.settings.packageRoot).to.equal('somepath');
             done();
         });
 
@@ -1268,7 +1270,7 @@ describe('Reporter', function () {
         it('should generate a report with multiple files', function (done) {
 
             var output = '';
-            var reporter = Reporters.generate({reporter: 'clover'});
+            var reporter = Reporters.generate({ reporter: 'clover' });
 
             reporter.report = function (text) {
                 output += text;
