@@ -69,5 +69,20 @@ describe('Linters', function () {
             ]);
             done();
         });
+
+        it('displays success message if no issues found', function (done) {
+
+            var path = Path.join(__dirname, 'lint', 'eslint', 'clean');
+            var result = Linters.lint({ lint: 'eslint', lintingPath: path });
+            expect(result).to.have.property('eslint');
+
+            var eslintResults = result.eslint;
+            expect(eslintResults).to.have.length(1);
+
+            var checkedFile = eslintResults[0];
+            expect(checkedFile.errors.length).to.equal(0);
+
+            done();
+        });
     });
 });

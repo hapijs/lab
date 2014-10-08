@@ -40,7 +40,7 @@ exports.method = function (a, b, c) {
 
     if (a ||
         b ||
-        (c ? 
+        (c ?
         d :
         e)) {
 

@@ -716,6 +716,50 @@ describe('Reporter', function () {
                 done();
             });
         });
+
+        it('displays a success message for lint when no issues found', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'console', coverage: true });
+            var notebook = {
+                tests: [],
+                lint: {
+                    'eslint': [
+                        {
+                            filename: 'test.js',
+                            errors: []
+                        }
+                    ]
+                }
+            };
+
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('No issues');
+                done();
+            });
+        });
+
+        it('displays a success message for lint when errors are null', function (done) {
+
+            var reporter = Reporters.generate({ reporter: 'console', coverage: true });
+            var notebook = {
+                tests: [],
+                lint: {
+                    'eslint': [
+                        {
+                            filename: 'test.js',
+                            errors: null
+                        }
+                    ]
+                }
+            };
+
+            reporter.finalize(notebook, function (err, code, output) {
+
+                expect(output).to.contain('No issues');
+                done();
+            });
+        });
     });
 
     describe('json', function () {
@@ -1221,8 +1265,8 @@ describe('Reporter', function () {
 
         it('should generate a report with multiple files', function (done) {
 
-            var reporter = Reporters.generate({reporter: 'clover'}),
-                output = '';
+            var output = '';
+            var reporter = Reporters.generate({reporter: 'clover'});
 
             reporter.report = function (text) {
                 output += text;
