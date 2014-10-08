@@ -20,7 +20,7 @@ describe('Test CLI 3', function () {
 
     it('supports negative numbers', function (done) {
 
-        expect(1-2).to.equal(-1);
+        expect(1 - 2).to.equal(-1);
         done();
     });
 

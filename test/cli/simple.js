@@ -20,13 +20,13 @@ describe('Test CLI', function () {
 
     it('adds two numbers together', function (done) {
 
-        expect(1+1).to.equal(2);
+        expect(1 + 1).to.equal(2);
         done();
     });
 
     it('subtracts two numbers', function (done) {
 
-        expect(2-2).to.equal(0);
+        expect(2 - 2).to.equal(0);
         done();
     });
 });

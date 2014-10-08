@@ -20,13 +20,13 @@ describe('Test CLI 2', function () {
 
     it('adds multiplies numbers together', function (done) {
 
-        expect(5*5).to.equal(25);
+        expect(5 * 5).to.equal(25);
         done();
     });
 
     it('divides two numbers', function (done) {
 
-        expect(25/5).to.equal(5);
+        expect(25 / 5).to.equal(5);
         done();
     });
 });

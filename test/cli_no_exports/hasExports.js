@@ -20,8 +20,7 @@ describe('Test CLI Exports', function () {
 
     it('adds two numbers together', function (done) {
 
-        expect(1+1).to.equal(2);
+        expect(1 + 1).to.equal(2);
         done();
     });
 });
-
