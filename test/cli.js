@@ -76,7 +76,7 @@ describe('CLI', function () {
 
     it('runs a directory of tests from the command line', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, 'test/cli']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-m', '2000']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
