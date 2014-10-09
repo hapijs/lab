@@ -14,75 +14,56 @@ var expect = _Lab.expect;
 
 describe('Linters', function () {
 
-    it('should error on unknown linter', function (done) {
+    it('should lint files in a folder', function (done) {
 
-        expect(function () {
+        var path = Path.join(__dirname, 'lint', 'eslint', 'basic');
+        var result = Linters.lint({ lintingPath: path });
+        expect(result).to.have.property('eslint');
 
-            Linters.lint({ lint: 'dummy', lintingPath: process.cwd() });
-        }).to.throw('unknown');
+        var eslintResults = result.eslint;
+        expect(eslintResults).to.have.length(1);
+
+        var checkedFile = eslintResults[0];
+        expect(checkedFile).to.have.property('filename', 'fail.js');
+        expect(checkedFile.errors).to.deep.include.members([
+            { line: 11, severity: 'ERROR', message: 'semi - Missing semicolon.' },
+            { line: 12, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+        ]);
+
         done();
     });
 
-    it('should accept linters as an array', function (done) {
+    it('should use local configuration files', function (done) {
 
-        var errors = Linters.lint({ lint: ['eslint'], lintingPath: Path.join(__dirname, 'lint', 'eslint', 'basic') });
-        expect(errors).to.have.property('eslint');
+        var path = Path.join(__dirname, 'lint', 'eslint', 'with_config');
+        var result = Linters.lint({ lintingPath: path });
+        expect(result).to.have.property('eslint');
+
+        var eslintResults = result.eslint;
+        expect(eslintResults).to.have.length(1);
+
+        var checkedFile = eslintResults[0];
+        expect(checkedFile).to.have.property('filename', 'fail.js');
+        expect(checkedFile.errors).to.deep.include.members([
+            { line: 12, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }
+        ]).and.to.not.deep.include.members([
+            { line: 6, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' }
+        ]);
         done();
     });
 
-    describe('ESLint', function () {
+    it('displays success message if no issues found', function (done) {
 
-        it('should lint files in a folder', function (done) {
+        var path = Path.join(__dirname, 'lint', 'eslint', 'clean');
+        var result = Linters.lint({ lintingPath: path });
+        expect(result).to.have.property('eslint');
 
-            var path = Path.join(__dirname, 'lint', 'eslint', 'basic');
-            var result = Linters.lint({ lint: 'eslint', lintingPath: path });
-            expect(result).to.have.property('eslint');
+        var eslintResults = result.eslint;
+        expect(eslintResults).to.have.length(1);
 
-            var eslintResults = result.eslint;
-            expect(eslintResults).to.have.length(1);
+        var checkedFile = eslintResults[0];
+        expect(checkedFile.errors.length).to.equal(0);
 
-            var checkedFile = eslintResults[0];
-            expect(checkedFile).to.have.property('filename', 'fail.js');
-            expect(checkedFile.errors).to.deep.include.members([
-                { line: 11, severity: 'ERROR', message: 'semi Missing semicolon.' },
-                { line: 12, severity: 'WARNING', message: 'eol-last Newline required at end of file but not found.' }
-            ]);
-
-            done();
-        });
-
-        it('should use local configuration files', function (done) {
-
-            var path = Path.join(__dirname, 'lint', 'eslint', 'with_config');
-            var result = Linters.lint({ lint: 'eslint', lintingPath: path });
-            expect(result).to.have.property('eslint');
-
-            var eslintResults = result.eslint;
-            expect(eslintResults).to.have.length(1);
-
-            var checkedFile = eslintResults[0];
-            expect(checkedFile).to.have.property('filename', 'fail.js');
-            expect(checkedFile.errors).to.deep.include.members([
-                { line: 12, severity: 'ERROR', message: 'eol-last Newline required at end of file but not found.' }
-            ]).and.to.not.deep.include.members([
-                { line: 6, severity: 'ERROR', message: 'no-unused-vars internals is defined but never used' }
-            ]);
-            done();
-        });
-
-        it('displays success message if no issues found', function (done) {
-
-            var path = Path.join(__dirname, 'lint', 'eslint', 'clean');
-            var result = Linters.lint({ lint: 'eslint', lintingPath: path });
-            expect(result).to.have.property('eslint');
-
-            var eslintResults = result.eslint;
-            expect(eslintResults).to.have.length(1);
-
-            var checkedFile = eslintResults[0];
-            expect(checkedFile.errors.length).to.equal(0);
-
-            done();
-        });
+        done();
     });
 });
