@@ -277,6 +277,39 @@ describe('Runner', function () {
         });
     });
 
+    it('fails on uncaught exception in before', function (done) {
+
+        var steps = [];
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
+
+            script.before(function () {
+
+                steps.push('before');
+                throw new Error('oops');
+            });
+
+            script.test('works', function (finished) {
+
+                steps.push('test');
+                finished();
+            });
+
+            script.after(function (finished) {
+
+                steps.push('after');
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(notebook.tests[0].err).to.equal('\'before\' action failed');
+            expect(steps).to.deep.equal(['before']);
+            done();
+        });
+    });
+
     it('skips tests on failed beforeEach', function (done) {
 
         var steps = [];
