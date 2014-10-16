@@ -769,4 +769,43 @@ describe('Lab', function () {
             done();
         };
     });
+
+    it('throws on invalid functions', function (done) {
+
+        var script = Lab.script();
+
+        expect(function () {
+
+            script.test('a');
+        }).not.to.throw();
+
+        expect(function() {
+
+            script.test('a', function() {});
+        }).to.throw('Function for test "a" should take exactly one argument');
+
+        ['before', 'beforeEach', 'after', 'afterEach'].forEach(function (fn) {
+
+            expect(function() {
+
+                script.experiment('exp', function () {
+
+                    script[fn]();
+                });
+            }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
+
+            expect(function() {
+
+                script.experiment('exp', function () {
+
+                    script[fn](function() {});
+                });
+            }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            done();
+        });
+    });
 });
