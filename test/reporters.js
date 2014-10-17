@@ -162,7 +162,9 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist;
                 expect(code).to.equal(0);
-                expect(output).to.match(/^\n  \n  .\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.contain('1 tests complete');
+                expect(output).to.contain('Test duration:');
+                expect(output).to.contain('No global variable leaks detected');
                 done();
             });
         });
