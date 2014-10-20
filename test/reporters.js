@@ -258,7 +258,6 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                console.log(output)
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test fails:\n\n      Error Message\n\n(?:      at <trace>\n)+(?:      at <trace>\n)+(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
