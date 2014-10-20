@@ -6,6 +6,7 @@ var Os = require('os');
 var Path = require('path');
 var Stream = require('stream');
 var Tty = require('tty');
+var Code = require('code');
 var Hoek = require('hoek');
 var _Lab = require('../test_runner');
 var Lab = require('../');
@@ -22,9 +23,7 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 
 describe('Reporter', function () {
@@ -153,7 +152,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true).to.equal(true);
+                    expect(true).to.equal(true);
                     finished();
                 });
             });
@@ -176,7 +175,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true).to.equal(false);
+                    expect(true).to.equal(false);
                     finished();
                 });
             });
@@ -200,7 +199,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(['a', 'b']).to.deep.equal(['a', 'c']);
+                    expect(['a', 'b']).to.deep.equal(['a', 'c']);
                     finished();
                 });
             });
@@ -224,7 +223,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(function () {
+                    expect(function () {
 
                         throw new Error('boom');
                     }).to.not.throw();
@@ -449,7 +448,7 @@ describe('Reporter', function () {
 
                 script.test('diff', function (finished) {
 
-                    Lab.expect('abcd').to.equal('cdfg');
+                    expect('abcd').to.equal('cdfg');
                     finished();
                 });
             });
@@ -532,13 +531,13 @@ describe('Reporter', function () {
                 for (var i = 0; i < 30; ++i) {
                     script.test('works', function (finished) {
 
-                        Lab.expect(true).to.equal(true);
+                        expect(true).to.equal(true);
                         finished();
                     });
 
                     script.test('fails', function (finished) {
 
-                        Lab.expect(true).to.equal(false);
+                        expect(true).to.equal(false);
                         finished();
                     });
 
@@ -602,7 +601,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true).to.equal(true);
+                    expect(true).to.equal(true);
                     finished();
                 });
             });
@@ -623,7 +622,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true, 'Not working right').to.equal(false);
+                    expect(true, 'Not working right').to.equal(false);
                     finished();
                 });
             });
@@ -647,7 +646,7 @@ describe('Reporter', function () {
                 });
 
                 script.test('works', function (finished) {
-                    Lab.expect(true).to.equal(true, 'Working right');
+                    expect(true).to.equal(true, 'Working right');
                     finished();
                 });
             });
@@ -674,7 +673,7 @@ describe('Reporter', function () {
                 });
 
                 script.test('works', function (finished) {
-                    Lab.expect(true).to.equal(true, 'Working right');
+                    expect(true).to.equal(true, 'Working right');
                     finished();
                 });
             });
@@ -772,13 +771,13 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true).to.equal(true);
+                    expect(true).to.equal(true);
                     finished();
                 });
 
                 script.test('fails', function (finished) {
 
-                    Lab.expect(true).to.equal(false);
+                    expect(true).to.equal(false);
                     finished();
                 });
 
@@ -817,7 +816,7 @@ describe('Reporter', function () {
 
                 script.test('value of a', function (finished) {
 
-                    Lab.expect(Test.method(1)).to.equal(1);
+                    expect(Test.method(1)).to.equal(1);
                     finished();
                 });
             });
@@ -1012,7 +1011,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true).to.equal(true);
+                    expect(true).to.equal(true);
                     finished();
                 });
 
@@ -1025,7 +1024,7 @@ describe('Reporter', function () {
 
                 script.test('fails', function (finished) {
 
-                    Lab.expect(true).to.equal(false);
+                    expect(true).to.equal(false);
                     finished();
                 });
 
@@ -1055,7 +1054,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (finished) {
 
-                    Lab.expect(true).to.equal(true);
+                    expect(true).to.equal(true);
                     finished();
                 });
 
@@ -1068,7 +1067,7 @@ describe('Reporter', function () {
 
                 script.test('fails', function (finished) {
 
-                    Lab.expect(true).to.equal(false);
+                    expect(true).to.equal(false);
                     finished();
                 });
 

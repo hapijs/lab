@@ -1,6 +1,7 @@
 // Load modules
 
 var Path = require('path');
+var Code = require('code');
 var _Lab = require('../test_runner');
 var Lab = require('../');
 
@@ -15,9 +16,7 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 
 describe('Coverage', function () {

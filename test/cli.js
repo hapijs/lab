@@ -3,6 +3,7 @@
 var ChildProcess = require('child_process');
 var Fs = require('fs');
 var Path = require('path');
+var Code = require('code');
 var Lab = require('../');
 var _Lab = require('../test_runner');
 
@@ -17,9 +18,7 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 
 describe('CLI', function () {

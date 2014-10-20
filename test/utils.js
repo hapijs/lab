@@ -1,5 +1,6 @@
 // Load modules
 
+var Code = require('code');
 var _Lab = require('../test_runner');
 var Utils = require('../lib/utils');
 
@@ -14,9 +15,7 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 
 describe('Utils', function () {

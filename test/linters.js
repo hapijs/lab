@@ -2,6 +2,7 @@
 
 var Path = require('path');
 var _Lab = require('../test_runner');
+var Code = require('code');
 var Linters = require('../lib/lint');
 
 
@@ -10,7 +11,7 @@ var Linters = require('../lib/lint');
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 describe('Linters', function () {
 
