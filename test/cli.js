@@ -38,13 +38,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('2 tests complete');
             done();
         });
@@ -62,13 +62,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('4 tests complete');
             done();
         });
@@ -86,13 +86,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('10 tests complete');
             done();
         });
@@ -111,7 +111,7 @@ describe('CLI', function () {
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('Usage: lab [options] [path]');
             done();
         });
@@ -133,13 +133,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('No global variable leaks detected');
 
             Fs.unlinkSync('./test/cli/leaks.js');
@@ -163,13 +163,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('No global variable leaks detected');
 
             Fs.unlinkSync('./test/cli/leaks.js');
@@ -189,13 +189,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.not.contain('.');
             done();
         });
@@ -213,13 +213,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('2) subtracts two numbers');
             done();
         });
@@ -237,13 +237,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('1 tests complete');
             done();
         });
@@ -262,13 +262,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('2 tests complete');
             done();
         });
@@ -286,13 +286,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('\u001b[');
             done();
         });
@@ -310,13 +310,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.not.contain('\u001b[');
             done();
         });
@@ -334,13 +334,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('\u001b[');
             done();
         });
@@ -358,13 +358,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('2 tests complete');
             expect(output).to.contain('Coverage: 0.00%');
             done();
@@ -383,13 +383,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('1 tests complete');
             done();
         });
@@ -407,13 +407,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('1 tests complete');
             done();
         });
@@ -431,13 +431,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('1 tests complete');
             done();
         });
@@ -455,13 +455,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('1 tests complete');
             done();
         });
@@ -479,13 +479,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('includes a lab script that is not exported via exports.lab');
             done();
         });
@@ -503,13 +503,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('includes a lab script that is not exported via exports.lab');
             done();
         });
@@ -528,13 +528,13 @@ describe('CLI', function () {
         cli.stderr.on('data', function (data) {
 
             output += data;
-            expect(data).to.exist;
+            expect(data).to.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('Invalid');
             done();
         });
@@ -553,13 +553,13 @@ describe('CLI', function () {
         cli.stderr.on('data', function (data) {
 
             output += data;
-            expect(data).to.exist;
+            expect(data).to.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(1);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('Unknown option: z');
             done();
         });
@@ -577,13 +577,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
             expect(output).to.contain('<testsuite tests="2"');
             done();
         });
@@ -609,13 +609,13 @@ describe('CLI', function () {
 
         cli.stderr.on('data', function (data) {
 
-            expect(data).to.not.exist;
+            expect(data).to.not.exist();
         });
 
         cli.once('close', function (code, signal) {
 
             expect(code).to.equal(0);
-            expect(signal).to.not.exist;
+            expect(signal).to.not.exist();
 
             var file = Fs.readFileSync(outputPath);
             expect(file.toString()).to.contain('No global variable leaks detected');
