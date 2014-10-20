@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "bossy": "1.x.x",
+    "code": "1.x.x",
     "esprima": "1.x.x",
-    "chai": "1.x.x",
     "handlebars": "1.x.x",
     "items": "1.x.x",
     "diff": "1.x.x",
