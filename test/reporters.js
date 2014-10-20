@@ -188,7 +188,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -212,7 +212,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"cb\"\n      \]\n\n      expected \[ 'a', 'b' \] to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"cb\"\n      \]\n\n      Expected \[ 'a', 'b' \] to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -238,7 +238,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: expected \[Function\] to not throw an error but got \[Error: boom\]\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Expected \[Function\] to not throw an error but got \[Error: boom\]\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
                 done();
             });
         });
@@ -248,7 +248,7 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-                script.test('works', function (finished) {
+                script.test('fails', function (finished) {
 
                     throw new Error('Error Message');
                 });
@@ -258,8 +258,9 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
+                console.log(output)
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Error Message\n\n(?:      at <trace>\n)+(?:      at <trace>\n)+(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test fails:\n\n      Error Message\n\n(?:      at <trace>\n)+(?:      at <trace>\n)+(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -279,7 +280,7 @@ describe('Reporter', function () {
                     expect(err).to.not.exist();
                     expect(code).to.equal(1);
                     var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                    expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Error: Timed out \(\d+ms\)\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                    expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Timed out \(\d+ms\)\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                     done();
                 });
             });
@@ -631,7 +632,7 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      falsetrue\n\n      Not working right: Expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -798,7 +799,7 @@ describe('Reporter', function () {
                 expect(result.tests.group[0].title).to.equal('works');
                 expect(result.tests.group[0].err).to.equal(false);
                 expect(result.tests.group[1].title).to.equal('fails');
-                expect(result.tests.group[1].err).to.equal('expected true to equal specified value');
+                expect(result.tests.group[1].err).to.equal('Expected true to equal specified value');
                 expect(result.tests.group[2].title).to.equal('fails with non-error');
                 expect(result.tests.group[2].err).to.equal(true);
                 expect(result.leaks.length).to.equal(0);
@@ -1040,7 +1041,7 @@ describe('Reporter', function () {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 var result = output.replace(/      .*\n/g, '      <trace>\n');
-                expect(result).to.match(/^TAP version 13\n1..5\nok 1 \(1\) test works\n  ---\n  duration_ms: \d+\n  ...\nok 2 # SKIP \(2\) test skip\nok 3 # TODO \(3\) test todo\nnot ok 4 \(4\) test fails\n  ---\n  duration_ms: \d+\n  stack: |-\n    Error: expected true to equal specified value\n(?:      <trace>\n)+  ...\nnot ok 5 \(5\) test fails with non-error\n  ---\n  duration_ms: \d+\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n$/);
+                expect(result).to.match(/^TAP version 13\n1..5\nok 1 \(1\) test works\n  ---\n  duration_ms: \d+\n  ...\nok 2 # SKIP \(2\) test skip\nok 3 # TODO \(3\) test todo\nnot ok 4 \(4\) test fails\n  ---\n  duration_ms: \d+\n  stack: |-\n    Expected true to equal specified value\n(?:      <trace>\n)+  ...\nnot ok 5 \(5\) test fails with non-error\n  ---\n  duration_ms: \d+\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n$/);
                 done();
             });
         });
@@ -1087,7 +1088,7 @@ describe('Reporter', function () {
                     'errors="0"',
                     'skipped="2"',
                     'failures="2"',
-                    '<failure message="expected true to equal specified value" type="Error">'
+                    '<failure message="Expected true to equal specified value" type="Error">'
                 ]);
 
                 done();
