@@ -1,5 +1,6 @@
 // Load modules
 
+var Code = require('code');
 var _Lab = require('../test_runner');
 var Lab = require('../');
 
@@ -14,9 +15,7 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 // save references to timer globals
 
@@ -35,7 +34,7 @@ describe('Runner', function () {
 
             script.test('works', function (finished) {
 
-                Lab.expect(process.env.NODE_ENV).to.equal('lab');
+                expect(process.env.NODE_ENV).to.equal('lab');
                 process.env.NODE_ENV = orig;
                 finished();
             });
@@ -58,7 +57,7 @@ describe('Runner', function () {
 
             script.test('works', function (finished) {
 
-                Lab.expect(process.env.NODE_ENV).to.equal(orig);
+                expect(process.env.NODE_ENV).to.equal(orig);
                 process.env.NODE_ENV = orig;
                 finished();
             });
@@ -81,7 +80,7 @@ describe('Runner', function () {
 
             script.test('works', function (finished) {
 
-                Lab.expect(process.env.NODE_ENV).to.equal('test');
+                expect(process.env.NODE_ENV).to.equal('test');
                 process.env.NODE_ENV = orig;
                 finished();
             });
@@ -430,7 +429,7 @@ describe('Runner', function () {
         Lab.report(script, { output: false, lint: 'eslint', lintingPath: 'test/lint' }, function (err, code, output) {
 
             expect(code).to.equal(0);
-            expect(output).to.contain('eslint/').and.to.contain('semi');
+            expect(output).to.contain(['eslint/', 'semi']);
             done();
         });
     });

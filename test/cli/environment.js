@@ -1,5 +1,6 @@
 // Load modules
 
+var Code = require('code');
 var _Lab = require('../../test_runner');
 
 
@@ -8,7 +9,7 @@ var _Lab = require('../../test_runner');
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 var env = process.env.NODE_ENV;
 

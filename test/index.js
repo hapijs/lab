@@ -1,5 +1,6 @@
 // Load modules
 
+var Code = require('code');
 var _Lab = require('../test_runner');
 var Lab = require('../');
 
@@ -14,9 +15,7 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = _Lab.expect;
+var expect = Code.expect;
 
 
 describe('Lab', function () {
@@ -35,7 +34,7 @@ describe('Lab', function () {
 
             script.test('value of a', function (finished) {
 
-                Lab.expect(a).to.equal(1);
+                expect(a).to.equal(1);
                 finished();
             });
 
@@ -70,7 +69,7 @@ describe('Lab', function () {
 
             script.it('value of a', function (finished) {
 
-                Lab.expect(a).to.equal(1);
+                expect(a).to.equal(1);
                 finished();
             });
 
@@ -104,7 +103,7 @@ describe('Lab', function () {
 
             script.test('value of a', function (finished) {
 
-                Lab.expect(a).to.equal(1);
+                expect(a).to.equal(1);
                 finished();
             });
 
@@ -145,15 +144,15 @@ describe('Lab', function () {
 
             script.test('value of a', function (finished) {
 
-                Lab.expect(a).to.equal(1);
-                Lab.expect(b).to.equal(1);
+                expect(a).to.equal(1);
+                expect(b).to.equal(1);
                 finished();
             });
 
             script.test('value of b', function (finished) {
 
-                Lab.expect(a).to.equal(1);
-                Lab.expect(b).to.equal(3);
+                expect(a).to.equal(1);
+                expect(b).to.equal(3);
                 finished();
             });
 
@@ -213,15 +212,15 @@ describe('Lab', function () {
 
             script.test('value of a', function (finished) {
 
-                Lab.expect(a).to.equal(2);
-                Lab.expect(b).to.equal(2);
+                expect(a).to.equal(2);
+                expect(b).to.equal(2);
                 finished();
             });
 
             script.test('value of b', function (finished) {
 
-                Lab.expect(a).to.equal(2);
-                Lab.expect(b).to.equal(6);
+                expect(a).to.equal(2);
+                expect(b).to.equal(6);
                 finished();
             });
 
@@ -267,7 +266,7 @@ describe('Lab', function () {
 
             script.test('works', function (finished) {
 
-                Lab.expect(0).to.equal(1);
+                expect(0).to.equal(1);
                 finished();
             });
         });
@@ -378,7 +377,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -407,7 +406,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -436,7 +435,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -465,7 +464,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -495,7 +494,7 @@ describe('Lab', function () {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.not.exist();
             expect(notebook.failures).to.equal(0);
             done();
         });
@@ -524,7 +523,7 @@ describe('Lab', function () {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.not.exist();
             expect(notebook.failures).to.equal(0);
             done();
         });
@@ -553,7 +552,7 @@ describe('Lab', function () {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.not.exist();
             expect(notebook.failures).to.equal(0);
             done();
         });
@@ -581,7 +580,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -610,7 +609,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -639,7 +638,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -665,7 +664,7 @@ describe('Lab', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist;
+            expect(notebook.tests[0].skipped).to.not.exist();
             expect(notebook.tests[1].skipped).to.equal(true);
             expect(notebook.failures).to.equal(0);
             done();
@@ -692,7 +691,7 @@ describe('Lab', function () {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.not.exist();
             expect(notebook.failures).to.equal(0);
             done();
         });
@@ -718,7 +717,7 @@ describe('Lab', function () {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.not.exist();
             expect(notebook.failures).to.equal(0);
             done();
         });
@@ -744,7 +743,7 @@ describe('Lab', function () {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist;
+            expect(notebook.tests[1].skipped).to.not.exist();
             expect(notebook.failures).to.equal(0);
             done();
         });

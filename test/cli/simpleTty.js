@@ -1,11 +1,9 @@
 // Load modules
 
-var _Lab = require('../../test_runner');
 var Tty = require('tty');
+var Code = require('code');
+var _Lab = require('../../test_runner');
 
-Tty.isatty = function() {
-    return true;
-};
 
 // Declare internals
 
@@ -17,7 +15,13 @@ var internals = {};
 var lab = exports.lab = _Lab.script();
 var describe = lab.describe;
 var it = lab.it;
-var expect = _Lab.expect;
+var expect = Code.expect;
+
+
+Tty.isatty = function () {
+
+    return true;
+};
 
 
 describe('Test CLI', function () {
