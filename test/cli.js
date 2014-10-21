@@ -622,4 +622,28 @@ describe('CLI', function () {
             done();
         });
     });
+
+    it('loads assertions library', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_assert/assert.js', '-m', '2000', '-a', 'code']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('2 tests complete');
+            done();
+        });
+    });
 });
