@@ -43,6 +43,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 - `-v`, `--verbose` - verbose test output, defaults to false.
+- `-a`, `--assert` - name of assert library to use.
 
 ## Usage
 
@@ -64,12 +65,13 @@ $ lab unit.js
 
 Test files must require the **lab** module, and export a test script:
 ```javascript
+var Code = require('code');   // assertion library
 var Lab = require('lab');
 var lab = exports.lab = Lab.script();
 
 lab.test('returns true when 1 + 1 equals 2', function (done) {
 
-    Lab.expect(1+1).to.equal(2);
+    Code.expect(1+1).to.equal(2);
     done();
 });
 ```
@@ -84,7 +86,7 @@ lab.experiment('math', function () {
 
     lab.test('returns true when 1 + 1 equals 2', function (done) {
 
-        Lab.expect(1+1).to.equal(2);
+        Code.expect(1+1).to.equal(2);
         done();
     });
 });
@@ -110,7 +112,7 @@ lab.experiment('math', function () {
 
     lab.test('returns true when 1 + 1 equals 2', function (done) {
 
-        Lab.expect(1+1).to.equal(2);
+        Code.expect(1+1).to.equal(2);
         done();
     });
 });
@@ -153,6 +155,7 @@ The `script([options])` method takes an optional `options` argument where `optio
 
 To make **lab** look like BDD:
 ```javascript
+var Code = require('code');
 var Lab = require('lab');
 var lab = exports.lab = Lab.script();
 
@@ -160,7 +163,7 @@ var describe = lab.describe;
 var it = lab.it;
 var before = lab.before;
 var after = lab.after;
-var expect = Lab.expect;
+var expect = Code.expect;
 
 describe('math', function () {
 
@@ -174,6 +177,7 @@ describe('math', function () {
 
 To make **lab** look like TDD:
 ```javascript
+var Code = require('code');
 var Lab = require('lab');
 var lab = exports.lab = Lab.script();
 
@@ -181,7 +185,7 @@ var suite = lab.suite;
 var test = lab.test;
 var before = lab.before;
 var after = lab.after;
-var expect = Lab.expect;
+var expect = Code.expect;
 
 suite('math', function () {
 
