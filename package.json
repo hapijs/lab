@@ -21,8 +21,7 @@
     "hoek": "2.x.x"
   },
   "devDependencies": {
-    "code": "1.x.x",
-    "hoek": "2.x.x"
+    "code": "1.x.x"
   },
   "bin": {
     "lab": "./bin/lab"
