@@ -434,6 +434,70 @@ describe('Runner', function () {
         });
     });
 
+    it('extends report with assertions library support', function (done) {
+
+        var script = Lab.script();
+        var assertions = Code;
+        script.experiment('test', function () {
+
+            script.test('1', function (finished) {
+
+                assertions.expect(true).to.be.true();
+                finished();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: assertions }, function (err, code, output) {
+
+            expect(code).to.equal(0);
+            expect(output).to.match(/Assertions count: \d+/);
+            done();
+        });
+    });
+
+    it('extends report with assertions library support (incomplete assertions)', function (done) {
+
+        var script = Lab.script();
+        var assertions = Code;
+        script.experiment('test', function () {
+
+            script.test('1', function (finished) {
+
+                assertions.expect(true).to.be.true;
+                finished();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: assertions }, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            expect(output).to.match(/Assertions count: \d+/);
+            expect(output).to.contain('Incomplete assertion at');
+            done();
+        });
+    });
+
+    it('extends report with assertions library support (incompatible)', function (done) {
+
+        var script = Lab.script();
+        var assertions = Code;
+        script.experiment('test', function () {
+
+            script.test('1', function (finished) {
+
+                assertions.expect(true).to.be.true();
+                finished();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
+
+            expect(code).to.equal(0);
+            expect(output).to.not.match(/Assertions count: \d+/);
+            done();
+        });
+    });
+
     describe('global timeout functions', function () {
 
         // We can't poison global.Date because the normal implementation of
