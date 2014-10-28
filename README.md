@@ -138,7 +138,7 @@ lab.experiment('math', { timeout: 1000 }, function () {
 
     lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
 
-        Lab.expect(1+1).to.equal(2);
+        Code.expect(1+1).to.equal(2);
         done();
     });
 });
