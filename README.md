@@ -214,7 +214,7 @@ $ npm install -g lab
   "dependencies": {
   },
   "devDependencies": {
-    "lab": "4.x.x"
+    "lab": "5.x.x"
   },
   "scripts": {
     "test": "make test-cov"
