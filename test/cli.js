@@ -97,6 +97,30 @@ describe('CLI', function () {
         });
     });
 
+    it('ignores directories with .labignore', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_ignore', '-m', '2000']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('1 tests complete');
+            done();
+        });
+    });
+
     it('shows the help (-h)', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath,'-h']);
