@@ -63,6 +63,8 @@ By default, **lab** loads all the '\*.js' files inside the local 'test' director
 $ lab unit.js
 ```
 
+To ignore certain directories, create an empty `.labignore` file in the directory you want to ignore.
+
 Test files must require the **lab** module, and export a test script:
 ```javascript
 var Code = require('code');   // assertion library
