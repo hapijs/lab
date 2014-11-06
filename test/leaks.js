@@ -8,7 +8,9 @@ var Lab = require('../');
 
 // Declare internals
 
-var internals = {};
+var internals = {
+    harmonyGlobals: ['Promise', 'Proxy', 'Symbol', 'Map', 'WeakMap', 'Set', 'WeakSet']
+};
 
 
 // Test shortcuts
@@ -86,18 +88,50 @@ describe('Leaks', function () {
 
     it('ignores Harmony globals', function (done) {
 
-        global.Promise = 1;
-        global.Proxy = 1;
-        global.Symbol = 1;
-        global.WeakMap = 1;
+        var harmonyGlobals = internals.harmonyGlobals;
+
+        for (var i = 0; i < harmonyGlobals.length; ++i) {
+            var harmonyGlobal = harmonyGlobals[i];
+
+            global[harmonyGlobal] = global[harmonyGlobal] || 1;
+        }
 
         var leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
-        delete global.Promise;
-        delete global.Proxy;
-        delete global.Symbol;
-        delete global.WeakMap;
+        for (var i = 0; i < harmonyGlobals.length; ++i) {
+            var harmonyGlobal = harmonyGlobals[i];
+
+            if (global[harmonyGlobal] === 1) {
+                delete global[harmonyGlobal];
+            }
+        }
+
+        done();
+    });
+
+    it('handles case where Harmony globals do not exist', function (done) {
+
+        var harmonyGlobals = internals.harmonyGlobals;
+        var originalValues = {};
+
+        for (var i = 0; i < harmonyGlobals.length; ++i) {
+            var harmonyGlobal = harmonyGlobals[i];
+
+            originalValues[harmonyGlobal] = global[harmonyGlobal];
+            delete global[harmonyGlobal];
+        }
+
+        var leaks = Lab.leaks.detect();
+        expect(leaks.length).to.equal(0);
+
+        for (var i = 0; i < harmonyGlobals.length; ++i) {
+            var harmonyGlobal = harmonyGlobals[i];
+
+            if (originalValues[harmonyGlobal]) {
+                global[harmonyGlobal] = originalValues[harmonyGlobal];
+            }
+        }
 
         done();
     });
