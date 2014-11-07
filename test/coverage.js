@@ -33,6 +33,16 @@ describe('Coverage', function () {
         done();
     });
 
+    it('measures coverage on an empty return statement', function (done) {
+
+        var Test = require('./coverage/return');
+        Test.method();
+
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/return') });
+        expect(cov.percent).to.equal(100);
+        done();
+    });
+
     it('identifies lines with partial coverage', function (done) {
 
         var Test = require('./coverage/partial');
