@@ -253,6 +253,6 @@ $ npm test
 
 ## Acknowledgements
 
-**lab** initial code borrowed heavily from [mocha](http://visionmedia.github.com/mocha/), including the actual code used to render
+**lab** initial code borrowed heavily from [mocha](http://mochajs.org/), including the actual code used to render
 the coverage report into HTML. **lab** coverage code was originally adapted from [blanket](https://github.com/alex-seville/blanket)
 which in turn uses [falafel](https://github.com/substack/node-falafel).
