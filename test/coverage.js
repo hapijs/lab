@@ -164,6 +164,14 @@ describe('Coverage', function () {
         done();
     });
 
+    it('retains original value of conditional result', function (done) {
+
+        var Test = require('./coverage/conditional');
+        var value = { a: 1 };
+        expect(Test.method(value)).to.equal(value);
+        done();
+    });
+
     describe('#analyze', function () {
 
         it('sorts file paths in report', function (done) {
