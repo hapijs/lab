@@ -97,6 +97,29 @@ describe('CLI', function () {
         });
     });
 
+    it('exits with code 1 when after function throws', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_throws/throws.js']);
+        var outData = '';
+        var errData = '';
+
+        cli.stdout.on('data', function (data) {
+
+            outData += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            errData += data;
+        });
+
+        cli.once('close', function (code) {
+
+            expect(code).to.not.equal(0);
+            done();
+        });
+    });
+
     it('shows the help (-h)', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath,'-h']);
