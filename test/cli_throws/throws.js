@@ -24,8 +24,8 @@ describe('Test CLI throws', function () {
     });
 
     it('handles thrown error', function (done) {
-done();
-        //throw new Error('throwing it');
+
+        done();
     });
 });
 
