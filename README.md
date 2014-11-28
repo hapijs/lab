@@ -197,6 +197,13 @@ suite('math', function () {
 });
 ```
 
+## Ignoring files in linting
+Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
+```
+node_modules/*
+**/vendor/*.js
+```
+
 ## Best practices
 
 - Install **lab** as a global module:
