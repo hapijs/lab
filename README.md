@@ -26,9 +26,10 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-i`, `--id` - only run the test for the given identifier (or identifiers range).
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
 - `-l`, `--leaks` - disables global variable leak detection.
-- `-L`, `--lint` - run linting rules using `eslint`.  Disabled by default.
+- `-L`, `--lint` - run linting rules using linter.  Disabled by default.
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
+- `-n`, `--linter` - specify linting program; default is `eslint`.
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
 - `-r`, `--reporter` - the reporter used to generate the test results. Defaults to `console`. Options are:

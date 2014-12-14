@@ -20,6 +20,9 @@
     "eslint": "0.8.x",
     "hoek": "2.x.x"
   },
+  "optionalDependencies": {
+    "jslint": "0.7.x"
+  },
   "devDependencies": {
     "code": "1.x.x"
   },

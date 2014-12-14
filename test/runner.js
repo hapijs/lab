@@ -426,7 +426,7 @@ describe('Runner', function () {
             });
         });
 
-        Lab.report(script, { output: false, lint: 'eslint', lintingPath: 'test/lint' }, function (err, code, output) {
+        Lab.report(script, { output: false, lint: true, linter: 'eslint', lintingPath: 'test/lint' }, function (err, code, output) {
 
             expect(code).to.equal(0);
             expect(output).to.contain(['eslint/', 'semi']);
