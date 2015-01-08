@@ -13,16 +13,16 @@ var describe = lab.describe;
 var it = lab.it;
 var expect = Code.expect;
 
-describe('Linters', function () {
+describe('Linters - eslint', function () {
 
     it('should lint files in a folder', function (done) {
 
         var path = Path.join(__dirname, 'lint', 'eslint', 'basic');
-        Linters.lint({ lintingPath: path }, function (err, result) {
+        Linters.lint({ lintingPath: path, linter: 'eslint' }, function (err, result) {
 
-            expect(result).to.include('eslint');
+            expect(result).to.include('lint');
 
-            var eslintResults = result.eslint;
+            var eslintResults = result.lint;
             expect(eslintResults).to.have.length(1);
 
             var checkedFile = eslintResults[0];
@@ -39,11 +39,11 @@ describe('Linters', function () {
     it('should use local configuration files', function (done) {
 
         var path = Path.join(__dirname, 'lint', 'eslint', 'with_config');
-        Linters.lint({ lintingPath: path }, function (err, result) {
+        Linters.lint({ lintingPath: path, linter: 'eslint' }, function (err, result) {
 
-            expect(result).to.include('eslint');
+            expect(result).to.include('lint');
 
-            var eslintResults = result.eslint;
+            var eslintResults = result.lint;
             expect(eslintResults).to.have.length(1);
 
             var checkedFile = eslintResults[0];
@@ -57,14 +57,74 @@ describe('Linters', function () {
     it('displays success message if no issues found', function (done) {
 
         var path = Path.join(__dirname, 'lint', 'eslint', 'clean');
-        Linters.lint({ lintingPath: path }, function (err, result) {
+        Linters.lint({ lintingPath: path, linter: 'eslint' }, function (err, result) {
 
-            expect(result.eslint).to.exist();
+            expect(result.lint).to.exist();
 
-            var eslintResults = result.eslint;
+            var eslintResults = result.lint;
             expect(eslintResults).to.have.length(1);
 
             var checkedFile = eslintResults[0];
+            expect(checkedFile.errors.length).to.equal(0);
+
+            done();
+        });
+    });
+});
+
+describe('Linters - jslint', function () {
+    it('should lint files in a folder', function (done) {
+
+        var path = Path.join(__dirname, 'lint', 'jslint', 'basic');
+        Linters.lint({ lintingPath: path, linter: 'jslint' }, function (err, result) {
+
+            expect(result).to.include('lint');
+
+            var jslintResults = result.lint;
+            expect(jslintResults).to.have.length(1);
+
+            var checkedFile = jslintResults[0];
+            expect(checkedFile).to.include({ filename: 'fail.js' });
+            expect(checkedFile.errors).to.deep.include(
+                { line: 11, severity: 'ERROR', message: 'Use spaces, not tabs.' },
+                { line: 11, severity: 'ERROR', message: 'Missing \'use strict\' statement.' },
+                { line: 11, severity: 'ERROR', message: 'Expected \';\' and instead saw \'}\'.' }
+            );
+
+            done();
+        });
+    });
+
+    it('should use local configuration files', function (done) {
+
+        var path = Path.join(__dirname, 'lint', 'jslint', 'with_config');
+        Linters.lint({ lintingPath: path, linter: 'jslint' }, function (err, result) {
+
+            expect(result).to.include('lint');
+
+            var jslintResults = result.lint;
+            expect(jslintResults).to.have.length(1);
+
+            var checkedFile = jslintResults[0];
+            expect(checkedFile).to.include({ filename: 'fail.js' });
+            expect(checkedFile.errors).to.deep.include({ line: 11, severity: 'ERROR', message: 'Use spaces, not tabs.' },
+                                                       { line: 11, severity: 'ERROR', message: 'Missing \'use strict\' statement.' });
+            expect(checkedFile.errors).to.not.deep.include({ line: 11, severity: 'ERROR', message: 'Unexpected \'++\'.' });
+            done();
+        });
+    });
+
+    it('displays success message if no issues found', function (done) {
+
+        var path = Path.join(__dirname, 'lint', 'jslint', 'clean');
+        Linters.lint({ lintingPath: path, linter: 'jslint' }, function (err, result) {
+
+            expect(result.lint).to.exist();
+
+            var jslintResults = result.lint;
+            expect(jslintResults).to.have.length(1);
+
+            var checkedFile = jslintResults[0];
             expect(checkedFile.errors.length).to.equal(0);
 
             done();

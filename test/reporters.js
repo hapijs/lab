@@ -695,7 +695,7 @@ describe('Reporter', function () {
             var notebook = {
                 tests: [],
                 lint: {
-                    'eslint': [
+                    'lint': [
                         {
                             filename: 'test.js',
                             errors: [
@@ -723,7 +723,7 @@ describe('Reporter', function () {
             var notebook = {
                 tests: [],
                 lint: {
-                    'eslint': [
+                    'lint': [
                         {
                             filename: 'test.js',
                             errors: []
@@ -745,7 +745,7 @@ describe('Reporter', function () {
             var notebook = {
                 tests: [],
                 lint: {
-                    'eslint': [
+                    'lint': [
                         {
                             filename: 'test.js',
                             errors: null
