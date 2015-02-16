@@ -225,7 +225,8 @@ $ npm install -g lab
     "lab": "5.x.x"
   },
   "scripts": {
-    "test": "make test-cov"
+    "test": "lab -t 100",
+    "test-cov-html": "lab -r html -o coverage.html"
   },
   "licenses": [
     {
@@ -236,21 +237,8 @@ $ npm install -g lab
 }
 ```
 
-- Add a `Makefile` to your project:
-
-```bash
-test:
-    @node node_modules/lab/bin/lab
-test-cov:
-    @node node_modules/lab/bin/lab -t 100
-test-cov-html:
-    @node node_modules/lab/bin/lab -r html -o coverage.html
-
-.PHONY: test test-cov test-cov-html
-```
-
 Note that `npm test` will execute **lab** with the `-t 100` option which will require 100% code coverage. Change or remove
-this option if you just cannot be bothered with producing quality code. Run `make test-cov-html` and check the `coverage.html`
+this option if you just cannot be bothered with producing quality code. Run `npm run test-cov-html` and check the `coverage.html`
 file to figure out where coverage is lacking.
 
 - Run your tests with
