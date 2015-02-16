@@ -30,7 +30,8 @@
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "make test-cov"
+    "test": "./bin/_lab -fL -t 100 -m 3000",
+    "test-cov-html": "./bin/_lab -fL -r html -m 3000 -o coverage.html"
   },
   "licenses": [
     {
