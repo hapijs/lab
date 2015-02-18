@@ -553,6 +553,7 @@ describe('CLI', function () {
         });
 
         cli.once('close', function (code, signal) {
+            
             expect(code).to.equal(0);
             expect(signal).to.not.exist();
             expect(output).to.contain('0 tests complete');
