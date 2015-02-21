@@ -1,0 +1,12 @@
+// Load modules
+
+
+// Declare internals
+
+var internals = {};
+
+
+exports.method = function (value) {
+    !NOCOMPILE!+2;
+    return value;
+};

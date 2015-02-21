@@ -696,7 +696,7 @@ describe('CLI', function () {
 
     it('displays error message when transform module does not export', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-T', 'test/coverage/transform-bad.js']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-T', 'test/transform/exclude/lab-noexport']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
@@ -711,9 +711,35 @@ describe('CLI', function () {
         });
 
         cli.once('close', function (code, signal) {
+
             expect(code).to.equal(1);
             expect(signal).to.not.exist();
-            expect(output).to.contain('transform module must export extensions');
+            expect(output).to.contain('transform module must export');
+            done();
+        });
+    });
+
+    it('uses transforms to run a test', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/transform-test.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            output += data;
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('1 tests complete');
             done();
         });
     });
