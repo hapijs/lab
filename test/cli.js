@@ -670,7 +670,7 @@ describe('CLI', function () {
         });
     });
 
-    it('throws when unknown module is specified in transform option', function (done) {
+    it('errors out when unknown module is specified in transform option', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-T', 'not-a-transform-module']);
         var output = '';
@@ -688,7 +688,7 @@ describe('CLI', function () {
 
         cli.once('close', function (code, signal) {
 
-            expect(code).to.equal(8);
+            expect(code).to.not.equal(0);
             expect(signal).to.not.exist();
             done();
         });
