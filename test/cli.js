@@ -712,7 +712,7 @@ describe('CLI', function () {
 
         cli.once('close', function (code, signal) {
 
-            expect(code).to.equal(1);
+            expect(code).to.not.equal(0);
             expect(signal).to.not.exist();
             expect(output).to.contain('transform module must export');
             done();
