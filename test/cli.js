@@ -537,6 +537,30 @@ describe('CLI', function () {
         });
     });
 
+    it('ignores scripts which export null', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/nullExports.js']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+            
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('0 tests complete');
+            done();
+        });
+    });
+
     it('displays error message when an unknown reporter is specified', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, '-r', 'unknown']);
