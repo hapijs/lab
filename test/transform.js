@@ -22,11 +22,11 @@ describe('Transform', function () {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', 
         transform: [
-            {ext: '.new', transform: function (content) {
+            { ext: '.new', transform: function (content) {
 
                 return content.replace('!NOCOMPILE!', 'value = value ');
             }},
-            {ext: '.js', transform: null}
+            { ext: '.js', transform: null }
         ]
     });
 
