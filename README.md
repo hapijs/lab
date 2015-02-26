@@ -43,6 +43,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-s`, `--silence` - silence test output, defaults to false.
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
+- `-T`, `--transform` - javascript file that exports an array of objects ie. `[ { ext: ".js", transform: function (content) { ... } } ]`. Note that if you use this option with -c (--coverage), then you must generate sourcemaps and pass sourcemaps option to get proper line numbers.
 - `-v`, `--verbose` - verbose test output, defaults to false.
 - `-a`, `--assert` - name of assert library to use.
 
@@ -196,6 +197,19 @@ suite('math', function () {
         done();
     });
 });
+```
+
+To use source transforms, you must specify a file that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler could look like:
+```javascript
+var Babel = require('babel-core');
+
+module.exports = [
+  {ext: '.js', transform: function (content) {
+
+    var result = Babel.transform(content, { sourceMap: 'inline', ast: false});
+      return result.code;
+  }}
+];
 ```
 
 ## Ignoring files in linting
