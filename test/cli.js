@@ -138,7 +138,6 @@ describe('CLI', function () {
 
         cli.once('close', function (code) {
 
-            expect(outData).to.contain('[domain debug error stack]');
             expect(code).to.not.equal(0);
             done();
         });

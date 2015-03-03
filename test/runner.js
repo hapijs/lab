@@ -226,7 +226,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { debug: true }, null, function (err, notebook) {
 
-            expect(notebook.errors.length).to.equal(1);
+            expect(notebook.errors.length).to.greaterThan(0);
             done();
         });
     });
