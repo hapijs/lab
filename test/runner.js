@@ -208,6 +208,29 @@ describe('Runner', function () {
         });
     });
 
+    it('debug domain error', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('a', function (finished) {
+
+                setImmediate(function () {
+
+                    throw new Error('throwing stack later');
+                });
+
+                finished();
+            });
+        });
+
+        Lab.execute(script, { D: true }, null, function (err, notebook) {
+
+            expect(notebook.errors.length).to.equal(1);
+            done();
+        });
+    });
+
     it('skips tests on failed before', function (done) {
 
         var steps = [];

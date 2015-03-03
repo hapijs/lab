@@ -120,6 +120,30 @@ describe('CLI', function () {
         });
     });
 
+    it('displays a domain\'s error stack (-D)', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_throws/debug.js', '--debug']);
+        var outData = '';
+        var errData = '';
+
+        cli.stdout.on('data', function (data) {
+
+            outData += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            errData += data;
+        });
+
+        cli.once('close', function (code) {
+
+            expect(outData).to.contain('[domain debug error stack]');
+            expect(code).to.not.equal(0);
+            done();
+        });
+    });
+
     it('shows the help (-h)', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath,'-h']);
