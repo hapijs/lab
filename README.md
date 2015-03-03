@@ -42,6 +42,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `tap` - TAP protocol report.
     - `lcov` - output to [lcov](http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php) format.
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
+    - [Custom Reporters](#custom-reporters) - See Below
 - `-s`, `--silence` - silence test output, defaults to false.
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
@@ -262,6 +263,16 @@ file to figure out where coverage is lacking.
 ```bash
 $ npm test
 ```
+
+## Custom Reporters
+
+If the value passed for `reporter` isn't included with Lab, it is loaded from the filesystem.
+If the string starts with a period (`'./custom-reporter'`), it will be loaded relative to the current working directory.
+If it doesn't start with a period (`'custom-reporter'`), it will be loaded from the `node_modules` directory, just like any module installed using `npm install`.
+
+Reporters must be a class with the following methods: `start`, `test` and `end`. `options` are passed to the class constructor upon initialization.
+
+See the [json reporter](lib/reporters/json.js) for an good starting point.
 
 ## Acknowledgements
 

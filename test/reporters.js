@@ -1313,4 +1313,47 @@ describe('Reporter', function () {
             done();
         });
     });
+
+    describe('custom reporters', function () {
+
+        it('requires a custom reporter relatively if starts with .', function (done) {
+
+            var reporter = './node_modules/lab-event-reporter/index.js';
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: reporter }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                done();
+            });
+        });
+
+        it('requires a custom reporter from node_modules if not starting with .', function (done) {
+
+            var reporter = 'lab-event-reporter';
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: reporter }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                done();
+            });
+        });
+    });
 });

@@ -25,7 +25,8 @@
     "jslint": "0.7.x"
   },
   "devDependencies": {
-    "code": "1.x.x"
+    "code": "1.x.x",
+    "lab-event-reporter": "1.x.x"
   },
   "bin": {
     "lab": "./bin/lab"
