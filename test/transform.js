@@ -59,20 +59,6 @@ describe('Transform', function () {
         done();
     });
 
-    it('unit tests coverage.retrieveFile', function (done) {
-
-        var content = Lab.coverage.retrieveFile('test/transform/exclude/lab-noexport.js');
-        expect(content).to.contain('// no code');
-
-        content = Lab.coverage.retrieveFile('test/transform/exclude/lab-noexport.js');
-        expect(content).to.contain('// no code');
-
-        content = Lab.coverage.retrieveFile('doesnotexist');
-        expect(content).to.equal(null);
-
-        done();
-    });
-
     it('unit tests transform.retrieveFile', function (done) {
 
         var content = Transform.retrieveFile('test/transform/exclude/lab-noexport.js');
