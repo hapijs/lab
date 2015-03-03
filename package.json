@@ -18,7 +18,8 @@
     "diff": "1.x.x",
     "source-map-support": "0.2.x",
     "eslint": "0.14.x",
-    "hoek": "2.x.x"
+    "hoek": "2.x.x",
+    "mkdirp": "0.5.x"
   },
   "optionalDependencies": {
     "jslint": "0.7.x"
