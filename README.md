@@ -19,6 +19,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-c`, `--coverage` - enables code coverage analysis.
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
+- `-D`, `--debug` - print the stack during a domain error event.
 - `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
 - `-f`, `--flat` - do not perform a recursive load of test files within the test directory.
 - `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
