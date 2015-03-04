@@ -70,6 +70,21 @@ describe('Linters - eslint', function () {
             done();
         });
     });
+
+    it('should pass options and not find any files', function (done) {
+
+        var lintOptions = JSON.stringify({ extensions: ['.jsx'] });
+        var path = Path.join(__dirname, 'lint', 'eslint', 'basic');
+        Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': lintOptions }, function (err, result) {
+
+            expect(result).to.include('lint');
+
+            var eslintResults = result.lint;
+            expect(eslintResults).to.have.length(0);
+
+            done();
+        });
+    });
 });
 
 describe('Linters - jslint', function () {
@@ -126,6 +141,21 @@ describe('Linters - jslint', function () {
 
             var checkedFile = jslintResults[0];
             expect(checkedFile.errors.length).to.equal(0);
+
+            done();
+        });
+    });
+
+    it('should pass options and not find any files', function (done) {
+
+        var lintOptions = JSON.stringify({ argv: { remain: ['**/*.jsx'] } });
+        var path = Path.join(__dirname, 'lint', 'jslint', 'basic');
+        Linters.lint({ lintingPath: path, linter: 'jslint', 'lint-options': lintOptions }, function (err, result) {
+
+            expect(result).to.include('lint');
+
+            var jslintResults = result.lint;
+            expect(jslintResults).to.have.length(0);
 
             done();
         });
