@@ -1,14 +1,31 @@
 // Load modules
 
+var Os = require('os');
 var Path = require('path');
 var Code = require('code');
 var _Lab = require('../test_runner');
 var Lab = require('../');
+var Transform = require('../lib/transform');
 
 
 // Declare internals
 
-var internals = {};
+var internals = {
+    transform: [
+        { ext: '.new', transform: function (content, filename) {
+
+            return content.replace('!NOCOMPILE!', 'value = value ');
+        }},
+        { ext: '.inl', transform: function (content, filename) {
+
+            if (Buffer.isBuffer(content)) {
+                content = content.toString();
+            }
+            return content.concat(Os.EOL).concat('//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIkB0cmFjZXVyL2dlbmVyYXRlZC9UZW1wbGF0ZVBhcnNlci8xIiwiLi93aGlsZS5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsQUFBSSxFQUFBLENBQUEsWUFBVyxVQUFvQixDQUFDO0FDS3BDLEFBQUksRUFBQSxDQUFBLFNBQVEsRUFBSSxHQUFDLENBQUM7QUFHbEIsTUFBTSxPQUFPLEVBQUksVUFBVSxLQUFJLENBQUc7QUFFOUIsUUFBTSxLQUFJLENBQUc7QUFDVCxRQUFJLEVBQUksTUFBSSxDQUFDO0VBQ2pCO0FBQUEsQUFFQSxPQUFPLE1BQUksQ0FBQztBQUNoQixDQUFDIiwic291cmNlc0NvbnRlbnQiOlsidmFyIF9fbW9kdWxlTmFtZSA9ICRfX3BsYWNlaG9sZGVyX18wOyIsIi8vIExvYWQgbW9kdWxlc1xuXG5cbi8vIERlY2xhcmUgaW50ZXJuYWxzXG5cbnZhciBpbnRlcm5hbHMgPSB7fTtcblxuXG5leHBvcnRzLm1ldGhvZCA9IGZ1bmN0aW9uICh2YWx1ZSkge1xuXG4gICAgd2hpbGUodmFsdWUpIHtcbiAgICAgICAgdmFsdWUgPSBmYWxzZTtcbiAgICB9XG5cbiAgICByZXR1cm4gdmFsdWU7XG59O1xuIl19').concat(Os.EOL);
+        }},
+        { ext: '.js', transform: null }
+    ]
+};
 
 
 // Test shortcuts
@@ -20,15 +37,7 @@ var expect = Code.expect;
 
 describe('Transform', function () {
 
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', 
-        transform: [
-            { ext: '.new', transform: function (content) {
-
-                return content.replace('!NOCOMPILE!', 'value = value ');
-            }},
-            { ext: '.js', transform: null }
-        ]
-    });
+    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', transform: internals.transform });
 
     it('instruments and measures coverage', function (done) {
 
@@ -47,6 +56,52 @@ describe('Transform', function () {
 
         var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic') });
         expect(cov.percent).to.equal(100);
+        done();
+    });
+
+    it('unit tests transform.retrieveFile', function (done) {
+
+        var content = Transform.retrieveFile('test/transform/exclude/lab-noexport.js');
+        expect(content).to.contain('// no code');
+
+        content = Transform.retrieveFile('test/transform/exclude/lab-noexport.js');
+        expect(content).to.contain('// no code');
+
+        content = Transform.retrieveFile('doesnotexist');
+        expect(content).to.equal(null);
+
+        done();
+    });
+});
+
+describe('Transform.install', function () {
+
+    lab.before(function (done) {
+
+        internals.js = require.extensions['.js'];
+        internals['new'] = require.extensions['.new'];
+        internals.inl = require.extensions['.inl'];
+        done();
+    });
+
+    lab.after(function (done) {
+
+        require.extensions['.js'] = internals.js;
+        require.extensions['.new'] = internals['new'];
+        require.extensions['.inl'] = internals.inl;
+        done();
+    });
+
+    it('works correctly', function (done) {
+
+        Transform.install({ transform: internals.transform });
+
+        var Test = require('./transform/sourcemaps');
+        expect(Test.method(false)).to.equal(false);
+
+        var Test2 = require('./transform/exclude/transform-basic');
+        expect(Test2.method()).to.equal(1);
+
         done();
     });
 });
