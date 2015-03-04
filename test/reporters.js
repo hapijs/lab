@@ -88,6 +88,31 @@ describe('Reporter', function () {
         });
     });
 
+    it('outputs to a file in a directory', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('works', function (finished) {
+
+                finished();
+            });
+        });
+
+        var randomname = [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-');
+        var folder = Path.join(Os.tmpDir(), randomname);
+        var filename = Path.join(folder, randomname);
+        Lab.report(script, { output: filename }, function (err, code, output) {
+
+            expect(err).to.not.exist();
+            expect(code).to.equal(0);
+            expect(output).to.equal(Fs.readFileSync(filename).toString());
+            Fs.unlinkSync(filename);
+            Fs.rmdirSync(folder);
+            done();
+        });
+    });
+
     it('exists with error code when leak detected', function (done) {
 
         var reporter = Reporters.generate({ reporter: 'console' });
