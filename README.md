@@ -207,11 +207,16 @@ To use source transforms, you must specify a file that tells Lab how to do the t
 var Babel = require('babel-core');
 
 module.exports = [
-  {ext: '.js', transform: function (content, filename) {
+    {ext: '.js', transform: function (content, filename) {
 
-    var result = Babel.transform(content, { sourceMap: 'inline', filename: filename, sourceFileName: filename });
-      return result.code;
-  }}
+        // Make sure to only transform your code or the dependencies you want
+        if (filename.indexOf('node_modules') === -1) {
+          var result = Babel.transform(content, { sourceMap: 'inline', filename: filename, sourceFileName: filename });
+          return result.code;
+        }
+
+        return content;
+    }}
 ];
 ```
 
