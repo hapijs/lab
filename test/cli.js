@@ -769,7 +769,7 @@ describe('CLI', function () {
 
     it('uses transforms to run a test file that has to be transformed', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new']);
+        var cli = ChildProcess.spawn('node', [labPath, '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
@@ -793,7 +793,7 @@ describe('CLI', function () {
 
     it('uses transforms to run a test file that has to be transformed with coverage support', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, '-c', '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new']);
+        var cli = ChildProcess.spawn('node', [labPath, '-c', '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
