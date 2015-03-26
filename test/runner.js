@@ -438,6 +438,27 @@ describe('Runner', function () {
         });
     });
 
+    it('can handle thenables', function (done) {
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('1', function () {
+                return Promise.fulfill('done');
+            });
+
+            script.test('1', function () {
+                return Promise.reject(new Error('sample reason'));
+            });
+        });
+
+        Lab.report(script, { output: false }, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            done();
+        });
+    });
+
     it('uses provided linter', function (done) {
 
         var script = Lab.script();
