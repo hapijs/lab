@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "bossy": "1.x.x",
-    "esprima": "1.x.x",
+    "espree": "2.x.x",
     "handlebars": "2.x.x",
     "items": "1.x.x",
     "diff": "1.x.x",
