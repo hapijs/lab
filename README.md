@@ -277,7 +277,7 @@ If it doesn't start with a period (`'custom-reporter'`), it will be loaded from 
 
 Reporters must be a class with the following methods: `start`, `test` and `end`. `options` are passed to the class constructor upon initialization.
 
-See the [json reporter](lib/reporters/json.js) for an good starting point.
+See the [json reporter](lib/reporters/json.js) for a good starting point.
 
 ## Acknowledgements
 
