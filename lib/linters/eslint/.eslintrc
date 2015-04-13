@@ -1,4 +1,7 @@
 {
+    "plugins": [
+        "eslint-plugin-hapi"
+    ],
     "rules": {
         "consistent-return": 0,
         "vars-on-top": 0,
@@ -22,6 +25,7 @@
         "no-lonely-if": 0,
         "space-in-brackets": 0,
         "brace-style": 0,
+        "hapi/hapi-scope-start": 1,
         "dot-notation": 1,
         "eol-last": 1,
         "camelcase": 1,
