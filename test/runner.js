@@ -439,22 +439,37 @@ describe('Runner', function () {
     });
 
     it('can handle thenables', function (done) {
-
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('1', function () {
-                return Promise.fulfill('done');
+            script.test('1', function (done) {
+                return Promise.resolve('done');
             });
 
-            script.test('1', function () {
-                return Promise.reject(new Error('sample reason'));
+            script.test('2', function (done) {
+                return Promise.reject(new Error('Promise Error'))
             });
+
+            script.test('3', function (done) {
+              return {
+                then: function (ok, ko) {
+                  ok('done')
+                }
+              }
+            })
+
+            script.test('4', function (done) {
+              return {
+                then: function (ok, ko) {
+                  ko(new Error('Thenable Error'))
+                }
+              }
+            })
         });
 
         Lab.report(script, { output: false }, function (err, code, output) {
-
             expect(code).to.equal(1);
+            console.log(output)
             done();
         });
     });
