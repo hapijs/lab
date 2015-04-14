@@ -473,7 +473,8 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false }, function (err, code, output) {
             expect(code).to.equal(1);
-            console.log(output)
+            expect(output).to.contain('Promise Error');
+            expect(output).to.contain('Thenable Error');
             done();
         });
     });
