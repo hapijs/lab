@@ -439,6 +439,10 @@ describe('Runner', function () {
     });
 
     it('can handle thenables', function (done) {
+        if (typeof Promise === 'undefined') {
+          var Promise = require('promise');
+        }
+
         var script = Lab.script();
         script.experiment('test', function () {
 
