@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "bossy": "1.x.x",
-    "esprima": "2.x.x",
+    "espree": "2.x.x",
     "eslint-plugin-hapi": "1.x.x",
     "handlebars": "3.x.x",
     "items": "1.x.x",
