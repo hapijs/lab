@@ -82,7 +82,7 @@ lab.test('returns true when 1 + 1 equals 2', function (done) {
 ```
 
 When a test is completed, `done(err)` must be called, otherwise the test will time out (2 seconds by default) and will fail.
-The test passes if `done()` is call once before the timeout, no exception thrown, and no arguments are passed to `done()`.
+The test passes if `done()` is called once before the timeout, no exception thrown, and no arguments are passed to `done()`.
 If no callback function is provided, the test is considered a TODO reminder and will be skipped.
 
 Tests can be organized into experiments:
@@ -277,7 +277,7 @@ If it doesn't start with a period (`'custom-reporter'`), it will be loaded from 
 
 Reporters must be a class with the following methods: `start`, `test` and `end`. `options` are passed to the class constructor upon initialization.
 
-See the [json reporter](lib/reporters/json.js) for an good starting point.
+See the [json reporter](lib/reporters/json.js) for a good starting point.
 
 ## Acknowledgements
 
