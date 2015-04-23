@@ -58,6 +58,8 @@
         "no-new-wrappers": 2,
         "no-comma-dangle": 2,
         "no-sparse-arrays": 2,
-        "no-ex-assign": 2
+        "no-ex-assign": 2,
+        "space-before-function-paren": 2,
+        "func-style": [2, "expression"]
     }
 }
