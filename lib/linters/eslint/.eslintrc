@@ -59,6 +59,7 @@
         "no-comma-dangle": 2,
         "no-sparse-arrays": 2,
         "no-ex-assign": 2,
+        "indent": [2, 4],
         "space-before-function-paren": 2,
         "func-style": [2, "expression"]
     }
