@@ -58,6 +58,7 @@
         "no-new-wrappers": 2,
         "no-comma-dangle": 2,
         "no-sparse-arrays": 2,
-        "no-ex-assign": 2
+        "no-ex-assign": 2,
+        "indent": [2, 4]
     }
 }
