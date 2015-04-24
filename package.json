@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "5.6.1",
+  "version": "5.7.0",
   "repository": "git://github.com/hapijs/lab",
   "main": "index",
   "keywords": [
