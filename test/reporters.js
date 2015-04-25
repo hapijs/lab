@@ -553,23 +553,27 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
+                var works = function (finished) {
+
+                    expect(true).to.equal(true);
+                    finished();
+                };
+
+                var fails = function (finished) {
+
+                    expect(true).to.equal(false);
+                    finished();
+                };
+
+                var skips = function (finished) {
+
+                    finished();
+                };
+
                 for (var i = 0; i < 30; ++i) {
-                    script.test('works', function (finished) {
-
-                        expect(true).to.equal(true);
-                        finished();
-                    });
-
-                    script.test('fails', function (finished) {
-
-                        expect(true).to.equal(false);
-                        finished();
-                    });
-
-                    script.test('skips', { skip: true }, function (finished) {
-
-                        finished();
-                    });
+                    script.test('works', works);
+                    script.test('fails', fails);
+                    script.test('skips', { skip: true }, skips);
                 }
             });
 
@@ -671,6 +675,7 @@ describe('Reporter', function () {
                 });
 
                 script.test('works', function (finished) {
+
                     expect(true).to.equal(true, 'Working right');
                     finished();
                 });
@@ -698,6 +703,7 @@ describe('Reporter', function () {
                 });
 
                 script.test('works', function (finished) {
+
                     expect(true).to.equal(true, 'Working right');
                     finished();
                 });
@@ -1295,6 +1301,7 @@ describe('Reporter', function () {
             var reporter = Reporters.generate({ reporter: 'clover' });
 
             reporter.report = function (text) {
+
                 output += text;
             };
 
