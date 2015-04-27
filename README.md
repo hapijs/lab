@@ -28,6 +28,8 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
+- `--lint-errors-threshold` - maximum absolute amount of linting errors.
+- `--lint-warnings-threshold` - maximum absolute amount of linting warnings.
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
 - `-n`, `--linter` - specify linting program; default is `eslint`.

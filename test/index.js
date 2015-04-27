@@ -778,14 +778,14 @@ describe('Lab', function () {
             script.test('a');
         }).not.to.throw();
 
-        expect(function() {
+        expect(function () {
 
-            script.test('a', function() {});
+            script.test('a', function () {});
         }).to.throw('Function for test "a" should take exactly one argument');
 
         ['before', 'beforeEach', 'after', 'afterEach'].forEach(function (fn) {
 
-            expect(function() {
+            expect(function () {
 
                 script.experiment('exp', function () {
 
@@ -793,11 +793,11 @@ describe('Lab', function () {
                 });
             }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
 
-            expect(function() {
+            expect(function () {
 
                 script.experiment('exp', function () {
 
-                    script[fn](function() {});
+                    script[fn](function () {});
                 });
             }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
         });

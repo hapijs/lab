@@ -88,6 +88,7 @@ describe('Linters - eslint', function () {
 });
 
 describe('Linters - jslint', function () {
+
     it('should lint files in a folder', function (done) {
 
         var path = Path.join(__dirname, 'lint', 'jslint', 'basic');

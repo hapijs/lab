@@ -79,7 +79,7 @@ describe('Transform.install', function () {
     lab.before(function (done) {
 
         internals.js = require.extensions['.js'];
-        internals['new'] = require.extensions['.new'];
+        internals.new = require.extensions['.new'];
         internals.inl = require.extensions['.inl'];
         done();
     });
@@ -87,7 +87,7 @@ describe('Transform.install', function () {
     lab.after(function (done) {
 
         require.extensions['.js'] = internals.js;
-        require.extensions['.new'] = internals['new'];
+        require.extensions['.new'] = internals.new;
         require.extensions['.inl'] = internals.inl;
         done();
     });
