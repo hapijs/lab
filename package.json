@@ -28,7 +28,7 @@
   "devDependencies": {
     "code": "1.x.x",
     "lab-event-reporter": "1.x.x",
-    "promise": "^6.1.0"
+    "promise": "6.x.x"
   },
   "bin": {
     "lab": "./bin/lab"
