@@ -145,7 +145,7 @@ describe('CLI', function () {
 
     it('shows the help (-h)', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath,'-h']);
+        var cli = ChildProcess.spawn('node', [labPath, '-h']);
         var output = '';
 
         cli.stdout.on('data', function (data) {
@@ -169,7 +169,7 @@ describe('CLI', function () {
 
         Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
 
-        var cli = ChildProcess.spawn('node', [labPath,'test/cli/leaks.js', '-I', 'foo,bar']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/leaks.js', '-I', 'foo,bar']);
 
         cli.stdout.on('data', function (data) {
 
@@ -199,7 +199,7 @@ describe('CLI', function () {
 
         Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
 
-        var cli = ChildProcess.spawn('node', [labPath,'test/cli/leaks.js', '--ignore', 'foo,bar']);
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli/leaks.js', '--ignore', 'foo,bar']);
 
         cli.stdout.on('data', function (data) {
 

@@ -573,7 +573,7 @@ describe('Runner', function () {
             script.beforeEach(function (done) {
 
                 shared = new EventEmitter();
-                shared.on('whatever', function() {
+                shared.on('whatever', function () {
 
                     this.emit('something');
                 });
@@ -611,7 +611,7 @@ describe('Runner', function () {
             script.beforeEach(function (done) {
 
                 shared = new EventEmitter();
-                shared.on('whatever', function() {
+                shared.on('whatever', function () {
 
                     this.emit('something');
                 });
@@ -661,7 +661,7 @@ describe('Runner', function () {
             script.beforeEach(function (done) {
 
                 shared = new EventEmitter();
-                shared.on('whatever', function() {
+                shared.on('whatever', function () {
 
                     this.emit('something');
                 });
@@ -711,11 +711,11 @@ describe('Runner', function () {
             script.beforeEach(function (done) {
 
                 shared = new EventEmitter();
-                shared.on('foo', function() {
+                shared.on('foo', function () {
 
                     this.emit('bar');
                 });
-                shared.on('beep', function() {
+                shared.on('beep', function () {
 
                     this.emit('boop');
                 });
@@ -772,11 +772,11 @@ describe('Runner', function () {
             script.beforeEach(function (done) {
 
                 shared = new EventEmitter();
-                shared.on('foo', function() {
+                shared.on('foo', function () {
 
                     this.emit('bar');
                 });
-                shared.on('beep', function() {
+                shared.on('beep', function () {
 
                     this.emit('boop');
                 });

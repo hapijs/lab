@@ -113,7 +113,7 @@ describe('Reporter', function () {
         });
     });
 
-    it('exists with error code when leak detected', function (done) {
+    it('exits with error code when leak detected', function (done) {
 
         var reporter = Reporters.generate({ reporter: 'console' });
         var notebook = {
@@ -132,7 +132,7 @@ describe('Reporter', function () {
         });
     });
 
-    it('exists with error code when coverage threshold is not met', function (done) {
+    it('exits with error code when coverage threshold is not met', function (done) {
 
         var reporter = Reporters.generate({ reporter: 'console', coverage: true, threshold: 50 });
         var notebook = {
@@ -150,7 +150,7 @@ describe('Reporter', function () {
         });
     });
 
-    it('exists with success code when coverage threshold is met', function (done) {
+    it('exits with success code when coverage threshold is met', function (done) {
 
         var reporter = Reporters.generate({ reporter: 'console', coverage: true, threshold: 50 });
         var notebook = {
@@ -158,6 +158,130 @@ describe('Reporter', function () {
             coverage: {
                 percent: 60,
                 files: []
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(0);
+            done();
+        });
+    });
+
+    it('exits with error code when linting error threshold is met', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', 'lint-errors-threshold': 5 });
+        var notebook = {
+            tests: [],
+            lint: {
+                lint: [
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] },
+                    { errors: [{ severity: 'ERROR' }, { severity: 'ERROR' }] },
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] },
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] }
+                ]
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            done();
+        });
+    });
+
+    it('exits with error code when linting error threshold is met and threshold is 0', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', 'lint-errors-threshold': 0 });
+        var notebook = {
+            tests: [],
+            lint: {
+                lint: [
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] }
+                ]
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            done();
+        });
+    });
+
+    it('exits with success code when linting error threshold is not met', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', 'lint-errors-threshold': 5 });
+        var notebook = {
+            tests: [],
+            lint: {
+                lint: [
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] },
+                    { errors: [{ severity: 'ERROR' }, { severity: 'ERROR' }] },
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] }
+                ]
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(0);
+            done();
+        });
+    });
+
+    it('exits with error code when linting warning threshold is met', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', 'lint-warnings-threshold': 5 });
+        var notebook = {
+            tests: [],
+            lint: {
+                lint: [
+                    { errors: [{ severity: 'ERROR' }, { severity: 'WARNING' }] },
+                    { errors: [{ severity: 'WARNING' }, { severity: 'WARNING' }] },
+                    { errors: [{ severity: 'ERROR' }, { severity: 'WARNING' }] },
+                    { errors: [{ severity: 'ERROR' }, { severity: 'WARNING' }] }
+                ]
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            done();
+        });
+    });
+
+    it('exits with error code when linting warning threshold is met and threshold is 0', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', 'lint-warnings-threshold': 0 });
+        var notebook = {
+            tests: [],
+            lint: {
+                lint: [
+                    { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] }
+                ]
+            }
+        };
+
+        reporter.finalize(notebook, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            done();
+        });
+    });
+
+    it('exits with success code when linting warning threshold is not met', function (done) {
+
+        var reporter = Reporters.generate({ reporter: 'console', 'lint-warnings-threshold': 5 });
+        var notebook = {
+            tests: [],
+            lint: {
+                lint: [
+                    { errors: [{ severity: 'ERROR' }, { severity: 'WARNING' }] },
+                    { errors: [{ severity: 'WARNING' }, { severity: 'WARNING' }] },
+                    { errors: [{ severity: 'ERROR' }, { severity: 'WARNING' }] }
+                ]
             }
         };
 
@@ -553,23 +677,27 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
+                var works = function (finished) {
+
+                    expect(true).to.equal(true);
+                    finished();
+                };
+
+                var fails = function (finished) {
+
+                    expect(true).to.equal(false);
+                    finished();
+                };
+
+                var skips = function (finished) {
+
+                    finished();
+                };
+
                 for (var i = 0; i < 30; ++i) {
-                    script.test('works', function (finished) {
-
-                        expect(true).to.equal(true);
-                        finished();
-                    });
-
-                    script.test('fails', function (finished) {
-
-                        expect(true).to.equal(false);
-                        finished();
-                    });
-
-                    script.test('skips', { skip: true }, function (finished) {
-
-                        finished();
-                    });
+                    script.test('works', works);
+                    script.test('fails', fails);
+                    script.test('skips', { skip: true }, skips);
                 }
             });
 
@@ -671,6 +799,7 @@ describe('Reporter', function () {
                 });
 
                 script.test('works', function (finished) {
+
                     expect(true).to.equal(true, 'Working right');
                     finished();
                 });
@@ -698,6 +827,7 @@ describe('Reporter', function () {
                 });
 
                 script.test('works', function (finished) {
+
                     expect(true).to.equal(true, 'Working right');
                     finished();
                 });
@@ -1295,6 +1425,7 @@ describe('Reporter', function () {
             var reporter = Reporters.generate({ reporter: 'clover' });
 
             reporter.report = function (text) {
+
                 output += text;
             };
 

@@ -28,6 +28,8 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
+- `--lint-errors-threshold` - maximum absolute amount of linting errors.
+- `--lint-warnings-threshold` - maximum absolute amount of linting warnings.
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
 - `-n`, `--linter` - specify linting program; default is `eslint`.
@@ -261,7 +263,8 @@ $ npm install -g lab
 
 Note that `npm test` will execute **lab** with the `-t 100` option which will require 100% code coverage. Change or remove
 this option if you just cannot be bothered with producing quality code. Run `npm run test-cov-html` and check the `coverage.html`
-file to figure out where coverage is lacking.
+file to figure out where coverage is lacking. When coverage is below the threshold, the CLI with exit with code `1` and will result
+in an npm Error message.
 
 - Run your tests with
 

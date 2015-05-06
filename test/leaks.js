@@ -99,8 +99,8 @@ describe('Leaks', function () {
         var leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
-        for (var i = 0; i < harmonyGlobals.length; ++i) {
-            var harmonyGlobal = harmonyGlobals[i];
+        for (i = 0; i < harmonyGlobals.length; ++i) {
+            harmonyGlobal = harmonyGlobals[i];
 
             if (global[harmonyGlobal] === 1) {
                 delete global[harmonyGlobal];
@@ -125,8 +125,8 @@ describe('Leaks', function () {
         var leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
-        for (var i = 0; i < harmonyGlobals.length; ++i) {
-            var harmonyGlobal = harmonyGlobals[i];
+        for (i = 0; i < harmonyGlobals.length; ++i) {
+            harmonyGlobal = harmonyGlobals[i];
 
             if (originalValues[harmonyGlobal]) {
                 global[harmonyGlobal] = originalValues[harmonyGlobal];
