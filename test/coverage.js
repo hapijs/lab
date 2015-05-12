@@ -185,6 +185,30 @@ describe('Coverage', function () {
         done();
     });
 
+    it('should work with loop labels', function (done) {
+
+        var Test = require('./coverage/loop-labels.js');
+        expect(Test.method()).to.deep.equal([1, 0]);
+
+        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/loop-labels') });
+        var source = cov.files[0].source;
+        var missedChunks = [];
+        Object.keys(source).forEach(function (lineNumber) {
+
+            var line = source[lineNumber];
+            if (line.miss) {
+                missedChunks.push.apply(missedChunks, line.chunks.filter(function (chunk) {
+
+                    return !!chunk.miss;
+                }));
+            }
+        });
+
+        expect(missedChunks).to.have.length(1).and.to.deep.equal([{ source: 'j < 1', miss: 'true' }]);
+
+        done();
+    });
+
     describe('#analyze', function () {
 
         it('sorts file paths in report', function (done) {
