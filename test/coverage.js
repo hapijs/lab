@@ -172,6 +172,19 @@ describe('Coverage', function () {
         done();
     });
 
+    it('should not change use strict instructions', function (done) {
+
+        var Test = require('./coverage/use-strict.js');
+        expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
+
+        var testFile = Path.join(__dirname, 'coverage/use-strict.js');
+        expect(Test.singleLine.toString()).to.contain('"use strict"; __$$labCov._line(\'' + testFile + '\',19);return value;');
+
+        expect(Test.shouldFail).to.throw('unknownvar is not defined');
+
+        done();
+    });
+
     describe('#analyze', function () {
 
         it('sorts file paths in report', function (done) {
