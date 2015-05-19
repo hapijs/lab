@@ -178,7 +178,7 @@ describe('Coverage', function () {
         expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
 
         var testFile = Path.join(__dirname, 'coverage/use-strict.js');
-        expect(Test.singleLine.toString()).to.contain('"use strict"; __$$labCov._line(\'' + testFile + '\',19);return value;');
+        expect(Test.singleLine.toString()).to.contain('"use strict"; global.__$$labCov._line(\'' + testFile + '\',19);return value;');
 
         expect(Test.shouldFail).to.throw('unknownvar is not defined');
 
