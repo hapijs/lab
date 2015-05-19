@@ -170,7 +170,7 @@ describe('Reporter', function () {
 
     it('exits with error code when linting error threshold is met', function (done) {
 
-        var reporter = Reporters.generate({ reporter: 'console', 'lint-errors-threshold': 5 });
+        var reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-errors-threshold': 5 });
         var notebook = {
             tests: [],
             lint: {
@@ -192,7 +192,7 @@ describe('Reporter', function () {
 
     it('exits with error code when linting error threshold is met and threshold is 0', function (done) {
 
-        var reporter = Reporters.generate({ reporter: 'console', 'lint-errors-threshold': 0 });
+        var reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-errors-threshold': 0 });
         var notebook = {
             tests: [],
             lint: {
@@ -211,7 +211,7 @@ describe('Reporter', function () {
 
     it('exits with success code when linting error threshold is not met', function (done) {
 
-        var reporter = Reporters.generate({ reporter: 'console', 'lint-errors-threshold': 5 });
+        var reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-errors-threshold': 5 });
         var notebook = {
             tests: [],
             lint: {
@@ -232,7 +232,7 @@ describe('Reporter', function () {
 
     it('exits with error code when linting warning threshold is met', function (done) {
 
-        var reporter = Reporters.generate({ reporter: 'console', 'lint-warnings-threshold': 5 });
+        var reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-warnings-threshold': 5 });
         var notebook = {
             tests: [],
             lint: {
@@ -254,7 +254,7 @@ describe('Reporter', function () {
 
     it('exits with error code when linting warning threshold is met and threshold is 0', function (done) {
 
-        var reporter = Reporters.generate({ reporter: 'console', 'lint-warnings-threshold': 0 });
+        var reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-warnings-threshold': 0 });
         var notebook = {
             tests: [],
             lint: {
@@ -273,7 +273,7 @@ describe('Reporter', function () {
 
     it('exits with success code when linting warning threshold is not met', function (done) {
 
-        var reporter = Reporters.generate({ reporter: 'console', 'lint-warnings-threshold': 5 });
+        var reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-warnings-threshold': 5 });
         var notebook = {
             tests: [],
             lint: {
