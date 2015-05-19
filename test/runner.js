@@ -332,6 +332,83 @@ describe('Runner', function () {
         });
     });
 
+    it('runs afterEaches in nested experiments from inside, out (by experiments)', function (done) {
+
+        var steps = [];
+        var script = Lab.script({ schedule: false });
+        script.experiment('test', function () {
+
+            script.beforeEach(function (finished) {
+
+                steps.push('outer beforeEach');
+                finished();
+            });
+
+            script.afterEach(function (finished) {
+
+                steps.push('outer afterEach 1');
+                finished();
+            });
+
+            script.test('first works', function (finished) {
+
+                steps.push('first test');
+                finished();
+            });
+
+            script.experiment('inner test', function () {
+
+                script.beforeEach(function (finished) {
+
+                    steps.push('inner beforeEach');
+                    finished();
+                });
+
+                script.afterEach(function (finished) {
+
+                    steps.push('inner afterEach 1');
+                    finished();
+                });
+
+                script.test('works', function (finished) {
+
+                    steps.push('second test');
+                    finished();
+                });
+
+                script.afterEach(function (finished) {
+
+                    steps.push('inner afterEach 2');
+                    finished();
+                });
+            });
+
+            script.afterEach(function (finished) {
+
+                steps.push('outer afterEach 2');
+                finished();
+            });
+        });
+
+        Lab.execute(script, null, null, function (err, notebook) {
+
+            expect(steps).to.deep.equal([
+              'outer beforeEach',
+              'first test',
+              'outer afterEach 1',
+              'outer afterEach 2',
+              'outer beforeEach',
+              'inner beforeEach',
+              'second test',
+              'inner afterEach 1',
+              'inner afterEach 2',
+              'outer afterEach 1',
+              'outer afterEach 2'
+            ]);
+            done();
+        });
+    });
+
     it('executes in parallel', function (done) {
 
         var steps = [];
