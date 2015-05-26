@@ -102,9 +102,10 @@ describe('Linters - jslint', function () {
             var checkedFile = jslintResults[0];
             expect(checkedFile).to.include({ filename: 'fail.js' });
             expect(checkedFile.errors).to.deep.include(
-                { line: 11, severity: 'ERROR', message: 'Use spaces, not tabs.' },
-                { line: 11, severity: 'ERROR', message: 'Missing \'use strict\' statement.' },
-                { line: 11, severity: 'ERROR', message: 'Expected \';\' and instead saw \'}\'.' }
+                { line: 10, severity: 'ERROR', message: 'Use spaces, not tabs.' },
+                { line: 10, severity: 'ERROR', message: 'Expected \'use strict\' before \'return\'.' },
+                { line: 11, severity: 'ERROR', message: 'Expected \';\' and instead saw \'}\'.' },
+                { line: 11, severity: 'ERROR', message: 'Stopping.' }
             );
 
             done();
@@ -123,9 +124,12 @@ describe('Linters - jslint', function () {
 
             var checkedFile = jslintResults[0];
             expect(checkedFile).to.include({ filename: 'fail.js' });
-            expect(checkedFile.errors).to.deep.include({ line: 11, severity: 'ERROR', message: 'Use spaces, not tabs.' },
-                                                       { line: 11, severity: 'ERROR', message: 'Missing \'use strict\' statement.' });
-            expect(checkedFile.errors).to.not.deep.include({ line: 11, severity: 'ERROR', message: 'Unexpected \'++\'.' });
+            expect(checkedFile.errors).to.deep.include(
+                { line: 5, severity: 'ERROR', message: 'Unused \'internals\'.' },
+                { line: 10, severity: 'ERROR', message: 'Use spaces, not tabs.' },
+                { line: 11, severity: 'ERROR', message: 'Expected \'use strict\' before \'return\'.' }
+            );
+            expect(checkedFile.errors).to.not.deep.include({ line: 10, severity: 'ERROR', message: 'Unexpected \'++\'.' });
             done();
         });
     });
