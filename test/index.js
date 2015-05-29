@@ -776,14 +776,14 @@ describe('Lab', function () {
 
         expect(function () {
 
-            script.test('a', function() {});
+            script.test('a', function () {});
         }).to.throw('Function for test "a" should take exactly one argument or return a Promise');
 
-        expect(function() {
+        expect(function () {
 
-            script.test('a', function() {
+            script.test('a', function () {
 
-                return Promise.resolve()
+                return Promise.resolve();
             });
         }).not.to.throw();
 
