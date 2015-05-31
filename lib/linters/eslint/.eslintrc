@@ -61,6 +61,8 @@
         "no-ex-assign": 2,
         "indent": [2, 4],
         "space-before-function-paren": 2,
-        "func-style": [2, "expression"]
+        "func-style": [2, "expression"],
+        "lines-around-comment": [2, { "beforeLineComment": true, "afterLineComment": false, "beforeBlockComment": false, "afterBlockComment": false }],
+        "object-curly-spacing": [2, "always"]
     }
 }

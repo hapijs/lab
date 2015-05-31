@@ -757,6 +757,7 @@ describe('Runner', function () {
                 });
 
                 setTimeout(done, 100);
+
                 // done();
             });
 
@@ -818,6 +819,7 @@ describe('Runner', function () {
                 });
 
                 setTimeout(done, 100);
+
                 // done();
             });
 

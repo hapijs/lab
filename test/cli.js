@@ -641,6 +641,7 @@ describe('CLI', function () {
             Fs.unlinkSync(outputPath);
         }
         catch (err) {
+
             // Error is ok here
         }
 
