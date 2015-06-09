@@ -18,12 +18,12 @@
     "items": "1.x.x",
     "diff": "1.x.x",
     "source-map-support": "0.2.x",
-    "eslint": "0.19.x",
+    "eslint": "0.22.x",
     "hoek": "2.x.x",
     "mkdirp": "0.5.x"
   },
   "optionalDependencies": {
-    "jslint": "0.8.x"
+    "jslint": "0.9.x"
   },
   "devDependencies": {
     "code": "1.x.x",
@@ -33,8 +33,8 @@
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "./bin/_lab -fL -t 100 -m 3000 --lint-errors-threshold 0 --lint-warnings-threshold 0",
-    "test-cov-html": "./bin/_lab -fL -r html -m 3000 -o coverage.html --lint-errors-threshold 0 --lint-warnings-threshold 0"
+    "test": "./bin/_lab -fL -t 100 -m 3000",
+    "test-cov-html": "./bin/_lab -fL -r html -m 3000 -o coverage.html"
   },
   "license": "BSD-3-Clause"
 }

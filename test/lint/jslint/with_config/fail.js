@@ -8,5 +8,10 @@ var internals = {};
 
 exports.method = function (value) {
 
-	return value++;
+    var myString = 'x';
+    var myObject = {
+        x: 10
+    };
+    value = eval('myObject.' + myString);
+    return value;
 };
