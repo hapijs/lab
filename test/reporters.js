@@ -793,9 +793,9 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-                script.before(function (done) {
+                script.before(function (finished) {
 
-                    done(new Error('there was an error in the before function'));
+                    finished(new Error('there was an error in the before function'));
                 });
 
                 script.test('works', function (finished) {
@@ -821,9 +821,9 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-                script.afterEach(function (done) {
+                script.afterEach(function (finished) {
 
-                    done('there was an error in the afterEach function');
+                    finished('there was an error in the afterEach function');
                 });
 
                 script.test('works', function (finished) {

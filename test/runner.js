@@ -120,17 +120,29 @@ describe('Runner', function () {
             });
         });
 
-        Lab.execute(script, { ids: [1, 3] }, null, function (err, notebook) {
+        var filterFirstIds = function (next) {
 
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.failures).to.equal(0);
+            Lab.execute(script, { ids: [1, 3] }, null, function (err, notebook) {
+
+                expect(notebook.tests).to.have.length(2);
+                expect(notebook.failures).to.equal(0);
+                next();
+            });
+        };
+
+        var filterLastIds = function (next) {
 
             Lab.execute(script, { ids: [2, 4] }, null, function (err, notebook) {
 
                 expect(notebook.tests).to.have.length(2);
                 expect(notebook.failures).to.equal(2);
-                done();
+                next();
             });
+        };
+
+        filterFirstIds(function () {
+
+            filterLastIds(done);
         });
     });
 
@@ -160,17 +172,29 @@ describe('Runner', function () {
             });
         });
 
-        Lab.execute(script, { grep: '\\d' }, null, function (err, notebook) {
+        var filterDigit = function (next) {
 
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.failures).to.equal(0);
+            Lab.execute(script, { grep: '\\d' }, null, function (err, notebook) {
+
+                expect(notebook.tests).to.have.length(2);
+                expect(notebook.failures).to.equal(0);
+                next();
+            });
+        };
+
+        var filterAlpha = function (next) {
 
             Lab.execute(script, { grep: '[ab]' }, null, function (err, notebook) {
 
                 expect(notebook.tests).to.have.length(2);
                 expect(notebook.failures).to.equal(2);
-                done();
+                next();
             });
+        };
+
+        filterDigit(function () {
+
+            filterAlpha(done);
         });
     });
 
@@ -606,14 +630,14 @@ describe('Runner', function () {
         script.experiment('shared test', function () {
 
             var shared;
-            script.beforeEach(function (done) {
+            script.beforeEach(function (finished) {
 
                 shared = new EventEmitter();
                 shared.on('whatever', function () {
 
                     this.emit('something');
                 });
-                done();
+                finished();
             });
 
             script.test('1', function (finished) {
@@ -644,14 +668,14 @@ describe('Runner', function () {
         script.experiment('shared test', function () {
 
             var shared;
-            script.beforeEach(function (done) {
+            script.beforeEach(function (finished) {
 
                 shared = new EventEmitter();
                 shared.on('whatever', function () {
 
                     this.emit('something');
                 });
-                done();
+                finished();
             });
 
             script.test('1', function (finished) {
@@ -694,14 +718,14 @@ describe('Runner', function () {
         script.experiment('shared test', function () {
 
             var shared;
-            script.beforeEach(function (done) {
+            script.beforeEach(function (finished) {
 
                 shared = new EventEmitter();
                 shared.on('whatever', function () {
 
                     this.emit('something');
                 });
-                done();
+                finished();
             });
 
             script.test('1', function (finished) {
@@ -744,7 +768,7 @@ describe('Runner', function () {
         script.experiment('parallel shared test', { parallel: true }, function () {
 
             var shared;
-            script.beforeEach(function (done) {
+            script.beforeEach(function (finished) {
 
                 shared = new EventEmitter();
                 shared.on('foo', function () {
@@ -756,7 +780,7 @@ describe('Runner', function () {
                     this.emit('boop');
                 });
 
-                setTimeout(done, 100);
+                setTimeout(finished, 100);
 
                 // done();
             });
@@ -806,7 +830,7 @@ describe('Runner', function () {
         script.experiment('parallel shared test', { parallel: true }, function () {
 
             var shared;
-            script.beforeEach(function (done) {
+            script.beforeEach(function (finished) {
 
                 shared = new EventEmitter();
                 shared.on('foo', function () {
@@ -818,7 +842,7 @@ describe('Runner', function () {
                     this.emit('boop');
                 });
 
-                setTimeout(done, 100);
+                setTimeout(finished, 100);
 
                 // done();
             });
