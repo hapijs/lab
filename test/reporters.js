@@ -793,15 +793,15 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-                script.before(function (finished) {
+                script.before(function (testDone) {
 
-                    finished(new Error('there was an error in the before function'));
+                    testDone(new Error('there was an error in the before function'));
                 });
 
-                script.test('works', function (finished) {
+                script.test('works', function (testDone) {
 
                     expect(true).to.equal(true, 'Working right');
-                    finished();
+                    testDone();
                 });
             });
 
@@ -821,15 +821,15 @@ describe('Reporter', function () {
             var script = Lab.script();
             script.experiment('test', function () {
 
-                script.afterEach(function (finished) {
+                script.afterEach(function (testDone) {
 
-                    finished('there was an error in the afterEach function');
+                    testDone('there was an error in the afterEach function');
                 });
 
-                script.test('works', function (finished) {
+                script.test('works', function (testDone) {
 
                     expect(true).to.equal(true, 'Working right');
-                    finished();
+                    testDone();
                 });
             });
 

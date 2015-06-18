@@ -32,11 +32,11 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
                 expect(process.env.NODE_ENV).to.equal('lab');
                 process.env.NODE_ENV = orig;
-                finished();
+                testDone();
             });
         });
 
@@ -55,11 +55,11 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
                 expect(process.env.NODE_ENV).to.equal(orig);
                 process.env.NODE_ENV = orig;
-                finished();
+                testDone();
             });
         });
 
@@ -78,11 +78,11 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
                 expect(process.env.NODE_ENV).to.equal('test');
                 process.env.NODE_ENV = orig;
-                finished();
+                testDone();
             });
         });
 
@@ -99,22 +99,22 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('2', function (finished) {
+            script.test('2', function (testDone) {
 
                 throw new Error();
             });
 
-            script.test('3', function (finished) {
+            script.test('3', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('4', function (finished) {
+            script.test('4', function (testDone) {
 
                 throw new Error();
             });
@@ -151,22 +151,22 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
                 throw new Error();
             });
 
-            script.test('3', function (finished) {
+            script.test('3', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('b', function (finished) {
+            script.test('b', function (testDone) {
 
                 throw new Error();
             });
@@ -203,22 +203,22 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
                 throw new Error();
             });
 
-            script.test('3', function (finished) {
+            script.test('3', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('b', function (finished) {
+            script.test('b', function (testDone) {
 
                 throw new Error();
             });
@@ -237,14 +237,14 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
                 setImmediate(function () {
 
                     throw new Error('throwing stack later');
                 });
 
-                finished();
+                testDone();
             });
         });
 
@@ -261,57 +261,57 @@ describe('Runner', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 steps.push('before');
-                finished(new Error('oops'));
+                testDone(new Error('oops'));
             });
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
                 steps.push('test');
-                finished();
+                testDone();
             });
 
-            script.test('skips', { skip: true }, function (finished) {
+            script.test('skips', { skip: true }, function (testDone) {
 
                 steps.push('test');
-                finished();
+                testDone();
             });
 
             script.test('todo');
 
             script.experiment('inner', { skip: true }, function () {
 
-                script.test('works', function (finished) {
+                script.test('works', function (testDone) {
 
                     steps.push('test');
-                    finished();
+                    testDone();
                 });
 
                 script.experiment('inner', function () {
 
-                    script.test('works', function (finished) {
+                    script.test('works', function (testDone) {
 
                         steps.push('test');
-                        finished();
+                        testDone();
                     });
                 });
             });
 
             script.experiment('inner2', function () {
 
-                script.test('works', { skip: true }, function (finished) {
+                script.test('works', { skip: true }, function (testDone) {
 
                     steps.push('test');
-                    finished();
+                    testDone();
                 });
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 steps.push('after');
-                finished();
+                testDone();
             });
         });
 
@@ -329,22 +329,22 @@ describe('Runner', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 steps.push('before');
-                finished(new Error('oops'));
+                testDone(new Error('oops'));
             });
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
                 steps.push('test');
-                finished();
+                testDone();
             });
 
-            script.afterEach(function (finished) {
+            script.afterEach(function (testDone) {
 
                 steps.push('after');
-                finished();
+                testDone();
             });
         });
 
@@ -362,55 +362,55 @@ describe('Runner', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 steps.push('outer beforeEach');
-                finished();
+                testDone();
             });
 
-            script.afterEach(function (finished) {
+            script.afterEach(function (testDone) {
 
                 steps.push('outer afterEach 1');
-                finished();
+                testDone();
             });
 
-            script.test('first works', function (finished) {
+            script.test('first works', function (testDone) {
 
                 steps.push('first test');
-                finished();
+                testDone();
             });
 
             script.experiment('inner test', function () {
 
-                script.beforeEach(function (finished) {
+                script.beforeEach(function (testDone) {
 
                     steps.push('inner beforeEach');
-                    finished();
+                    testDone();
                 });
 
-                script.afterEach(function (finished) {
+                script.afterEach(function (testDone) {
 
                     steps.push('inner afterEach 1');
-                    finished();
+                    testDone();
                 });
 
-                script.test('works', function (finished) {
+                script.test('works', function (testDone) {
 
                     steps.push('second test');
-                    finished();
+                    testDone();
                 });
 
-                script.afterEach(function (finished) {
+                script.afterEach(function (testDone) {
 
                     steps.push('inner afterEach 2');
-                    finished();
+                    testDone();
                 });
             });
 
-            script.afterEach(function (finished) {
+            script.afterEach(function (testDone) {
 
                 steps.push('outer afterEach 2');
-                finished();
+                testDone();
             });
         });
 
@@ -439,19 +439,19 @@ describe('Runner', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 setTimeout(function () {
 
                     steps.push('1');
-                    finished();
+                    testDone();
                 }, 5);
             });
 
-            script.test('2', function (finished) {
+            script.test('2', function (testDone) {
 
                 steps.push('2');
-                finished();
+                testDone();
             });
         });
 
@@ -468,19 +468,19 @@ describe('Runner', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.test('1', { parallel: false }, function (finished) {
+            script.test('1', { parallel: false }, function (testDone) {
 
                 setTimeout(function () {
 
                     steps.push('1');
-                    finished();
+                    testDone();
                 }, 5);
             });
 
-            script.test('2', function (finished) {
+            script.test('2', function (testDone) {
 
                 steps.push('2');
-                finished();
+                testDone();
             });
         });
 
@@ -497,19 +497,19 @@ describe('Runner', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.test('1', { parallel: true }, function (finished) {
+            script.test('1', { parallel: true }, function (testDone) {
 
                 setTimeout(function () {
 
                     steps.push('1');
-                    finished();
+                    testDone();
                 }, 5);
             });
 
-            script.test('2', { parallel: true }, function (finished) {
+            script.test('2', { parallel: true }, function (testDone) {
 
                 steps.push('2');
-                finished();
+                testDone();
             });
         });
 
@@ -520,15 +520,15 @@ describe('Runner', function () {
         });
     });
 
-    it('reports double finish', function (done) {
+    it('reports double done()', function (done) {
 
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
-                finished();
-                finished();
+                testDone();
+                testDone();
             });
         });
 
@@ -544,9 +544,9 @@ describe('Runner', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -564,10 +564,10 @@ describe('Runner', function () {
         var assertions = Code;
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 assertions.expect(true).to.be.true();
-                finished();
+                testDone();
             });
         });
 
@@ -585,10 +585,10 @@ describe('Runner', function () {
         var assertions = Code;
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 assertions.expect(true).to.be.true;
-                finished();
+                testDone();
             });
         });
 
@@ -607,10 +607,10 @@ describe('Runner', function () {
         var assertions = Code;
         script.experiment('test', function () {
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 assertions.expect(true).to.be.true();
-                finished();
+                testDone();
             });
         });
 
@@ -630,17 +630,17 @@ describe('Runner', function () {
         script.experiment('shared test', function () {
 
             var shared;
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
                 shared.on('whatever', function () {
 
                     this.emit('something');
                 });
-                finished();
+                testDone();
             });
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 shared.on('something', function () {
 
@@ -668,17 +668,17 @@ describe('Runner', function () {
         script.experiment('shared test', function () {
 
             var shared;
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
                 shared.on('whatever', function () {
 
                     this.emit('something');
                 });
-                finished();
+                testDone();
             });
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 shared.on('something', function () {
 
@@ -689,7 +689,7 @@ describe('Runner', function () {
 
             script.experiment('nested test', function () {
 
-                script.test('2', function (finished) {
+                script.test('2', function (testDone) {
 
                     shared.on('something', function () {
 
@@ -718,28 +718,28 @@ describe('Runner', function () {
         script.experiment('shared test', function () {
 
             var shared;
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
                 shared.on('whatever', function () {
 
                     this.emit('something');
                 });
-                finished();
+                testDone();
             });
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 shared.on('something', function () {
 
-                    finished();
+                    testDone();
                 });
                 shared.emit('whatever');
             });
 
             script.experiment('nested test', function () {
 
-                script.test('2', function (finished) {
+                script.test('2', function (testDone) {
 
                     shared.on('something', function () {
 
@@ -768,7 +768,7 @@ describe('Runner', function () {
         script.experiment('parallel shared test', { parallel: true }, function () {
 
             var shared;
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
                 shared.on('foo', function () {
@@ -780,12 +780,12 @@ describe('Runner', function () {
                     this.emit('boop');
                 });
 
-                setTimeout(finished, 100);
+                setTimeout(testDone, 100);
 
                 // done();
             });
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 shared.on('bar', function () {
 
@@ -798,7 +798,7 @@ describe('Runner', function () {
                 }, 50);
             });
 
-            script.test('2', function (finished) {
+            script.test('2', function (testDone) {
 
                 shared.on('boop', function () {
 
@@ -830,7 +830,7 @@ describe('Runner', function () {
         script.experiment('parallel shared test', { parallel: true }, function () {
 
             var shared;
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
                 shared.on('foo', function () {
@@ -842,12 +842,12 @@ describe('Runner', function () {
                     this.emit('boop');
                 });
 
-                setTimeout(finished, 100);
+                setTimeout(testDone, 100);
 
                 // done();
             });
 
-            script.test('1', function (finished) {
+            script.test('1', function (testDone) {
 
                 shared.on('bar', function () {
 
@@ -860,7 +860,7 @@ describe('Runner', function () {
                 }, 50);
             });
 
-            script.test('2', function (finished) {
+            script.test('2', function (testDone) {
 
                 shared.on('boop', function () {
 
@@ -875,7 +875,7 @@ describe('Runner', function () {
 
             script.experiment('parallel shared test', function () {
 
-                script.test('3', function (finished) {
+                script.test('3', function (testDone) {
 
                     shared.on('bar', function () {
 
@@ -888,7 +888,7 @@ describe('Runner', function () {
                     }, 100);
                 });
 
-                script.test('4', function (finished) {
+                script.test('4', function (testDone) {
 
                     shared.on('boop', function () {
 
@@ -920,21 +920,21 @@ describe('Runner', function () {
         // global.setTimeout uses it [1] so if the runnable.js keeps a copy of
         // global.setTimeout (like it's supposed to), that will blow up.
         // [1]: https://github.com/joyent/node/blob/7fc835afe362ebd30a0dbec81d3360bd24525222/lib/timers.js#L74
-        var overrideGlobals = function (finished) {
+        var overrideGlobals = function (testDone) {
 
             var fn = function () {};
             global.setTimeout = fn;
             global.clearTimeout = fn;
             global.setImmediate = fn;
-            finished();
+            testDone();
         };
 
-        var resetGlobals = function (finished) {
+        var resetGlobals = function (testDone) {
 
             global.setTimeout = setTimeout;
             global.clearTimeout = clearTimeout;
             global.setImmediate = setImmediate;
-            finished();
+            testDone();
         };
 
         it('setImmediate still functions correctly', function (done) {
@@ -946,9 +946,9 @@ describe('Runner', function () {
 
             script.experiment('test', function () {
 
-                script.test('1', function (finished) {
+                script.test('1', function (testDone) {
 
-                    setImmediate(finished);
+                    setImmediate(testDone);
                 });
             });
 
@@ -968,9 +968,9 @@ describe('Runner', function () {
 
             script.experiment('test', function () {
 
-                script.test('timeout', { timeout: 5 }, function (finished) {
+                script.test('timeout', { timeout: 5 }, function (testDone) {
 
-                    finished();
+                    testDone();
                 });
             });
 
@@ -991,11 +991,11 @@ describe('Runner', function () {
 
             script.experiment('test', { timeout: 5 }, function () {
 
-                script.test('timeout', { timeout: 0 }, function (finished) {
+                script.test('timeout', { timeout: 0 }, function (testDone) {
 
                     setTimeout(function () {
 
-                        finished();
+                        testDone();
                     }, 10);
                 });
             });
