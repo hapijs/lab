@@ -26,22 +26,22 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.test('value of a', function (finished) {
+            script.test('value of a', function (testDone) {
 
                 expect(a).to.equal(1);
-                finished();
+                testDone();
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
         });
 
@@ -61,22 +61,22 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.describe('test', function () {
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.it('value of a', function (finished) {
+            script.it('value of a', function (testDone) {
 
                 expect(a).to.equal(1);
-                finished();
+                testDone();
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
         });
 
@@ -95,22 +95,22 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.suite('test', function () {
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.test('value of a', function (finished) {
+            script.test('value of a', function (testDone) {
 
                 expect(a).to.equal(1);
-                finished();
+                testDone();
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
         });
 
@@ -130,42 +130,42 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 ++b;
-                finished();
+                testDone();
             });
 
-            script.test('value of a', function (finished) {
+            script.test('value of a', function (testDone) {
 
                 expect(a).to.equal(1);
                 expect(b).to.equal(1);
-                finished();
+                testDone();
             });
 
-            script.test('value of b', function (finished) {
+            script.test('value of b', function (testDone) {
 
                 expect(a).to.equal(1);
                 expect(b).to.equal(3);
-                finished();
+                testDone();
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.afterEach(function (finished) {
+            script.afterEach(function (testDone) {
 
                 ++b;
-                finished();
+                testDone();
             });
         });
 
@@ -186,66 +186,66 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.before(function (finished) {
+            script.before(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 ++b;
-                finished();
+                testDone();
             });
 
-            script.beforeEach(function (finished) {
+            script.beforeEach(function (testDone) {
 
                 ++b;
-                finished();
+                testDone();
             });
 
-            script.test('value of a', function (finished) {
+            script.test('value of a', function (testDone) {
 
                 expect(a).to.equal(2);
                 expect(b).to.equal(2);
-                finished();
+                testDone();
             });
 
-            script.test('value of b', function (finished) {
+            script.test('value of b', function (testDone) {
 
                 expect(a).to.equal(2);
                 expect(b).to.equal(6);
-                finished();
+                testDone();
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.after(function (finished) {
+            script.after(function (testDone) {
 
                 ++a;
-                finished();
+                testDone();
             });
 
-            script.afterEach(function (finished) {
+            script.afterEach(function (testDone) {
 
                 ++b;
-                finished();
+                testDone();
             });
 
-            script.afterEach(function (finished) {
+            script.afterEach(function (testDone) {
 
                 ++b;
-                finished();
+                testDone();
             });
         });
 
@@ -264,10 +264,10 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
                 expect(0).to.equal(1);
-                finished();
+                testDone();
             });
         });
 
@@ -284,17 +284,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -313,35 +313,35 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
-                finished();
+                testDone();
             });
 
             script.experiment('test2', function () {
 
-                script.test('b', function (finished) {
+                script.test('b', function (testDone) {
 
-                    finished();
+                    testDone();
                 });
             });
 
-            script.test('c', function (finished) {
+            script.test('c', function (testDone) {
 
-                finished();
+                testDone();
             });
 
             script.experiment('test3', function () {
 
-                script.test('d', function (finished) {
+                script.test('d', function (testDone) {
 
-                    finished();
+                    testDone();
                 });
             });
 
-            script.test('e', function (finished) {
+            script.test('e', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -360,17 +360,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', { skip: true }, function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -389,17 +389,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment.skip('test2', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -418,17 +418,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment.skip('test2', {}, function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -447,17 +447,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', { only: true }, function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -476,17 +476,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', { only: true }, function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -505,17 +505,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment.only('test2', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -534,17 +534,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment.only('test2', {}, function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -563,17 +563,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', function () {
 
-            script.test('works', { skip: true }, function (finished) {
+            script.test('works', { skip: true }, function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -592,17 +592,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', function () {
 
-            script.test.skip('works', function (finished) {
+            script.test.skip('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -621,17 +621,17 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
         script.experiment('test2', function () {
 
-            script.test.skip('works', {}, function (finished) {
+            script.test.skip('works', {}, function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -650,14 +650,14 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('a', { only: true }, function (finished) {
+            script.test('a', { only: true }, function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('b', function (finished) {
+            script.test('b', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -676,14 +676,14 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test('b', { only: true }, function (finished) {
+            script.test('b', { only: true }, function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -702,14 +702,14 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test.only('b', function (finished) {
+            script.test.only('b', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -728,14 +728,14 @@ describe('Lab', function () {
         var script = Lab.script({ schedule: false });
         script.experiment('test1', function () {
 
-            script.test('a', function (finished) {
+            script.test('a', function (testDone) {
 
-                finished();
+                testDone();
             });
 
-            script.test.only('b', {}, function (finished) {
+            script.test.only('b', {}, function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
@@ -754,9 +754,9 @@ describe('Lab', function () {
         var script = Lab.script();
         script.experiment('test', function () {
 
-            script.test('works', function (finished) {
+            script.test('works', function (testDone) {
 
-                finished();
+                testDone();
             });
         });
 
