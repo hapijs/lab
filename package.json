@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "bossy": "1.x.x",
-    "diff": "1.x.x",
     "espree": "2.x.x",
-    "eslint": "0.22.x",
     "eslint-plugin-hapi": "1.x.x",
     "handlebars": "3.x.x",
-    "hoek": "2.x.x",
     "items": "1.x.x",
-    "mkdirp": "0.5.x",
-    "source-map-support": "0.2.x"
+    "diff": "1.x.x",
+    "source-map-support": "0.3.x",
+    "eslint": "0.22.x",
+    "hoek": "2.x.x",
+    "mkdirp": "0.5.x"
   },
   "optionalDependencies": {
     "jslint": "0.9.x"
