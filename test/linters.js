@@ -73,6 +73,40 @@ describe('Linters - eslint', function () {
         });
     });
 
+    it('allows err to be shadowed', function (done) {
+
+        var path = Path.join(__dirname, 'lint', 'eslint', 'shadow');
+        Linters.lint({ lintingPath: path, linter: 'eslint' }, function (err, result) {
+
+            expect(result.lint).to.exist();
+
+            var eslintResults = result.lint;
+            expect(eslintResults).to.have.length(1);
+
+            var checkedFile = eslintResults[0];
+            expect(checkedFile.errors.length).to.equal(0);
+
+            done();
+        });
+    });
+
+    it('doesn\'t allow res to be shadowed', function (done) {
+
+        var path = Path.join(__dirname, 'lint', 'eslint', 'shadow-res');
+        Linters.lint({ lintingPath: path, linter: 'eslint' }, function (err, result) {
+
+            expect(result.lint).to.exist();
+
+            var eslintResults = result.lint;
+            expect(eslintResults).to.have.length(1);
+
+            var checkedFile = eslintResults[0];
+            expect(checkedFile.errors.length).to.equal(1);
+
+            done();
+        });
+    });
+
     it('should pass options and not find any files', function (done) {
 
         var lintOptions = JSON.stringify({ extensions: ['.jsx'] });
