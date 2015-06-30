@@ -1447,60 +1447,6 @@ describe('Reporter', function () {
 
     describe('multiple reporters', function () {
 
-        it('with only one output will return an error', function (done) {
-
-            var script = Lab.script();
-            script.experiment('test', function () {
-
-                script.test('works', function (finished) {
-
-                    finished();
-                });
-            });
-
-            Lab.report(script, { reporter: ['console', 'console'], output: 'stdout' }, function (err, code, output) {
-
-                expect(err).to.exist();
-                done();
-            });
-        });
-
-        it('with less outputs than reporters will return an error', function (done) {
-
-            var script = Lab.script();
-            script.experiment('test', function () {
-
-                script.test('works', function (finished) {
-
-                    finished();
-                });
-            });
-
-            Lab.report(script, { reporter: ['console', 'console', 'console'], output: ['stdout', 'stdout'] }, function (err, code, output) {
-
-                expect(err).to.exist();
-                done();
-            });
-        });
-
-        it('with more outputs than reporters will return an error', function (done) {
-
-            var script = Lab.script();
-            script.experiment('test', function () {
-
-                script.test('works', function (finished) {
-
-                    finished();
-                });
-            });
-
-            Lab.report(script, { reporter: ['console', 'console'], output: ['stdout', 'stdout', 'stdout'] }, function (err, code, output) {
-
-                expect(err).to.exist();
-                done();
-            });
-        });
-
         it('with multiple outputs are supported', function (done) {
 
             var Recorder = function () {
