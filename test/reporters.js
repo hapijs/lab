@@ -1479,8 +1479,11 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true }, function (err, code, output) {
 
                 expect(err).to.not.exist();
-              //expect(code).to.equal(0);
-              //Fs.unlinkSync(filename);
+                expect(code.lcov).to.equal(0);
+                expect(code.console).to.equal(0);
+                expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
+                expect(output.console).to.equal(recorder.content);
+                Fs.unlinkSync(filename);
                 done();
             });
         });
