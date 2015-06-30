@@ -1447,6 +1447,60 @@ describe('Reporter', function () {
 
     describe('multiple reporters', function () {
 
+        it('with only one output will return an error', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: ['console', 'console'], output: 'stdout' }, function (err, code, output) {
+
+                expect(err).to.exist();
+                done();
+            });
+        });
+
+        it('with less outputs than reporters will return an error', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: ['console', 'console', 'console'], output: ['stdout', 'stdout'] }, function (err, code, output) {
+
+                expect(err).to.exist();
+                done();
+            });
+        });
+
+        it('with more outputs than reporters will return an error', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: ['console', 'console'], output: ['stdout', 'stdout', 'stdout'] }, function (err, code, output) {
+
+                expect(err).to.exist();
+                done();
+            });
+        });
+
         it('with multiple outputs are supported', function (done) {
 
             var Recorder = function () {
@@ -1483,6 +1537,48 @@ describe('Reporter', function () {
                 expect(code.console).to.equal(0);
                 expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
                 expect(output.console).to.equal(recorder.content);
+                Fs.unlinkSync(filename);
+                done();
+            });
+        });
+
+
+        it('with multiple duplicate outputs are supported', function (done) {
+
+            var Recorder = function () {
+
+                Stream.Writable.call(this);
+
+                this.content = '';
+            };
+
+            Hoek.inherits(Recorder, Stream.Writable);
+
+            Recorder.prototype._write = function (chunk, encoding, next) {
+
+                this.content += chunk.toString();
+                next();
+            };
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            var recorder = new Recorder();
+            var filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+
+            Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code.console).to.equal(0);
+                expect(code.console2).to.equal(0);
+                expect(output.console).to.equal(Fs.readFileSync(filename).toString());
+                expect(output.console2).to.equal(recorder.content);
                 Fs.unlinkSync(filename);
                 done();
             });
