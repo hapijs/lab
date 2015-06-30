@@ -831,7 +831,7 @@ describe('CLI', function () {
 
     it('displays error message when multiple reporters with less outputs are specified', function (done) {
 
-        var cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', , '-r', 'console', '-o', 'stdout', '-o', 'stdout']);
+        var cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout']);
         var output = '';
 
         cli.once('close', function (code, signal) {
