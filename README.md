@@ -44,6 +44,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `tap` - TAP protocol report.
     - `lcov` - output to [lcov](http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php) format.
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
+    - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
 - `-s`, `--silence` - silence test output, defaults to false.
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
@@ -270,6 +271,27 @@ in an npm Error message.
 
 ```bash
 $ npm test
+```
+
+## Multiple Reporters
+
+Multiple reporters can be specified by providing multiple reporter options.
+
+```bash
+$ lab -r console -r html
+```
+
+If any output `-o` is provided, they must match the same number of provided reporter options. The reporters would be paired with an output based on
+the order in which they were supplied. When specifying multiple outputs, use `stdout` to send a particular reporter to stdout.
+
+```bash
+$ lab -r console -o stdout -r html -o coverage.html -r lcov -o lcov.info -r json -o data.json
+```
+
+Multiple reporters of the same kind are also supported.
+
+```bash
+$ lab -r console -o stdout -r console -o console.log
 ```
 
 ## Custom Reporters
