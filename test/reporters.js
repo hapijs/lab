@@ -1445,6 +1445,92 @@ describe('Reporter', function () {
         });
     });
 
+    describe('multiple reporters', function () {
+
+        it('with multiple outputs are supported', function (done) {
+
+            var Recorder = function () {
+
+                Stream.Writable.call(this);
+
+                this.content = '';
+            };
+
+            Hoek.inherits(Recorder, Stream.Writable);
+
+            Recorder.prototype._write = function (chunk, encoding, next) {
+
+                this.content += chunk.toString();
+                next();
+            };
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            var recorder = new Recorder();
+            var filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+
+            Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code.lcov).to.equal(0);
+                expect(code.console).to.equal(0);
+                expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
+                expect(output.console).to.equal(recorder.content);
+                Fs.unlinkSync(filename);
+                done();
+            });
+        });
+
+
+        it('that are duplicates with multiple outputs are supported', function (done) {
+
+            var Recorder = function () {
+
+                Stream.Writable.call(this);
+
+                this.content = '';
+            };
+
+            Hoek.inherits(Recorder, Stream.Writable);
+
+            Recorder.prototype._write = function (chunk, encoding, next) {
+
+                this.content += chunk.toString();
+                next();
+            };
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            var recorder = new Recorder();
+            var filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+
+            Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code.console).to.equal(0);
+                expect(code.console2).to.equal(0);
+                expect(output.console).to.equal(Fs.readFileSync(filename).toString());
+                expect(output.console2).to.equal(recorder.content);
+                Fs.unlinkSync(filename);
+                done();
+            });
+        });
+    });
+
     describe('custom reporters', function () {
 
         it('requires a custom reporter relatively if starts with .', function (done) {
