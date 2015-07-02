@@ -816,4 +816,42 @@ describe('CLI', function () {
         });
     });
 
+    it('displays error message when multiple reporters with only one output are specified', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-o', 'stdout']);
+        var output = '';
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist();
+            done();
+        });
+    });
+
+    it('displays error message when multiple reporters with less outputs are specified', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout']);
+        var output = '';
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist();
+            done();
+        });
+    });
+
+    it('displays error message when multiple reporters with more outputs are specified', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout', '-o', 'stdout']);
+        var output = '';
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist();
+            done();
+        });
+    });
 });
