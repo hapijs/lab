@@ -66,7 +66,6 @@
         "indent": [2, 4],
         "space-before-function-paren": 2,
         "func-style": [2, "expression"],
-        "object-curly-spacing": [2, "always"],
-        "spaced-comment": [2, "always",{"markers":[","]}]
+        "object-curly-spacing": [2, "always"]
     }
 }
