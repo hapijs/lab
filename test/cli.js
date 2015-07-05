@@ -694,6 +694,78 @@ describe('CLI', function () {
         });
     });
 
+    it('only loads files matching pattern (-P)', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('2 tests complete');
+            done();
+        });
+    });
+
+    it('only loads files matching pattern when pattern at beginning of name (-P)', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('3 tests complete');
+            done();
+        });
+    });
+
+    it('loads all files when pattern is empty (-P)', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_pattern', '-m', '2000', '-a', 'code', '-P', '']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('3 tests complete');
+            done();
+        });
+    });
+
     it('errors out when unknown module is specified in transform option', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-T', 'not-a-transform-module']);
