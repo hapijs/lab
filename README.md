@@ -16,6 +16,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 ## Command Line
 
 **lab** supports the following command line options:
+- `-a`, `--assert` - name of assert library to use.
 - `-c`, `--coverage` - enables code coverage analysis.
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
@@ -52,7 +53,6 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 - `-T`, `--transform` - javascript file that exports an array of objects ie. `[ { ext: ".js", transform: function (content, filename) { ... } } ]`. Note that if you use this option with -c (--coverage), then you must generate sourcemaps and pass sourcemaps option to get proper line numbers.
 - `-v`, `--verbose` - verbose test output, defaults to false.
-- `-a`, `--assert` - name of assert library to use.
 
 ## Usage
 
