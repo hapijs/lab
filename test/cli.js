@@ -120,6 +120,48 @@ describe('CLI', function () {
         });
     });
 
+    it('exits with code 1 when function returns error with multiple reporters', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_failure/failure.js', '-r', 'console', '-r', 'lcov']);
+        var outData = '';
+        var errData = '';
+
+        cli.stdout.on('data', function (data) {
+
+            outData += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            errData += data;
+        });
+
+        cli.once('close', function (code) {
+
+            expect(code).to.not.equal(0);
+            done();
+        });
+    });
+
+    it('runs tests with multiple reporters', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', 'console', '-r', 'lcov']);
+        var outData = '';
+
+        cli.stdout.on('data', function (data) {
+
+            outData += data;
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(outData).to.contain('10 tests complete');
+            done();
+        });
+    });
+
     it('displays a domain\'s error stack (-D)', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli_throws/debug.js', '--debug']);
