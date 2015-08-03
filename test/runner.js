@@ -417,17 +417,17 @@ describe('Runner', function () {
         Lab.execute(script, null, null, function (err, notebook) {
 
             expect(steps).to.deep.equal([
-              'outer beforeEach',
-              'first test',
-              'outer afterEach 1',
-              'outer afterEach 2',
-              'outer beforeEach',
-              'inner beforeEach',
-              'second test',
-              'inner afterEach 1',
-              'inner afterEach 2',
-              'outer afterEach 1',
-              'outer afterEach 2'
+                'outer beforeEach',
+                'first test',
+                'outer afterEach 1',
+                'outer afterEach 2',
+                'outer beforeEach',
+                'inner beforeEach',
+                'second test',
+                'inner afterEach 1',
+                'inner afterEach 2',
+                'outer afterEach 1',
+                'outer afterEach 2'
             ]);
             done();
         });
