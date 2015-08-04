@@ -495,6 +495,57 @@ describe('CLI', function () {
         });
     });
 
+    it('uses custom coverage path with the --coverage-path argument', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('1 tests complete');
+            expect(output).to.contain('Coverage: 100.00%');
+            done();
+        });
+    });
+
+    it('uses custom coverage excludes with the --coverage-exclude argument', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli_coverage', '-t', '100', '--coverage-exclude', 'test/cli_coverage/exclude', '-a', 'code']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            expect(data).to.not.exist();
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(1);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('1 tests complete');
+            expect(output).to.contain('Coverage: 96.55% (1/29)');
+            expect(output).to.contain('test/cli_coverage/missing.js missing coverage on line(s)');
+            done();
+        });
+    });
+
     it('doesn\'t fail with coverage when no external file is being tested', function (done) {
 
         var cli = ChildProcess.spawn(labPath, ['test/cli/simple.js', '-t', '10']);
