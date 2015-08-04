@@ -1,6 +1,5 @@
 // Load modules
 
-var Promise = require('promise');
 var Code = require('code');
 var _Lab = require('../test_runner');
 var Lab = require('../');
@@ -776,16 +775,13 @@ describe('Lab', function () {
 
         expect(function () {
 
-            script.test('a', function () {});
-        }).to.throw('Function for test "a" should take exactly one argument or return a Promise');
+            script.test('a');
+        }).not.to.throw();
 
         expect(function () {
 
-            script.test('a', function () {
-
-                return Promise.resolve();
-            });
-        }).not.to.throw();
+            script.test('a', function () {});
+        }).to.throw('Function for test "a" should take exactly one argument');
 
         ['before', 'beforeEach', 'after', 'afterEach'].forEach(function (fn) {
 
