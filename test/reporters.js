@@ -800,7 +800,7 @@ describe('Reporter', function () {
 
                 script.test('works', function (testDone) {
 
-                    expect(true).to.equal(true, 'Working right');
+                    expect(true).to.equal(true);
                     testDone();
                 });
             });
