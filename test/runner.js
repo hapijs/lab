@@ -539,6 +539,55 @@ describe('Runner', function () {
         });
     });
 
+    it('can handle thenables', function (done) {
+
+        if (typeof Promise === 'undefined') {
+            var Promise = require('promise');
+        }
+
+        var script = Lab.script();
+        script.experiment('test', function () {
+
+            script.test('1', function (done) {
+
+                return Promise.resolve('done');
+            });
+
+            script.test('2', function (done) {
+
+                return Promise.reject(new Error('Promise Error'));
+            });
+
+            script.test('3', function (done) {
+
+                return {
+                    then: function (ok, ko) {
+
+                        ok('done');
+                    }
+                };
+            });
+
+            script.test('4', function (done) {
+
+                return {
+                    then: function (ok, ko) {
+
+                        ko(new Error('Thenable Error'));
+                    }
+                };
+            });
+        });
+
+        Lab.report(script, { output: false }, function (err, code, output) {
+
+            expect(code).to.equal(1);
+            expect(output).to.contain('Promise Error');
+            expect(output).to.contain('Thenable Error');
+            done();
+        });
+    });
+
     it('uses provided linter', function (done) {
 
         var script = Lab.script();
