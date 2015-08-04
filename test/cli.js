@@ -162,6 +162,68 @@ describe('CLI', function () {
         });
     });
 
+    it('runs tests with a custom reporter starting with .', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', './node_modules/lab-event-reporter/index.js']);
+        var outData = '';
+
+        cli.stdout.on('data', function (data) {
+
+            outData += data;
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(outData).to.equal('');
+            done();
+        });
+    });
+
+    it('requires a custom reporter from node_modules', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', 'lab-event-reporter']);
+        var outData = '';
+
+        cli.stdout.on('data', function (data) {
+
+            outData += data;
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(outData).to.equal('');
+            done();
+        });
+    });
+
+    it('displays error message when an unknown reporter is specified', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', 'unknown']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.stderr.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.not.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain('Cannot find module');
+            done();
+        });
+    });
+
     it('displays a domain\'s error stack (-D)', function (done) {
 
         var cli = ChildProcess.spawn('node', [labPath, 'test/cli_throws/debug.js', '--debug']);
@@ -598,31 +660,6 @@ describe('CLI', function () {
             expect(code).to.equal(1);
             expect(signal).to.not.exist();
             expect(output).to.contain('includes a lab script that is not exported via exports.lab');
-            done();
-        });
-    });
-
-    it('displays error message when an unknown reporter is specified', function (done) {
-
-        var cli = ChildProcess.spawn('node', [labPath, '-r', 'unknown']);
-        var output = '';
-
-        cli.stdout.on('data', function (data) {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', function (data) {
-
-            output += data;
-            expect(data).to.exist();
-        });
-
-        cli.once('close', function (code, signal) {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('Invalid');
             done();
         });
     });
