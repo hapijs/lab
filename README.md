@@ -18,6 +18,8 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 **lab** supports the following command line options:
 - `-a`, `--assert` - name of assert library to use.
 - `-c`, `--coverage` - enables code coverage analysis.
+- `--coverage-path` - sets code coverage path.
+- `--coverage-exclude` - sets code coverage excludes.
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-D`, `--debug` - print the stack during a domain error event.
