@@ -915,6 +915,35 @@ describe('Reporter', function () {
                 done();
             });
         });
+
+        it('reports with circular JSON', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    var err = new Error('Fail');
+                    err.actual = {
+                        a: 1
+                    };
+                    err.actual.b = err.actual;
+                    err.expected = {
+                        a: 2
+                    };
+                    err.expected.b = err.expected;
+                    throw err;
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                expect(err).not.to.exist();
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n        "a": 12,\n        "b": "\[Circular ~\]"\n      }\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                done();
+            });
+        });
     });
 
     describe('json', function () {
