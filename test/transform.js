@@ -76,6 +76,19 @@ describe('Transform', function () {
 
         done();
     });
+
+    it('should return transformed file through for relative (cwd-rooted) and absolute paths', function (done) {
+
+        require('./transform/basic-transform'); // prime the cache
+
+        var rel = Transform.retrieveFile('test/transform/basic-transform.new');
+        expect(rel).to.not.contain('!NOCOMPILE!');
+
+        var abs = Transform.retrieveFile(process.cwd() + '/test/transform/basic-transform.new');
+        expect(abs).to.not.contain('!NOCOMPILE!');
+
+        done();
+    });
 });
 
 describe('Transform.install', function () {
