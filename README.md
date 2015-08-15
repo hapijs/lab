@@ -26,7 +26,6 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
 - `-f`, `--flat` - do not perform a recursive load of test files within the test directory.
 - `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
-- `-P`, `--pattern` - only load files with the given pattern in the name.
 - `-h`, `--help` - show command line usage.
 - `-i`, `--id` - only run the test for the given identifier (or identifiers range).
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
@@ -40,6 +39,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
+- `-P`, `--pattern` - only load files with the given pattern in the name.
 - `-r`, `--reporter` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - text report.
     - `html` - HTML test and code coverage report (sets `-c`).
