@@ -226,6 +226,16 @@ module.exports = [
 ];
 ```
 
+## Extending the linter
+
+**lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
+
+1. Add `eslint-plugin-hapi` and `eslint-config-hapi` as dependencies in your `package.json`. You must add both the plugin and the config because eslint treats them as peer dependencies. For more background, see [eslint/eslint#3458](https://github.com/eslint/eslint/issues/3458) and [eslint/eslint#2518](https://github.com/eslint/eslint/issues/2518).
+
+2. In your project's eslint configuration, add `"extends": "eslint-config-hapi"`. eslint will automatically infer the `eslint-config-`, so technically you can just write `"extends": "hapi"`.
+
+Your project's eslint configuration will now extend the default **lab** configuration.
+
 ## Ignoring files in linting
 Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
 ```
