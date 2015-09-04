@@ -960,7 +960,9 @@ describe('Reporter', function () {
                         c: function () {
 
                             return 'foo';
-                        }
+                        },
+                        d: Infinity,
+                        e: -Infinity
                     };
                     throw err;
                 });
@@ -970,7 +972,7 @@ describe('Reporter', function () {
 
                 expect(err).not.to.exist();
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n        "a": 1,\n        "b": "\[undefined\]",\n        "c": "\[function \(\) \{\\n\\n\s+return 'foo';\\n\s+\}\]"\n      }\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n\s+"a": 1,\n\s+"b": "\[undefined\]",\n\s+"c": "\[function \(\) \{\\n\\n\s+return 'foo';\\n\s+\}\]",\n\s+"d": "\[Infinity\]",\n\s+"e": "\[-Infinity\]"\n\s+}\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
