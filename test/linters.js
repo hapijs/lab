@@ -27,7 +27,7 @@ describe('Linters - eslint', function () {
             expect(eslintResults).to.have.length(1);
 
             var checkedFile = eslintResults[0];
-            expect(checkedFile).to.include({ filename: 'fail.js' });
+            expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
             expect(checkedFile.errors).to.deep.include([
                 { line: 11, severity: 'ERROR', message: 'semi - Missing semicolon.' },
                 { line: 12, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
@@ -48,7 +48,7 @@ describe('Linters - eslint', function () {
             expect(eslintResults).to.have.length(1);
 
             var checkedFile = eslintResults[0];
-            expect(checkedFile).to.include({ filename: 'fail.js' });
+            expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
             expect(checkedFile.errors).to.deep.include([
                 { line: 12, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }]);
             expect(checkedFile.errors).to.not.deep.include({ line: 6, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });

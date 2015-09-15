@@ -497,7 +497,7 @@
                                 <td class="line">{{@key}}</td>
                                 <td class="hits">{{this.percent}}</td>
                                 <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{this.miss}}">{{this.source}}</div>{{else}}<div>{{this.source}}</div>{{/if}}{{/each}}</td>
-                                {{#if ../../../sourcemaps}}
+                                {{#if ../sourcemaps}}
                                     <td class="sourcemaps file">{{this.originalFilename}}</td>
                                     <td class="sourcemaps line">{{this.originalLine}}</td>
                                 {{/if}}
@@ -507,7 +507,7 @@
                                 <td class="line">{{@key}}</td>
                                 <td class="hits">{{this.percent}}</td>
                                 <td class="source">{{this.source}}</td>
-                                {{#if ../../../sourcemaps}}
+                                {{#if ../sourcemaps}}
                                     <td class="sourcemaps file">{{this.originalFilename}}</td>
                                     <td class="sourcemaps line">{{this.originalLine}}</td>
                                 {{/if}}
@@ -518,7 +518,7 @@
                             <td class="line">{{@key}}</td>
                             <td class="hits">{{hits this.hits}}</td>
                             <td class="source">{{this.source}}</td>
-                            {{#if ../../sourcemaps}}
+                            {{#if ../sourcemaps}}
                                 <td class="sourcemaps file">{{this.originalFilename}}</td>
                                 <td class="sourcemaps line">{{this.originalLine}}</td>
                             {{/if}}
