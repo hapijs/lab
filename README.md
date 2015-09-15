@@ -226,6 +226,16 @@ module.exports = [
 ];
 ```
 
+Sometimes you want to disable code coverage for specific lines, and have the coverage report omit them entirely. To do so, use the `$lab:coverage:(off|on)$` comments. For example:
+```javascript
+// There is no way to cover this in node 0.10
+/* $lab:coverage:off$ */
+if (typeof value === 'symbol') {
+    return '[' + value.toString() + ']';
+}
+/* $lab:coverage:on$ */
+```
+
 ## Extending the linter
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
