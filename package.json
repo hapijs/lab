@@ -35,7 +35,7 @@
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "./bin/_lab -fL -t 100 -m 3000",
+    "test": "node bin/_lab -fL -t 100 -m 3000",
     "test-cov-html": "./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "./bin/_lab -d -f -L"
   },
