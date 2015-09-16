@@ -1004,7 +1004,7 @@ describe('Reporter', function () {
                 });
             });
 
-            Lab.report(script, { reporter: 'json' }, function (err, code, output) {
+            Lab.report(script, { reporter: 'json', lint: true, linter: 'eslint' }, function (err, code, output) {
 
                 var result = JSON.parse(output);
                 expect(err).to.not.exist();
@@ -1019,6 +1019,9 @@ describe('Reporter', function () {
                 expect(result.leaks.length).to.equal(0);
                 expect(result.duration).to.exist();
                 expect(result.errors).to.have.length(1);
+                expect(result.lint.length).to.be.greaterThan(1);
+                expect(result.lint[0].filename).to.exist();
+                expect(result.lint[0].errors).to.exist();
                 done();
             });
         });
