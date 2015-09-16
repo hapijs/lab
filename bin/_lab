@@ -1,16 +1,21 @@
 #!/usr/bin/env node
 
 if (process.env.ROOT_SPAWN) {
+    return require('../test_runner/cli').run();
+}
+
+var ChildProcess = require('child_process');
+
+if (process.platform === 'win32') {
+    process.env.ROOT_SPAWN = true;
     require('../test_runner/cli').run();
 }
 else {
-    var ChildProcess = require('child_process');
-
     ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
 
         process.env.ROOT_SPAWN = true;
         require('../test_runner/cli').run();
-	});
+    });
 
     process.on('exit', function (code) {
 
