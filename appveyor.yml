@@ -25,8 +25,8 @@ test_script:
   - npm --version
   # We test multiple Windows shells because of prior stdout buffering issues
   # filed against Grunt. https://github.com/joyent/node/issues/3584
-  - ps: "node bin/_lab -fL -t 100 -m 3000 # PowerShell" # Pass comment to PS for easier debugging
-  - cmd: node bin/_lab -fL -t 100 -m 3000
+  - ps: "node bin/_lab -fL -t 100 -m 3000 -v # PowerShell" # Pass comment to PS for easier debugging
+  - cmd: node bin/_lab -fL -t 100 -m 3000 -v
 
 # Don't actually build.
 build: off
