@@ -5,11 +5,10 @@ if (process.env.ROOT_SPAWN) {
 }
 
 var ChildProcess = require('child_process');
-var Path = require('path');
 
 if (process.platform === 'win32') {
     process.env.ROOT_SPAWN = true;
-    require(Path.join(__dirname, '../test_runner/cli')).run();
+    require('../test_runner/cli').run();
 }
 else {
     ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
