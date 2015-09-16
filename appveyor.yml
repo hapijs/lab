@@ -16,7 +16,7 @@ install:
   - ps: Install-Product node $env:nodejs_version
   # Typical npm stuff.
   - npm install
-  - cmd: xcopy lib test_runner /Y
+  - cmd: xcopy lib test_runner /Y /I /S
 
 # Post-install test scripts.
 test_script:
