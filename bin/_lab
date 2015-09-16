@@ -1,16 +1,31 @@
 #!/usr/bin/env node
 
 if (process.env.ROOT_SPAWN) {
-    require('../test_runner/cli').run();
+    return require('../test_runner/cli').run();
+}
+
+var ChildProcess = require('child_process');
+var Path = require('path');
+
+if (process.platform === 'win32') {
+
+    ChildProcess.exec('xcopy lib test_runner /Y', function (err) {
+
+        process.env.ROOT_SPAWN = true;
+        require(Path.join(__dirname, '../test_runner/cli')).run();
+    });
+
+    process.on('exit', function (code) {
+
+        ChildProcess.exec('del test_runner /Y', function (err) {});
+    });
 }
 else {
-    var ChildProcess = require('child_process');
-
     ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
 
         process.env.ROOT_SPAWN = true;
         require('../test_runner/cli').run();
-	});
+    });
 
     process.on('exit', function (code) {
 
