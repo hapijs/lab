@@ -8,17 +8,8 @@ var ChildProcess = require('child_process');
 var Path = require('path');
 
 if (process.platform === 'win32') {
-
-    ChildProcess.exec('xcopy lib test_runner /Y', function (err) {
-
-        process.env.ROOT_SPAWN = true;
-        require(Path.join(__dirname, '../test_runner/cli')).run();
-    });
-
-    process.on('exit', function (code) {
-
-        ChildProcess.exec('del test_runner /Y', function (err) {});
-    });
+    process.env.ROOT_SPAWN = true;
+    require(Path.join(__dirname, '../test_runner/cli')).run();
 }
 else {
     ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
