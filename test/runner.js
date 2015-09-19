@@ -42,6 +42,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { environment: 'lab' }, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(notebook.tests).to.have.length(1);
             expect(notebook.failures).to.equal(0);
             done();
@@ -65,6 +66,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { environment: null }, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(notebook.tests).to.have.length(1);
             expect(notebook.failures).to.equal(0);
             done();
@@ -88,6 +90,7 @@ describe('Runner', function () {
 
         Lab.execute(script, {}, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(notebook.tests).to.have.length(1);
             expect(notebook.failures).to.equal(0);
             done();
@@ -124,6 +127,7 @@ describe('Runner', function () {
 
             Lab.execute(script, { ids: [1, 3] }, null, function (err, notebook) {
 
+                expect(err).not.to.exist();
                 expect(notebook.tests).to.have.length(2);
                 expect(notebook.failures).to.equal(0);
                 next();
@@ -134,6 +138,7 @@ describe('Runner', function () {
 
             Lab.execute(script, { ids: [2, 4] }, null, function (err, notebook) {
 
+                expect(err).not.to.exist();
                 expect(notebook.tests).to.have.length(2);
                 expect(notebook.failures).to.equal(2);
                 next();
@@ -176,6 +181,7 @@ describe('Runner', function () {
 
             Lab.execute(script, { grep: '\\d' }, null, function (err, notebook) {
 
+                expect(err).not.to.exist();
                 expect(notebook.tests).to.have.length(2);
                 expect(notebook.failures).to.equal(0);
                 next();
@@ -186,6 +192,7 @@ describe('Runner', function () {
 
             Lab.execute(script, { grep: '[ab]' }, null, function (err, notebook) {
 
+                expect(err).not.to.exist();
                 expect(notebook.tests).to.have.length(2);
                 expect(notebook.failures).to.equal(2);
                 next();
@@ -226,6 +233,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { dry: true }, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(notebook.tests).to.have.length(4);
             expect(notebook.failures).to.equal(0);
             done();
@@ -250,6 +258,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { debug: true }, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(notebook.errors.length).to.greaterThan(0);
             done();
         });
@@ -416,6 +425,7 @@ describe('Runner', function () {
 
         Lab.execute(script, null, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(steps).to.deep.equal([
                 'outer beforeEach',
                 'first test',
@@ -457,6 +467,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { parallel: true }, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(steps).to.deep.equal(['2', '1']);
             done();
         });
@@ -486,6 +497,7 @@ describe('Runner', function () {
 
         Lab.execute(script, { parallel: true }, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(steps).to.deep.equal(['1', '2']);
             done();
         });
@@ -515,6 +527,7 @@ describe('Runner', function () {
 
         Lab.execute(script, null, null, function (err, notebook) {
 
+            expect(err).not.to.exist();
             expect(steps).to.deep.equal(['2', '1']);
             done();
         });
@@ -534,6 +547,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -552,7 +566,8 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, lint: true, linter: 'eslint', lintingPath: 'test/lint' }, function (err, code, output) {
 
-            expect(code).to.equal(0);
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
             expect(output).to.contain(['eslint/', 'semi']);
             done();
         });
@@ -573,6 +588,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: assertions }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(0);
             expect(output).to.match(/Assertions count: \d+/);
             done();
@@ -594,6 +610,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: assertions }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.match(/Assertions count: \d+/);
             expect(output).to.contain('Incomplete assertion at');
@@ -616,6 +633,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(0);
             expect(output).to.not.match(/Assertions count: \d+/);
             done();
@@ -652,6 +670,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test"');
@@ -702,6 +721,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('2 of 2 tests failed');
             expect(output.match(/Multiple callbacks or thrown errors received in test "Before each shared test"/g)).to.have.length(4);
@@ -752,6 +772,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('1 of 2 tests failed');
             expect(output.match(/Multiple callbacks or thrown errors received in test "Before each shared test"/g)).to.have.length(2);
@@ -814,6 +835,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('2 of 2 tests failed');
             expect(output.match(/Multiple callbacks or thrown errors received in test "Before each parallel shared test"/g)).to.have.length(4);
@@ -905,6 +927,7 @@ describe('Runner', function () {
 
         Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('4 of 4 tests failed');
             expect(output.match(/Multiple callbacks or thrown errors received in test "Before each parallel shared test"/g)).to.have.length(8);
@@ -954,6 +977,7 @@ describe('Runner', function () {
 
             Lab.report(script, { output: false }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(code).to.equal(0);
                 done();
             });
@@ -977,6 +1001,7 @@ describe('Runner', function () {
             var now = Date.now();
             Lab.execute(script, null, null, function (err, notebook) {
 
+                expect(err).not.to.exist();
                 expect(Date.now() - now).to.be.below(100);
                 done();
             });
@@ -1003,6 +1028,7 @@ describe('Runner', function () {
             var now = Date.now();
             Lab.execute(script, null, null, function (err, notebook) {
 
+                expect(err).not.to.exist();
                 expect(Date.now() - now).to.be.above(9);
                 done();
             });

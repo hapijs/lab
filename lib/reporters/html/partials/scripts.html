@@ -1,0 +1,84 @@
+<script>
+  headings = [];
+
+  onload = function () {
+      headings = document.querySelectorAll('h2');
+      reset();
+  };
+
+  onscroll = function (e) {
+      var heading = find(window.scrollY);
+      if (!heading) {
+        var current = document.querySelector('#menu a.active');
+        if (current) {
+          current.className = '';
+        }
+        return;
+      }
+      var links = document.querySelectorAll('#menu a')
+              , link;
+
+      for (var i = 0, len = links.length; i < len; ++i) {
+          link = links[i];
+          link.className = link.getAttribute('href') == '#' + heading.id ? 'active' : '';
+      }
+  };
+
+  function find (y) {
+      var i = headings.length
+              , heading;
+
+      while (i--) {
+          heading = headings[i];
+          if (y >= heading.offsetTop) {
+              return heading;
+          }
+      }
+  }
+
+  function toggle (className) {
+
+      var elements = document.getElementsByClassName(className);
+
+      for (var i = 0, il = elements.length; i < il; ++i) {
+          var element = elements[i];
+
+          if (element.classList.contains('hide')) {
+              element.classList.remove('hide');
+              element.classList.add('show');
+          }
+          else {
+              element.classList.remove('show');
+              element.classList.add('hide');
+          }
+      };
+  }
+
+  function reset () {
+
+      var shownElements = document.getElementsByClassName('show');
+      var filterElements = document.querySelectorAll('input[type=checkbox]');
+
+      for (var i = 0, il = filterElements.length; i < il; ++i) {
+          filterElements[i].checked = false;
+      }
+
+      // Check any filters with visible elements
+      for (i = 0, il = shownElements.length; i < il; ++i) {
+          var shownElement = shownElements[i];
+          var classNames = shownElement.className.split(' ');
+          for (var ci = 0, cl = classNames.length; ci < cl; ++ci){
+              var element = document.getElementById('show-' + classNames[ci]);
+              if (element) {
+                  element.checked = true;
+              }
+          }
+      }
+  };
+
+  function filter (element) {
+
+      toggle(element.value);
+      reset();
+  }
+</script>

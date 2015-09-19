@@ -1,0 +1,14 @@
+<div id="coverage">
+    <h1>Code Coverage Report</h1>
+    <div class="stats {{coverage.percentClass}}">
+        <div class="percentage">{{coverage.percent}}%</div>
+        <div class="sloc">{{coverage.cov.sloc}}</div>
+        <div class="hits">{{coverage.cov.hits}}</div>
+        <div class="misses">{{coverage.cov.misses}}</div>
+    </div>
+    <div id="files">
+        {{#each coverage.cov.files}}
+        {{> file }}
+        {{/each}}
+    </div>
+</div>

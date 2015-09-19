@@ -1,0 +1,18 @@
+<div id="linting">
+    <h1>Linting Report</h1>
+    {{#if lint.disabled}}
+        <span>Nothing to show here, linting is disabled.</span>
+    {{else}}
+        <div class="lint-stats">
+            <span class="lint-errors {{lint.errorClass}}">{{lint.totalErrors}}</span>
+            <span class="lint-warnings {{lint.warningClass}}">{{lint.totalWarnings}}</span>
+        </div>
+        <div class="lint-files">
+            {{#if lint.total}}
+            {{#each lint.lint}}
+            {{> lint-file }}
+            {{/each}}
+            {{/if}}
+        </div>
+    {{/if}}
+</div>

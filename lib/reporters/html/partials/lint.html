@@ -1,0 +1,12 @@
+{{#if this}}
+<td class="lint">
+    {{#if this.errors}}
+    <span class="errors" data-tooltip="{{lintJoin this.errors}}"></span>
+    {{/if}}
+    {{#if this.warnings}}
+    <span class="warnings" data-tooltip="{{lintJoin this.warnings}}"></span>
+    {{/if}}
+</td>
+{{else}}
+<td class="lint empty"></td>
+{{/if}}

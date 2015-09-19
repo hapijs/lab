@@ -1,0 +1,51 @@
+<div id="tests">
+  <h1>Test Report</h1>
+  <div class="stats {{#if failures.length}}terrible{{else}}{{#if skipped.length}}low{{else}}high{{/if}}{{/if}}">
+      <div class="failures">{{failures.length}}</div>
+      <div class="skipped">{{skipped.length}}</div>
+      <div class="test-count">{{tests.length}}</div>
+      <div class="duration">{{duration}}</div>
+  </div>
+  <div id="filters">
+      <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success"><label for="show-success">Show Success</label></input>
+      <input type="checkbox" checked="" onchange="filter(this)" value="failure" id="show-failure"><label for="show-failure">Show Failure</label></input>
+      <br>
+      {{#each paths}}
+      <input type="checkbox" checked="" onchange="filter(this)" value="{{this}}" id="show-{{this}}"><label for="show-{{this}}">{{replace this "\_" " " "gi"}}</label></input>
+      {{/each}}
+  </div>
+  <table>
+      <thead>
+      <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Duration (ms)</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each tests}}
+      <tr class="show {{join this.path " "}} {{#if this.err}}failure{{else}}success{{/if}}">
+          <td class="test-id">{{this.id}}</td>
+          <td class="test-title">{{this.title}}
+              {{#if this.err}}<div class="stack">{{this.err.stack}}</div>{{/if}}
+          </td>
+          <td class="test-duration">{{this.duration}}</td>
+      </tr>
+      {{/each}}
+      </tbody>
+  </table>
+
+  {{#if errors.length}}
+  <h2>Script errors :</h2>
+  <ul>
+    {{#each errors}}
+    <li>
+      <div>{{errorMessage this}}</div>
+      {{#if this.stack}}
+      <pre>{{errorStack this}}</pre>
+      {{/if}}
+    </li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</div>

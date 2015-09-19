@@ -1,0 +1,36 @@
+{{#if this.miss}}
+    {{#if this.chunks}}
+        <tr class="chunks">
+            <td class="line" data-tooltip>{{@key}}</td>
+            {{> lint this.lintErrors }}
+            <td class="hits" data-tooltip>{{this.percent}}</td>
+            <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{this.miss}}" data-tooltip>{{this.source}}</div>{{else}}<div>{{this.source}}</div>{{/if}}{{/each}}</td>
+            {{#if sourcemaps}}
+                <td class="sourcemaps file" data-tooltip>{{this.originalFilename}}</td>
+                <td class="sourcemaps line" data-tooltip>{{this.originalLine}}</td>
+            {{/if}}
+        </tr>
+    {{else}}
+        <tr class="miss">
+            <td class="line" data-tooltip>{{@key}}</td>
+            {{> lint this.lintErrors }}
+            <td class="hits" data-tooltip>{{this.percent}}</td>
+            <td class="source" data-tooltip>{{this.source}}</td>
+            {{#if sourcemaps}}
+                <td class="sourcemaps file" data-tooltip>{{this.originalFilename}}</td>
+                <td class="sourcemaps line" data-tooltip>{{this.originalLine}}</td>
+            {{/if}}
+        </tr>
+    {{/if}}
+{{else}}
+    <tr class="hit">
+        <td class="line" data-tooltip>{{@key}}</td>
+        {{> lint this.lintErrors }}
+        <td class="hits" data-tooltip>{{hits this.hits}}</td>
+        <td class="source">{{this.source}}</td>
+        {{#if sourcemaps}}
+            <td class="sourcemaps file" data-tooltip>{{this.originalFilename}}</td>
+            <td class="sourcemaps line" data-tooltip>{{this.originalLine}}</td>
+        {{/if}}
+    </tr>
+{{/if}}
