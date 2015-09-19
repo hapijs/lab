@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "bossy": "1.x.x",
-    "diff": "1.x.x",
-    "eslint": "1.4.x",
+    "diff": "2.x.x",
+    "eslint": "1.5.x",
     "eslint-config-hapi": "2.x.x",
     "eslint-plugin-hapi": "1.x.x",
     "espree": "2.x.x",
@@ -29,7 +29,9 @@
   },
   "devDependencies": {
     "code": "1.x.x",
-    "lab-event-reporter": "1.x.x"
+    "cpr": "^0.4.2",
+    "lab-event-reporter": "1.x.x",
+    "rimraf": "^2.4.3"
   },
   "bin": {
     "lab": "./bin/lab"
