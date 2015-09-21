@@ -5,6 +5,7 @@ var Fs = require('fs');
 var Path = require('path');
 var Code = require('code');
 var Lab = require('../');
+var Pkg = require('../package.json');
 var _Lab = require('../test_runner');
 
 
@@ -262,6 +263,25 @@ describe('CLI', function () {
             expect(code).to.equal(0);
             expect(signal).to.not.exist();
             expect(output).to.contain('Usage: lab [options] [path]');
+            done();
+        });
+    });
+
+    it('shows the version (-V)', function (done) {
+
+        var cli = ChildProcess.spawn('node', [labPath, '-V']);
+        var output = '';
+
+        cli.stdout.on('data', function (data) {
+
+            output += data;
+        });
+
+        cli.once('close', function (code, signal) {
+
+            expect(code).to.equal(0);
+            expect(signal).to.not.exist();
+            expect(output).to.contain(Pkg.version);
             done();
         });
     });

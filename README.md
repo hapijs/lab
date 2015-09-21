@@ -55,6 +55,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
 - `-T`, `--transform` - javascript file that exports an array of objects ie. `[ { ext: ".js", transform: function (content, filename) { ... } } ]`. Note that if you use this option with -c (--coverage), then you must generate sourcemaps and pass sourcemaps option to get proper line numbers.
 - `-v`, `--verbose` - verbose test output, defaults to false.
+- `-V`, `--version` - display lab version information.
 
 ## Usage
 
