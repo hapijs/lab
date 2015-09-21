@@ -4,16 +4,21 @@ if (process.env.ROOT_SPAWN) {
     require('../test_runner/cli').run();
 }
 else {
-    var ChildProcess = require('child_process');
+    var Cpr = require('cpr');
+    var Rimraf = require('rimraf');
 
-    ChildProcess.exec('rm -rf test_runner && cp -rf lib test_runner', function (err) {
+    Cpr('./lib', './test_runner', { deleteFirst: true }, function (err) {
+
+        if (err) {
+            throw err;
+        }
 
         process.env.ROOT_SPAWN = true;
         require('../test_runner/cli').run();
-	});
+    });
 
     process.on('exit', function (code) {
 
-        ChildProcess.exec('rm -rf test_runner', function (err) {});
+        Rimraf.sync('./test_runner');
     });
 }
