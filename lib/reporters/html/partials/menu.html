@@ -1,0 +1,19 @@
+<div id="menu">
+    <li><a href="#tests">Test Report</a></li>
+    <li><a href="#coverage">Coverage Report</a></li>
+    {{#each coverage.cov.files}}
+    <li>
+        <span class="cov {{this.percentClass}}">{{this.percent}}</span>
+        <a href="#{{this.filename}}">{{#if this.dirname}}<span class="dirname">{{this.dirname}}</span>{{/if}}<span class="basename">{{this.basename}}</span></a>
+    </li>
+    {{/each}}
+    <li><a href="#linting">Linting Report</a></li>
+    {{#each lint.lint}}
+    {{#if this.errors.length}}
+    <li>
+        <span class="lint"><span class="{{this.errorClass}}">{{this.totalErrors}}</span> || <span class="{{this.warningClass}}">{{this.totalWarnings}}</span></span>
+        <a href="#lint-{{this.filename}}">{{this.filename}}</a>
+    </li>
+    {{/if}}
+    {{/each}}
+</div>

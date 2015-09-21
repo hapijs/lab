@@ -1,0 +1,28 @@
+<div class="file">
+    <h2 id="{{this.filename}}">{{this.filename}}</h2>
+    <div class="stats {{this.percentClass}}">
+        <div class="percentage">{{this.percent}}%</div>
+        <div class="sloc">{{this.sloc}}</div>
+        <div class="hits">{{this.hits}}</div>
+        <div class="misses">{{this.misses}}</div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Line</th>
+                <th>Lint</th>
+                <th>Hits</th>
+                <th>Source</th>
+                {{#if this.sourcemaps}}
+                    <th>Original filename</th>
+                    <th>Original line</th>
+                {{/if}}
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this.source}}
+        {{> line sourcemaps=../sourcemaps }}
+        {{/each}}
+        </tbody>
+    </table>
+</div>

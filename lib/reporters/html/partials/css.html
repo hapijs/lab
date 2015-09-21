@@ -1,0 +1,448 @@
+<style>
+    body {
+        font: 14px/1.6 Helvetica, Arial, sans-serif;
+        margin: 0;
+        color: #2c2c2c;
+    }
+
+    #tests, #coverage, #linting {
+        padding: 60px;
+    }
+
+    h1 a:hover {
+        text-decoration: none;
+    }
+
+    h2 {
+        width: 80%;
+        margin-top: 80px;
+        margin-bottom: 0;
+        font-weight: 100;
+        letter-spacing: 1px;
+    }
+
+    ul {
+        margin-top: 20px;
+        padding: 0 15px;
+        width: 100%;
+    }
+
+    ul li {
+        float: left;
+        width: 40%;
+        margin-top: 5px;
+        margin-right: 60px;
+        list-style: none;
+        padding: 5px 0;
+        font-size: 12px;
+    }
+
+    #menu {
+        position: fixed;
+        font-size: 12px;
+        overflow-y: auto;
+        top: 0;
+        right: 0;
+        margin: 0;
+        height: 100%;
+        padding: 15px 15px;
+        border-left: 1px solid #eee;
+        background-color: #666;
+        z-index: 1;
+    }
+
+    #menu::after {
+        display: block;
+        content: '';
+        padding-top: 80px;
+    }
+
+    #menu li a {
+        display: block;
+        color: white;
+        padding: 0 5px 0 35px;
+        transition: background 300ms;
+        text-decoration: none;
+    }
+
+    #menu li {
+        position: relative;
+        list-style: none;
+    }
+
+    #menu a:hover,
+    #menu a.active {
+        text-decoration: none;
+        background: rgba(255, 255, 255, .4);
+    }
+
+    #menu li:hover .cov {
+        opacity: 1;
+    }
+
+    #menu li .dirname {
+        opacity: .60;
+        padding-right: 2px;
+    }
+
+    #menu li .basename {
+        opacity: 1;
+    }
+
+    #menu .cov, #menu .lint {
+        background: rgba(0, 0, 0, .3);
+        position: absolute;
+        top: 0;
+        font-size: 9px;
+        text-align: center;
+        opacity: .8;
+        width: 22px;
+        border-radius: 10px;
+        padding: 2px 3px;
+    }
+
+    #files .stats:nth-child(2n) {
+        display: inline-block;
+        margin-top: 15px;
+        border: 1px solid #eee;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .stats div {
+        float: left;
+        padding: 0 5px;
+    }
+
+    .stats::after {
+        display: block;
+        content: '';
+        clear: both;
+    }
+
+    .stats .sloc::after {
+        content: ' SLOC';
+        color: #b6b6b6;
+    }
+
+    .stats .percentage::after {
+        content: ' coverage';
+        color: #b6b6b6;
+    }
+
+    .stats .hits::before {
+        content: '(';
+        color: #b6b6b6;
+    }
+
+    .stats .hits::after {
+        content: ' Covered';
+        color: #b6b6b6;
+    }
+
+    .stats .misses::after {
+        content: ' Not Covered)';
+        color: #b6b6b6;
+    }
+
+    .stats .failures::after {
+        content: ' Failures';
+        color: #b6b6b6;
+    }
+
+    .stats .skipped::after {
+        content: ' Skipped';
+        color: #b6b6b6;
+    }
+
+    .stats .test-count::after {
+        content: ' Tests';
+        color: #b6b6b6;
+    }
+
+    .stats .duration::before {
+        content: '(';
+        color: #b6b6b6;
+    }
+
+    .stats .duration::after {
+        content: ' ms)';
+        color: #b6b6b6;
+    }
+
+    .high {
+        color: #00d4b4;
+    }
+
+    .medium {
+        color: #e87d0d;
+    }
+
+    .low {
+        color: #d4081a;
+    }
+
+    .terrible {
+        color: #d4081a;
+        font-weight: bold;
+    }
+
+    #files table {
+        width: 80%;
+        margin-top: 10px;
+        border-collapse: collapse;
+        border: 1px solid #cbcbcb;
+        color: #363636;
+        border-radius: 3px;
+    }
+
+    #files thead {
+        display: none;
+    }
+
+    table td.line,
+    table td.lint,
+    table td.hits {
+        width: 20px;
+        background: #eaeaea;
+        text-align: right;
+        font-size: 11px;
+        padding: 0 10px;
+        color: #949494;
+        white-space: nowrap;
+    }
+
+    table td.hits {
+        width: 10px;
+        padding: 2px 5px;
+        color: rgba(0, 0, 0, .2);
+        background: #f0f0f0;
+    }
+
+    table td.sourcemaps {
+        width: 1%;
+        border-left: 1px solid #cbcbcb;
+        padding: 0 10px;
+    }
+
+    table td.lint.empty {
+        width: 0;
+        padding: 0;
+    }
+
+    table td.lint > span {
+        border-radius: 50%;
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        vertical-align: baseline;
+    }
+
+    table td.lint .errors {
+        background-color: red;
+    }
+
+    table td.lint .warnings {
+        background-color: orange;
+    }
+
+    td.sourcemaps.file {
+        background: #f0f0f0;
+    }
+
+    tr.miss td.line,
+    tr.miss td.hits {
+        background: #e6c3c7;
+    }
+
+    tr.miss td {
+        background: #f8d5d8;
+    }
+
+    td.source {
+        padding-left: 15px;
+        line-height: 15px;
+        white-space: pre;
+        font: 12px monaco, monospace;
+    }
+
+    td.source div {
+        display: inline-block;
+    }
+
+    td.source div.true {
+        background: #bae8bf;
+    }
+
+    td.source div.false {
+        background: #e8e5ba;
+    }
+
+    td.source div.never {
+        background: #f8d5d8;
+    }
+
+    #tests table {
+        width: 80%;
+        margin-top: 10px;
+        border-collapse: collapse;
+        border: 1px solid #cbcbcb;
+        color: #363636;
+        border-radius: 3px;
+    }
+
+    #tests thead {
+        background: #F5F5F5;
+    }
+
+    #tests tr {
+        border: 1px solid #ccc;
+    }
+
+    #tests td {
+        padding-left: 8px;
+        vertical-align: top;
+    }
+
+    #tests .success:nth-child(2n) {
+        background: #F5F5F5;
+    }
+
+    #tests .failure {
+        background: #FF9E9E;
+    }
+
+    #tests table .skipped {
+        background: #AA82FF;
+    }
+
+    #tests .success {
+        color: #949494;
+    }
+
+    #tests .failure .test-title {
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    #tests .stack {
+        margin-top: 4px;
+        padding-left: 15px;
+        margin-bottom: 12px;
+        font: 12px monaco, monospace;
+        white-space: pre;
+        line-height: 15px;
+    }
+
+    .hide {
+        position: absolute;
+        left: -9999em;
+    }
+
+    .show {
+        position: relative;
+    }
+
+    [data-tooltip] {
+        position: relative;
+    }
+
+    [data-tooltip]:hover:before {
+        border: solid;
+        border-color: #333 transparent;
+        border-width: 6px 6px 0 6px;
+        bottom: 20px;
+        content: "";
+        left: 0;
+        position: absolute;
+        z-index: 99;
+    }
+
+    [data-tooltip]:hover:after {
+        background: #333;
+        background: rgba(0, 0, 0, .8);
+        border-radius: 5px;
+        bottom: 26px;
+        color: #fff;
+        left: -10px;
+        padding: 5px 15px;
+        position: absolute;
+        z-index: 98;
+        content: attr(data-tooltip);
+        white-space: pre;
+        text-align: left;
+    }
+
+    .line[data-tooltip]:hover:after {
+        content: "Line number";
+    }
+
+    .hits[data-tooltip]:hover:after {
+        content: "Number of hits";
+    }
+
+    .miss .source[data-tooltip]:hover:after {
+        content: "Missed line";
+    }
+
+    .miss.true[data-tooltip]:hover:after {
+        content: "Condition always true";
+    }
+
+    .miss.false[data-tooltip]:hover:after {
+        content: "Condition always false";
+    }
+
+    .miss.never[data-tooltip]:hover:after {
+        content: "Statement never reached";
+    }
+
+    .sourcemaps.file[data-tooltip]:hover:after {
+        content: "Original file";
+    }
+
+    .sourcemaps.line[data-tooltip]:hover:after {
+        content: "Original line";
+    }
+
+    .lint .errors[data-tooltip]:hover:after {
+        content: "Linting errors:\A" attr(data-tooltip);
+    }
+
+    .lint .warnings[data-tooltip]:hover:after {
+        content: "Linting warnings:\A" attr(data-tooltip);
+    }
+
+    #filters {
+        width: 75%;
+        margin-top: 25px;
+    }
+
+    #filters label {
+        margin-right: 10px;
+    }
+
+    .lint-stats .lint-errors::after {
+        content: ' linting errors';
+        color: #b6b6b6;
+    }
+
+    .lint-stats .lint-warnings::after {
+        content: ' linting warnings';
+        color: #b6b6b6;
+    }
+
+    .lint-entry {
+        color: #b6b6b6;
+        float: none;
+        padding: 0;
+    }
+
+    .lint-entry .level-ERROR {
+        color: #d4081a;
+    }
+
+    .lint-entry .level-WARNING {
+        color: #e87d0d;
+    }
+</style>

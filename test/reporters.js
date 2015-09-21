@@ -127,6 +127,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -145,6 +146,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -163,6 +165,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(0);
             done();
         });
@@ -185,6 +188,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -204,6 +208,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -225,6 +230,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(0);
             done();
         });
@@ -247,6 +253,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -266,6 +273,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(1);
             done();
         });
@@ -287,6 +295,7 @@ describe('Reporter', function () {
 
         reporter.finalize(notebook, function (err, code, output) {
 
+            expect(err).not.to.exist();
             expect(code).to.equal(0);
             done();
         });
@@ -534,6 +543,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', progress: 0 }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.match(/^\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
@@ -552,6 +562,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
@@ -574,6 +585,7 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: 'console', progress: 2 }, function (err, code, output) {
 
                 process.platform = oldPlatform;
+                expect(err).not.to.exist();
                 expect(output).to.contain('\u221A');
 
                 done();
@@ -604,6 +616,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('Coverage: 78.95% (4/19)');
                 expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 12, 15, 16, 19');
                 expect(output).to.not.contain('console-full');
@@ -624,6 +637,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('Coverage: 100.00%');
                 done();
             });
@@ -645,6 +659,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
                 expect(output).to.contain('test/coverage/while.js on line(s): 11, 12');
                 done();
@@ -667,6 +682,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/'), sourcemaps: true }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.not.contain('sourcemaps-covered');
                 done();
             });
@@ -782,6 +798,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
                 expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Not working right: Expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
@@ -806,6 +823,8 @@ describe('Reporter', function () {
             });
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                expect(err).not.to.exist();
 
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
 
@@ -834,6 +853,8 @@ describe('Reporter', function () {
             });
 
             Lab.report(script, { reporter: 'console', colors: false }, function (err, code, output) {
+
+                expect(err).not.to.exist();
 
                 var result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
 
@@ -867,6 +888,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('missing ;');
                 done();
             });
@@ -889,6 +911,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('No issues');
                 done();
             });
@@ -911,6 +934,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('No issues');
                 done();
             });
@@ -1042,6 +1066,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 var result = JSON.parse(output);
                 expect(result.coverage.percent).to.equal(100);
                 done();
@@ -1067,6 +1092,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('<div class="stats medium">');
                 expect(output).to.contain('<span class="cov medium">69.23</span>');
                 delete global.__$$testCovHtml;
@@ -1090,19 +1116,141 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain([
                     '<th>Original filename</th>',
                     '<th>Original line</th>',
-                    '<td class="sourcemaps file">test/coverage/sourcemaps-external.js</td>',
-                    '<td class="sourcemaps line">1</td>',
-                    '<td class="sourcemaps line">6</td>',
-                    '<td class="sourcemaps line">9</td>',
-                    '<td class="sourcemaps line">11</td>',
-                    '<td class="sourcemaps line">12</td>',
-                    '<td class="sourcemaps line">13</td>',
-                    '<td class="sourcemaps line">16</td>'
+                    '<td class="sourcemaps file" data-tooltip>test/coverage/sourcemaps-external.js</td>',
+                    '<td class="sourcemaps line" data-tooltip>1</td>',
+                    '<td class="sourcemaps line" data-tooltip>6</td>',
+                    '<td class="sourcemaps line" data-tooltip>9</td>',
+                    '<td class="sourcemaps line" data-tooltip>11</td>',
+                    '<td class="sourcemaps line" data-tooltip>12</td>',
+                    '<td class="sourcemaps line" data-tooltip>13</td>',
+                    '<td class="sourcemaps line" data-tooltip>16</td>'
                 ]);
                 delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('generates a coverage report with linting enabled and multiple files', function (done) {
+
+            var Test1 = require('./coverage/html-lint/html-lint.1');
+            var Test2 = require('./coverage/html-lint/html-lint.2');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test1.method(1, 2, 3);
+                    finished();
+                });
+
+                script.test('something', function (finished) {
+
+                    Test2.method(1, 2, 3);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint') }, function (err, code, output) {
+
+                expect(err).not.to.exist();
+                expect(output)
+                    .to.contain('<div class="stats medium">')
+                    .and.to.contain('<span class="errors" data-tooltip="indent - Expected indentation of 4 space characters but found 0.&#xa;eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.&#xa;semi - Missing semicolon."></span>')
+                    .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;."></span>')
+                    .and.to.contain('<span class="lint-errors low">8</span>')
+                    .and.to.contain('<span class="lint-warnings low">1</span>')
+                    .and.to.contain('<li class="lint-entry">L11 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L12 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L16 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
+                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
+                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-ERROR">ERROR</span> - semi - Missing semicolon.</li>')
+                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>');
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('generates a coverage report with linting enabled with thresholds', function (done) {
+
+            var Test1 = require('./coverage/html-lint/html-lint.1');
+            var Test2 = require('./coverage/html-lint/html-lint.2');
+
+            var script = Lab.script({ schedule: false });
+            script.experiment('test', function () {
+
+                script.test('something', function (finished) {
+
+                    Test1.method(1, 2, 3);
+                    finished();
+                });
+
+                script.test('something', function (finished) {
+
+                    Test2.method(1, 2, 3);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), 'lint-errors-threshold': 2, 'lint-warnings-threshold': 2 }, function (err, code, output) {
+
+                expect(err).not.to.exist();
+                expect(output)
+                    .to.contain('<span class="lint-errors low">8</span>')
+                    .and.to.contain('<span class="lint-warnings medium">1</span>');
+
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('generates a report with test script errors', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.before(function (finished) { });
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', 'context-timeout': 1 }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                expect(output)
+                    .to.contain('Timed out &#x28;1ms&#x29; - Before test')
+                    .and.to.contain('at Timer.listOnTimeout');
+                done();
+            });
+        });
+
+        it('generates a report with test script errors that are not Error', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.before(function (finished) { throw 'abc'; });
+                script.test('works', function (finished) {
+
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', 'context-timeout': 1 }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                expect(output).to.contain('<div>abc</div>');
                 done();
             });
         });
@@ -1136,6 +1284,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('<span class="cov terrible">10</span>');
                 expect(output).to.contain('<span class="cov terrible">10.12</span>');
                 expect(output).to.contain('<span class="cov high">76</span>');
@@ -1161,6 +1310,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('<span class="cov terrible">10</span>');
                 done();
             });
@@ -1183,6 +1333,7 @@ describe('Reporter', function () {
 
             reporter.finalize(notebook, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('<span class="cov high">80</span>');
                 done();
             });
@@ -1213,6 +1364,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'html', coveragePath: Path.join(__dirname, './coverage/html') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('Test Report');
                 expect(output).to.contain('test-title');
                 delete global.__$$testCovHtml;
@@ -1396,6 +1548,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.contain('clover.test.coverage');
                 expect(output).to.contain('<line num="9" count="1" type="stmt"/>');
                 delete global.__$$testCovHtml;
@@ -1435,6 +1588,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.not.contain('clover.test.coverage');
                 expect(output).to.contain('<coverage generated=');
                 delete global.__$$testCovHtml;
@@ -1476,6 +1630,7 @@ describe('Reporter', function () {
 
             Lab.report(script, { reporter: 'clover', coverage: false, coveragePath: Path.join(__dirname, './coverage/clover') }, function (err, code, output) {
 
+                expect(err).not.to.exist();
                 expect(output).to.not.contain('clover.test.coverage');
                 expect(output).to.contain('<coverage generated=');
                 delete global.__$$testCovHtml;

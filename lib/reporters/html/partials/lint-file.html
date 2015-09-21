@@ -1,0 +1,10 @@
+<div class="lint-file">
+    {{#if this.errors}}
+    <h2 id="lint-{{this.filename}}">{{this.filename}}</h2>
+    <ul>
+    {{#each this.errors}}
+        <li class="lint-entry">L{{this.line}} - <span class="level-{{this.severity}}">{{this.severity}}</span> - {{{this.message}}}</li>
+    {{/each}}
+    </ul>
+    {{/if}}
+</div>

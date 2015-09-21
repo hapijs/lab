@@ -130,6 +130,7 @@ describe('Linters - jslint', function () {
         var path = Path.join(__dirname, 'lint', 'jslint', 'basic');
         Linters.lint({ lintingPath: path, linter: 'jslint' }, function (err, result) {
 
+            expect(err).not.to.exist();
             expect(result).to.include('lint');
 
             var jslintResults = result.lint;
@@ -153,6 +154,7 @@ describe('Linters - jslint', function () {
         var path = Path.join(__dirname, 'lint', 'jslint', 'with_config');
         Linters.lint({ lintingPath: path, linter: 'jslint' }, function (err, result) {
 
+            expect(err).not.to.exist();
             expect(result).to.include('lint');
 
             var jslintResults = result.lint;
@@ -175,6 +177,7 @@ describe('Linters - jslint', function () {
         var path = Path.join(__dirname, 'lint', 'jslint', 'clean');
         Linters.lint({ lintingPath: path, linter: 'jslint' }, function (err, result) {
 
+            expect(err).not.to.exist();
             expect(result.lint).to.exist();
 
             var jslintResults = result.lint;
@@ -193,6 +196,7 @@ describe('Linters - jslint', function () {
         var path = Path.join(__dirname, 'lint', 'jslint', 'basic');
         Linters.lint({ lintingPath: path, linter: 'jslint', 'lint-options': lintOptions }, function (err, result) {
 
+            expect(err).not.to.exist();
             expect(result).to.include('lint');
 
             var jslintResults = result.lint;
