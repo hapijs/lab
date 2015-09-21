@@ -29,9 +29,9 @@
   },
   "devDependencies": {
     "code": "1.x.x",
-    "cpr": "^0.4.2",
+    "cpr": "0.4.x",
     "lab-event-reporter": "1.x.x",
-    "rimraf": "^2.4.3"
+    "rimraf": "2.4.x"
   },
   "bin": {
     "lab": "./bin/lab"
