@@ -2,23 +2,24 @@
 
 if (process.env.ROOT_SPAWN) {
     require('../test_runner/cli').run();
+    return;
 }
-else {
-    var Cpr = require('cpr');
-    var Rimraf = require('rimraf');
 
-    Cpr('./lib', './test_runner', { deleteFirst: true }, function (err) {
+var Cpr = require('cpr');
+var Rimraf = require('rimraf');
 
-        if (err) {
-            throw err;
-        }
+Cpr('./lib', './test_runner', { deleteFirst: true, confirm: true }, function (err) {
 
-        process.env.ROOT_SPAWN = true;
-        require('../test_runner/cli').run();
-    });
+    if (err) {
+        console.error(err);
+        process.exit(1);
+    }
 
-    process.on('exit', function (code) {
+    process.env.ROOT_SPAWN = true;
+    require('../test_runner/cli').run();
+});
 
-        Rimraf.sync('./test_runner');
-    });
-}
+process.on('exit', function (code) {
+
+    Rimraf.sync('./test_runner');
+});
