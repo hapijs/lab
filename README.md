@@ -6,6 +6,7 @@ Node test utility
 
 Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 
+**lab** is sponsored by [nearForm](http://www.nearform.com/).
 
 ## Introduction
 
