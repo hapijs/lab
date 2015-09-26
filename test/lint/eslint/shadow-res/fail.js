@@ -14,6 +14,8 @@ exports.method = function (value) {
 
             return value;
         };
+
+        return inner;
     };
 
     top();
