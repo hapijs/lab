@@ -400,6 +400,75 @@ describe('Reporter', function () {
             });
         });
 
+        it('generates a report with caught error (data plain)', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    var error = new Error('boom');
+                    error.data = 'abc';
+                    throw error;
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n      Additional error data:\n      "abc"\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with caught error (data array)', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    var error = new Error('boom');
+                    error.data = [1, 2, 3];
+                    throw error;
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n      Additional error data:\n      \[1,2,3\]\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                done();
+            });
+        });
+
+        it('generates a report with caught error (data object)', function (done) {
+
+            var script = Lab.script();
+            script.experiment('test', function () {
+
+                script.test('works', function (finished) {
+
+                    var error = new Error('boom');
+                    error.data = { a: 1 };
+                    throw error;
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, function (err, code, output) {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                var result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n      Additional error data:\n          a: 1\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                done();
+            });
+        });
+
         it('generates a report with plain Error', function (done) {
 
             var script = Lab.script();
