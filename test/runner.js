@@ -640,7 +640,7 @@ describe('Runner', function () {
         });
     });
 
-    it('reports errors with shared event emitters', function (done) {
+    it('reports emitter handler errors in correct location', function (done) {
 
         var script = Lab.script();
         var EventEmitter = require('events').EventEmitter;
@@ -668,18 +668,17 @@ describe('Runner', function () {
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
+        Lab.report(script, { output: false, assert: {}, colors: false }, function (err, code, output) {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
+            expect(output).to.match(/shared test 1:\s+assertion failed !/);
             expect(output).to.contain('1 of 1 tests failed');
-            expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test"');
-            expect(output).to.contain('assertion failed !');
             done();
         });
     });
 
-    it('reports errors with shared event emitters and nested experiments', function (done) {
+    it('reports multiple emitter handler errors in correct locations', function (done) {
 
         var script = Lab.script();
         var EventEmitter = require('events').EventEmitter;
@@ -707,232 +706,316 @@ describe('Runner', function () {
             });
 
             script.experiment('nested test', function () {
-
-                script.test('2', function (testDone) {
+                script.beforeEach(function (testDone) {
 
                     shared.on('something', function () {
 
-                        throw new Error('assertion failed !');
+                        testDone();
+                        throw new Error('assertion failed 2 !');
                     });
                     shared.emit('whatever');
                 });
-            });
-        });
 
-        Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            expect(output).to.contain('2 of 2 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each shared test"/g)).to.have.length(4);
-            expect(output.match(/assertion failed !/g)).to.have.length(4);
-            done();
-        });
-    });
-
-    it('reports errors with shared event emitters and nested experiments with a single deep failure', function (done) {
-
-        var script = Lab.script();
-        var EventEmitter = require('events').EventEmitter;
-
-        script.experiment('shared test', function () {
-
-            var shared;
-            script.beforeEach(function (testDone) {
-
-                shared = new EventEmitter();
-                shared.on('whatever', function () {
-
-                    this.emit('something');
-                });
-                testDone();
-            });
-
-            script.test('1', function (testDone) {
-
-                shared.on('something', function () {
+                script.test('2', function (testDone) {
 
                     testDone();
                 });
+            });
+        });
+
+
+        Lab.report(script, { output: false, assert: {}, colors: false }, function (err, code, output) {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/shared test 1:[^\w]*assertion failed !/);
+            expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test nested test" (error): assertion failed 2 !');
+            expect(output).to.contain('1 of 2 tests failed');
+            done();
+        });
+    });
+
+    it('reports emitter handler errors in correct location in parallel', function (done) {
+
+        var script = Lab.script();
+        var EventEmitter = require('events').EventEmitter;
+
+        script.experiment('shared test', function () {
+
+            var shared;
+            script.beforeEach(function (testDone) {
+
+                shared = new EventEmitter();
+                shared.on('whatever', function () {
+
+                    this.emit('something');
+                });
+                testDone();
+            });
+
+            script.test('1', function (testDone) {
+
+                shared.on('something', function () {
+
+                    throw new Error('assertion failed !');
+                });
+                shared.emit('whatever');
+            });
+        });
+
+        Lab.report(script, { output: false, assert: {}, colors: false, parallel: true }, function (err, code, output) {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/shared test 1:\s+assertion failed !/);
+            expect(output).to.contain('1 of 1 tests failed');
+            done();
+        });
+    });
+
+    it('reports multiple emitter handler errors in correct locations in parallel', function (done) {
+
+        var script = Lab.script();
+        var EventEmitter = require('events').EventEmitter;
+
+        script.experiment('shared test', function () {
+
+            var shared;
+            script.beforeEach(function (testDone) {
+
+                shared = new EventEmitter();
+                shared.on('whatever', function () {
+
+                    this.emit('something');
+                });
+                testDone();
+            });
+
+            script.test('1', function (testDone) {
+
+                shared.on('something', function () {
+
+                    throw new Error('assertion failed !');
+                });
                 shared.emit('whatever');
             });
 
             script.experiment('nested test', function () {
-
-                script.test('2', function (testDone) {
+                script.beforeEach(function (testDone) {
 
                     shared.on('something', function () {
 
-                        throw new Error('assertion failed !');
+                        testDone();
+                        throw new Error('assertion failed 2 !');
                     });
                     shared.emit('whatever');
                 });
+
+                script.test('2', function (testDone) {
+
+                    testDone();
+                });
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
+
+        Lab.report(script, { output: false, assert: {}, colors: false, parallel: true }, function (err, code, output) {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
+            expect(output).to.match(/shared test 1:[^\w]*assertion failed !/);
+            expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test nested test" (error): assertion failed 2 !');
             expect(output).to.contain('1 of 2 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each shared test"/g)).to.have.length(2);
-            expect(output.match(/assertion failed !/g)).to.have.length(2);
             done();
         });
     });
 
-    it('reports errors with shared event emitters in parallel', function (done) {
+    it('reports emitter emit errors in correct location', function (done) {
 
         var script = Lab.script();
         var EventEmitter = require('events').EventEmitter;
 
-        script.experiment('parallel shared test', { parallel: true }, function () {
+        script.experiment('shared test', function () {
 
             var shared;
             script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
-                shared.on('foo', function () {
+                shared.on('whatever', function () {
 
-                    this.emit('bar');
+                    this.emit('something');
                 });
-                shared.on('beep', function () {
-
-                    this.emit('boop');
-                });
-
-                setTimeout(testDone, 100);
-
-                // done();
+                testDone();
             });
 
             script.test('1', function (testDone) {
 
-                shared.on('bar', function () {
+                shared.on('something', function () {
 
-                    throw new Error('foo failed !');
+                    shared.emit('error', new Error('assertion failed !'));
                 });
-
-                setTimeout(function () {
-
-                    shared.emit('foo');
-                }, 50);
-            });
-
-            script.test('2', function (testDone) {
-
-                shared.on('boop', function () {
-
-                    throw new Error('beep failed !');
-                });
-
-                setTimeout(function () {
-
-                    shared.emit('beep');
-                }, 100);
+                shared.emit('whatever');
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
+        Lab.report(script, { output: false, assert: {}, colors: false }, function (err, code, output) {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
-            expect(output).to.contain('2 of 2 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each parallel shared test"/g)).to.have.length(4);
-            expect(output.match(/foo failed/g).length).to.equal(3);
+            expect(output).to.match(/shared test 1:\s+assertion failed !/);
+            expect(output).to.contain('1 of 1 tests failed');
             done();
         });
     });
 
-    it('reports errors with shared event emitters in parallel', function (done) {
+    it('reports multiple emitter emit errors in correct locations', function (done) {
 
         var script = Lab.script();
         var EventEmitter = require('events').EventEmitter;
 
-        script.experiment('parallel shared test', { parallel: true }, function () {
+        script.experiment('shared test', function () {
 
             var shared;
             script.beforeEach(function (testDone) {
 
                 shared = new EventEmitter();
-                shared.on('foo', function () {
+                shared.on('whatever', function () {
 
-                    this.emit('bar');
+                    this.emit('something');
                 });
-                shared.on('beep', function () {
-
-                    this.emit('boop');
-                });
-
-                setTimeout(testDone, 100);
-
-                // done();
+                testDone();
             });
 
             script.test('1', function (testDone) {
 
-                shared.on('bar', function () {
+                shared.on('something', function () {
 
-                    throw new Error('foo failed !');
+                    shared.emit('error', new Error('assertion failed !'));
                 });
-
-                setTimeout(function () {
-
-                    shared.emit('foo');
-                }, 50);
+                shared.emit('whatever');
             });
 
-            script.test('2', function (testDone) {
+            script.experiment('nested test', function () {
+                script.beforeEach(function (testDone) {
 
-                shared.on('boop', function () {
+                    shared.on('something', function () {
 
-                    throw new Error('beep failed !');
+                        testDone();
+                        shared.emit('error', new Error('assertion failed 2 !'));
+                    });
+                    shared.emit('whatever');
                 });
 
-                setTimeout(function () {
+                script.test('2', function (testDone) {
 
-                    shared.emit('beep');
-                }, 100);
-            });
-
-            script.experiment('parallel shared test', function () {
-
-                script.test('3', function (testDone) {
-
-                    shared.on('bar', function () {
-
-                        throw new Error('foo failed !');
-                    });
-
-                    setTimeout(function () {
-
-                        shared.emit('foo');
-                    }, 100);
-                });
-
-                script.test('4', function (testDone) {
-
-                    shared.on('boop', function () {
-
-                        throw new Error('beep failed !');
-                    });
-
-                    setTimeout(function () {
-
-                        shared.emit('beep');
-                    }, 50);
+                    testDone();
                 });
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, function (err, code, output) {
+
+        Lab.report(script, { output: false, assert: {}, colors: false }, function (err, code, output) {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
-            expect(output).to.contain('4 of 4 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each parallel shared test"/g)).to.have.length(8);
-            expect(output.match(/foo failed/g).length).to.equal(3);
-            expect(output.match(/beep failed/g).length).to.equal(3);
+            expect(output).to.match(/shared test 1:[^\w]*assertion failed !/);
+            expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test nested test" (error): assertion failed 2 !');
+            expect(output).to.contain('1 of 2 tests failed');
+            done();
+        });
+    });
+
+    it('reports emitter emit errors in correct location in parallel', function (done) {
+
+        var script = Lab.script();
+        var EventEmitter = require('events').EventEmitter;
+
+        script.experiment('shared test', function () {
+
+            var shared;
+            script.beforeEach(function (testDone) {
+
+                shared = new EventEmitter();
+                shared.on('whatever', function () {
+
+                    this.emit('something');
+                });
+                testDone();
+            });
+
+            script.test('1', function (testDone) {
+
+                shared.on('something', function () {
+
+                    shared.emit('error', new Error('assertion failed !'));
+                });
+                shared.emit('whatever');
+            });
+        });
+
+        Lab.report(script, { output: false, assert: {}, colors: false, parallel: true }, function (err, code, output) {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/shared test 1:\s+assertion failed !/);
+            expect(output).to.contain('1 of 1 tests failed');
+            done();
+        });
+    });
+
+    it('reports multiple emitter emit errors in correct locations in parallel', function (done) {
+
+        var script = Lab.script();
+        var EventEmitter = require('events').EventEmitter;
+
+        script.experiment('shared test', function () {
+
+            var shared;
+            script.beforeEach(function (testDone) {
+
+                shared = new EventEmitter();
+                shared.on('whatever', function () {
+
+                    this.emit('something');
+                });
+                testDone();
+            });
+
+            script.test('1', function (testDone) {
+
+                shared.on('something', function () {
+
+                    shared.emit('error', new Error('assertion failed !'));
+                });
+                shared.emit('whatever');
+            });
+
+            script.experiment('nested test', function () {
+                script.beforeEach(function (testDone) {
+
+                    shared.on('something', function () {
+
+                        testDone();
+                        shared.emit('error', new Error('assertion failed 2 !'));
+                    });
+                    shared.emit('whatever');
+                });
+
+                script.test('2', function (testDone) {
+
+                    testDone();
+                });
+            });
+        });
+
+
+        Lab.report(script, { output: false, assert: {}, colors: false, parallel: true }, function (err, code, output) {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/shared test 1:[^\w]*assertion failed !/);
+            expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test nested test" (error): assertion failed 2 !');
+            expect(output).to.contain('1 of 2 tests failed');
             done();
         });
     });

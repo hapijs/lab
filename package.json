@@ -13,6 +13,7 @@
   "dependencies": {
     "bossy": "1.x.x",
     "diff": "2.x.x",
+    "emitter-domain": "^1.0.1",
     "eslint": "1.5.x",
     "eslint-config-hapi": "3.x.x",
     "eslint-plugin-hapi": "1.x.x",
