@@ -49,10 +49,10 @@ describe('Coverage', function () {
         Test.method(1, 2, 3);
 
         var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
-        expect(Math.floor(cov.percent)).to.equal(59);
-        expect(cov.sloc).to.equal(47);
+        expect(Math.floor(cov.percent)).to.equal(62);
+        expect(cov.sloc).to.equal(51);
         expect(cov.misses).to.equal(19);
-        expect(cov.hits).to.equal(28);
+        expect(cov.hits).to.equal(32);
         done();
     });
 
