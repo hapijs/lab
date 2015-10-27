@@ -59,6 +59,10 @@ exports.method = function (a, b, c) {
     for (var k in j) {
         ++l;
     }
+    
+    for (var o of j) {      
+        ++l;
+    }
 
     var m = (a ? b : c) || (c ? d : e);
 
