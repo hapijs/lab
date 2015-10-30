@@ -1,3 +1,5 @@
+'use strict';
+
 // Load modules
 
 var Path = require('path');
@@ -29,8 +31,8 @@ describe('Linters - eslint', function () {
             var checkedFile = eslintResults[0];
             expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
             expect(checkedFile.errors).to.deep.include([
-                { line: 11, severity: 'ERROR', message: 'semi - Missing semicolon.' },
-                { line: 12, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+                { line: 13, severity: 'ERROR', message: 'semi - Missing semicolon.' },
+                { line: 14, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
             ]);
 
             done();
@@ -50,8 +52,8 @@ describe('Linters - eslint', function () {
             var checkedFile = eslintResults[0];
             expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
             expect(checkedFile.errors).to.deep.include([
-                { line: 12, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }]);
-            expect(checkedFile.errors).to.not.deep.include({ line: 6, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });
+                { line: 14, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }]);
+            expect(checkedFile.errors).to.not.deep.include({ line: 8, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });
             done();
         });
     });
@@ -139,10 +141,9 @@ describe('Linters - jslint', function () {
             var checkedFile = jslintResults[0];
             expect(checkedFile).to.include({ filename: 'fail.js' });
             expect(checkedFile.errors).to.deep.include([
-                { line: 10, severity: 'ERROR', message: 'Use spaces, not tabs.' },
-                { line: 10, severity: 'ERROR', message: 'Expected \'use strict\' before \'return\'.' },
-                { line: 11, severity: 'ERROR', message: 'Expected \';\' and instead saw \'}\'.' },
-                { line: 11, severity: 'ERROR', message: 'Stopping.' }
+                { line: 12, severity: 'ERROR', message: 'Use spaces, not tabs.' },
+                { line: 13, severity: 'ERROR', message: 'Expected \';\' and instead saw \'}\'.' },
+                { line: 13, severity: 'ERROR', message: 'Stopping.' }
             ]);
 
             done();
@@ -163,9 +164,8 @@ describe('Linters - jslint', function () {
             var checkedFile = jslintResults[0];
             expect(checkedFile).to.include({ filename: 'fail.js' });
             expect(checkedFile.errors).to.deep.include([
-                { line: 5, severity: 'ERROR', message: 'Unused \'internals\'.' },
-                { line: 10, severity: 'ERROR', message: 'Expected \'use strict\' before \'var\'.' },
-                { line: 11, severity: 'ERROR', message: 'Unused \'myObject\'.' }
+                { line: 7, severity: 'ERROR', message: 'Unused \'internals\'.' },
+                { line: 13, severity: 'ERROR', message: 'Unused \'myObject\'.' }
             ]);
             expect(checkedFile.errors).to.not.deep.include({ line: 14, severity: 'ERROR', message: 'Unexpected \'eval\'.' });
             done();

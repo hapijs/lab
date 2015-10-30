@@ -1,3 +1,5 @@
+'use strict';
+
 // Load modules
 
 var Crypto = require('crypto');
@@ -686,8 +688,8 @@ describe('Reporter', function () {
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console') }, function (err, code, output) {
 
                 expect(err).not.to.exist();
-                expect(output).to.contain('Coverage: 78.95% (4/19)');
-                expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 12, 15, 16, 19');
+                expect(output).to.contain('Coverage: 80.95% (4/21)');
+                expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
                 expect(output).to.not.contain('console-full');
                 done();
             });
@@ -911,7 +913,7 @@ describe('Reporter', function () {
 
                 script.afterEach(function (testDone) {
 
-                    testDone('there was an error in the afterEach function');
+                    testDone(new Error('there was an error in the afterEach function'));
                 });
 
                 script.test('works', function (testDone) {
@@ -1108,7 +1110,7 @@ describe('Reporter', function () {
                 expect(result.tests.group[1].title).to.equal('fails');
                 expect(result.tests.group[1].err).to.equal('Expected true to equal specified value');
                 expect(result.tests.group[2].title).to.equal('fails with non-error');
-                expect(result.tests.group[2].err).to.equal(true);
+                expect(result.tests.group[2].err).to.equal('Non Error object received or caught');
                 expect(result.leaks.length).to.equal(0);
                 expect(result.duration).to.exist();
                 expect(result.errors).to.have.length(1);
@@ -1163,7 +1165,7 @@ describe('Reporter', function () {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('<div class="stats medium">');
-                expect(output).to.contain('<span class="cov medium">69.23</span>');
+                expect(output).to.contain('<span class="cov medium">71.43</span>');
                 delete global.__$$testCovHtml;
                 done();
             });
@@ -1233,15 +1235,15 @@ describe('Reporter', function () {
                     .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;."></span>')
                     .and.to.contain('<span class="lint-errors low">8</span>')
                     .and.to.contain('<span class="lint-warnings low">1</span>')
-                    .and.to.contain('<li class="lint-entry">L11 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
-                    .and.to.contain('<li class="lint-entry">L12 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
                     .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
-                    .and.to.contain('<li class="lint-entry">L16 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
-                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
-                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
-                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
-                    .and.to.contain('<li class="lint-entry">L19 - <span class="level-ERROR">ERROR</span> - semi - Missing semicolon.</li>')
-                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>');
+                    .and.to.contain('<li class="lint-entry">L14 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L15 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L18 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
+                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
+                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
+                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - semi - Missing semicolon.</li>')
+                    .and.to.contain('<li class="lint-entry">L23 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>');
                 delete global.__$$testCovHtml;
                 done();
             });
@@ -1319,7 +1321,7 @@ describe('Reporter', function () {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                expect(output).to.contain('<div>abc</div>');
+                expect(output).to.contain('Non Error object received or caught');
                 done();
             });
         });
@@ -1557,8 +1559,8 @@ describe('Reporter', function () {
 
                 expect(output).to.contain('coverage/html.js');
                 expect(output).to.contain('DA:1,1');                    // Check that line is marked as covered
-                expect(output).to.contain('LF:13');                     // Total Lines
-                expect(output).to.contain('LH:9');                      // Lines Hit
+                expect(output).to.contain('LF:14');                     // Total Lines
+                expect(output).to.contain('LH:10');                     // Lines Hit
                 expect(output).to.contain('end_of_record');
 
                 done();
@@ -1619,7 +1621,7 @@ describe('Reporter', function () {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('clover.test.coverage');
-                expect(output).to.contain('<line num="9" count="1" type="stmt"/>');
+                expect(output).to.contain('<line num="11" count="1" type="stmt"/>');
                 delete global.__$$testCovHtml;
                 done();
             });

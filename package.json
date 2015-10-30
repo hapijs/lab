@@ -18,7 +18,7 @@
     "eslint-plugin-hapi": "1.x.x",
     "espree": "2.x.x",
     "handlebars": "4.x.x",
-    "hoek": "2.x.x",
+    "hoek": "3.x.x",
     "items": "1.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
@@ -28,7 +28,7 @@
     "jslint": "0.9.x"
   },
   "devDependencies": {
-    "code": "1.x.x",
+    "code": "2.x.x",
     "cpr": "0.4.x",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.4.x"

@@ -1,3 +1,5 @@
+'use strict';
+
 // Load modules
 
 var ChildProcess = require('child_process');
@@ -560,7 +562,7 @@ describe('CLI', function () {
             expect(code).to.equal(1);
             expect(signal).to.not.exist();
             expect(output).to.contain('1 tests complete');
-            expect(output).to.contain('Coverage: 96.55% (1/29)');
+            expect(output).to.contain('Coverage: 96.88% (1/32)');
             expect(output).to.contain('test/cli_coverage/missing.js missing coverage on line(s)');
             done();
         });

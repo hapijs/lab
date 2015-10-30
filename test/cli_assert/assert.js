@@ -1,3 +1,5 @@
+'use strict';
+
 // Load modules
 
 var _Lab = require('../../test_runner');

@@ -1,3 +1,5 @@
+'use strict';
+
 // Load modules
 
 var Path = require('path');
@@ -49,10 +51,10 @@ describe('Coverage', function () {
         Test.method(1, 2, 3);
 
         var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
-        expect(Math.floor(cov.percent)).to.equal(62);
-        expect(cov.sloc).to.equal(51);
+        expect(Math.floor(cov.percent)).to.equal(63);
+        expect(cov.sloc).to.equal(52);
         expect(cov.misses).to.equal(19);
-        expect(cov.hits).to.equal(32);
+        expect(cov.hits).to.equal(33);
         done();
     });
 
@@ -121,9 +123,9 @@ describe('Coverage', function () {
 
         var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
         expect(Math.floor(cov.percent)).to.equal(100);
-        expect(cov.sloc).to.equal(15);
+        expect(cov.sloc).to.equal(16);
         expect(cov.misses).to.equal(0);
-        expect(cov.hits).to.equal(15);
+        expect(cov.hits).to.equal(16);
         done();
     });
 

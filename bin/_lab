@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 if (process.env.ROOT_SPAWN) {
     require('../test_runner/cli').run();
     return;

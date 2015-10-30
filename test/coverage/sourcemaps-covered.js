@@ -1,5 +1,5 @@
-"use strict";
-var __moduleName = "basic";
+'use strict';
+var __moduleName = 'basic';
 var internals = {};
 exports.method = function(value) {
   return value;

@@ -1,5 +1,5 @@
-"use strict";
-var __moduleName = "while";
+'use strict';
+var __moduleName = 'while';
 var internals = {};
 exports.method = function(value) {
   while (value) {
