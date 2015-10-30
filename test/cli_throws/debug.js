@@ -1,31 +1,33 @@
+'use strict';
+
 // Load modules
 
-var _Lab = require('../../test_runner');
+const _Lab = require('../../test_runner');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var after = lab.after;
-var describe = lab.describe;
-var it = lab.it;
+const lab = exports.lab = _Lab.script();
+const after = lab.after;
+const describe = lab.describe;
+const it = lab.it;
 
 
-describe('Test CLI domain error debug', function () {
+describe('Test CLI domain error debug', () => {
 
-    after(function (done) {
+    after((done) => {
 
         done();
     });
 
-    it('throws badly', function (done) {
+    it('throws badly', (done) => {
 
-        setTimeout(function () {
+        setTimeout(() => {
 
             throw new Error('throwing later');
         }, 0);

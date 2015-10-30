@@ -1,16 +1,18 @@
+'use strict';
+
 // Load modules
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (value) {
 
-    var top = function (res) {
+    const top = function (res) {
 
-        var inner = function (res) {
+        const inner = function (res) {
 
             return value;
         };

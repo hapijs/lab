@@ -1,24 +1,26 @@
+'use strict';
+
 // Load modules
 
-var _Lab = require('../../test_runner');
+const _Lab = require('../../test_runner');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = _Lab.assertions.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = _Lab.assertions.expect;
 
 
-describe('Test CLI', function () {
+describe('Test CLI', () => {
 
-    it('adds two numbers together', function (done) {
+    it('adds two numbers together', (done) => {
 
         expect(1 + 1).to.equal(2);
         done();

@@ -1,21 +1,23 @@
+'use strict';
+
 // Load modules
 
-var Code = require('code');
-var _Lab = require('../../test_runner');
+const Code = require('code');
+const _Lab = require('../../test_runner');
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
-var env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV;
 
-describe('Test CLI', function () {
+describe('Test CLI', () => {
 
-    it('Node Environment defaults to test', function (done) {
+    it('Node Environment defaults to test', (done) => {
 
         if (process.argv[3] && process.argv[3].indexOf('-e') >= 0) {
             expect(env).to.equal('lab');

@@ -1,6 +1,6 @@
 "use strict";
-var __moduleName = "while";
-var internals = {};
+const __moduleName = "while";
+const internals = {};
 exports.method = function(value) {
   while (value) {
     value = false;

@@ -1,51 +1,53 @@
+'use strict';
+
 // Load modules
 
-var Code = require('code');
-var _Lab = require('../test_runner');
-var Lab = require('../');
+const Code = require('code');
+const _Lab = require('../test_runner');
+const Lab = require('../');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Lab', function () {
+describe('Lab', () => {
 
-    it('creates a script and executes', function (done) {
+    it('creates a script and executes', (done) => {
 
-        var a = 0;
-        var script = Lab.script({ schedule: false });
-        script.experiment('test', function () {
+        let a = 0;
+        const script = Lab.script({ schedule: false });
+        script.experiment('test', () => {
 
-            script.before(function (testDone) {
+            script.before((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.test('value of a', function (testDone) {
+            script.test('value of a', (testDone) => {
 
                 expect(a).to.equal(1);
                 testDone();
             });
 
-            script.after(function (testDone) {
+            script.after((testDone) => {
 
                 ++a;
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(a).to.equal(2);
             expect(notebook.tests).to.have.length(1);
@@ -55,32 +57,32 @@ describe('Lab', function () {
         });
     });
 
-    it('creates a script and executes (BDD)', function (done) {
+    it('creates a script and executes (BDD)', (done) => {
 
-        var a = 0;
-        var script = Lab.script({ schedule: false });
-        script.describe('test', function () {
+        let a = 0;
+        const script = Lab.script({ schedule: false });
+        script.describe('test', () => {
 
-            script.before(function (testDone) {
+            script.before((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.it('value of a', function (testDone) {
+            script.it('value of a', (testDone) => {
 
                 expect(a).to.equal(1);
                 testDone();
             });
 
-            script.after(function (testDone) {
+            script.after((testDone) => {
 
                 ++a;
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(a).to.equal(2);
             expect(notebook.tests).to.have.length(1);
@@ -89,32 +91,32 @@ describe('Lab', function () {
         });
     });
 
-    it('creates a script and executes (TDD)', function (done) {
+    it('creates a script and executes (TDD)', (done) => {
 
-        var a = 0;
-        var script = Lab.script({ schedule: false });
-        script.suite('test', function () {
+        let a = 0;
+        const script = Lab.script({ schedule: false });
+        script.suite('test', () => {
 
-            script.before(function (testDone) {
+            script.before((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.test('value of a', function (testDone) {
+            script.test('value of a', (testDone) => {
 
                 expect(a).to.equal(1);
                 testDone();
             });
 
-            script.after(function (testDone) {
+            script.after((testDone) => {
 
                 ++a;
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(a).to.equal(2);
             expect(notebook.tests).to.have.length(1);
@@ -123,53 +125,53 @@ describe('Lab', function () {
         });
     });
 
-    it('executes beforeEach and afterEach', function (done) {
+    it('executes beforeEach and afterEach', (done) => {
 
-        var a = 0;
-        var b = 0;
-        var script = Lab.script({ schedule: false });
-        script.experiment('test', function () {
+        let a = 0;
+        let b = 0;
+        const script = Lab.script({ schedule: false });
+        script.experiment('test', () => {
 
-            script.before(function (testDone) {
+            script.before((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.beforeEach(function (testDone) {
+            script.beforeEach((testDone) => {
 
                 ++b;
                 testDone();
             });
 
-            script.test('value of a', function (testDone) {
+            script.test('value of a', (testDone) => {
 
                 expect(a).to.equal(1);
                 expect(b).to.equal(1);
                 testDone();
             });
 
-            script.test('value of b', function (testDone) {
+            script.test('value of b', (testDone) => {
 
                 expect(a).to.equal(1);
                 expect(b).to.equal(3);
                 testDone();
             });
 
-            script.after(function (testDone) {
+            script.after((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.afterEach(function (testDone) {
+            script.afterEach((testDone) => {
 
                 ++b;
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(a).to.equal(2);
             expect(b).to.equal(4);
@@ -179,77 +181,77 @@ describe('Lab', function () {
         });
     });
 
-    it('executes multiple pre/post processors', function (done) {
+    it('executes multiple pre/post processors', (done) => {
 
-        var a = 0;
-        var b = 0;
-        var script = Lab.script({ schedule: false });
-        script.experiment('test', function () {
+        let a = 0;
+        let b = 0;
+        const script = Lab.script({ schedule: false });
+        script.experiment('test', () => {
 
-            script.before(function (testDone) {
-
-                ++a;
-                testDone();
-            });
-
-            script.before(function (testDone) {
+            script.before((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.beforeEach(function (testDone) {
+            script.before((testDone) => {
+
+                ++a;
+                testDone();
+            });
+
+            script.beforeEach((testDone) => {
 
                 ++b;
                 testDone();
             });
 
-            script.beforeEach(function (testDone) {
+            script.beforeEach((testDone) => {
 
                 ++b;
                 testDone();
             });
 
-            script.test('value of a', function (testDone) {
+            script.test('value of a', (testDone) => {
 
                 expect(a).to.equal(2);
                 expect(b).to.equal(2);
                 testDone();
             });
 
-            script.test('value of b', function (testDone) {
+            script.test('value of b', (testDone) => {
 
                 expect(a).to.equal(2);
                 expect(b).to.equal(6);
                 testDone();
             });
 
-            script.after(function (testDone) {
+            script.after((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.after(function (testDone) {
+            script.after((testDone) => {
 
                 ++a;
                 testDone();
             });
 
-            script.afterEach(function (testDone) {
+            script.afterEach((testDone) => {
 
                 ++b;
                 testDone();
             });
 
-            script.afterEach(function (testDone) {
+            script.afterEach((testDone) => {
 
                 ++b;
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(a).to.equal(4);
             expect(b).to.equal(8);
@@ -259,19 +261,19 @@ describe('Lab', function () {
         });
     });
 
-    it('reports errors', function (done) {
+    it('reports errors', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test', () => {
 
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 expect(0).to.equal(1);
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(1);
             expect(notebook.failures).to.equal(1);
@@ -279,26 +281,26 @@ describe('Lab', function () {
         });
     });
 
-    it('multiple experiments', function (done) {
+    it('multiple experiments', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].id).to.equal(1);
@@ -308,44 +310,44 @@ describe('Lab', function () {
         });
     });
 
-    it('nested experiments', function (done) {
+    it('nested experiments', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('a', function (testDone) {
+            script.test('a', (testDone) => {
 
                 testDone();
             });
 
-            script.experiment('test2', function () {
+            script.experiment('test2', () => {
 
-                script.test('b', function (testDone) {
+                script.test('b', (testDone) => {
 
                     testDone();
                 });
             });
 
-            script.test('c', function (testDone) {
+            script.test('c', (testDone) => {
 
                 testDone();
             });
 
-            script.experiment('test3', function () {
+            script.experiment('test3', () => {
 
-                script.test('d', function (testDone) {
+                script.test('d', (testDone) => {
 
                     testDone();
                 });
             });
 
-            script.test('e', function (testDone) {
+            script.test('e', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(5);
             expect(notebook.tests[0].id).to.equal(1);
@@ -355,26 +357,26 @@ describe('Lab', function () {
         });
     });
 
-    it('skips experiment', function (done) {
+    it('skips experiment', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', { skip: true }, function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', { skip: true }, () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -384,26 +386,26 @@ describe('Lab', function () {
         });
     });
 
-    it('skips experiment using helper (2 args)', function (done) {
+    it('skips experiment using helper (2 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment.skip('test2', function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment.skip('test2', () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -413,26 +415,26 @@ describe('Lab', function () {
         });
     });
 
-    it('skips experiment using helper (3 args)', function (done) {
+    it('skips experiment using helper (3 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment.skip('test2', {}, function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment.skip('test2', {}, () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -442,26 +444,26 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one experiment (only first)', function (done) {
+    it('runs only one experiment (only first)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', { only: true }, function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', { only: true }, () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -471,26 +473,26 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one experiment (only not first)', function (done) {
+    it('runs only one experiment (only not first)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', { only: true }, function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', { only: true }, () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
@@ -500,26 +502,26 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one experiment using helper (2 args)', function (done) {
+    it('runs only one experiment using helper (2 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment.only('test2', function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment.only('test2', () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
@@ -529,26 +531,26 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one experiment using helper (3 args)', function (done) {
+    it('runs only one experiment using helper (3 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment.only('test2', {}, function () {
-
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment.only('test2', {}, () => {
+
+            script.test('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
@@ -558,26 +560,26 @@ describe('Lab', function () {
         });
     });
 
-    it('skips test', function (done) {
+    it('skips test', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', function () {
-
-            script.test('works', { skip: true }, function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', () => {
+
+            script.test('works', { skip: true }, (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -587,26 +589,26 @@ describe('Lab', function () {
         });
     });
 
-    it('skips test using helper (2 args)', function (done) {
+    it('skips test using helper (2 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', function () {
-
-            script.test.skip('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', () => {
+
+            script.test.skip('works', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -616,26 +618,26 @@ describe('Lab', function () {
         });
     });
 
-    it('skips test using helper (3 args)', function (done) {
+    it('skips test using helper (3 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('works', function (testDone) {
-
-                testDone();
-            });
-        });
-
-        script.experiment('test2', function () {
-
-            script.test.skip('works', {}, function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        script.experiment('test2', () => {
+
+            script.test.skip('works', {}, (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -645,23 +647,23 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one test (only first)', function (done) {
+    it('runs only one test (only first)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('a', { only: true }, function (testDone) {
+            script.test('a', { only: true }, (testDone) => {
 
                 testDone();
             });
 
-            script.test('b', function (testDone) {
+            script.test('b', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.not.exist();
@@ -671,23 +673,23 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one test (only not first)', function (done) {
+    it('runs only one test (only not first)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('a', function (testDone) {
+            script.test('a', (testDone) => {
 
                 testDone();
             });
 
-            script.test('b', { only: true }, function (testDone) {
+            script.test('b', { only: true }, (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
@@ -697,23 +699,23 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one test using helper (2 args)', function (done) {
+    it('runs only one test using helper (2 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('a', function (testDone) {
+            script.test('a', (testDone) => {
 
                 testDone();
             });
 
-            script.test.only('b', function (testDone) {
+            script.test.only('b', (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
@@ -723,23 +725,23 @@ describe('Lab', function () {
         });
     });
 
-    it('runs only one test using helper (3 args)', function (done) {
+    it('runs only one test using helper (3 args)', (done) => {
 
-        var script = Lab.script({ schedule: false });
-        script.experiment('test1', function () {
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
 
-            script.test('a', function (testDone) {
+            script.test('a', (testDone) => {
 
                 testDone();
             });
 
-            script.test.only('b', {}, function (testDone) {
+            script.test.only('b', {}, (testDone) => {
 
                 testDone();
             });
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             expect(notebook.tests).to.have.length(2);
             expect(notebook.tests[0].skipped).to.equal(true);
@@ -749,18 +751,18 @@ describe('Lab', function () {
         });
     });
 
-    it('schedules automatic execution', { parallel: false }, function (done) {
+    it('schedules automatic execution', { parallel: false }, (done) => {
 
-        var script = Lab.script();
-        script.experiment('test', function () {
+        const script = Lab.script();
+        script.experiment('test', () => {
 
-            script.test('works', function (testDone) {
+            script.test('works', (testDone) => {
 
                 testDone();
             });
         });
 
-        var orig = process.exit;
+        const orig = process.exit;
         process.exit = function (code) {
 
             process.exit = orig;
@@ -769,40 +771,40 @@ describe('Lab', function () {
         };
     });
 
-    it('throws on invalid functions', function (done) {
+    it('throws on invalid functions', (done) => {
 
-        var script = Lab.script();
+        const script = Lab.script();
 
-        expect(function () {
+        expect(() => {
 
             script.test('a');
         }).not.to.throw();
 
-        expect(function () {
+        expect(() => {
 
-            script.test('a', function () {});
+            script.test('a', () => {});
         }).to.throw('Function for test "a" should take exactly one argument');
 
-        ['before', 'beforeEach', 'after', 'afterEach'].forEach(function (fn) {
+        ['before', 'beforeEach', 'after', 'afterEach'].forEach((fn) => {
 
-            expect(function () {
+            expect(() => {
 
-                script.experiment('exp', function () {
+                script.experiment('exp', () => {
 
                     script[fn]();
                 });
             }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
 
-            expect(function () {
+            expect(() => {
 
-                script.experiment('exp', function () {
+                script.experiment('exp', () => {
 
-                    script[fn](function () {});
+                    script[fn](() => {});
                 });
             }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
         });
 
-        Lab.execute(script, null, null, function (err, notebook) {
+        Lab.execute(script, null, null, (err, notebook) => {
 
             done();
         });

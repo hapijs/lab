@@ -1,34 +1,36 @@
+'use strict';
+
 // Load modules
 
-var Code = require('code');
-var _Lab = require('../../test_runner');
+const Code = require('code');
+const _Lab = require('../../test_runner');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Test CLI Not Only', function () {
+describe('Test CLI Not Only', () => {
 
-    it('should not run', function (done) {
+    it('should not run', (done) => {
 
         throw new Error();
     });
 });
 
 
-describe.only('Test CLI Only', function () {
+describe.only('Test CLI Only', () => {
 
-    it('should run', function (done) {
+    it('should run', (done) => {
 
         done();
     });

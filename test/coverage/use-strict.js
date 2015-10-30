@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 // Load modules
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (value) {

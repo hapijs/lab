@@ -1,66 +1,68 @@
+'use strict';
+
 // Load modules
 
-var Path = require('path');
-var Code = require('code');
-var _Lab = require('../test_runner');
-var Lab = require('../');
+const Path = require('path');
+const Code = require('code');
+const _Lab = require('../test_runner');
+const Lab = require('../');
 
 
 // Declare internals
 
-var internals = {
+const internals = {
     harmonyGlobals: ['Promise', 'Proxy', 'Symbol', 'Map', 'WeakMap', 'Set', 'WeakSet']
 };
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Leaks', function () {
+describe('Leaks', () => {
 
-    it('identifies global leaks', function (done) {
+    it('identifies global leaks', (done) => {
 
         global.abc = 1;
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         delete global.abc;
         expect(leaks.length).to.equal(1);
         done();
     });
 
-    it('identifies global leaks for non-enumerable properties', function (done) {
+    it('identifies global leaks for non-enumerable properties', (done) => {
 
         Object.defineProperty(global, 'abc', { enumerable: false, configurable: true });
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         delete global.abc;
         expect(leaks.length).to.equal(1);
         done();
     });
 
-    it('verifies no leaks', function (done) {
+    it('verifies no leaks', (done) => {
 
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
         done();
     });
 
-    it('ignores DTrace globals', function (done) {
+    it('ignores DTrace globals', (done) => {
 
-        var currentGlobal = global.DTRACE_HTTP_SERVER_RESPONSE;
+        const currentGlobal = global.DTRACE_HTTP_SERVER_RESPONSE;
 
         global.DTRACE_HTTP_SERVER_RESPONSE = 1;
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
         global.DTRACE_HTTP_SERVER_RESPONSE = currentGlobal;
         done();
     });
 
-    it('works with missing DTrace globals', function (done) {
+    it('works with missing DTrace globals', (done) => {
 
         delete global.DTRACE_HTTP_SERVER_RESPONSE;
         delete global.DTRACE_HTTP_CLIENT_REQUEST;
@@ -71,36 +73,36 @@ describe('Leaks', function () {
         delete global.DTRACE_NET_SOCKET_WRITE;
         delete global.DTRACE_NET_SERVER_CONNECTION;
 
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
         done();
     });
 
-    it('ignores Counter globals', function (done) {
+    it('ignores Counter globals', (done) => {
 
         global.COUNTER_NET_SERVER_CONNECTION = 1;
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         delete global.COUNTER_NET_SERVER_CONNECTION;
         expect(leaks.length).to.equal(0);
         done();
     });
 
-    it('ignores Harmony globals', function (done) {
+    it('ignores Harmony globals', (done) => {
 
-        var harmonyGlobals = internals.harmonyGlobals;
+        const harmonyGlobals = internals.harmonyGlobals;
 
-        for (var i = 0; i < harmonyGlobals.length; ++i) {
-            var harmonyGlobal = harmonyGlobals[i];
+        for (let i = 0; i < harmonyGlobals.length; ++i) {
+            const harmonyGlobal = harmonyGlobals[i];
 
             global[harmonyGlobal] = global[harmonyGlobal] || 1;
         }
 
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
-        for (i = 0; i < harmonyGlobals.length; ++i) {
-            harmonyGlobal = harmonyGlobals[i];
+        for (let i = 0; i < harmonyGlobals.length; ++i) {
+            const harmonyGlobal = harmonyGlobals[i];
 
             if (global[harmonyGlobal] === 1) {
                 delete global[harmonyGlobal];
@@ -110,23 +112,23 @@ describe('Leaks', function () {
         done();
     });
 
-    it('handles case where Harmony globals do not exist', function (done) {
+    it('handles case where Harmony globals do not exist', (done) => {
 
-        var harmonyGlobals = internals.harmonyGlobals;
-        var originalValues = {};
+        const harmonyGlobals = internals.harmonyGlobals;
+        const originalValues = {};
 
-        for (var i = 0; i < harmonyGlobals.length; ++i) {
-            var harmonyGlobal = harmonyGlobals[i];
+        for (let i = 0; i < harmonyGlobals.length; ++i) {
+            const harmonyGlobal = harmonyGlobals[i];
 
             originalValues[harmonyGlobal] = global[harmonyGlobal];
             delete global[harmonyGlobal];
         }
 
-        var leaks = Lab.leaks.detect();
+        const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
-        for (i = 0; i < harmonyGlobals.length; ++i) {
-            harmonyGlobal = harmonyGlobals[i];
+        for (let i = 0; i < harmonyGlobals.length; ++i) {
+            const harmonyGlobal = harmonyGlobals[i];
 
             if (originalValues[harmonyGlobal]) {
                 global[harmonyGlobal] = originalValues[harmonyGlobal];
@@ -136,10 +138,10 @@ describe('Leaks', function () {
         done();
     });
 
-    it('identifies custom globals', function (done) {
+    it('identifies custom globals', (done) => {
 
         global.abc = 1;
-        var leaks = Lab.leaks.detect(['abc']);
+        const leaks = Lab.leaks.detect(['abc']);
         delete global.abc;
         expect(leaks.length).to.equal(0);
         done();

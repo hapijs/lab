@@ -1,14 +1,16 @@
+'use strict';
+
 // Load modules
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (a, b, c) {
 
-    var d = 0;
+    let d = 0;
     if (a) {
         d += 1;
     }
@@ -16,9 +18,9 @@ exports.method = function (a, b, c) {
         d += 1;
     }
 
-    var e = (a ? b : c);
+    const e = (a ? b : c);
 
-    var f;
+    let f;
     if (e)
         f = 0;
     else
@@ -26,13 +28,13 @@ exports.method = function (a, b, c) {
 
     while (false)++f;
 
-    var g = 0;
+    let g = 0;
     label:
         while (g > 3) { ++g; }
 
-    var h = false || a;
+    const h = false || a;
 
-    for (var i = 0;
+    for (let i = 0;
         i < 3;
         ++i) {
 
@@ -47,24 +49,24 @@ exports.method = function (a, b, c) {
         ++a;
     }
 
-    var n = false ?
+    const n = false ?
         a
         +
         b
         :
         0;
 
-    var j = [1, 2, 3];
-    var l = 0;
-    for (var k in j) {
+    const j = [1, 2, 3];
+    let l = 0;
+    for (let k in j) {
         ++l;
     }
     
-    for (var o of j) {      
+    for (let o of j) {      
         ++l;
     }
 
-    var m = (a ? b : c) || (c ? d : e);
+    const m = (a ? b : c) || (c ? d : e);
 
     return d + (a || b || c);
 };

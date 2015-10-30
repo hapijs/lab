@@ -1,14 +1,16 @@
+'use strict';
+
 // Load modules
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (a, b, c) {
 
-	var d = 0;
+	let d = 0;
 	if (a) {
 		d += 1;
 	}

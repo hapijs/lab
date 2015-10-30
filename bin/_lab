@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 
+'use strict';
+
 if (process.env.ROOT_SPAWN) {
     require('../test_runner/cli').run();
     return;
 }
 
-var Cpr = require('cpr');
-var Rimraf = require('rimraf');
+const Cpr = require('cpr');
+const Rimraf = require('rimraf');
 
-Cpr('./lib', './test_runner', { deleteFirst: true, confirm: true }, function (err) {
+Cpr('./lib', './test_runner', { deleteFirst: true, confirm: true }, (err) => {
 
     if (err) {
         console.error(err);
@@ -19,7 +21,7 @@ Cpr('./lib', './test_runner', { deleteFirst: true, confirm: true }, function (er
     require('../test_runner/cli').run();
 });
 
-process.on('exit', function (code) {
+process.on('exit', (code) => {
 
     Rimraf.sync('./test_runner');
 });

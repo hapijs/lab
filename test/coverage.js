@@ -1,73 +1,75 @@
+'use strict';
+
 // Load modules
 
-var Path = require('path');
-var Code = require('code');
-var _Lab = require('../test_runner');
-var Lab = require('../');
+const Path = require('path');
+const Code = require('code');
+const _Lab = require('../test_runner');
+const Lab = require('../');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Coverage', function () {
+describe('Coverage', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
 
-    it('instruments and measures coverage', function (done) {
+    it('instruments and measures coverage', (done) => {
 
-        var Test = require('./coverage/basic');
+        const Test = require('./coverage/basic');
         Test.method(1);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/basic') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/basic') });
         expect(cov.percent).to.equal(100);
         done();
     });
 
-    it('measures coverage on an empty return statement', function (done) {
+    it('measures coverage on an empty return statement', (done) => {
 
-        var Test = require('./coverage/return');
+        const Test = require('./coverage/return');
         Test.method();
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/return') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/return') });
         expect(cov.percent).to.equal(100);
         done();
     });
 
-    it('identifies lines with partial coverage', function (done) {
+    it('identifies lines with partial coverage', (done) => {
 
-        var Test = require('./coverage/partial');
+        const Test = require('./coverage/partial');
         Test.method(1, 2, 3);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
-        expect(Math.floor(cov.percent)).to.equal(62);
-        expect(cov.sloc).to.equal(51);
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
+        expect(Math.floor(cov.percent)).to.equal(63);
+        expect(cov.sloc).to.equal(52);
         expect(cov.misses).to.equal(19);
-        expect(cov.hits).to.equal(32);
+        expect(cov.hits).to.equal(33);
         done();
     });
 
-    it('identifies lines with partial coverage when having external sourcemap', function (done) {
+    it('identifies lines with partial coverage when having external sourcemap', (done) => {
 
-        var Test = require('./coverage/sourcemaps-external');
+        const Test = require('./coverage/sourcemaps-external');
         Test.method(false);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-external'), sourcemaps: true });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-external'), sourcemaps: true });
 
-        var source = cov.files[0].source;
-        var missedLines = [];
-        Object.keys(source).forEach(function (lineNumber) {
+        const source = cov.files[0].source;
+        const missedLines = [];
+        Object.keys(source).forEach((lineNumber) => {
 
-            var line = source[lineNumber];
+            const line = source[lineNumber];
             if (line.miss) {
                 missedLines.push({
                     filename: line.originalFilename,
@@ -85,18 +87,18 @@ describe('Coverage', function () {
         done();
     });
 
-    it('identifies lines with partial coverage when having inline sourcemap', function (done) {
+    it('identifies lines with partial coverage when having inline sourcemap', (done) => {
 
-        var Test = require('./coverage/sourcemaps-inline');
+        const Test = require('./coverage/sourcemaps-inline');
         Test.method(false);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-inline'), sourcemaps: true });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-inline'), sourcemaps: true });
 
-        var source = cov.files[0].source;
-        var missedLines = [];
-        Object.keys(source).forEach(function (lineNumber) {
+        const source = cov.files[0].source;
+        const missedLines = [];
+        Object.keys(source).forEach((lineNumber) => {
 
-            var line = source[lineNumber];
+            const line = source[lineNumber];
             if (line.miss) {
                 missedLines.push({
                     filename: line.originalFilename,
@@ -114,44 +116,44 @@ describe('Coverage', function () {
         done();
     });
 
-    it('bypasses marked code', function (done) {
+    it('bypasses marked code', (done) => {
 
-        var Test = require('./coverage/bypass');
+        const Test = require('./coverage/bypass');
         Test.method(1, 2, 3);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
         expect(Math.floor(cov.percent)).to.equal(100);
-        expect(cov.sloc).to.equal(15);
+        expect(cov.sloc).to.equal(16);
         expect(cov.misses).to.equal(0);
-        expect(cov.hits).to.equal(15);
+        expect(cov.hits).to.equal(16);
         done();
     });
 
-    it('ignores non-matching files', function (done) {
+    it('ignores non-matching files', (done) => {
 
-        var Test = require('./coverage/exclude/ignore');
+        const Test = require('./coverage/exclude/ignore');
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/exclude/ignore') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/exclude/ignore') });
         expect(Math.floor(cov.percent)).to.equal(0);
         expect(cov.files).to.have.length(0);
         done();
     });
 
-    it('measures missing while statement coverage', function (done) {
+    it('measures missing while statement coverage', (done) => {
 
-        var Test = require('./coverage/while');
+        const Test = require('./coverage/while');
         Test.method(false);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/while') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/while') });
         expect(cov.percent).to.be.lessThan(100);
         done();
     });
 
-    it('measures when errors are thrown', function (done) {
+    it('measures when errors are thrown', (done) => {
 
-        var Test = require('./coverage/throws');
+        const Test = require('./coverage/throws');
 
-        var fn = function () {
+        const fn = function () {
 
             Test.method(true);
             Test.method(false);
@@ -159,25 +161,25 @@ describe('Coverage', function () {
 
         expect(fn).to.throw(Error);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/throws') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/throws') });
         expect(cov.percent).to.equal(100);
         done();
     });
 
-    it('retains original value of conditional result', function (done) {
+    it('retains original value of conditional result', (done) => {
 
-        var Test = require('./coverage/conditional');
-        var value = { a: 1 };
+        const Test = require('./coverage/conditional');
+        const value = { a: 1 };
         expect(Test.method(value)).to.equal(value);
         done();
     });
 
-    it('should not change use strict instructions', function (done) {
+    it('should not change use strict instructions', (done) => {
 
-        var Test = require('./coverage/use-strict.js');
+        const Test = require('./coverage/use-strict.js');
         expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
 
-        var testFile = Path.join(__dirname, 'coverage/use-strict.js');
+        const testFile = Path.join(__dirname, 'coverage/use-strict.js');
         expect(Test.singleLine.toString()).to.contain('"use strict"; global.__$$labCov._line(\'' + testFile + '\',19);return value;');
 
         expect(Test.shouldFail).to.throw('unknownvar is not defined');
@@ -185,19 +187,19 @@ describe('Coverage', function () {
         done();
     });
 
-    it('should work with loop labels', function (done) {
+    it('should work with loop labels', (done) => {
 
-        var Test = require('./coverage/loop-labels.js');
+        const Test = require('./coverage/loop-labels.js');
         expect(Test.method()).to.deep.equal([1, 0]);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/loop-labels') });
-        var source = cov.files[0].source;
-        var missedChunks = [];
-        Object.keys(source).forEach(function (lineNumber) {
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/loop-labels') });
+        const source = cov.files[0].source;
+        const missedChunks = [];
+        Object.keys(source).forEach((lineNumber) => {
 
-            var line = source[lineNumber];
+            const line = source[lineNumber];
             if (line.miss) {
-                missedChunks.push.apply(missedChunks, line.chunks.filter(function (chunk) {
+                missedChunks.push.apply(missedChunks, line.chunks.filter((chunk) => {
 
                     return !!chunk.miss;
                 }));
@@ -209,19 +211,19 @@ describe('Coverage', function () {
         done();
     });
 
-    describe('#analyze', function () {
+    describe('#analyze', () => {
 
-        it('sorts file paths in report', function (done) {
+        it('sorts file paths in report', (done) => {
 
-            var files = global.__$$labCov.files;
-            var paths = ['/a/b', '/a/b/c', '/a/c/b', '/a/c', '/a/b/c', '/a/b/a'];
-            paths.forEach(function (path) {
+            const files = global.__$$labCov.files;
+            const paths = ['/a/b', '/a/b/c', '/a/c/b', '/a/c', '/a/b/c', '/a/b/a'];
+            paths.forEach((path) => {
 
                 files[path] = { source: [] };
             });
 
-            var cov = Lab.coverage.analyze({ coveragePath: '/a' });
-            var sorted = cov.files.map(function (file) {
+            const cov = Lab.coverage.analyze({ coveragePath: '/a' });
+            const sorted = cov.files.map((file) => {
 
                 return file.filename;
             });

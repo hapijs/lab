@@ -1,26 +1,28 @@
+'use strict';
+
 // Load modules
 
-var _Lab = require('../../../test_runner');
-var Include = require('../include/include');
+const _Lab = require('../../../test_runner');
+const Include = require('../include/include');
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = _Lab.assertions.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = _Lab.assertions.expect;
 
 
-describe('Test CLI', function () {
+describe('Test CLI', () => {
 
-    it('returns the specified value', function (done) {
+    it('returns the specified value', (done) => {
 
-        var result = Include.method('test');
+        const result = Include.method('test');
         expect(result).to.equal('test');
         done();
     });
