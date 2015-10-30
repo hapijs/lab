@@ -2,26 +2,26 @@
 
 // Load modules
 
-var Code = require('code');
-var _Lab = require('../../test_runner');
+const Code = require('code');
+const _Lab = require('../../test_runner');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Test CLI', function () {
+describe('Test CLI', () => {
 
-    it('handles failure', function (done) {
+    it('handles failure', (done) => {
 
         done(new Error('fail'));
     });

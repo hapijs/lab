@@ -1,6 +1,6 @@
 'use strict';
-var __moduleName = 'basic';
-var internals = {};
+const __moduleName = 'basic';
+const internals = {};
 exports.method = function(value) {
   return value;
 };

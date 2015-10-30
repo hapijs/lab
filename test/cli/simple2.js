@@ -2,32 +2,32 @@
 
 // Load modules
 
-var Code = require('code');
-var _Lab = require('../../test_runner');
+const Code = require('code');
+const _Lab = require('../../test_runner');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Test CLI 2', function () {
+describe('Test CLI 2', () => {
 
-    it('adds multiplies numbers together', function (done) {
+    it('adds multiplies numbers together', (done) => {
 
         expect(5 * 5).to.equal(25);
         done();
     });
 
-    it('divides two numbers', function (done) {
+    it('divides two numbers', (done) => {
 
         expect(25 / 5).to.equal(5);
         done();

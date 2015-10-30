@@ -5,13 +5,13 @@
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (a, b, c) {
 
 	// $lab:coverage:off$
-	var d = 0;
+	let d = 0;
 	if (a) { /* $lab:coverage:off$ */
 		d += 1;
 	}

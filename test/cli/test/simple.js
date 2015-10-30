@@ -2,32 +2,32 @@
 
 // Load modules
 
-var Code = require('code');
-var _Lab = require('../../../test_runner');
+const Code = require('code');
+const _Lab = require('../../../test_runner');
 
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
 
-describe('Test CLI 3', function () {
+describe('Test CLI 3', () => {
 
-    it('supports negative numbers', function (done) {
+    it('supports negative numbers', (done) => {
 
         expect(1 - 2).to.equal(-1);
         done();
     });
 
-    it('supports infinity', function (done) {
+    it('supports infinity', (done) => {
 
         expect(Infinity + 1).to.equal(Infinity);
         done();

@@ -2,17 +2,17 @@
 
 // Load modules
 
-var Os = require('os');
-var Path = require('path');
-var Code = require('code');
-var _Lab = require('../test_runner');
-var Lab = require('../');
-var Transform = require('../lib/transform');
+const Os = require('os');
+const Path = require('path');
+const Code = require('code');
+const _Lab = require('../test_runner');
+const Lab = require('../');
+const Transform = require('../lib/transform');
 
 
 // Declare internals
 
-var internals = {
+const internals = {
     transform: [
         {
             ext: '.new', transform: function (content, filename) {
@@ -36,38 +36,38 @@ var internals = {
 
 // Test shortcuts
 
-var lab = exports.lab = _Lab.script();
-var describe = lab.describe;
-var it = lab.it;
-var expect = Code.expect;
+const lab = exports.lab = _Lab.script();
+const describe = lab.describe;
+const it = lab.it;
+const expect = Code.expect;
 
-describe('Transform', function () {
+describe('Transform', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', transform: internals.transform });
 
-    it('instruments and measures coverage', function (done) {
+    it('instruments and measures coverage', (done) => {
 
-        var Test = require('./transform/basic-transform');
+        const Test = require('./transform/basic-transform');
         expect(Test.method(1)).to.equal(3);
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic-transform') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic-transform') });
         expect(cov.percent).to.equal(100);
         done();
     });
 
-    it('does not transform unneeded files', function (done) {
+    it('does not transform unneeded files', (done) => {
 
-        var Test = require('./transform/basic');
+        const Test = require('./transform/basic');
         expect(Test.method(1)).to.equal('!NOCOMPILE!');
 
-        var cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic') });
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic') });
         expect(cov.percent).to.equal(100);
         done();
     });
 
-    it('unit tests transform.retrieveFile', function (done) {
+    it('unit tests transform.retrieveFile', (done) => {
 
-        var content = Transform.retrieveFile('test/transform/exclude/lab-noexport.js');
+        let content = Transform.retrieveFile('test/transform/exclude/lab-noexport.js');
         expect(content).to.contain('// no code');
 
         content = Transform.retrieveFile('test/transform/exclude/lab-noexport.js');
@@ -79,23 +79,23 @@ describe('Transform', function () {
         done();
     });
 
-    it('should return transformed file through for relative (cwd-rooted) and absolute paths', function (done) {
+    it('should return transformed file through for relative (cwd-rooted) and absolute paths', (done) => {
 
         require('./transform/basic-transform'); // prime the cache
 
-        var rel = Transform.retrieveFile('test/transform/basic-transform.new');
+        const rel = Transform.retrieveFile('test/transform/basic-transform.new');
         expect(rel).to.not.contain('!NOCOMPILE!');
 
-        var abs = Transform.retrieveFile(process.cwd() + '/test/transform/basic-transform.new');
+        const abs = Transform.retrieveFile(process.cwd() + '/test/transform/basic-transform.new');
         expect(abs).to.not.contain('!NOCOMPILE!');
 
         done();
     });
 });
 
-describe('Transform.install', function () {
+describe('Transform.install', () => {
 
-    lab.before(function (done) {
+    lab.before((done) => {
 
         internals.js = require.extensions['.js'];
         internals.new = require.extensions['.new'];
@@ -103,7 +103,7 @@ describe('Transform.install', function () {
         done();
     });
 
-    lab.after(function (done) {
+    lab.after((done) => {
 
         require.extensions['.js'] = internals.js;
         require.extensions['.new'] = internals.new;
@@ -111,14 +111,14 @@ describe('Transform.install', function () {
         done();
     });
 
-    it('works correctly', function (done) {
+    it('works correctly', (done) => {
 
         Transform.install({ transform: internals.transform });
 
-        var Test = require('./transform/sourcemaps');
+        const Test = require('./transform/sourcemaps');
         expect(Test.method(false)).to.equal(false);
 
-        var Test2 = require('./transform/exclude/transform-basic');
+        const Test2 = require('./transform/exclude/transform-basic');
         expect(Test2.method()).to.equal(1);
 
         done();

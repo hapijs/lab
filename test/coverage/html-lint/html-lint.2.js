@@ -5,7 +5,7 @@
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (a, b, c) {

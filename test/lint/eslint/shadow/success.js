@@ -5,14 +5,14 @@
 
 // Declare internals
 
-var internals = {};
+const internals = {};
 
 
 exports.method = function (value) {
 
-    var top = function (err) {
+    const top = function (err) {
 
-        var inner = function (err) {
+        const inner = function (err) {
 
             return value;
         };
