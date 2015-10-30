@@ -13,9 +13,9 @@
   "dependencies": {
     "bossy": "1.x.x",
     "diff": "2.x.x",
-    "eslint": "1.5.x",
-    "eslint-config-hapi": "3.x.x",
-    "eslint-plugin-hapi": "1.x.x",
+    "eslint": "1.8.x",
+    "eslint-config-hapi": "5.x.x",
+    "eslint-plugin-hapi": "2.x.x",
     "espree": "2.x.x",
     "handlebars": "4.x.x",
     "hoek": "3.x.x",
