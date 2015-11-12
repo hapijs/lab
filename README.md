@@ -290,7 +290,7 @@ $ npm install -g lab
 Note that `npm test` will execute **lab** with the `-t 100` option which will
 require 100% code coverage. Run `npm run test-cov-html` and check the `coverage.html`
 file to figure out where coverage is lacking. When coverage is below the threshold,
-the CLI with exit with code `1` and will result in an npm Error message.
+the CLI will exit with code `1` and will result in an npm Error message.
 
 - Run your tests with
 
