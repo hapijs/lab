@@ -54,7 +54,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-s`, `--silence` - silence test output, defaults to false.
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.
-- `-T`, `--transform` - javascript file that exports an array of objects ie. `[ { ext: ".js", transform: function (content, filename) { ... } } ]`. Note that if you use this option with -c (--coverage), then you must generate sourcemaps and pass sourcemaps option to get proper line numbers.
+- `-T`, `--transform` - javascript file that exports an array of objects ie. `[ { ext: ".js", transform: (content, filename) => { ... } } ]`. Note that if you use this option with -c (--coverage), then you must generate sourcemaps and pass sourcemaps option to get proper line numbers.
 - `-v`, `--verbose` - verbose test output, defaults to false.
 - `-V`, `--version` - display lab version information.
 
@@ -78,11 +78,11 @@ $ lab unit.js
 
 Test files must require the **lab** module, and export a test script:
 ```javascript
-var Code = require('code');   // assertion library
-var Lab = require('lab');
-var lab = exports.lab = Lab.script();
+const Code = require('code');   // assertion library
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
 
-lab.test('returns true when 1 + 1 equals 2', function (done) {
+lab.test('returns true when 1 + 1 equals 2', (done) => {
 
     Code.expect(1+1).to.equal(2);
     done();
@@ -95,9 +95,9 @@ If no callback function is provided, the test is considered a TODO reminder and 
 
 Tests can be organized into experiments:
 ```javascript
-lab.experiment('math', function () {
+lab.experiment('math', () => {
 
-    lab.test('returns true when 1 + 1 equals 2', function (done) {
+    lab.test('returns true when 1 + 1 equals 2', (done) => {
 
         Code.expect(1+1).to.equal(2);
         done();
@@ -109,21 +109,21 @@ If you need to perform some async actions before or after executing the tests in
 `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
 
 ```javascript
-lab.experiment('math', function () {
+lab.experiment('math', () => {
 
-    lab.before(function (done) {
+    lab.before((done) => {
 
         // Wait 1 second
-        setTimeout(function () { done(); }, 1000);
+        setTimeout(() => { done(); }, 1000);
     });
 
-    lab.beforeEach(function (done) {
+    lab.beforeEach((done) => {
 
         // Run before every single test
         done();
     });
 
-    lab.test('returns true when 1 + 1 equals 2', function (done) {
+    lab.test('returns true when 1 + 1 equals 2', (done) => {
 
         Code.expect(1+1).to.equal(2);
         done();
@@ -141,15 +141,15 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 - `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
 
 ```javascript
-lab.experiment('math', { timeout: 1000 }, function () {
+lab.experiment('math', { timeout: 1000 }, () => {
 
-    lab.before({ timeout: 500 }, function (done) {
+    lab.before({ timeout: 500 }, (done) =>  {
 
         doSomething();
         done();
     });
 
-    lab.test('returns true when 1 + 1 equals 2', { parallel: true }, function (done) {
+    lab.test('returns true when 1 + 1 equals 2', { parallel: true }, (done) =>  {
 
         Code.expect(1+1).to.equal(2);
         done();
@@ -168,19 +168,19 @@ The `script([options])` method takes an optional `options` argument where `optio
 
 To make **lab** look like BDD:
 ```javascript
-var Code = require('code');
-var Lab = require('lab');
-var lab = exports.lab = Lab.script();
+const Code = require('code');
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
 
-var describe = lab.describe;
-var it = lab.it;
-var before = lab.before;
-var after = lab.after;
-var expect = Code.expect;
+const describe = lab.describe;
+const it = lab.it;
+const before = lab.before;
+const after = lab.after;
+const expect = Code.expect;
 
-describe('math', function () {
+describe('math', () => {
 
-    it('returns true when 1 + 1 equals 2', function (done) {
+    it('returns true when 1 + 1 equals 2', (done) => {
 
         expect(1+1).to.equal(2);
         done();
@@ -190,19 +190,19 @@ describe('math', function () {
 
 To make **lab** look like TDD:
 ```javascript
-var Code = require('code');
-var Lab = require('lab');
-var lab = exports.lab = Lab.script();
+const Code = require('code');
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
 
-var suite = lab.suite;
-var test = lab.test;
-var before = lab.before;
-var after = lab.after;
-var expect = Code.expect;
+const suite = lab.suite;
+const test = lab.test;
+const before = lab.before;
+const after = lab.after;
+const expect = Code.expect;
 
-suite('math', function () {
+suite('math', () => {
 
-    test('returns true when 1 + 1 equals 2', function (done) {
+    test('returns true when 1 + 1 equals 2', (done) => {
 
         expect(1+1).to.equal(2);
         done();
@@ -212,14 +212,14 @@ suite('math', function () {
 
 To use source transforms, you must specify a file that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler could look like:
 ```javascript
-var Babel = require('babel-core');
+const Babel = require('babel-core');
 
 module.exports = [
-    {ext: '.js', transform: function (content, filename) {
+    {ext: '.js', transform: (content, filename) => {
 
         // Make sure to only transform your code or the dependencies you want
         if (filename.indexOf('node_modules') === -1) {
-          var result = Babel.transform(content, { sourceMap: 'inline', filename: filename, sourceFileName: filename });
+          const result = Babel.transform(content, { sourceMap: 'inline', filename: filename, sourceFileName: filename });
           return result.code;
         }
 
