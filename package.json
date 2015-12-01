@@ -14,7 +14,7 @@
     "bossy": "1.x.x",
     "diff": "2.x.x",
     "eslint": "1.10.x",
-    "eslint-config-hapi": "7.x.x",
+    "eslint-config-hapi": "8.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "2.x.x",
     "handlebars": "4.x.x",
