@@ -22,14 +22,14 @@
     "items": "2.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
-    "source-map-support": "0.3.x"
+    "source-map-support": "0.4.x"
   },
   "optionalDependencies": {
     "jslint": "0.9.3"
   },
   "devDependencies": {
     "code": "2.x.x",
-    "cpr": "0.4.x",
+    "cpr": "1.0.x",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.4.x"
   },
