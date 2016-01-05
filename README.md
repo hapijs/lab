@@ -329,6 +329,14 @@ Reporters must be a class with the following methods: `start`, `test` and `end`.
 
 See the [json reporter](lib/reporters/json.js) for a good starting point.
 
+## Excluding paths from coverage reporting
+
+The `--coverage-exclude` argument can be repeated multiple times in order to add multiple paths to exclude.  By default the `node_modules` and `test` directories are excluded.  If you want to exclude those as well as a directory named `public` you can run lab as follows:
+
+```bash
+lab -c --coverage-exclude test --coverage-exclude node_modules --coverage-exclude public
+```
+
 ## Acknowledgements
 
 **lab** initial code borrowed heavily from [mocha](http://mochajs.org/), including the actual code used to render
