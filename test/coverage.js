@@ -3,6 +3,7 @@
 // Load modules
 
 const Path = require('path');
+const Module = require('module')
 const Code = require('code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
@@ -229,6 +230,24 @@ describe('Coverage', () => {
             });
 
             expect(sorted).to.deep.equal(['/a/b', '/a/c', '/a/b/a', '/a/b/c', '/a/c/b']);
+            done();
+        });
+    });
+
+    describe('Clear require cache', () => {
+
+        it('does not reset file coverage', (done) => {
+
+            const cacheBackup = require.cache; // backup require cache
+            const filename = Path.resolve(__dirname, './coverage/basic.js')
+            let file = require('./coverage/basic');
+            const fileCovBefore = global.__$$labCov.files[filename];
+            require.cache = Module._cache = {}; // clear require cache before additional require
+            file = require('./coverage/basic');
+            require.cache = Module._cache = cacheBackup; // restore require cache
+
+            const fileCovAfter = global.__$$labCov.files[filename];
+            expect(fileCovAfter).to.equal(fileCovBefore)
             done();
         });
     });
