@@ -210,21 +210,43 @@ suite('math', () => {
 });
 ```
 
-To use source transforms, you must specify a file that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler could look like:
+To use source transforms, you must specify a file that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler and the CoffeeScript compiler could look like:
+
 ```javascript
 const Babel = require('babel-core');
+const Coffee = require('coffee-script');
+const Btoa = require('btoa');
 
 module.exports = [
-    {ext: '.js', transform: (content, filename) => {
+    { ext: '.js', transform: (content, filename) => {
 
         // Make sure to only transform your code or the dependencies you want
         if (filename.indexOf('node_modules') === -1) {
-          const result = Babel.transform(content, { sourceMap: 'inline', filename: filename, sourceFileName: filename });
-          return result.code;
+            const result = Babel.transform(content, { sourceMap: 'inline', filename: filename, sourceFileName: filename });
+            return result.code;
         }
 
         return content;
-    }}
+    } },
+    { ext: '.coffee', transform: (content, filename) => {
+
+        // Again, make sure to only transform your code or the dependencies you want
+        if (filename.indexOf('node_modules') === -1) {
+            const result = Coffee.compile(content, {
+                sourceMap: true,
+                inline: true,
+                sourceRoot: '/',
+                sourceFiles: [filename]
+            });
+
+            // append source map to end of compiled JS
+            return result.js +
+              '\n//# sourceMappingURL=data:application/json;base64,' +
+              Btoa(unescape(encodeURIComponent(result.v3SourceMap)));
+        }
+
+        return content;
+    } }
 ];
 ```
 
