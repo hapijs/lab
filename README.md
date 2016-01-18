@@ -84,7 +84,7 @@ const lab = exports.lab = Lab.script();
 
 lab.test('returns true when 1 + 1 equals 2', (done) => {
 
-    Code.expect(1+1).to.equal(2);
+    Code.expect(1 + 1).to.equal(2);
     done();
 });
 ```
@@ -99,7 +99,7 @@ lab.experiment('math', () => {
 
     lab.test('returns true when 1 + 1 equals 2', (done) => {
 
-        Code.expect(1+1).to.equal(2);
+        Code.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -114,7 +114,10 @@ lab.experiment('math', () => {
     lab.before((done) => {
 
         // Wait 1 second
-        setTimeout(() => { done(); }, 1000);
+        setTimeout(() => {
+
+            done();
+        }, 1000);
     });
 
     lab.beforeEach((done) => {
@@ -125,10 +128,11 @@ lab.experiment('math', () => {
 
     lab.test('returns true when 1 + 1 equals 2', (done) => {
 
-        Code.expect(1+1).to.equal(2);
+        Code.expect(1 + 1).to.equal(2);
         done();
     });
 });
+
 ```
 
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
@@ -151,7 +155,7 @@ lab.experiment('math', { timeout: 1000 }, () => {
 
     lab.test('returns true when 1 + 1 equals 2', { parallel: true }, (done) =>  {
 
-        Code.expect(1+1).to.equal(2);
+        Code.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -180,9 +184,19 @@ const expect = Code.expect;
 
 describe('math', () => {
 
+    before((done) => {
+
+        done();
+    });
+
+    after((done) => {
+
+        done();
+    });
+
     it('returns true when 1 + 1 equals 2', (done) => {
 
-        expect(1+1).to.equal(2);
+        expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -196,15 +210,13 @@ const lab = exports.lab = Lab.script();
 
 const suite = lab.suite;
 const test = lab.test;
-const before = lab.before;
-const after = lab.after;
 const expect = Code.expect;
 
 suite('math', () => {
 
     test('returns true when 1 + 1 equals 2', (done) => {
 
-        expect(1+1).to.equal(2);
+        expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -258,6 +270,7 @@ if (typeof value === 'symbol') {
     return '[' + value.toString() + ']';
 }
 /* $lab:coverage:on$ */
+
 ```
 
 ## Extending the linter
