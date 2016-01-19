@@ -30,6 +30,7 @@
   "devDependencies": {
     "code": "2.x.x",
     "cpr": "1.0.x",
+    "eslint-plugin-markdown": "1.0.0-beta.1",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.4.x"
   },
@@ -38,8 +39,10 @@
   },
   "scripts": {
     "test": "./bin/_lab -fL -t 100 -m 3000",
+    "posttest": "npm run lint-md",
     "test-cov-html": "./bin/_lab -fL -r html -m 3000 -o coverage.html",
-    "lint": "./bin/_lab -d -f -L"
+    "lint": "./bin/_lab -d -f -L",
+    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md  ."
   },
   "license": "BSD-3-Clause"
 }
