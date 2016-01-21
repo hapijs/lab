@@ -16,7 +16,7 @@
     "eslint": "1.10.x",
     "eslint-config-hapi": "8.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "espree": "2.x.x",
+    "espree": "3.x.x",
     "handlebars": "4.x.x",
     "hoek": "3.x.x",
     "items": "2.x.x",
