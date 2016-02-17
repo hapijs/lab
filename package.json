@@ -13,8 +13,8 @@
   "dependencies": {
     "bossy": "1.x.x",
     "diff": "2.x.x",
-    "eslint": "1.10.x",
-    "eslint-config-hapi": "8.x.x",
+    "eslint": "2.x.x",
+    "eslint-config-hapi": "9.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.x.x",
     "handlebars": "4.x.x",
@@ -32,7 +32,7 @@
     "cpr": "1.0.x",
     "eslint-plugin-markdown": "1.0.0-beta.1",
     "lab-event-reporter": "1.x.x",
-    "rimraf": "2.4.x"
+    "rimraf": "2.5.x"
   },
   "bin": {
     "lab": "./bin/lab"
