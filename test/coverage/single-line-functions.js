@@ -45,3 +45,6 @@ exports.method8 = function (a, b) {
 exports.method8NotCalled = function (a, b) {
 	return a * b;
 };
+
+exports.method9 = function (a, b) {a = a - 1; b = b + 1; return a + b;};
+exports.method9NotCalled = function (a, b) {a = a - 1; b = b + 1; return a * b;};
