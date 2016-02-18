@@ -212,6 +212,26 @@ describe('Coverage', () => {
         done();
     });
 
+    it('should measure missing coverage on single-line functions correctly', (done) => {
+
+        const Test = require('./coverage/single-line-functions');
+        let results = [];
+        for(let i = 1; i <= 10; ++i) {
+        	results.push(Test[`method${i}`](3, 4));
+        }
+
+        results.push(Test.method11(5, 10));
+        results.push(Test.method11(0, 10));
+        results.push(Test.method11Partial(5, 10));
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/single-line-functions') });
+        const source = cov.files[0].source;
+        const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+        expect(results).to.deep.equal([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 10, 5]);
+        expect(missedLines).to.deep.equal(['12', '15', '21', '27', '30', '33', '39', '46', '50', '53', '56']);
+        done();
+    });
+
     describe('#analyze', () => {
 
         it('sorts file paths in report', (done) => {
