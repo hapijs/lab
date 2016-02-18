@@ -39,6 +39,27 @@ describe('Linters - eslint', () => {
         });
     });
 
+    it('should default to eslint', (done) => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
+        Linters.lint({ lintingPath: path }, (err, result) => {
+
+            expect(result).to.include('lint');
+
+            const eslintResults = result.lint;
+            expect(eslintResults).to.have.length(1);
+
+            const checkedFile = eslintResults[0];
+            expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
+            expect(checkedFile.errors).to.deep.include([
+                { line: 13, severity: 'ERROR', message: 'semi - Missing semicolon.' },
+                { line: 14, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+            ]);
+
+            done();
+        });
+    });
+
     it('should use local configuration files', (done) => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'with_config');
@@ -125,82 +146,21 @@ describe('Linters - eslint', () => {
     });
 });
 
-describe('Linters - jslint', () => {
+describe('Linters - custom', () => {
 
-    it('should lint files in a folder', (done) => {
+    it('can run custom linter', (done) => {
 
-        const path = Path.join(__dirname, 'lint', 'jslint', 'basic');
-        Linters.lint({ lintingPath: path, linter: 'jslint' }, (err, result) => {
+        const path = Path.join(__dirname, 'lint');
+        Linters.lint({ lintingPath: path, linter: Path.join(__dirname, 'lint', 'custom') }, (err, result) => {
 
-            expect(err).not.to.exist();
             expect(result).to.include('lint');
 
-            const jslintResults = result.lint;
-            expect(jslintResults).to.have.length(1);
+            const results = result.lint;
+            expect(results).to.have.length(1);
 
-            const checkedFile = jslintResults[0];
-            expect(checkedFile).to.include({ filename: 'fail.js' });
-            expect(checkedFile.errors).to.deep.include([
-                { line: 12, severity: 'ERROR', message: 'Use spaces, not tabs.' },
-                { line: 13, severity: 'ERROR', message: 'Expected \';\' and instead saw \'}\'.' },
-                { line: 13, severity: 'ERROR', message: 'Stopping.' }
-            ]);
-
-            done();
-        });
-    });
-
-    it('should use local configuration files', (done) => {
-
-        const path = Path.join(__dirname, 'lint', 'jslint', 'with_config');
-        Linters.lint({ lintingPath: path, linter: 'jslint' }, (err, result) => {
-
-            expect(err).not.to.exist();
-            expect(result).to.include('lint');
-
-            const jslintResults = result.lint;
-            expect(jslintResults).to.have.length(1);
-
-            const checkedFile = jslintResults[0];
-            expect(checkedFile).to.include({ filename: 'fail.js' });
-            expect(checkedFile.errors).to.deep.include([
-                { line: 7, severity: 'ERROR', message: 'Unused \'internals\'.' },
-                { line: 13, severity: 'ERROR', message: 'Unused \'myObject\'.' }
-            ]);
-            expect(checkedFile.errors).to.not.deep.include({ line: 14, severity: 'ERROR', message: 'Unexpected \'eval\'.' });
-            done();
-        });
-    });
-
-    it('displays success message if no issues found', (done) => {
-
-        const path = Path.join(__dirname, 'lint', 'jslint', 'clean');
-        Linters.lint({ lintingPath: path, linter: 'jslint' }, (err, result) => {
-
-            expect(err).not.to.exist();
-            expect(result.lint).to.exist();
-
-            const jslintResults = result.lint;
-            expect(jslintResults).to.have.length(1);
-
-            const checkedFile = jslintResults[0];
-            expect(checkedFile.errors.length).to.equal(0);
-
-            done();
-        });
-    });
-
-    it('should pass options and not find any files', (done) => {
-
-        const lintOptions = JSON.stringify({ argv: { remain: ['**/*.jsx'] } });
-        const path = Path.join(__dirname, 'lint', 'jslint', 'basic');
-        Linters.lint({ lintingPath: path, linter: 'jslint', 'lint-options': lintOptions }, (err, result) => {
-
-            expect(err).not.to.exist();
-            expect(result).to.include('lint');
-
-            const jslintResults = result.lint;
-            expect(jslintResults).to.have.length(0);
+            const checkedFile = results[0];
+            expect(checkedFile.filename).to.equal('custom');
+            expect(checkedFile.errors.length).to.equal(1);
 
             done();
         });

@@ -36,7 +36,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `--lint-warnings-threshold` - maximum absolute amount of linting warnings. Defaults to 0.
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
-- `-n`, `--linter` - specify linting program; default is `eslint`.
+- `-n`, `--linter` - specify linting program file path; default is `eslint`.
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
@@ -289,6 +289,12 @@ Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintig
 node_modules/*
 **/vendor/*.js
 ```
+
+## Running a custom linter
+
+If you would like to run a different linter, or even a custom version of eslint you should
+pass the `-n` or `--linter` argument with the path to the lint runner.  For example,
+if you plan to us jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.  
 
 ## Best practices
 
