@@ -232,6 +232,19 @@ describe('Coverage', () => {
         done();
     });
 
+    it('should measure missing coverage on trailing function declarations correctly', (done) => {
+
+        const Test = require('./coverage/trailing-function-declarations');
+        let result = Test.method(3, 4);
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/trailing-function-declarations') });
+        const source = cov.files[0].source;
+        const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+        expect(result).to.equal(7);
+        expect(missedLines).to.deep.equal(['19', '22']);
+        done();
+    });
+
     describe('#analyze', () => {
 
         it('sorts file paths in report', (done) => {
