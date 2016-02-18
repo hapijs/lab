@@ -212,7 +212,7 @@ describe('Coverage', () => {
         done();
     });
 
-    it('measures missing coverage on single-line functions correctly', (done) => {
+    it('should measure missing coverage on single-line functions correctly', (done) => {
 
         const Test = require('./coverage/single-line-functions');
         let results = [];
