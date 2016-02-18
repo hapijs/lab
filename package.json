@@ -24,9 +24,6 @@
     "mkdirp": "0.5.x",
     "source-map-support": "0.4.x"
   },
-  "optionalDependencies": {
-    "jslint": "0.9.3"
-  },
   "devDependencies": {
     "code": "2.x.x",
     "cpr": "1.0.x",
