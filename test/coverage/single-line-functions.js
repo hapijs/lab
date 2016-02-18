@@ -51,3 +51,6 @@ exports.method9NotCalled = function (a, b) {a = a - 1; b = b + 1; return a * b;}
 
 exports.method10 = (a, b) => exports.method9(a, b);
 exports.method10NotCalled = (a, b) => exports.method9NotCalled(a, b);
+
+exports.method11 = (a, b) => a || b;
+exports.method11Partial = (a, b) => a || b;
