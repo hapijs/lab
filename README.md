@@ -51,6 +51,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
     - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
+- `--shuffle` - randomize the order that test scripts are executed.  Will not work with `--id`.
 - `-s`, `--silence` - silence test output, defaults to false.
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - minimum code test coverage percentage (sets `-c`), defaults to 100%.

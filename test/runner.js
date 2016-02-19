@@ -266,6 +266,66 @@ describe('Runner', () => {
         });
     });
 
+    it('shuffle will randomize scripts', (done) => {
+
+        const script1 = Lab.script();
+        script1.experiment('test1', () => {
+
+            script1.test('1', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script2 = Lab.script();
+        script2.experiment('test2', () => {
+
+            script2.test('2', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script3 = Lab.script();
+        script3.experiment('test3', () => {
+
+            script3.test('3', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script4 = Lab.script();
+        script4.experiment('test4', () => {
+
+            script4.test('4', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script5 = Lab.script();
+        script5.experiment('test5', () => {
+
+            script5.test('5', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const scripts = [script1, script2, script3, script4, script5];
+        Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook1) => {
+
+            expect(err).not.to.exist();
+            Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook2) => {
+
+                expect(err).not.to.exist();
+                expect(notebook1.tests).to.not.deep.equal(notebook2.tests);
+                done();
+            });
+        });
+    });
+
     it('skips tests on failed before', (done) => {
 
         const steps = [];
