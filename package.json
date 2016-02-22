@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "repository": "git://github.com/hapijs/lab",
   "main": "lib/index.js",
   "keywords": [
