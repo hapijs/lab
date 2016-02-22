@@ -313,6 +313,17 @@ describe('Runner', () => {
             });
         });
 
+        const random = Math.random;
+        let first = true;
+        Math.random = function () {
+            if (first) {
+                first = false;
+                return 0.3;
+            }
+
+            return 0.7;
+        }
+
         const scripts = [script1, script2, script3, script4, script5];
         Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook1) => {
 
@@ -321,6 +332,7 @@ describe('Runner', () => {
 
                 expect(err).not.to.exist();
                 expect(notebook1.tests).to.not.deep.equal(notebook2.tests);
+                Math.random = random;
                 done();
             });
         });
