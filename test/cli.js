@@ -9,7 +9,7 @@ const Code = require('code');
 const Lab = require('../');
 const Pkg = require('../package.json');
 const _Lab = require('../test_runner');
-
+const runLab = require('./run_lab');
 
 // Declare internals
 
@@ -30,262 +30,125 @@ describe('CLI', () => {
 
     it('runs a single test from the command line', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000']);
-        let output = '';
-
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('2 tests complete');
+        runLab(['test/cli/simple.js', '-m', '2000']).then((result) => {
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('2 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs multiple tests from the command line', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', 'test/cli/simple2.js', '-m', '2000']);
-        let output = '';
-
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('4 tests complete');
+        runLab(['test/cli/simple.js', 'test/cli/simple2.js', '-m', '2000']).then((result) => {
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('4 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs a directory of tests from the command line', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-m', '2000']);
-        let output = '';
+        runLab(['test/cli', '-m', '2000']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('10 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('10 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
-    it('exits with code 1 when after function throws', (done) => {
+    it('exits with code 1 after function throws', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_throws/throws.js']);
-        let outData = '';
-        let errData = '';
+        runLab(['test/cli_throws/throws.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            outData += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            errData += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.not.equal(0);
+            expect(result.code).to.equal(1);
             done();
-        });
+        }).catch(done);
     });
 
     it('exits with code 1 when function returns error with multiple reporters', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_failure/failure.js', '-r', 'console', '-r', 'lcov']);
-        let outData = '';
-        let errData = '';
+        runLab(['test/cli_failure/failure.js', '-r', 'console', '-r', 'lcov']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            outData += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            errData += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.not.equal(0);
+            expect(result.code).to.equal(1);
             done();
-        });
+        }).catch(done);
     });
 
     it('runs tests with multiple reporters', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', 'console', '-r', 'lcov']);
-        let outData = '';
+        runLab(['test/cli', '-r', 'console', '-r', 'lcov']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            outData += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(outData).to.contain('10 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('10 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs tests with a custom reporter starting with .', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', './node_modules/lab-event-reporter/index.js']);
-        let outData = '';
+        runLab(['test/cli', '-r', './node_modules/lab-event-reporter/index.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            outData += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(outData).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.combinedOutput).to.equal('');
             done();
-        });
+        }).catch(done);
     });
 
     it('requires a custom reporter from node_modules', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', 'lab-event-reporter']);
-        let outData = '';
+        runLab(['test/cli', '-r', 'lab-event-reporter']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            outData += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(outData).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.combinedOutput).to.equal('');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when an unknown reporter is specified', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-r', 'unknown']);
-        let output = '';
+        runLab(['test/cli', '-r', 'unknown']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.not.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('Cannot find module');
+            expect(result.code).to.equal(1);
+            expect(result.combinedOutput).to.contain('Cannot find module');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays a domain\'s error stack (-D)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_throws/debug.js', '--debug']);
-        let outData = '';
-        let errData = '';
+        runLab(['test/cli_throws/debug.js', '--debug']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            outData += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            errData += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.not.equal(0);
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.combinedOutput).to.contain('Test script errors:');
             done();
-        });
+        }).catch(done);
     });
 
     it('shows the help (-h)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-h']);
-        let output = '';
+        runLab(['-h']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('Usage: lab [options] [path]');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('Usage: lab [options] [path]');
             done();
-        });
+        }).catch(done);
     });
 
     it('shows the version (-V)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-V']);
-        let output = '';
+        runLab(['-V']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain(Pkg.version);
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain(Pkg.version);
             done();
-        });
+        }).catch(done);
     });
 
     it('ignores the list of predefined globals (-I)', (done) => {
@@ -295,27 +158,14 @@ describe('CLI', () => {
 
         Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/leaks.js', '-I', 'foo,bar']);
+        runLab(['test/cli/leaks.js', '-I', 'foo,bar']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('No global variable leaks detected');
 
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('No global variable leaks detected');
-
-            Fs.unlinkSync('./test/cli/leaks.js');
-            done();
-        });
+            Fs.unlink('./test/cli/leaks.js', done);
+        }).catch(done);
     });
 
     it('ignores the list of predefined globals when using --ignore', (done) => {
@@ -325,465 +175,215 @@ describe('CLI', () => {
 
         Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/leaks.js', '--ignore', 'foo,bar']);
+        runLab(['test/cli/leaks.js', '--ignore', 'foo,bar']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('No global variable leaks detected');
 
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('No global variable leaks detected');
-
-            Fs.unlinkSync('./test/cli/leaks.js');
-            done();
-        });
+            Fs.unlink('./test/cli/leaks.js', done);
+        }).catch(done);
     });
 
     it('silences output (-s)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-s']);
-        let output = '';
+        runLab(['test/cli/simple.js', '-s']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.not.contain('.');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.not.contain('.');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays verbose output (-v)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-v']);
-        let output = '';
+        runLab(['test/cli/simple.js', '-v']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('2) subtracts two numbers');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('2) subtracts two numbers');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs a single test (-i 1)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-i', '1']);
-        let output = '';
+        runLab(['test/cli', '-i', '1']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs a range of tests (-i 3-4)', (done) => {
 
         // The range may need to adjust as new tests are added (if they are skipped for example)
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli', '-i', '3-4']);
-        let output = '';
+        runLab(['test/cli', '-i', '3-4']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('2 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('2 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs in color mode with (-C)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-C']);
-        let output = '';
+        runLab(['test/cli/simple.js', '-C']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('\u001b[');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('\u001b[');
             done();
-        });
+        }).catch(done);
     });
 
     it('disables color output when tty doesn\'t support it', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js']);
-        let output = '';
+        runLab(['test/cli/simple.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.not.contain('\u001b[');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.not.contain('\u001b[');
             done();
-        });
+        }).catch(done);
     });
 
     it('defaults to color output when tty supports it', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simpleTty.js']);
-        let output = '';
+        runLab(['test/cli/simpleTty.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('\u001b[');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('\u001b[');
             done();
-        });
+        }).catch(done);
     });
 
     it('uses custom coverage path with the --coverage-path argument', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
-        let output = '';
+        runLab(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
-            expect(output).to.contain('Coverage: 100.00%');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
+            expect(result.output).to.contain('Coverage: 100.00%');
             done();
-        });
+        }).catch(done);
     });
 
     it('uses custom coverage excludes with the --coverage-exclude argument', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_coverage', '-t', '100', '--coverage-exclude', 'test/cli_coverage/exclude', '-a', 'code']);
-        let output = '';
+        runLab(['test/cli_coverage', '-t', '100', '--coverage-exclude', 'test/cli_coverage/exclude', '-a', 'code']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
-            expect(output).to.contain('Coverage: 96.88% (1/32)');
-            expect(output).to.contain('test/cli_coverage/missing.js missing coverage on line(s)');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('1 tests complete');
+            expect(result.output).to.contain('Coverage: 96.88% (1/32)');
+            expect(result.output).to.contain('test/cli_coverage/missing.js missing coverage on line(s)');
             done();
-        });
+        }).catch(done);
     });
 
     it('doesn\'t fail with coverage when no external file is being tested', (done) => {
 
-        const cli = ChildProcess.spawn(labPath, ['test/cli/simple.js', '-t', '10']);
-        let output = '';
-
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('2 tests complete');
-            expect(output).to.contain('Coverage: 0.00%');
+        runLab(['test/cli/simple.js', '-t', '10']).then((result) => {;
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('2 tests complete');
+            expect(result.output).to.contain('Coverage: 0.00%');
             done();
-        });
+        }).catch(done);
     });
 
     it('defaults NODE_ENV environment variable to test', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js']);
-        let output = '';
+        runLab(['test/cli/environment.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('changes the NODE_ENV based on -e param', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/environment.js', '-e', 'lab']);
-        let output = '';
+        runLab(['test/cli/environment.js', '-e', 'lab']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('runs tests with "only" method when set and reports correct test count', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/only.js']);
-        let output = '';
+        runLab(['test/cli/only.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('overrides cli options using script', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/override/cli.js']);
-        let output = '';
+        runLab(['test/override/cli.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when a script is detected without an exports.lab', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/missingExports.js']);
-        let output = '';
+        runLab(['test/cli_no_exports/missingExports.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('includes a lab script that is not exported via exports.lab');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when a script is missing exports and other scripts contain them', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_no_exports/']);
-        let output = '';
+        runLab(['test/cli_no_exports/']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('includes a lab script that is not exported via exports.lab');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when an unknown argument is specified', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-z']);
-        let output = '';
+        runLab(['-z']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-            expect(data).to.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('Unknown option: z');
+            expect(result.errorOutput).to.contain('Unknown option: z');
+            expect(result.code).to.equal(1);
             done();
-        });
+        }).catch(done);
     });
 
     it('supports junit reporter', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/only.js', '-r', 'junit']);
-        let output = '';
+        runLab(['test/cli/only.js', '-r', 'junit']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('<testsuite tests="2"');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('<testsuite tests="2"');
             done();
-        });
+        }).catch(done);
     });
 
     it('outputs to file passed with -o argument', (done) => {
@@ -797,285 +397,144 @@ describe('CLI', () => {
             // Error is ok here
         }
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-o', outputPath]);
-        let output = '';
+        runLab(['test/cli/simple.js', '-m', '2000', '-o', outputPath]).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.equal('');
             const file = Fs.readFileSync(outputPath);
             expect(file.toString()).to.contain('No global variable leaks detected');
-            Fs.unlinkSync(outputPath);
-            done();
-        });
+            Fs.unlink(outputPath, done);
+        }).catch(done);
     });
 
     it('loads assertions library', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_assert/assert.js', '-m', '2000', '-a', 'code']);
-        let output = '';
+        runLab(['test/cli_assert/assert.js', '-m', '2000', '-a', 'code']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('2 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('2 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('only loads files matching pattern (-P)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test']);
-        let output = '';
+        runLab(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('2 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('2 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('only loads files matching pattern when pattern at beginning of name (-P)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file']);
-        let output = '';
+        runLab(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('3 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('3 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('loads all files when pattern is empty (-P)', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli_pattern', '-m', '2000', '-a', 'code', '-P', '']);
-        let output = '';
+        runLab(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', '']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('3 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('3 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('errors out when unknown module is specified in transform option', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-T', 'not-a-transform-module']);
-        let output = '';
+        runLab(['test/cli/simple.js', '-T', 'not-a-transform-module']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-            expect(data).to.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.not.equal(0);
-            expect(signal).to.not.exist();
+            expect(result.errorOutput).to.contain('Cannot find module');
+            expect(result.code).to.equal(1);
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when transform module does not export', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, 'test/cli/simple.js', '-m', '2000', '-T', 'test/transform/exclude/lab-noexport']);
-        let output = '';
+        runLab(['test/cli/simple.js', '-m', '2000', '-T', 'test/transform/exclude/lab-noexport']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-            expect(data).to.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.not.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('transform module must export');
+            expect(result.errorOutput).to.contain('transform module must export');
+            expect(result.code).to.equal(1);
             done();
-        });
+        }).catch(done);
     });
 
     it('uses transforms to run a test', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/transform-test.js']);
-        let output = '';
+        runLab(['-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/transform-test.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-            expect(data).to.not.exist();
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('uses transforms to run a test file that has to be transformed', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']);
-        let output = '';
+        runLab(['-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('uses transforms to run a test file that has to be transformed with coverage support', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-c', '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']);
-        let output = '';
+        runLab(['-c', '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']).then((result) => {
 
-        cli.stdout.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.stderr.on('data', (data) => {
-
-            output += data;
-        });
-
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(0);
-            expect(signal).to.not.exist();
-            expect(output).to.contain('1 tests complete');
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when multiple reporters with only one output are specified', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-o', 'stdout']);
-        let output = '';
+        runLab(['-r', 'console', '-r', 'console', '-o', 'stdout']).then((result) => {
 
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
+            expect(result.errorOutput).to.contain('Usage');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.equal('');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when multiple reporters with less outputs are specified', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout']);
-        let output = '';
+        runLab(['-r', 'console', '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout']).then((result) => {
 
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
+            expect(result.errorOutput).to.contain('Usage');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.equal('');
             done();
-        });
+        }).catch(done);
     });
 
     it('displays error message when multiple reporters with more outputs are specified', (done) => {
 
-        const cli = ChildProcess.spawn('node', [labPath, '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout', '-o', 'stdout']);
-        let output = '';
+        runLab(['-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout', '-o', 'stdout']).then((result) => {
 
-        cli.once('close', (code, signal) => {
-
-            expect(code).to.equal(1);
-            expect(signal).to.not.exist();
+            expect(result.errorOutput).to.contain('Usage');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.equal('');
             done();
-        });
+        }).catch(done);
     });
 });

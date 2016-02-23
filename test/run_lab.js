@@ -7,7 +7,7 @@ const labPath = Path.join(__dirname, '..', 'bin', '_lab');
 
 module.exports = function (args, callback) {
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const cli = ChildProcess.spawn('node', [labPath, ...args]);
         let output = '';
         let errorOutput = '';
@@ -26,6 +26,11 @@ module.exports = function (args, callback) {
         });
 
         cli.once('close', (code, signal) => {
+        	if (signal) {
+        		reject(new Promise(() => {
+		            expect(signal).to.not.exist();
+        		}));
+        	}
             resolve({output, errorOutput, combinedOutput, code, signal});
         });
     })
