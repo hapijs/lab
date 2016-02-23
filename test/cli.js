@@ -54,7 +54,7 @@ describe('CLI', () => {
 
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
-            expect(result.output).to.contain('10 tests complete');
+            expect(result.output).to.contain('9 tests complete');
             done();
         }).catch(done);
     });
@@ -83,7 +83,7 @@ describe('CLI', () => {
 
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
-            expect(result.output).to.contain('10 tests complete');
+            expect(result.output).to.contain('9 tests complete');
             done();
         }).catch(done);
     });
@@ -502,7 +502,7 @@ describe('CLI', () => {
 
     it('supports junit reporter', (done) => {
 
-        runLab(['test/cli/only.js', '-r', 'junit']).then((result) => {
+        runLab(['test/cli/simple.js', '-r', 'junit']).then((result) => {
 
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
