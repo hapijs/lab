@@ -321,13 +321,138 @@ describe('CLI', () => {
         }).catch(done);
     });
 
-    it('runs tests with "only" method when set and reports correct test count', (done) => {
+    it('runs tests within a nestd "only" experiment and reports ran and skipped test count', (done) => {
 
-        runLab(['test/cli/only.js']).then((result) => {
+        runLab(['test/cli_only-skip/onlyExperiment.js']).then((result) => {
 
             expect(result.errorOutput).to.equal('');
+            expect(result.output).to.contain('Should execute before 1');
+            expect(result.output).to.contain('Should execute beforeEach 1');
+            expect(result.output).to.contain('Should execute after 1');
+            expect(result.output).to.contain('Should execute afterEach 1');
+            expect(result.output).to.contain('Should execute before 2');
+            expect(result.output).to.contain('Should execute beforeEach 2');
+            expect(result.output).to.contain('Should execute after 2');
+            expect(result.output).to.contain('Should execute afterEach 2');
+            expect(result.output).to.contain('Should execute before 3');
+            expect(result.output).to.contain('Should execute beforeEach 3');
+            expect(result.output).to.contain('Should execute after 3');
+            expect(result.output).to.contain('Should execute afterEach 3');
+            expect(result.output).to.contain('Should execute before 4');
+            expect(result.output).to.contain('Should execute beforeEach 4');
+            expect(result.output).to.contain('Should execute after 4');
+            expect(result.output).to.contain('Should execute afterEach 4');
+            expect(result.output).to.contain('3 tests complete (6 skipped)');
             expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
+            done();
+        }).catch(done);
+    });
+
+    it('runs tests within a root "only" experiment and reports ran and skipped test count', (done) => {
+
+        runLab(['test/cli_only-skip/onlyRootExperiment.js']).then((result) => {
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.output).to.contain('Should execute before 1');
+            expect(result.output).to.contain('Should execute beforeEach 1');
+            expect(result.output).to.contain('Should execute after 1');
+            expect(result.output).to.contain('Should execute afterEach 1');
+            expect(result.output).to.contain('Should execute before 2');
+            expect(result.output).to.contain('Should execute beforeEach 2');
+            expect(result.output).to.contain('Should execute after 2');
+            expect(result.output).to.contain('Should execute afterEach 2');
+            expect(result.output).to.contain('Should execute before 3');
+            expect(result.output).to.contain('Should execute beforeEach 3');
+            expect(result.output).to.contain('Should execute after 3');
+            expect(result.output).to.contain('Should execute afterEach 3');
+            expect(result.output).to.contain('Should execute before 4');
+            expect(result.output).to.contain('Should execute beforeEach 4');
+            expect(result.output).to.contain('Should execute after 4');
+            expect(result.output).to.contain('Should execute afterEach 4');
+            expect(result.output).to.contain('Should execute before 5');
+            expect(result.output).to.contain('Should execute beforeEach 5');
+            expect(result.output).to.contain('Should execute after 5');
+            expect(result.output).to.contain('Should execute afterEach 5');
+            expect(result.output).to.contain('Should execute before 6');
+            expect(result.output).to.contain('Should execute beforeEach 6');
+            expect(result.output).to.contain('Should execute after 6');
+            expect(result.output).to.contain('Should execute afterEach 6');
+            expect(result.output).to.contain('8 tests complete (1 skipped)');
+            expect(result.code).to.equal(0);
+            done();
+        }).catch(done);
+    });
+
+    it('runs "only" test and reports ran and skipped test count', (done) => {
+
+        runLab(['test/cli_only-skip/onlyTest.js']).then((result) => {
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.output).to.contain('Should execute before 1');
+            expect(result.output).to.contain('Should execute beforeEach 1');
+            expect(result.output).to.contain('Should execute after 1');
+            expect(result.output).to.contain('Should execute afterEach 1');
+            expect(result.output).to.contain('Should execute before 2');
+            expect(result.output).to.contain('Should execute beforeEach 2');
+            expect(result.output).to.contain('Should execute after 2');
+            expect(result.output).to.contain('Should execute afterEach 2');
+            expect(result.output).to.contain('Should execute before 3');
+            expect(result.output).to.contain('Should execute beforeEach 3');
+            expect(result.output).to.contain('Should execute after 3');
+            expect(result.output).to.contain('Should execute afterEach 3');
+            expect(result.output).to.contain('1 tests complete (8 skipped)');
+            expect(result.code).to.equal(0);
+            done();
+        }).catch(done);
+    });
+
+    it('displays error message when there is more than one "only" within one file', (done) => {
+
+        runLab(['test/cli_only-skip/onlyMultiple.js']).then((result) => {
+
+            expect(result.errorOutput).to.contain('Multiple tests are marked as "only":');
+            expect(result.code).to.equal(1);
+            done();
+        }).catch(done);
+    });
+
+    it('displays error message when there is more than one "only" accross multiple files', (done) => {
+
+        runLab(['test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']).then((result) => {
+
+            expect(result.errorOutput).to.contain('Multiple tests are marked as "only":');
+            expect(result.code).to.equal(1);
+            done();
+        }).catch(done);
+    });
+
+    it('skips "skip" test and reports ran and skipped test count', (done) => {
+
+        runLab(['test/cli_only-skip/skip.js']).then((result) => {
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.output).to.contain('Should execute before 1');
+            expect(result.output).to.contain('Should execute beforeEach 1');
+            expect(result.output).to.contain('Should execute after 1');
+            expect(result.output).to.contain('Should execute afterEach 1');
+            expect(result.output).to.contain('Should execute before 2');
+            expect(result.output).to.contain('Should execute beforeEach 2');
+            expect(result.output).to.contain('Should execute after 2');
+            expect(result.output).to.contain('Should execute afterEach 2');
+            expect(result.output).to.contain('Should execute before 3');
+            expect(result.output).to.contain('Should execute beforeEach 3');
+            expect(result.output).to.contain('Should execute after 3');
+            expect(result.output).to.contain('Should execute afterEach 3');
+            expect(result.output).to.contain('Should execute before 4');
+            expect(result.output).to.contain('Should execute beforeEach 4');
+            expect(result.output).to.contain('Should execute after 4');
+            expect(result.output).to.contain('Should execute afterEach 4');
+            expect(result.output).to.contain('Should execute before 5');
+            expect(result.output).to.contain('Should execute beforeEach 5');
+            expect(result.output).to.contain('Should execute after 5');
+            expect(result.output).to.contain('Should execute afterEach 5');
+            expect(result.output).to.contain('5 tests complete (4 skipped)');
+            expect(result.code).to.equal(0);
             done();
         }).catch(done);
     });
