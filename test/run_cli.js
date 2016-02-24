@@ -7,35 +7,28 @@ const labPath = Path.join(__dirname, '..', 'bin', '_lab');
 
 module.exports = (args, callback) => {
 
-    return new Promise((resolve, reject) => {
+    const cli = ChildProcess.spawn('node', [].concat(labPath, args));
+    let output = '';
+    let errorOutput = '';
+    let combinedOutput = '';
 
-        const cli = ChildProcess.spawn('node', [labPath, ...args]);
-        let output = '';
-        let errorOutput = '';
-        let combinedOutput = '';
+    cli.stdout.on('data', (data) => {
 
-        cli.stdout.on('data', (data) => {
+        output += data;
+        combinedOutput += data;
+    });
 
-            output += data;
-            combinedOutput += data;
-        });
+    cli.stderr.on('data', (data) => {
 
-        cli.stderr.on('data', (data) => {
+        errorOutput += data;
+        combinedOutput += data;
+    });
 
-            errorOutput += data;
-            combinedOutput += data;
-        });
+    cli.once('close', (code, signal) => {
 
-        cli.once('close', (code, signal) => {
-
-        	if (signal) {
-        		reject(new Promise(() => {
-
-		            expect(signal).to.not.exist();
-        		}));
-        	}
-            resolve({output, errorOutput, combinedOutput, code, signal});
-        });
-    })
-
+    	if (signal) {
+    		callback(new Error('Unexpected signal: ' + signal));
+    	}
+        callback(null, {output, errorOutput, combinedOutput, code, signal});
+    });
 }
