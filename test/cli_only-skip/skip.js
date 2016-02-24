@@ -76,7 +76,7 @@ describe('math', () => {
 
         it('returns true when 1 + 1 equals 2', (done) => {
 
-            expect(1+1).to.equal(2);
+            expect(1 + 1).to.equal(2);
             done();
         });
 
@@ -114,13 +114,13 @@ describe('math', () => {
 
             it('returns true when 3 + 3 equals 6', (done) => {
 
-                expect(3+3).to.equal(6);
+                expect(3 + 3).to.equal(6);
                 done();
             });
 
             it('returns true when 4 + 4 equals 8', (done) => {
 
-                expect(4+4).to.equal(8);
+                expect(4 + 4).to.equal(8);
                 done();
             });
 
@@ -152,7 +152,7 @@ describe('math', () => {
 
                 it('returns true when 5 + 5 equals 10', (done) => {
 
-                    expect(5+5).to.equal(10);
+                    expect(5 + 5).to.equal(10);
                     done();
                 });
             });
@@ -261,7 +261,7 @@ describe('unrelated subtract', () => {
 
     it('returns true when 3 - 3 equals 0', (done) => {
 
-        expect(3-3).to.equal(0);
+        expect(3 - 3).to.equal(0);
         done();
     });
 });

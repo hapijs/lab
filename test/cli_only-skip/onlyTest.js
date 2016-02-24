@@ -114,7 +114,7 @@ describe('math', () => {
 
             it.only('returns true when 3 + 3 equals 6', (done) => {
 
-                expect(3+3).to.equal(6);
+                expect(3 + 3).to.equal(6);
                 done();
             });
 
