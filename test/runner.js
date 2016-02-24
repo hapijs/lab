@@ -332,6 +332,54 @@ describe('Runner', () => {
         });
     });
 
+    it('reports an error if there is more than one "only", even accross multiple scripts', (done) => {
+
+        const script1 = Lab.script();
+        script1.experiment('test', () => {
+
+            script1.experiment('subexperiment', () => {
+
+                script1.test('s1', (testDone) => {
+
+                    throw new Error();
+                })
+
+                script1.test('s2', (testDone) => {
+
+                    throw new Error();
+                })
+            });
+
+            script1.test.only('a', (testDone) => {
+
+                testDone();
+            });
+
+            script1.test('b', (testDone) => {
+
+                throw new Error();
+            });
+        });
+        const script2 = Lab.script();
+        script2.experiment.only('test2', () => {
+            script2.test('x1', (testDone) => {
+
+                throw new Error();
+            })
+        });
+
+        Lab.execute([script1, script2], {}, null, (err, notebook) => {
+
+            expect(err).to.exist();
+            expect(err.message).to.contain([
+                'Multiple tests are marked as "only":',
+                'Test: test a',
+                'Experiment: test2'
+            ]);
+            done();
+        });
+    });
+
     it('dry run', (done) => {
 
         const script = Lab.script();
