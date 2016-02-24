@@ -217,12 +217,12 @@ describe('Runner', () => {
                 script.test('s1', (testDone) => {
 
                     testDone();
-                })
+                });
 
                 script.test('s2', (testDone) => {
 
                     testDone();
-                })
+                });
             });
 
             script.test('a', (testDone) => {
@@ -256,12 +256,12 @@ describe('Runner', () => {
                 script.test('s1', (testDone) => {
 
                     throw new Error();
-                })
+                });
 
                 script.test('s2', (testDone) => {
 
                     throw new Error();
-                })
+                });
             });
 
             script.test.only('a', (testDone) => {
@@ -296,12 +296,12 @@ describe('Runner', () => {
                 script1.test('s1', (testDone) => {
 
                     throw new Error();
-                })
+                });
 
                 script1.test('s2', (testDone) => {
 
                     throw new Error();
-                })
+                });
             });
 
             script1.test.only('a', (testDone) => {
@@ -316,10 +316,11 @@ describe('Runner', () => {
         });
         const script2 = Lab.script();
         script2.experiment('test2', () => {
+
             script2.test('x1', (testDone) => {
 
                 throw new Error();
-            })
+            });
         });
 
         Lab.execute([script1, script2], {}, null, (err, notebook) => {
@@ -342,12 +343,12 @@ describe('Runner', () => {
                 script1.test('s1', (testDone) => {
 
                     throw new Error();
-                })
+                });
 
                 script1.test('s2', (testDone) => {
 
                     throw new Error();
-                })
+                });
             });
 
             script1.test.only('a', (testDone) => {
@@ -362,10 +363,11 @@ describe('Runner', () => {
         });
         const script2 = Lab.script();
         script2.experiment.only('test2', () => {
+
             script2.test('x1', (testDone) => {
 
                 throw new Error();
-            })
+            });
         });
 
         Lab.execute([script1, script2], {}, null, (err, notebook) => {
@@ -489,13 +491,14 @@ describe('Runner', () => {
         const random = Math.random;
         let first = true;
         Math.random = function () {
+
             if (first) {
                 first = false;
                 return 0.3;
             }
 
             return 0.7;
-        }
+        };
 
         const scripts = [script1, script2, script3, script4, script5];
         Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook1) => {
@@ -573,6 +576,7 @@ describe('Runner', () => {
 
         Lab.execute(script, null, null, (err, notebook) => {
 
+            expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
@@ -606,6 +610,7 @@ describe('Runner', () => {
 
         Lab.execute(script, null, null, (err, notebook) => {
 
+            expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();

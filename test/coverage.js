@@ -3,7 +3,7 @@
 // Load modules
 
 const Path = require('path');
-const Module = require('module')
+const Module = require('module');
 const Code = require('code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
@@ -132,7 +132,7 @@ describe('Coverage', () => {
 
     it('ignores non-matching files', (done) => {
 
-        const Test = require('./coverage/exclude/ignore');
+        require('./coverage/exclude/ignore');
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/exclude/ignore') });
         expect(Math.floor(cov.percent)).to.equal(0);
@@ -215,9 +215,9 @@ describe('Coverage', () => {
     it('should measure missing coverage on single-line functions correctly', (done) => {
 
         const Test = require('./coverage/single-line-functions');
-        let results = [];
-        for(let i = 1; i <= 10; ++i) {
-        	results.push(Test[`method${i}`](3, 4));
+        const results = [];
+        for (let i = 1; i <= 10; ++i) {
+            results.push(Test[`method${i}`](3, 4));
         }
 
         results.push(Test.method11(5, 10));
@@ -235,7 +235,7 @@ describe('Coverage', () => {
     it('should measure missing coverage on trailing function declarations correctly', (done) => {
 
         const Test = require('./coverage/trailing-function-declarations');
-        let result = Test.method(3, 4);
+        const result = Test.method(3, 4);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/trailing-function-declarations') });
         const source = cov.files[0].source;
@@ -272,15 +272,15 @@ describe('Coverage', () => {
         it('does not reset file coverage', (done) => {
 
             const cacheBackup = require.cache; // backup require cache
-            const filename = Path.resolve(__dirname, './coverage/basic.js')
-            let file = require('./coverage/basic');
+            const filename = Path.resolve(__dirname, './coverage/basic.js');
+            let file = require('./coverage/basic'); //eslint-disable-line no-unused-vars
             const fileCovBefore = global.__$$labCov.files[filename];
             require.cache = Module._cache = {}; // clear require cache before additional require
             file = require('./coverage/basic');
             require.cache = Module._cache = cacheBackup; // restore require cache
 
             const fileCovAfter = global.__$$labCov.files[filename];
-            expect(fileCovAfter).to.equal(fileCovBefore)
+            expect(fileCovAfter).to.equal(fileCovBefore);
             done();
         });
     });

@@ -23,6 +23,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
         Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result).to.include('lint');
 
             const eslintResults = result.lint;
@@ -44,6 +45,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
         Linters.lint({ lintingPath: path }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result).to.include('lint');
 
             const eslintResults = result.lint;
@@ -65,6 +67,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'with_config');
         Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result).to.include('lint');
 
             const eslintResults = result.lint;
@@ -84,6 +87,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'clean');
         Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result.lint).to.exist();
 
             const eslintResults = result.lint;
@@ -101,6 +105,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'shadow');
         Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result.lint).to.exist();
 
             const eslintResults = result.lint;
@@ -118,6 +123,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'shadow-res');
         Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result.lint).to.exist();
 
             const eslintResults = result.lint;
@@ -136,6 +142,7 @@ describe('Linters - eslint', () => {
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
         Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': lintOptions }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result).to.include('lint');
 
             const eslintResults = result.lint;
@@ -153,6 +160,7 @@ describe('Linters - custom', () => {
         const path = Path.join(__dirname, 'lint');
         Linters.lint({ lintingPath: path, linter: Path.join(__dirname, 'lint', 'custom') }, (err, result) => {
 
+            expect(err).to.not.exist();
             expect(result).to.include('lint');
 
             const results = result.lint;
