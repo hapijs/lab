@@ -295,7 +295,7 @@ node_modules/*
 
 If you would like to run a different linter, or even a custom version of eslint you should
 pass the `-n` or `--linter` argument with the path to the lint runner.  For example,
-if you plan to us jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.  
+if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.  
 
 ## Best practices
 
