@@ -3,11 +3,15 @@
 const ChildProcess = require('child_process');
 const Path = require('path');
 
-const labPath = Path.join(__dirname, '..', 'bin', '_lab');
+// Declare internals
+
+const internals = {
+    labPath: Path.join(__dirname, '..', 'bin', '_lab')
+};
 
 module.exports = (args, callback) => {
 
-    const cli = ChildProcess.spawn('node', [].concat(labPath, args));
+    const cli = ChildProcess.spawn('node', [].concat(internals.labPath, args));
     let output = '';
     let errorOutput = '';
     let combinedOutput = '';
