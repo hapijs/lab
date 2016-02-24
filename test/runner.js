@@ -207,6 +207,131 @@ describe('Runner', () => {
         });
     });
 
+    it('skips tests not in "only" experiment', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment.only('subexperiment', () => {
+
+                script.test('s1', (testDone) => {
+
+                    testDone();
+                })
+
+                script.test('s2', (testDone) => {
+
+                    testDone();
+                })
+            });
+
+            script.test('a', (testDone) => {
+
+                throw new Error();
+            });
+
+            script.test('b', (testDone) => {
+
+                throw new Error();
+            });
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(4);
+            expect(notebook.tests.filter((test) => test.skipped)).to.have.length(2);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips everything except the "only" test', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('subexperiment', () => {
+
+                script.test('s1', (testDone) => {
+
+                    throw new Error();
+                })
+
+                script.test('s2', (testDone) => {
+
+                    throw new Error();
+                })
+            });
+
+            script.test.only('a', (testDone) => {
+
+                testDone();
+            });
+
+            script.test('b', (testDone) => {
+
+                throw new Error();
+            });
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(4);
+            expect(notebook.tests.filter((test) => test.skipped)).to.have.length(3);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+
+    it('skips everything except the "only" test when executing multiple scripts', (done) => {
+
+        const script1 = Lab.script();
+        script1.experiment('test', () => {
+
+            script1.experiment('subexperiment', () => {
+
+                script1.test('s1', (testDone) => {
+
+                    throw new Error();
+                })
+
+                script1.test('s2', (testDone) => {
+
+                    throw new Error();
+                })
+            });
+
+            script1.test.only('a', (testDone) => {
+
+                testDone();
+            });
+
+            script1.test('b', (testDone) => {
+
+                throw new Error();
+            });
+        });
+        const script2 = Lab.script();
+        script2.experiment('test2', () => {
+            script2.test('x1', (testDone) => {
+
+                throw new Error();
+            })
+        });
+
+        Lab.execute([script1, script2], {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(5);
+            expect(notebook.tests.filter((test) => test.skipped)).to.have.length(4);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('dry run', (done) => {
 
         const script = Lab.script();
