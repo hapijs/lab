@@ -1095,7 +1095,7 @@ describe('Reporter', () => {
                 script.test('fails with non-error', (finished) => {
 
                     finished('boom');
-                    finished('kaboom');
+                    throw new Error('kaboom');
                 });
             });
 
