@@ -2,11 +2,9 @@
 
 // Load modules
 
-const ChildProcess = require('child_process');
 const Fs = require('fs');
 const Path = require('path');
 const Code = require('code');
-const Lab = require('../');
 const Pkg = require('../package.json');
 const _Lab = require('../test_runner');
 const RunCli = require('./run_cli');
@@ -25,8 +23,6 @@ const expect = Code.expect;
 
 
 describe('CLI', () => {
-
-    const labPath = Path.join(__dirname, '..', 'bin', '_lab');
 
     it('runs a single test from the command line', (done) => {
 
@@ -201,7 +197,6 @@ describe('CLI', () => {
 
     it('ignores the list of predefined globals (-I)', (done) => {
 
-        let output = '';
         const scriptFile = 'global.foo = 1; global.bar = 2';
 
         Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
@@ -222,7 +217,6 @@ describe('CLI', () => {
 
     it('ignores the list of predefined globals when using --ignore', (done) => {
 
-        let output = '';
         const scriptFile = 'global.foo = 1; global.bar = 2';
 
         Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);

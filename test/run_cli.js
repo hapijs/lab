@@ -30,9 +30,9 @@ module.exports = (args, callback) => {
 
     cli.once('close', (code, signal) => {
 
-    	if (signal) {
-    		callback(new Error('Unexpected signal: ' + signal));
-    	}
-        callback(null, {output, errorOutput, combinedOutput, code, signal});
+        if (signal) {
+            callback(new Error('Unexpected signal: ' + signal));
+        }
+        callback(null, { output, errorOutput, combinedOutput, code, signal });
     });
-}
+};

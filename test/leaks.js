@@ -2,7 +2,6 @@
 
 // Load modules
 
-const Path = require('path');
 const Code = require('code');
 const _Lab = require('../test_runner');
 const Lab = require('../');

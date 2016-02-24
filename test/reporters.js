@@ -1310,7 +1310,11 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.before((finished) => { throw 'abc'; });
+                script.before((finished) => {
+
+                    throw 'abc';
+                });
+
                 script.test('works', (finished) => {
 
                     finished();
