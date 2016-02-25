@@ -140,7 +140,24 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
 - `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
 - `skip` - skip execution. Cannot be overridden in children once parent is set to skip.
-- `only` - marks all other tests or experiments with `skip`.  This doesn't mark all other experiments and tests in a suite of scripts as skipped, instead it works within a single test script.
+- `only` - marks all other tests or experiments with `skip`.
+
+You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using the `options` flags:
+
+```JavaScript
+lab.experiment('with only', () => {
+
+    lab.test.only('only this test will run', (done) => {
+
+        Code.expect(1 + 1).to.equal(2);
+        done();
+    });
+    
+    lab.test('another test that will not be executed', (done) =>  {
+        done();
+    });
+});
+```
 
 `before()`, `after()`, `beforeEach()`, `afterEach()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
