@@ -152,8 +152,9 @@ lab.experiment('with only', () => {
         Code.expect(1 + 1).to.equal(2);
         done();
     });
-    
+
     lab.test('another test that will not be executed', (done) =>  {
+
         done();
     });
 });
