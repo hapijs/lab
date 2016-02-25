@@ -1096,11 +1096,6 @@ describe('Reporter', () => {
 
                     finished('boom');
                 });
-
-                script.after((finished) => {
-
-                    finished(new Error());
-                });
             });
 
             Lab.report(script, { reporter: 'json', lint: true, linter: 'eslint' }, (err, code, output) => {
@@ -1117,10 +1112,37 @@ describe('Reporter', () => {
                 expect(result.tests.group[2].err).to.equal('Non Error object received or caught');
                 expect(result.leaks.length).to.equal(0);
                 expect(result.duration).to.exist();
-                expect(result.errors).to.have.length(1);
                 expect(result.lint.length).to.be.greaterThan(1);
                 expect(result.lint[0].filename).to.exist();
                 expect(result.lint[0].errors).to.exist();
+                done();
+                done = function () {};
+            });
+        });
+
+        it('generates a report with errors', (done) => {
+
+            const script = Lab.script();
+            script.experiment('group', () => {
+
+                script.test('works', (finished) => {
+
+                    expect(true).to.equal(true);
+                    finished();
+                });
+
+                script.after((finished) => {
+
+                    finished(new Error());
+                });
+            });
+
+            Lab.report(script, { reporter: 'json' }, (err, code, output) => {
+
+                const result = JSON.parse(output);
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                expect(result.errors).to.have.length(1);
                 done();
                 done = function () {};
             });
