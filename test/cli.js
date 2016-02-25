@@ -566,7 +566,7 @@ describe('CLI', () => {
         afterEach((done) => {
 
             Fs.unlink(filename, () => done());
-        })
+        });
 
         it('displays error message when there is more than one "only" accross multiple files', (done) => {
 
@@ -585,6 +585,20 @@ describe('CLI', () => {
         it('displays error message when there is more than one "only" accross multiple files and the first reporter is not console', (done) => {
 
             RunCli(['-r', 'json', '-o', filename, '-r', 'console', '-o', 'stdout', 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
+
+                if (error) {
+                    done(error);
+                }
+
+                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
+                expect(result.code).to.equal(1);
+                done();
+            });
+        });
+
+        it('displays error message when there is more than one "only" accross multiple files and there’s no console reporter', (done) => {
+
+            RunCli(['-r', 'json', '-o', filename, '-r', 'junit', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
 
                 if (error) {
                     done(error);
