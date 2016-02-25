@@ -2,7 +2,9 @@
 
 // Load modules
 
+const Crypto = require('crypto');
 const Fs = require('fs');
+const Os = require('os');
 const Path = require('path');
 const Code = require('code');
 const Pkg = require('../package.json');
@@ -19,6 +21,8 @@ const internals = {};
 const lab = exports.lab = _Lab.script();
 const describe = lab.describe;
 const it = lab.it;
+const beforeEach = lab.beforeEach;
+const afterEach = lab.afterEach;
 const expect = Code.expect;
 
 
@@ -547,6 +551,63 @@ describe('CLI', () => {
             expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
             expect(result.code).to.equal(1);
             done();
+        });
+    });
+
+    describe('when using multiple reporters', () => {
+
+        let filename;
+        beforeEach((done) => {
+
+            filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+            done();
+        });
+
+        afterEach((done) => {
+
+            Fs.unlink(filename, () => done());
+        });
+
+        it('displays error message when there is more than one "only" accross multiple files', (done) => {
+
+            RunCli(['-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
+
+                if (error) {
+                    done(error);
+                }
+
+                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
+                expect(result.code).to.equal(1);
+                done();
+            });
+        });
+
+        it('displays error message when there is more than one "only" accross multiple files and the first reporter is not console', (done) => {
+
+            RunCli(['-r', 'json', '-o', filename, '-r', 'console', '-o', 'stdout', 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
+
+                if (error) {
+                    done(error);
+                }
+
+                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
+                expect(result.code).to.equal(1);
+                done();
+            });
+        });
+
+        it('displays error message when there is more than one "only" accross multiple files and there’s no console reporter', (done) => {
+
+            RunCli(['-r', 'json', '-o', filename, '-r', 'junit', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
+
+                if (error) {
+                    done(error);
+                }
+
+                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
+                expect(result.code).to.equal(1);
+                done();
+            });
         });
     });
 
