@@ -142,18 +142,19 @@ lab.experiment('math', () => {
 lab.experiment('math', () => {
 
     lab.before(() => {
-    
-    	const promise = aFunctionReturningAPromise()
 
-		return promise;
+        const promise = aFunctionReturningAPromise();
+
+        return promise;
     });
 
     lab.test('returns true when 1 + 1 equals 2', () => {
 
         return aFunctionReturningAPromise()
-        	.then((aValue) => {
-        		Code.expect(aValue).to.equal(expectedValue);
-        	});
+            .then((aValue) => {
+
+                Code.expect(aValue).to.equal(expectedValue);
+            });
     });
 });
 ```
@@ -335,7 +336,7 @@ node_modules/*
 
 If you would like to run a different linter, or even a custom version of eslint you should
 pass the `-n` or `--linter` argument with the path to the lint runner.  For example,
-if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.  
+if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
 
 ## Best practices
 
