@@ -821,7 +821,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).to.not.exist();
-            expect(notebook.tests[0].err).to.contain('\'before\' action failed');
+            expect(notebook.tests[0].err).to.equal('\'before\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
@@ -855,7 +855,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).to.not.exist();
-            expect(notebook.tests[0].err).to.contain('\'before each\' action failed');
+            expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
