@@ -1521,12 +1521,6 @@ describe('Runner', () => {
             });
         });
 
-        it('throws delayed', (done) => {
-            Promise.reject(new Error('faaaail'));
-
-            done();
-        });
-
         it('test timeouts still function correctly', (done) => {
 
             const script = Lab.script();
