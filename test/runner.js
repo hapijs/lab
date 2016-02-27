@@ -99,6 +99,250 @@ describe('Runner', () => {
         });
     });
 
+    it('should fail test that neither takes a callback nor returns anything', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {});
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('Function for "a" should either take a callback argument or return a promise');
+            done();
+        });
+    });
+
+    it('should fail test that neither takes a callback nor returns a valid promise', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {
+
+            return { not: 'a promise' };
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('Function for "a" should either take a callback argument or return a promise');
+            done();
+        });
+    });
+
+    it('should fail test that returns a rejected promise', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {
+
+            return Promise.reject(new Error('A reason why this test failed'));
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('A reason why this test failed');
+            done();
+        });
+    });
+
+    it('should fail test that calls the callback with an error', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', (done) => {
+
+            done(new Error('A reason why this test failed'));
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('A reason why this test failed');
+            done();
+        });
+    });
+
+    it('should not fail test that returns a resolved promise', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {
+
+            return Promise.resolve();
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('should not fail test that calls the callback without an error', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', (done) => {
+
+            done();
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    ['before', 'beforeEach', 'after', 'afterEach'].forEach((fnName) => {
+
+        it(`should fail "${fnName}" that neither takes a callback nor returns anything`, (done) => {
+
+            const script = Lab.script({ schedule: false });
+            script.describe('a test group', () => {
+
+                script.test('a', (done) => done());
+
+                script[fnName](() => {});
+            });
+
+
+            Lab.execute(script, {}, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.tests).to.have.length(1);
+                expect(notebook.errors[0].message).to.contain('should either take a callback argument or return a promise');
+                done();
+            });
+        });
+
+        it(`should fail "${fnName}" that neither takes a callback nor returns a valid promise`, (done) => {
+
+            const script = Lab.script({ schedule: false });
+            script.describe('a test group', () => {
+
+                script.test('a', (done) => done());
+
+                script[fnName](() => {
+
+                    return { not: 'a promise' };
+                });
+            });
+
+
+            Lab.execute(script, {}, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.errors[0].message).to.contain('should either take a callback argument or return a promise');
+                done();
+            });
+        });
+
+        it(`should fail "${fnName}" that returns a rejected promise`, (done) => {
+
+            const script = Lab.script({ schedule: false });
+            script.describe('a test group', () => {
+
+                script.test('a', (done) => done());
+
+                script[fnName](() => {
+
+                    return Promise.reject(new Error('A reason why this test failed'));
+                });
+            });
+
+
+            Lab.execute(script, {}, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.errors[0].message).to.contain('A reason why this test failed');
+                done();
+            });
+        });
+
+        it(`should fail "${fnName}" that calls the callback with an error`, (done) => {
+
+            const script = Lab.script({ schedule: false });
+            script.describe('a test group', () => {
+
+                script.test('a', (done) => done());
+
+                script[fnName]((done) => {
+
+                    done(new Error('A reason why this test failed'));
+                });
+            });
+
+
+            Lab.execute(script, {}, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.errors[0].message).to.contain('A reason why this test failed');
+                done();
+            });
+        });
+
+        it(`should not fail "${fnName}" that returns a resolved promise`, (done) => {
+
+            const script = Lab.script({ schedule: false });
+            script.describe('a test group', () => {
+
+                script.test('a', (done) => done());
+
+                script[fnName](() => {
+
+                    return Promise.resolve();
+                });
+            });
+
+            Lab.execute(script, {}, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.tests).to.have.length(1);
+                expect(notebook.failures).to.equal(0);
+                expect(notebook.errors.length).to.equal(0);
+                done();
+            });
+        });
+
+        it(`should not fail "${fnName}" calls the callback without an error`, (done) => {
+
+            const script = Lab.script({ schedule: false });
+            script.describe('a test group', () => {
+
+                script.test('a', (done) => done());
+
+                script[fnName]((done) => {
+
+                    done();
+                });
+            });
+
+            Lab.execute(script, {}, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.tests).to.have.length(1);
+                expect(notebook.failures).to.equal(0);
+                expect(notebook.errors.length).to.equal(0);
+                done();
+            });
+        });
+    });
+
     it('filters on ids', (done) => {
 
         const script = Lab.script();
@@ -577,7 +821,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).to.not.exist();
-            expect(notebook.tests[0].err).to.equal('\'before\' action failed');
+            expect(notebook.tests[0].err).to.contain('\'before\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
@@ -611,7 +855,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).to.not.exist();
-            expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
+            expect(notebook.tests[0].err).to.contain('\'before each\' action failed');
             expect(steps).to.deep.equal(['before']);
             done();
         });
