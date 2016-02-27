@@ -208,6 +208,32 @@ describe('Runner', () => {
         });
     });
 
+    it('should break out of the test promise chain before starting the next test', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {
+
+            return Promise.reject(new Error('A reason why this test failed'));
+        });
+
+        script.test('b', (done) => {
+
+            throw new Error('A different reason why this test failed');
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.failures).to.equal(2);
+            expect(notebook.tests[0].err.toString()).to.contain('A reason why this test failed');
+            expect(notebook.tests[1].err.toString()).to.contain('A different reason why this test failed');
+            done();
+        });
+    });
+
+
     ['before', 'beforeEach', 'after', 'afterEach'].forEach((fnName) => {
 
         it(`should fail "${fnName}" that neither takes a callback nor returns anything`, (done) => {
@@ -1493,6 +1519,12 @@ describe('Runner', () => {
                 expect(code).to.equal(0);
                 done();
             });
+        });
+
+        it('throws delayed', (done) => {
+            Promise.reject(new Error('faaaail'));
+
+            done();
         });
 
         it('test timeouts still function correctly', (done) => {
