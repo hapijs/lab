@@ -136,6 +136,28 @@ lab.experiment('math', () => {
 
 ```
 
+`test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises instead of using the `done` callback:
+
+```JavaScript
+lab.experiment('math', () => {
+
+    lab.before(() => {
+    
+    	const promise = aFunctionReturningAPromise()
+
+		return promise;
+    });
+
+    lab.test('returns true when 1 + 1 equals 2', () => {
+
+        return aFunctionReturningAPromise()
+        	.then((aValue) => {
+        		Code.expect(aValue).to.equal(expectedValue);
+        	});
+    });
+});
+```
+
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
 - `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
