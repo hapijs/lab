@@ -1073,7 +1073,7 @@ describe('Reporter', () => {
         });
     });
 
-    describe('json', () => {
+    describe('json', { timeout: 10000 }, () => {
 
         it('generates a report', (done) => {
 
@@ -1116,7 +1116,6 @@ describe('Reporter', () => {
                 expect(result.lint[0].filename).to.exist();
                 expect(result.lint[0].errors).to.exist();
                 done();
-                done = function () {};
             });
         });
 

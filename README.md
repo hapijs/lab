@@ -136,6 +136,29 @@ lab.experiment('math', () => {
 
 ```
 
+`test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises instead of using the `done` callback:
+
+```JavaScript
+lab.experiment('math', () => {
+
+    lab.before(() => {
+
+        const promise = aFunctionReturningAPromise();
+
+        return promise;
+    });
+
+    lab.test('returns true when 1 + 1 equals 2', () => {
+
+        return aFunctionReturningAPromise()
+            .then((aValue) => {
+
+                Code.expect(aValue).to.equal(expectedValue);
+            });
+    });
+});
+```
+
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
 - `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
@@ -313,7 +336,7 @@ node_modules/*
 
 If you would like to run a different linter, or even a custom version of eslint you should
 pass the `-n` or `--linter` argument with the path to the lint runner.  For example,
-if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.  
+if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
 
 ## Best practices
 

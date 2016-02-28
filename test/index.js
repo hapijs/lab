@@ -793,42 +793,49 @@ describe('Lab', () => {
         };
     });
 
-    it('throws on invalid functions', (done) => {
+    it('should not throw on tests without a function', (done) => {
 
-        const script = Lab.script();
+        const script = Lab.script({ schedule: false });
 
         expect(() => {
 
             script.test('a');
         }).not.to.throw();
+        done();
+    });
+
+    it('should not throw on tests with a function without arguments', (done) => {
+
+        const script = Lab.script({ schedule: false });
 
         expect(() => {
 
             script.test('a', () => {});
-        }).to.throw('Function for test "a" should take exactly one argument');
+        }).not.to.throw();
+        done();
+    });
 
-        ['before', 'beforeEach', 'after', 'afterEach'].forEach((fn) => {
+    ['before', 'beforeEach', 'after', 'afterEach'].forEach((fnName) => {
 
-            expect(() => {
+        it(`should throw on "${fnName}" without a function`, (done) => {
 
-                script.experiment('exp', () => {
-
-                    script[fn]();
-                });
-            }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
+            const script = Lab.script({ schedule: false });
 
             expect(() => {
 
-                script.experiment('exp', () => {
-
-                    script[fn](() => {});
-                });
-            }).to.throw('Function for ' + fn + ' in "exp" should take exactly one argument');
+                script[fnName]();
+            }).to.throw(`${fnName} in "script" requires a function argument`);
+            done();
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
+        it(`should not throw on "${fnName}" with a function without arguments`, (done) => {
 
-            expect(err).to.not.exist();
+            const script = Lab.script({ schedule: false });
+
+            expect(() => {
+
+                script[fnName](() => {});
+            }).not.to.throw();
             done();
         });
     });
