@@ -1073,7 +1073,7 @@ describe('Reporter', () => {
         });
     });
 
-    describe('json', () => {
+    describe('json', { timeout: 10000 }, () => {
 
         it('generates a report', (done) => {
 
