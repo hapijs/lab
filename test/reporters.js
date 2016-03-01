@@ -639,6 +639,26 @@ describe('Reporter', () => {
             });
         });
 
+        it('generates a report with verbose progress and assertions count per test', (done) => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', (finished) => {
+
+                    expect(finished).to.exist();
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', progress: 2, assert: Code }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                done();
+            });
+        });
+
         it('generates a report with verbose progress that displays well on windows', (done) => {
 
             const script = Lab.script();
