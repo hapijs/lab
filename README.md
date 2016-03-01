@@ -185,6 +185,7 @@ lab.experiment('with only', () => {
 
 Additionally, `test()` options support a `plan` setting to specify the expected number of assertions for your test to execute. This
 setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
+*`plan` may not work with parallel test executions*
 
 ```javascript
 lab.experiment('my plan', () => {
