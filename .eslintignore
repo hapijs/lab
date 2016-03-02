@@ -5,4 +5,5 @@ test/cli/
 test/cli_*/
 test/lint/
 test/override/
+test/plan/
 test/transform/

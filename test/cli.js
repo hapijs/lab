@@ -925,4 +925,34 @@ describe('CLI', () => {
             done();
         });
     });
+
+    it('runs a single test and reports failed test plans', (done) => {
+
+        RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', 'code'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('Expected 1 assertions, but found 2');
+            expect(result.output).to.contain('1 of 3 tests failed');
+            done();
+        });
+    });
+
+    it('runs a single test and fails with a plan and no assertion library', (done) => {
+
+        RunCli(['test/cli_plan/simple.js', '-m', '2000'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('Expected 1 assertions, but no assertion library found');
+            expect(result.output).to.contain('3 of 3 tests failed');
+            done();
+        });
+    });
 });

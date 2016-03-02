@@ -138,7 +138,7 @@ lab.experiment('math', () => {
 
 `test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises instead of using the `done` callback:
 
-```JavaScript
+```javascript
 lab.experiment('math', () => {
 
     lab.before(() => {
@@ -167,7 +167,7 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 
 You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using the `options` flags:
 
-```JavaScript
+```javascript
 lab.experiment('with only', () => {
 
     lab.test.only('only this test will run', (done) => {
@@ -178,6 +178,21 @@ lab.experiment('with only', () => {
 
     lab.test('another test that will not be executed', (done) =>  {
 
+        done();
+    });
+});
+```
+
+Additionally, `test()` options support a `plan` setting to specify the expected number of assertions for your test to execute. This
+setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
+*`plan` may not work with parallel test executions*
+
+```javascript
+lab.experiment('my plan', () => {
+
+    lab.test('only a single assertion executes', { plan: 1 }, (done) => {
+
+        Code.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -208,7 +223,7 @@ The `script([options])` method takes an optional `options` argument where `optio
   with node without having to use the cli (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
   can be turned off by setting `schedule` to `false`. Defaults to `true`.
 - `cli` - allows setting command line options within the script. Note that the last script file loaded wins and usage of this is recommended
-  only for temporarily changing the execution of tests. This option is useful when code working with an automatic test engine that runs test
+  only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests
   on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute
   the first test loaded.
 

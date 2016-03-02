@@ -1117,6 +1117,98 @@ describe('Runner', () => {
         });
     });
 
+    it('extends report with assertions library support (planned assertions)', (done) => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', { plan: 1 }, (testDone) => {
+
+                assertions.expect(true).to.be.true();
+                testDone();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: assertions }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(0);
+            expect(output).to.match(/Assertions count: \d+/);
+            expect(output).to.not.match(/Expected \d+ assertions, but found \d+/);
+            done();
+        });
+    });
+
+    it('extends report with assertions library support (planned assertions error)', (done) => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', { plan: 2 }, (testDone) => {
+
+                assertions.expect(true).to.be.true();
+                testDone();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: assertions }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/Assertions count: \d+/);
+            expect(output).to.match(/Expected \d+ assertions, but found \d+/);
+            done();
+        });
+    });
+
+    it('extends report with assertions library support (planned assertions error with existing error)', (done) => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', { plan: 2 }, (testDone) => {
+
+                assertions.expect(true).to.be.true();
+                testDone(new Error('My Error'));
+            });
+        });
+
+        Lab.report(script, { output: false, assert: assertions }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/My Error/);
+            expect(output).to.match(/Assertions count: \d+/);
+            expect(output).to.match(/Expected \d+ assertions, but found \d+/);
+            done();
+        });
+    });
+
+    it('extends report with planned assertions and missing assertion library', (done) => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', { plan: 1 }, (testDone) => {
+
+                assertions.expect(true).to.be.true();
+                testDone();
+            });
+        });
+
+        Lab.report(script, { output: false }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.contain('Expected 1 assertions, but no assertion library found');
+            done();
+        });
+    });
+
     it('extends report with assertions library support (incomplete assertions)', (done) => {
 
         const script = Lab.script();
