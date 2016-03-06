@@ -71,6 +71,21 @@ describe('CLI', () => {
         });
     });
 
+    it('runs a directory of tests with async code from the command line', (done) => {
+
+        RunCli(['test/cli_multi', '-m', '2000'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('2 tests complete');
+            done();
+        });
+    });
+
     it('exits with code 1 after function throws', (done) => {
 
         RunCli(['test/cli_throws/throws.js'], (error, result) => {
