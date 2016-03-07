@@ -73,7 +73,7 @@ describe('CLI', () => {
 
     it('runs a directory of tests with async code from the command line', (done) => {
 
-        RunCli(['test/cli_multi', '-m', '2000'], (error, result) => {
+        RunCli(['test/cli_multi', '-l', '-v'], (error, result) => {
 
             if (error) {
                 done(error);

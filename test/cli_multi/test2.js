@@ -31,6 +31,7 @@ describe('test2', () => {
     it('should multiply numbers', (done) => {
 
         process.nextTick(() => {
+
             expect(1 * 1).to.equal(1);
             done();
         });
