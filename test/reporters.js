@@ -1375,7 +1375,7 @@ describe('Reporter', () => {
                     .to.contain('<div class="stats medium">')
                     .and.to.contain('<span class="errors" data-tooltip="indent - Expected indentation of 4 space characters but found 0.&#xa;eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.&#xa;semi - Missing semicolon."></span>')
                     .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;."></span>')
-                    .and.to.contain('<span class="lint-errors low">8</span>')
+                    .and.to.contain('<span class="lint-errors low">9</span>')
                     .and.to.contain('<span class="lint-warnings low">1</span>')
                     .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
                     .and.to.contain('<li class="lint-entry">L14 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 space characters but found 0.</li>')
@@ -1416,7 +1416,7 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 expect(output)
-                    .to.contain('<span class="lint-errors low">8</span>')
+                    .to.contain('<span class="lint-errors low">9</span>')
                     .and.to.contain('<span class="lint-warnings medium">1</span>');
 
                 delete global.__$$testCovHtml;
