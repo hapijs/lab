@@ -328,6 +328,37 @@ describe('Reporter', () => {
             });
         });
 
+        it('counts "todo" tests as skipped', (done) => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', (finished) => {
+
+                    expect(true).to.equal(true);
+                    finished();
+                });
+
+                script.test.skip('a skipped test', (done) => {
+
+                    done(new Error('Should not be called'));
+                });
+
+                script.test('a todo test');
+            });
+
+            Lab.report(script, { reporter: 'console' }, (err, code, output) => {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(0);
+                expect(output).to.contain([
+                    '1 tests complete',
+                    '2 skipped'
+                ]);
+                done();
+            });
+        });
+
         it('generates a report with errors', (done) => {
 
             const script = Lab.script();
