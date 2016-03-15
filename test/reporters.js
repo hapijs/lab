@@ -714,6 +714,71 @@ describe('Reporter', () => {
             });
         });
 
+        it('generates a report without skipped and todo tests', (done) => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', (finished) => {
+
+                    expect(true).to.equal(true);
+                    finished();
+                });
+
+                script.test.skip('a skipped test', (done) => {
+
+                    done(new Error('Should not be called'));
+                });
+
+                script.test('a todo test');
+            });
+
+            Lab.report(script, { reporter: 'console', 'silent-skips': true }, (err, code, output) => {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(0);
+                expect(output).to.contain([
+                    '  .\n',
+                    '1 tests complete',
+                    '2 skipped'
+                ]);
+                done();
+            });
+        });
+
+        it('generates a verbose report without skipped and todo tests', (done) => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', (finished) => {
+
+                    expect(true).to.equal(true);
+                    finished();
+                });
+
+                script.test.skip('a skipped test', (done) => {
+
+                    done(new Error('Should not be called'));
+                });
+
+                script.test('a todo test');
+            });
+
+            Lab.report(script, { reporter: 'console', progress: 2, 'silent-skips': true }, (err, code, output) => {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(0);
+                expect(output).to.not.contain('a skipped test');
+                expect(output).to.not.contain('a todo test');
+                expect(output).to.contain([
+                    '1 tests complete',
+                    '2 skipped'
+                ]);
+                done();
+            });
+        });
+
         it('generates a coverage report (verbose)', (done) => {
 
             const Test = require('./coverage/console');
