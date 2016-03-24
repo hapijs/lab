@@ -451,7 +451,8 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n      Additional error data:\n      "abc"\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n/);
+                expect(result).to.match(/Additional error data:\n      "abc"\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
                 done();
             });
         });
@@ -474,7 +475,8 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n      Additional error data:\n      \[1,2,3\]\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n/);
+                expect(result).to.match(/Additional error data:\n      \[1,2,3\]\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
                 done();
             });
         });
@@ -497,7 +499,8 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n      at <trace>\n      at <trace>\n      at <trace>\n\n      Additional error data:\n          a: 1\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
+                expect(result).to.contain('Failed tests:\n\n  1)');
+                expect(result).to.contain('Additional error data:\n          a: 1\n\n\n1 of 1 tests failed\nTest duration:');
                 done();
             });
         });
