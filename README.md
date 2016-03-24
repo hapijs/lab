@@ -279,7 +279,7 @@ suite('math', () => {
 });
 ```
 
-To use source transforms, you must specify a file that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler and the CoffeeScript compiler could look like:
+To use source transforms, you must specify a file with the `-T` command line option that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler and the CoffeeScript compiler could look like:
 
 ```javascript
 const Babel = require('babel-core');
