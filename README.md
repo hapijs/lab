@@ -330,6 +330,28 @@ if (typeof value === 'symbol') {
 
 ```
 
+To run negative tests that should throw errors:
+```javascript
+const Code = require('code');
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
+
+const expect = Code.expect;
+
+lab.test('test should fail', (done) => {
+
+    try{
+        expect(true).equals(false);
+    }
+    catch(err) {
+        expect(err.name).to.equal('Error');
+        expect(err.message).to.equal('Expected true to equal specified value');
+    }
+    
+    done();
+});
+```
+
 ## Extending the linter
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
