@@ -331,7 +331,7 @@ if (typeof value === 'symbol') {
 ```
 
 To run negative tests that should throw errors:
-```javacript
+```javascript
 lab.test('negative test should fail', (done) => {
 
     expect(syncFunc('bad data')).to.throw(Error);
@@ -352,6 +352,7 @@ lab.test('negative test should fail on async function', (done) => {
     
     done();
 });
+
 ```
 
 ## Extending the linter
