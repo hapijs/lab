@@ -330,6 +330,31 @@ if (typeof value === 'symbol') {
 
 ```
 
+To run negative tests that should throw errors:
+```javascript
+lab.test('negative test should fail', (done) => {
+
+    expect(syncFunc('bad data')).to.throw(Error);
+    done();
+});
+
+lab.test('negative test should fail on async function', (done) => {
+
+    const arg = 'bad data';
+    asyncFunc(arg, (err, result) => {
+
+        expect(err).to.exist();
+        expect(err).to.be.instanceOf(Error);
+
+        // brittle
+        expect(err.message).to.equal('"' + arg + '" is not valid input');
+    });
+
+    done();
+});
+
+```
+
 ## Extending the linter
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
