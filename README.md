@@ -341,15 +341,15 @@ lab.test('negative test should fail', (done) => {
 lab.test('negative test should fail on async function', (done) => {
 
     const arg = 'bad data';
-    asyncFunc(arg, function (err, result) {
-        
+    asyncFunc(arg, (err, result) => {
+
         expect(err).to.exist();
         expect(err).to.be.instanceOf(Error);
-        
+
         // brittle
         expect(err.message).to.equal('"' + arg + '" is not valid input');
     });
-    
+
     done();
 });
 
