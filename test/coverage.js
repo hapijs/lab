@@ -175,6 +175,14 @@ describe('Coverage', () => {
         done();
     });
 
+    it('retains original value of conditional result with comma operator', (done) => {
+
+        const Test = require('./coverage/conditional2');
+        const value = 4711;
+        expect(Test.method(value)).to.equal(value);
+        done();
+    });
+
     it('should not change use strict instructions', (done) => {
 
         const Test = require('./coverage/use-strict.js');
