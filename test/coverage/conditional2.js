@@ -9,5 +9,5 @@ const internals = {};
 
 
 exports.method = function (value) {
-    return true ? (value-1, value) : value+1;  //Should return value
+    return true ? (value - 1, value) : value + 1;  //Should return value
 };
