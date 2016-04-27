@@ -10,7 +10,7 @@ const Lab = require('../');
 // Declare internals
 
 const internals = {
-    harmonyGlobals: ['Promise', 'Proxy', 'Symbol', 'Map', 'WeakMap', 'Set', 'WeakSet']
+    harmonyGlobals: ['Promise', 'Proxy', 'Symbol', 'Map', 'WeakMap', 'Set', 'WeakSet', 'Reflect']
 };
 
 
