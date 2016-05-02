@@ -20,6 +20,7 @@
     "handlebars": "4.x.x",
     "hoek": "3.x.x",
     "items": "2.x.x",
+    "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
     "source-map-support": "0.4.x"
