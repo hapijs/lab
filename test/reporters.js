@@ -327,6 +327,29 @@ describe('Reporter', () => {
                 done();
             });
         });
+        it('generate a report with stable diff of actual/expected objects of a failed test', (done) => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', (finished) => {
+
+                    expect({ a: 1, b:2, c:3, d:4, e:66 }).to.equal({ a: 1, e:5, b:2, c:3, d:4 });
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+
+                expect(err).to.not.exist();
+                expect(code).to.equal(1);
+                expect(output).to.contain('"e": 665');
+                expect(output).to.contain('1 of 1 tests failed');
+                expect(output).to.contain('Test duration:');
+                expect(output).to.contain('No global variable leaks detected');
+                done();
+            });
+        });
 
         it('counts "todo" tests as skipped', (done) => {
 
