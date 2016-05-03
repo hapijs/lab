@@ -378,19 +378,19 @@ describe('CLI', () => {
 
     it('uses custom coverage excludes with the --coverage-exclude argument', (done) => {
 
-        RunCli(['test/cli_coverage', '-t', '100', '--coverage-exclude', 'test/cli_coverage/exclude', '-a', 'code'], (error, result) => {
+        RunCli(['.', '-t', '100', '--coverage-exclude', 'exclude', '-a', 'code'], (error, result) => {
 
             if (error) {
                 done(error);
             }
-
+            
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(1);
             expect(result.output).to.contain('1 tests complete');
-            expect(result.output).to.contain('Coverage: 96.88% (1/32)');
-            expect(result.output).to.contain('test/cli_coverage/missing.js missing coverage on line(s)');
+            expect(result.output).to.contain('Coverage: 92.86% (1/14)');
+            expect(result.output).to.contain('missing.js missing coverage on line(s)');
             done();
-        });
+        }, 'test/cli_coverage');
     });
 
     it('doesn\'t fail with coverage when no external file is being tested', (done) => {
