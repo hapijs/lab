@@ -383,7 +383,7 @@ describe('CLI', () => {
             if (error) {
                 done(error);
             }
-            
+
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(1);
             expect(result.output).to.contain('1 tests complete');
