@@ -13,12 +13,12 @@
   "dependencies": {
     "bossy": "1.x.x",
     "diff": "2.x.x",
-    "eslint": "2.5.x",
+    "eslint": "2.9.x",
     "eslint-config-hapi": "9.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.x.x",
     "handlebars": "4.x.x",
-    "hoek": "3.x.x",
+    "hoek": "4.x.x",
     "items": "2.x.x",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
@@ -27,8 +27,8 @@
   },
   "devDependencies": {
     "code": "2.x.x",
-    "cpr": "1.0.x",
-    "eslint-plugin-markdown": "1.0.0-beta.1",
+    "cpr": "1.1.x",
+    "eslint-plugin-markdown": "1.0.0-beta.2",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.5.x"
   },
