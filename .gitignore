@@ -3,6 +3,7 @@
 npm-debug.log
 dump.rdb
 node_modules
+!test/cli_coverage/node_modules
 results.tap
 results.xml
 npm-shrinkwrap.json

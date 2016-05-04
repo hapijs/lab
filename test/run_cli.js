@@ -9,9 +9,9 @@ const internals = {
     labPath: Path.join(__dirname, '..', 'bin', '_lab')
 };
 
-module.exports = (args, callback) => {
+module.exports = (args, callback, root) => {
 
-    const cli = ChildProcess.spawn('node', [].concat(internals.labPath, args));
+    const cli = ChildProcess.spawn('node', [].concat(internals.labPath, args), { 'cwd' : root ? root : '.' });
     let output = '';
     let errorOutput = '';
     let combinedOutput = '';
