@@ -11,7 +11,7 @@
     "node": ">=4.0.0"
   },
   "dependencies": {
-    "bossy": "1.x.x",
+    "bossy": "3.x.x",
     "diff": "2.x.x",
     "eslint": "2.9.x",
     "eslint-config-hapi": "9.x.x",

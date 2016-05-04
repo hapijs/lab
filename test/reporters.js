@@ -115,6 +115,28 @@ describe('Reporter', () => {
         });
     });
 
+    it('outputs to a file with output is passed as an array and reporter is an array', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.test('works', (finished) => {
+
+                finished();
+            });
+        });
+
+        const filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(7).toString('hex')].join('-'));
+        Lab.report(script, { reporter: ['console'], output: [filename] }, (err, code, output) => {
+
+            expect(err).to.not.exist();
+            expect(code).to.equal(0);
+            expect(output).to.equal(Fs.readFileSync(filename).toString());
+            Fs.unlinkSync(filename);
+            done();
+        });
+    });
+
     it('exits with error code when leak detected', (done) => {
 
         const reporter = Reporters.generate({ reporter: 'console' });
