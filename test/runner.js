@@ -99,6 +99,32 @@ describe('Runner', () => {
         });
     });
 
+    it('calls cleanup function', (done) => {
+
+        const script = Lab.script();
+
+        let flag = false;
+        script.test('a', (done, onCleanup) => {
+
+            onCleanup((next) => {
+
+                flag = true;
+                return next();
+            });
+
+            done();
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            expect(flag).to.be.true();
+            done();
+        });
+    });
+
     it('should fail test that neither takes a callback nor returns anything', (done) => {
 
         const script = Lab.script({ schedule: false });

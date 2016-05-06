@@ -183,6 +183,24 @@ lab.experiment('with only', () => {
 });
 ```
 
+The `test()` callback provides a second `onCleanup` argument which is a function used to register a runtime cleanup function
+to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup
+function will be executed as-is without any timers and if it fails to call it's `next` argument, the runner will freeze.
+
+```javascript
+lab.test('cleanups after test', (done, onCleanup) => {
+
+    onCleanup((next) => {
+
+        cleanup_logic();
+        return next();
+    });
+
+    Code.expect(1 + 1).to.equal(2);
+    done();
+});
+```
+
 Additionally, `test()` options support a `plan` setting to specify the expected number of assertions for your test to execute. This
 setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
 *`plan` may not work with parallel test executions*
