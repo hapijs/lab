@@ -678,6 +678,71 @@ describe('Runner', () => {
         });
     });
 
+    it('skips before function in non-run experiment', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment.skip('subexperiment1', () => {
+
+                script.before((beforeDone) => {
+
+                    throw new Error();
+                });
+
+                script.test('s1', (testDone) => testDone());
+            });
+
+            script.experiment('subexperiment2', () => {
+
+                script.before((beforeDone) => beforeDone());
+
+                script.test('s1', (testDone) => testDone());
+            });
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests.filter((test) => test.skipped)).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips before function when not run through index', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('subexperiment1', () => {
+
+                script.before((beforeDone) => {
+
+                    throw new Error();
+                });
+
+                script.test('s1', (testDone) => testDone());
+            });
+
+            script.experiment('subexperiment2', () => {
+
+                script.before((beforeDone) => beforeDone());
+
+                script.test('s1', (testDone) => testDone());
+            });
+        });
+
+        Lab.execute(script, { ids: [2] }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('dry run', (done) => {
 
         const script = Lab.script();
