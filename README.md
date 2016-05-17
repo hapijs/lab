@@ -239,7 +239,7 @@ lab.experiment('math', { timeout: 1000 }, () => {
 The `script([options])` method takes an optional `options` argument where `options` is an object with the following optional keys:
 - `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly
   with node without having to use the cli (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
-  can be turned off by setting `schedule` to `false`. Defaults to `true`.
+  can be turned off by setting `schedule` to `false`. If you need to see the output with schedule disabled you should set `output` to `process.stdout`.  Defaults to `true`.
 - `cli` - allows setting command line options within the script. Note that the last script file loaded wins and usage of this is recommended
   only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests
   on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute
