@@ -775,7 +775,7 @@ describe('Lab', () => {
 
     it('schedules automatic execution', { parallel: false }, (done) => {
 
-        const script = Lab.script();
+        const script = Lab.script({ output: false });
         script.experiment('test', () => {
 
             script.test('works', (testDone) => {

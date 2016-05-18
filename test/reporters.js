@@ -339,7 +339,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -361,7 +361,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -392,7 +392,7 @@ describe('Reporter', () => {
                 script.test('a todo test');
             });
 
-            Lab.report(script, { reporter: 'console' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -417,7 +417,7 @@ describe('Reporter', () => {
             });
 
             global.x1 = true;
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 delete global.x1;
                 expect(err).to.not.exist();
@@ -441,7 +441,7 @@ describe('Reporter', () => {
             });
 
             global.x1 = true;
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 delete global.x1;
                 expect(err).to.not.exist();
@@ -468,7 +468,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -492,7 +492,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -516,7 +516,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -540,7 +540,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -562,7 +562,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -582,7 +582,7 @@ describe('Reporter', () => {
                     script.test('works', (finished) => { });
                 });
 
-                Lab.report(script, { reporter: 'console', colors: false, timeout: 1 }, (err, code, output) => {
+                Lab.report(script, { reporter: 'console', colors: false, timeout: 1, output: false }, (err, code, output) => {
 
                     expect(err).to.not.exist();
                     expect(code).to.equal(1);
@@ -625,7 +625,7 @@ describe('Reporter', () => {
                         });
                     });
 
-                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1 }, (err, code, output) => {
+                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1, output: false }, (err, code, output) => {
 
                         expect(err).to.not.exist();
                         expect(code).to.equal(1);
@@ -650,7 +650,7 @@ describe('Reporter', () => {
                         });
                     });
 
-                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000 }, (err, code, output) => {
+                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000, output: false }, (err, code, output) => {
 
                         expect(err).to.not.exist();
                         expect(code).to.equal(0);
@@ -670,7 +670,7 @@ describe('Reporter', () => {
                         });
                     });
 
-                    Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+                    Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                         expect(err).to.not.exist();
                         expect(code).to.equal(1);
@@ -692,7 +692,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 0 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 0, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.match(/^\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
@@ -711,7 +711,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
@@ -731,7 +731,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, assert: Code }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
@@ -753,7 +753,7 @@ describe('Reporter', () => {
             const oldPlatform = process.platform;
             Object.defineProperty(process, 'platform', { writable: true, value: 'win32' });
 
-            Lab.report(script, { reporter: 'console', progress: 2 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
 
                 process.platform = oldPlatform;
                 expect(err).not.to.exist();
@@ -782,7 +782,7 @@ describe('Reporter', () => {
                 script.test('a todo test');
             });
 
-            Lab.report(script, { reporter: 'console', 'silent-skips': true }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', 'silent-skips': true, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -814,7 +814,7 @@ describe('Reporter', () => {
                 script.test('a todo test');
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, 'silent-skips': true }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 2, 'silent-skips': true, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -850,7 +850,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('Coverage: 80.95% (4/21)');
@@ -893,7 +893,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
@@ -916,7 +916,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/'), sourcemaps: true }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/'), sourcemaps: true, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.not.contain('sourcemaps-covered');
@@ -953,7 +953,7 @@ describe('Reporter', () => {
                 }
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -983,7 +983,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, progress: 2 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, progress: 2, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -1011,7 +1011,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -1032,7 +1032,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
@@ -1058,7 +1058,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
 
@@ -1088,7 +1088,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
 
@@ -1196,7 +1196,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
@@ -1228,7 +1228,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
@@ -1263,7 +1263,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'json', lint: true, linter: 'eslint' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'json', lint: true, linter: 'eslint', output: false }, (err, code, output) => {
 
                 const result = JSON.parse(output);
                 expect(err).to.not.exist();
@@ -1301,7 +1301,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'json' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'json', output: false }, (err, code, output) => {
 
                 const result = JSON.parse(output);
                 expect(err).to.not.exist();
@@ -1326,7 +1326,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = JSON.parse(output);
@@ -1352,7 +1352,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('<div class="stats medium">');
@@ -1376,7 +1376,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain([
@@ -1417,7 +1417,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output)
@@ -1461,7 +1461,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), 'lint-errors-threshold': 2, 'lint-warnings-threshold': 2 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), 'lint-errors-threshold': 2, 'lint-warnings-threshold': 2, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output)
@@ -1485,7 +1485,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', 'context-timeout': 1 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -1512,7 +1512,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', 'context-timeout': 1 }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -1628,7 +1628,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coveragePath: Path.join(__dirname, './coverage/html') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'html', coveragePath: Path.join(__dirname, './coverage/html'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('Test Report');
@@ -1671,7 +1671,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'tap' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'tap', output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -1714,7 +1714,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'junit' }, (err, code, output) => {
+            Lab.report(script, { reporter: 'junit', output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -1747,7 +1747,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'lcov', coverage: true }, (err, code, output) => {
+            Lab.report(script, { reporter: 'lcov', coverage: true, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -1776,7 +1776,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'lcov', coverage: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'lcov', coverage: false, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -1812,7 +1812,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('clover.test.coverage');
@@ -1852,7 +1852,7 @@ describe('Reporter', () => {
             const origCwd = process.cwd();
             process.chdir(Path.join(__dirname, './coverage/'));
 
-            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.not.contain('clover.test.coverage');
@@ -1894,7 +1894,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'clover', coverage: false, coveragePath: Path.join(__dirname, './coverage/clover') }, (err, code, output) => {
+            Lab.report(script, { reporter: 'clover', coverage: false, coveragePath: Path.join(__dirname, './coverage/clover'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.not.contain('clover.test.coverage');
@@ -2031,7 +2031,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: reporter }, (err, code, output) => {
+            Lab.report(script, { reporter: reporter, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 done();
@@ -2051,7 +2051,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: reporter }, (err, code, output) => {
+            Lab.report(script, { reporter: reporter, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 done();
