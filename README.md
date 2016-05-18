@@ -359,10 +359,20 @@ if (typeof value === 'symbol') {
 Your project's eslint configuration will now extend the default **lab** configuration.
 
 ## Ignoring files in linting
+
 Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
 ```
 node_modules/*
 **/vendor/*.js
+```
+
+## Only run linting
+
+In order to run linting and not to execute tests you can combine the `dry` run
+flag with the `lint` flag.
+
+```
+lab -dL
 ```
 
 ## Running a custom linter
