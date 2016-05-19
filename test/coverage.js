@@ -59,6 +59,16 @@ describe('Coverage', () => {
         done();
     });
 
+    it('measures coverage a file with test in the name', (done) => {
+
+        const Test = require('./coverage/test-folder/test-name.js');
+        Test.method();
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules'] });
+        expect(cov.percent).to.equal(100);
+        done();
+    });
+
     it('identifies lines with partial coverage when having external sourcemap', (done) => {
 
         const Test = require('./coverage/sourcemaps-external');

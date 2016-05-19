@@ -395,7 +395,7 @@ describe('CLI', () => {
 
     it('doesn\'t fail with coverage when no external file is being tested', (done) => {
 
-        RunCli(['test/cli/simple.js', '-t', '10'], (error, result) => {
+        RunCli(['test/cli/simple.js', '-t', '100'], (error, result) => {
 
             if (error) {
                 done(error);
