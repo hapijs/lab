@@ -719,6 +719,70 @@ describe('Reporter', () => {
             });
         });
 
+        it('generates a report with verbose progress with experiments with same named tests', (done) => {
+
+            const script = Lab.script();
+            script.experiment('experiment', () => {
+
+                script.experiment('sub experiment', () => {
+
+                    script.experiment('sub sub experiment', () => {
+
+                        script.test('works', (finished) => finished());
+                    });
+                });
+
+                script.experiment('sub experiment', () => {
+
+                    script.experiment('sub sub experiment', () => {
+
+                        script.test('works', (finished) => finished());
+                    });
+                });
+
+                script.experiment('sub experiment', () => {
+
+                    script.experiment('sub sub experiment 1', () => {
+
+                        script.experiment('sub sub sub experiment', () => {
+
+                            script.test('works', (finished) => finished());
+                        });
+                    });
+
+                    script.experiment('sub sub experiment', () => {
+
+                        script.experiment('sub sub sub experiment', () => {
+
+                            script.test('works', (finished) => finished());
+                        });
+                    });
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output).to.contain('4) works');
+                done();
+            });
+        });
+
+        it('generates a report with verbose progress with the same test name and no wrapper experiment', (done) => {
+
+            const script = Lab.script();
+            script.test('works', (finished) => finished());
+            script.test('works', (finished) => finished());
+
+            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output).to.contain('1) works');
+                expect(output).to.contain('2) works');
+                done();
+            });
+        });
+
         it('generates a report with verbose progress and assertions count per test', (done) => {
 
             const script = Lab.script();
