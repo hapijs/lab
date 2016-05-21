@@ -90,7 +90,7 @@ describe('Coverage', () => {
             }
         });
 
-        expect(missedLines).to.deep.include([
+        expect(missedLines).to.include([
             { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
             { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
         ]);
@@ -119,7 +119,7 @@ describe('Coverage', () => {
             }
         });
 
-        expect(missedLines).to.deep.include([
+        expect(missedLines).to.include([
             { filename: './while.js', lineNumber: '5', originalLineNumber: 11 },
             { filename: './while.js', lineNumber: '6', originalLineNumber: 12 }
         ]);
@@ -209,7 +209,7 @@ describe('Coverage', () => {
     it('should work with loop labels', (done) => {
 
         const Test = require('./coverage/loop-labels.js');
-        expect(Test.method()).to.deep.equal([1, 0]);
+        expect(Test.method()).to.equal([1, 0]);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/loop-labels') });
         const source = cov.files[0].source;
@@ -225,7 +225,7 @@ describe('Coverage', () => {
             }
         });
 
-        expect(missedChunks).to.have.length(1).and.to.deep.equal([{ source: 'j < 1', miss: 'true' }]);
+        expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true' }]);
 
         done();
     });
@@ -245,8 +245,8 @@ describe('Coverage', () => {
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/single-line-functions') });
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
-        expect(results).to.deep.equal([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 10, 5]);
-        expect(missedLines).to.deep.equal(['12', '15', '21', '27', '30', '33', '39', '46', '50', '53', '56']);
+        expect(results).to.equal([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 10, 5]);
+        expect(missedLines).to.equal(['12', '15', '21', '27', '30', '33', '39', '46', '50', '53', '56']);
         done();
     });
 
@@ -259,7 +259,7 @@ describe('Coverage', () => {
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(result).to.equal(7);
-        expect(missedLines).to.deep.equal(['19', '22']);
+        expect(missedLines).to.equal(['19', '22']);
         done();
     });
 
@@ -280,7 +280,7 @@ describe('Coverage', () => {
                 return file.filename;
             });
 
-            expect(sorted).to.deep.equal(['/a/b', '/a/c', '/a/b/a', '/a/b/c', '/a/c/b']);
+            expect(sorted).to.equal(['/a/b', '/a/c', '/a/b/a', '/a/b/c', '/a/c/b']);
             done();
         });
     });

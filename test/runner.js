@@ -911,7 +911,7 @@ describe('Runner', () => {
             Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook2) => {
 
                 expect(err).not.to.exist();
-                expect(notebook1.tests).to.not.deep.equal(notebook2.tests);
+                expect(notebook1.tests).to.not.equal(notebook2.tests);
                 Math.random = random;
                 done();
             });
@@ -982,7 +982,7 @@ describe('Runner', () => {
 
             expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before\' action failed');
-            expect(steps).to.deep.equal(['before']);
+            expect(steps).to.equal(['before']);
             done();
         });
     });
@@ -1016,7 +1016,7 @@ describe('Runner', () => {
 
             expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
-            expect(steps).to.deep.equal(['before']);
+            expect(steps).to.equal(['before']);
             done();
         });
     });
@@ -1082,7 +1082,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal([
+            expect(steps).to.equal([
                 'outer beforeEach',
                 'first test',
                 'outer afterEach 1',
@@ -1124,7 +1124,7 @@ describe('Runner', () => {
         Lab.execute(script, { parallel: true }, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal(['2', '1']);
+            expect(steps).to.equal(['2', '1']);
             done();
         });
     });
@@ -1154,7 +1154,7 @@ describe('Runner', () => {
         Lab.execute(script, { parallel: true }, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal(['1', '2']);
+            expect(steps).to.equal(['1', '2']);
             done();
         });
     });
@@ -1184,7 +1184,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal(['2', '1']);
+            expect(steps).to.equal(['2', '1']);
             done();
         });
     });
