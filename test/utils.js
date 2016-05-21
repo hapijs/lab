@@ -35,7 +35,7 @@ describe('Utils', () => {
         };
 
         const merged = Utils.mergeOptions(parent, child);
-        expect(merged).to.deep.equal({ a: 1, b: 3, c: 4 });
+        expect(merged).to.equal({ a: 1, b: 3, c: 4 });
         done();
     });
 
@@ -47,7 +47,7 @@ describe('Utils', () => {
         };
 
         const merged = Utils.mergeOptions(parent, null);
-        expect(merged).to.deep.equal({ a: 1, b: 2 });
+        expect(merged).to.equal({ a: 1, b: 2 });
         done();
     });
 
@@ -59,7 +59,7 @@ describe('Utils', () => {
         };
 
         const merged = Utils.mergeOptions(null, child);
-        expect(merged).to.deep.equal({ b: 3, c: 4 });
+        expect(merged).to.equal({ b: 3, c: 4 });
         done();
     });
 
@@ -78,7 +78,7 @@ describe('Utils', () => {
         };
 
         const merged = Utils.mergeOptions(parent, child, ['e', 'f']);
-        expect(merged).to.deep.equal({ a: 1, b: 3, c: 4 });
+        expect(merged).to.equal({ a: 1, b: 3, c: 4 });
         done();
     });
 
@@ -97,7 +97,7 @@ describe('Utils', () => {
         };
 
         Utils.applyOptions(parent, child);
-        expect(parent).to.deep.equal({ a: 1, b: 3, c: 4, e: 5, f: 6 });
+        expect(parent).to.equal({ a: 1, b: 3, c: 4, e: 5, f: 6 });
         done();
     });
 });

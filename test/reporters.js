@@ -435,7 +435,7 @@ describe('Reporter', () => {
 
                 script.test('works', (finished) => {
 
-                    expect(['a', 'b']).to.deep.equal(['a', 'c']);
+                    expect(['a', 'b']).to.equal(['a', 'c']);
                     finished();
                 });
             });
