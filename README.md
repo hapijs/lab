@@ -37,7 +37,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
 - `-n`, `--linter` - specify linting program file path; default is `eslint`.
-- `--lint-fix` - apply any fixes from the linter. Disabled by default.
+- `--lint-fix` - apply any fixes from the linter, requires `-L` or `--lint` to be enabled. Disabled by default.
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
