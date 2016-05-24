@@ -6,6 +6,7 @@ const Path = require('path');
 const _Lab = require('../test_runner');
 const Code = require('code');
 const Linters = require('../lib/lint');
+const Fs = require('fs');
 
 
 // Test shortcuts
@@ -150,6 +151,51 @@ describe('Linters - eslint', () => {
 
             done();
         });
+    });
+
+    it('should fix lint rules when --lint-fix used', (done, onCleanup) => {
+
+        const originalWriteFileSync = Fs.writeFileSync;
+
+        onCleanup((next) => {
+
+            Fs.writeFileSync = originalWriteFileSync;
+            next();
+        });
+
+        Fs.writeFileSync = (path, output) => {
+
+            expect(path).to.endWith('test/lint/eslint/fix/success.js');
+            expect(output).to.endWith('\n\n    return value;\n};\n');
+        };
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'fix');
+        Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-fix': true }, (err, result) => {
+
+            expect(err).to.not.exist();
+            expect(result).to.include('lint');
+
+            const eslintResults = result.lint;
+            expect(eslintResults).to.have.length(1);
+            expect(eslintResults[0]).to.include({
+                totalErrors: 0,
+                totalWarnings: 0
+            });
+            done();
+        });
+    });
+
+    it('should error on malformed lint-options', (done) => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'fix');
+
+        const f = () => {
+
+            Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': '}' }, () => {});
+        };
+
+        expect(f).to.throw('lint-options could not be parsed');
+        done();
     });
 });
 
