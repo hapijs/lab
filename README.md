@@ -183,7 +183,7 @@ lab.experiment('with only', () => {
 });
 ```
 
-The `test()` callback has a `note` function attached to it that can be used to
+The `test()` callback has a `note()` function attached to it that can be used to
 attach notes to the test case.  These notes are included in the console reporter
 at the end of the output.  For example, if you would like to add a note with the
 current time, your test case may look like the following:
@@ -197,7 +197,7 @@ lab.test('attaches notes', (done) => {
 });
 ```
 
-Multiple notes can be appended for the same test case by simply calling `note`
+Multiple notes can be appended for the same test case by simply calling `note()`
 repeatedly.
 
 
