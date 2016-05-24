@@ -681,6 +681,28 @@ describe('Reporter', () => {
             });
         });
 
+        it('generates a report with all notes displayed', (done) => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', (finished) => {
+
+                    finished.note('This is a sweet feature');
+                    finished.note('Here is another note');
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'console', progress: 0, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output).to.contain('This is a sweet feature');
+                expect(output).to.contain('Here is another note');
+                done();
+            });
+        });
+
         it('generates a report without progress', (done) => {
 
             const script = Lab.script();

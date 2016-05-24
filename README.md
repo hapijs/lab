@@ -183,6 +183,24 @@ lab.experiment('with only', () => {
 });
 ```
 
+The `test()` callback has a `note` function attached to it that can be used to
+attach notes to the test case.  These notes are included in the consoler reporter
+at the end of the output.  For example, if you would like to add a note with the
+current time, your test case may look like the following:
+
+```javascript
+lab.test('attaches notes', (done) => {
+
+    Code.expect(1 + 1).to.equal(2);
+    done.note(`The current time is ${Date.now()}`);
+    done();
+});
+```
+
+Multiple notes can be appended for the same test case by simply calling `note`
+repeatedly.
+
+
 The `test()` callback provides a second `onCleanup` argument which is a function used to register a runtime cleanup function
 to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup
 function will be executed as-is without any timers and if it fails to call it's `next` argument, the runner will freeze.
