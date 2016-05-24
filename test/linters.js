@@ -2,11 +2,11 @@
 
 // Load modules
 
+const Fs = require('fs');
 const Path = require('path');
 const _Lab = require('../test_runner');
 const Code = require('code');
 const Linters = require('../lib/lint');
-const Fs = require('fs');
 
 
 // Test shortcuts
