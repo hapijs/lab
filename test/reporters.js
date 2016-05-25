@@ -1073,7 +1073,7 @@ describe('Reporter', () => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                expect(output).to.match(/test\n  ✔ 1\) works \(\d+ ms\)\n  ✖2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
+                expect(output).to.match(/test\n  ✔ 1\) works \(\d+ ms\)\n  ✖ 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
                 done();
             });
         });
