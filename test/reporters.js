@@ -736,7 +736,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -820,7 +820,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[90m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
