@@ -98,6 +98,7 @@ describe('CLI', () => {
             expect(result.code).to.equal(0);
             expect(result.output).to.contain('1 tests complete');
             expect(result.output).to.contain('Coverage: 100');
+            expect(result.output).to.contain('Linting results');
             done();
         }, Path.join(__dirname, 'cli_labrc'));
     });

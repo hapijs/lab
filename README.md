@@ -367,6 +367,26 @@ if (typeof value === 'symbol') {
 
 ```
 
+## `.labrc` file
+
+**lab** supports a `.labrc` configuration file for centralizing lab settings.  
+The `.labrc` file can be located in the current working directory or in the
+users home directory.  The `.labrc` file needs to be able to be required by
+Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
+that exports an object with the keys that are the settings.  
+
+
+Below is an example of a `.labrc` file to enable linting and test coverage checking:
+
+```js
+module.exports = {
+    coverage: true,
+    threshold: 90,
+    lint: true
+};
+```
+
+
 ## Extending the linter
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
