@@ -11,7 +11,7 @@ const internals = {
 
 module.exports = (args, callback, root) => {
 
-    const cli = ChildProcess.spawn('node', [].concat(internals.labPath, args), { cwd : root ? root : '.' });
+    const cli = ChildProcess.spawn('node', [].concat(internals.labPath, args), { cwd : root || '.' });
     let output = '';
     let errorOutput = '';
     let combinedOutput = '';

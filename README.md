@@ -371,7 +371,7 @@ if (typeof value === 'symbol') {
 
 **lab** supports a `.labrc` configuration file for centralizing lab settings.  
 The `.labrc` file can be located in the current working directory or in the
-users home directory.  The `.labrc` file needs to be able to be required by
+user's home directory.  The `.labrc` file needs to be able to be required by
 Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
 that exports an object with the keys that are the settings.  
 
@@ -385,6 +385,32 @@ module.exports = {
     lint: true
 };
 ```
+
+### `.labrc` setting precedent
+
+The `.labrc` file will override the lab default settings. Any options passed
+to the **lab** runner will override the settings found in `.labrc`.  For example,
+assume you have the following `.labrc` file:
+
+```js
+module.exports = {
+    coverage: true,
+    threshold: 100
+};
+```
+
+If you need to reduce the coverage threshold for a single run, you can execute
+**lab** as follows:
+
+```sh
+lab -t 80
+```
+
+### `.labrc` available settings
+
+The `.labrc` file supports configuration keys that are named with the long name
+of the command line settings.  Therefore, if you need to specify an assert
+library, you would export a key named assert with the desired value.
 
 
 ## Extending the linter
