@@ -367,16 +367,16 @@ if (typeof value === 'symbol') {
 
 ```
 
-## `.labrc` file
+## `.labrc.js` file
 
-**lab** supports a `.labrc` configuration file for centralizing lab settings.  
-The `.labrc` file can be located in the current working directory or in the
-user's home directory.  The `.labrc` file needs to be able to be required by
+**lab** supports a `.labrc.js` configuration file for centralizing lab settings.  
+The `.labrc.js` file can be located in the current working directory or in the
+user's home directory.  The `.labrc.js` file needs to be able to be required by
 Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
 that exports an object with the keys that are the settings.  
 
 
-Below is an example of a `.labrc` file to enable linting and test coverage checking:
+Below is an example of a `.labrc.js` file to enable linting and test coverage checking:
 
 ```js
 module.exports = {
@@ -386,11 +386,11 @@ module.exports = {
 };
 ```
 
-### `.labrc` setting precedent
+### `.labrc.js` setting precedent
 
-The `.labrc` file will override the lab default settings. Any options passed
-to the **lab** runner will override the settings found in `.labrc`.  For example,
-assume you have the following `.labrc` file:
+The `.labrc.js` file will override the **lab** default settings. Any options passed
+to the **lab** runner will override the settings found in `.labrc.js`.  For example,
+assume you have the following `.labrc.js` file:
 
 ```js
 module.exports = {
@@ -406,11 +406,11 @@ If you need to reduce the coverage threshold for a single run, you can execute
 lab -t 80
 ```
 
-### `.labrc` available settings
+### `.labrc.js` available settings
 
-The `.labrc` file supports configuration keys that are named with the long name
+The `.labrc.js` file supports configuration keys that are named with the long name
 of the command line settings.  Therefore, if you need to specify an assert
-library, you would export a key named assert with the desired value.
+library, you would export a key named "assert" with the desired value.
 
 
 ## Extending the linter

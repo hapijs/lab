@@ -19,9 +19,9 @@ const it = lab.it;
 const expect = Code.expect;
 
 
-describe('Test .labrc', () => {
+describe('Test .labrc.js', () => {
 
-    it('sets environment from .labrc', (done) => {
+    it('sets environment from .labrc.js', (done) => {
 
         expect(process.env.NODE_ENV).to.equal('labrc');
         done();
