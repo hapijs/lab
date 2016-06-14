@@ -103,20 +103,6 @@ describe('CLI', () => {
         }, Path.join(__dirname, 'cli_labrc'));
     });
 
-    it('defaults the NODE_ENV to "test"', (done) => {
-
-        RunCli(['test/cli_env/env.js'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
-    });
-
     it('exits with code 1 after function throws', (done) => {
 
         RunCli(['test/cli_throws/throws.js'], (error, result) => {

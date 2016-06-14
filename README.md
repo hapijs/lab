@@ -389,9 +389,10 @@ module.exports = {
 
 ### `.labrc.js` setting precedent
 
-The `.labrc.js` file will override the **lab** default settings. Any options passed
-to the **lab** runner will override the settings found in `.labrc.js`.  For example,
-assume you have the following `.labrc.js` file:
+The `.labrc.js` file will override the **lab** default settings. Any options
+passed to the **lab** runner will override the settings found in `.labrc.js`,
+with the exception of `environment`.  For example, assume you have the following
+`.labrc.js` file:
 
 ```js
 module.exports = {
