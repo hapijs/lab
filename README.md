@@ -370,8 +370,9 @@ if (typeof value === 'symbol') {
 ## `.labrc.js` file
 
 **lab** supports a `.labrc.js` configuration file for centralizing lab settings.  
-The `.labrc.js` file can be located in the current working directory or in the
-user's home directory.  The `.labrc.js` file needs to be able to be required by
+The `.labrc.js` file can be located in the current working directory, any
+directory that is the parent of the current working directory, or in the user's
+home directory.  The `.labrc.js` file needs to be able to be required by
 Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
 that exports an object with the keys that are the settings.  
 
