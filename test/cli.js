@@ -810,6 +810,21 @@ describe('CLI', () => {
         });
     });
 
+    it('reports a warning when no files matching the pattern are found', (done) => {
+
+        RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'nofiles'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('The pattern provided (-P or --pattern) didn\'t match any files.');
+            done();
+        });
+    });
+
     it('only loads files matching pattern when pattern at beginning of name (-P)', (done) => {
 
         RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file'], (error, result) => {
