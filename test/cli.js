@@ -86,6 +86,23 @@ describe('CLI', () => {
         });
     });
 
+    it('runs a single test and uses .labrc when found', (done) => {
+
+        RunCli([Path.join(__dirname, 'cli_labrc', 'index.js')], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
+            expect(result.output).to.contain('Coverage: 100');
+            expect(result.output).to.contain('Linting results');
+            done();
+        }, Path.join(__dirname, 'cli_labrc'));
+    });
+
     it('exits with code 1 after function throws', (done) => {
 
         RunCli(['test/cli_throws/throws.js'], (error, result) => {

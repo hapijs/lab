@@ -367,6 +367,53 @@ if (typeof value === 'symbol') {
 
 ```
 
+## `.labrc.js` file
+
+**lab** supports a `.labrc.js` configuration file for centralizing lab settings.  
+The `.labrc.js` file can be located in the current working directory, any
+directory that is the parent of the current working directory, or in the user's
+home directory.  The `.labrc.js` file needs to be able to be required by
+Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
+that exports an object with the keys that are the settings.  
+
+
+Below is an example of a `.labrc.js` file to enable linting and test coverage checking:
+
+```js
+module.exports = {
+    coverage: true,
+    threshold: 90,
+    lint: true
+};
+```
+
+### `.labrc.js` setting precedent
+
+The `.labrc.js` file will override the **lab** default settings. Any options passed
+to the **lab** runner will override the settings found in `.labrc.js`.  For example,
+assume you have the following `.labrc.js` file:
+
+```js
+module.exports = {
+    coverage: true,
+    threshold: 100
+};
+```
+
+If you need to reduce the coverage threshold for a single run, you can execute
+**lab** as follows:
+
+```sh
+lab -t 80
+```
+
+### `.labrc.js` available settings
+
+The `.labrc.js` file supports configuration keys that are named with the long name
+of the command line settings.  Therefore, if you need to specify an assert
+library, you would export a key named "assert" with the desired value.
+
+
 ## Extending the linter
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
