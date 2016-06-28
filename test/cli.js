@@ -97,8 +97,10 @@ describe('CLI', () => {
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
             expect(result.output).to.contain('1 tests complete');
+            expect(result.output).to.contain('sets environment from .labrc.js');
             expect(result.output).to.contain('Coverage: 100');
             expect(result.output).to.contain('Linting results');
+            expect(result.output).to.not.contain('No global variable leaks detected');
             done();
         }, Path.join(__dirname, 'cli_labrc'));
     });
