@@ -2,5 +2,7 @@ module.exports = {
     coverage: true,
     environment: 'labrc',
     threshold: 10,
-    lint: true
+    lint: true,
+    leaks: false,
+    verbose: true
 };
