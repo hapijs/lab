@@ -1,7 +1,7 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "10.5.1",
+  "version": "10.9.0",
   "repository": "git://github.com/hapijs/lab",
   "main": "lib/index.js",
   "keywords": [
@@ -13,10 +13,11 @@
   "dependencies": {
     "bossy": "3.x.x",
     "diff": "2.x.x",
-    "eslint": "2.9.x",
+    "eslint": "3.0.x",
     "eslint-config-hapi": "9.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.x.x",
+    "find-rc": "3.0.x",
     "handlebars": "4.x.x",
     "hoek": "4.x.x",
     "items": "2.x.x",
@@ -26,7 +27,7 @@
     "source-map-support": "0.4.x"
   },
   "devDependencies": {
-    "code": "2.x.x",
+    "code": "3.x.x",
     "cpr": "1.1.x",
     "eslint-plugin-markdown": "1.0.0-beta.2",
     "lab-event-reporter": "1.x.x",

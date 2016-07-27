@@ -37,6 +37,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
 - `-n`, `--linter` - specify linting program file path; default is `eslint`.
+- `--lint-fix` - apply any fixes from the linter, requires `-L` or `--lint` to be enabled. Disabled by default.
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
@@ -183,6 +184,24 @@ lab.experiment('with only', () => {
 });
 ```
 
+The `test()` callback has a `note()` function attached to it that can be used to
+attach notes to the test case.  These notes are included in the console reporter
+at the end of the output.  For example, if you would like to add a note with the
+current time, your test case may look like the following:
+
+```javascript
+lab.test('attaches notes', (done) => {
+
+    Code.expect(1 + 1).to.equal(2);
+    done.note(`The current time is ${Date.now()}`);
+    done();
+});
+```
+
+Multiple notes can be appended for the same test case by simply calling `note()`
+repeatedly.
+
+
 The `test()` callback provides a second `onCleanup` argument which is a function used to register a runtime cleanup function
 to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup
 function will be executed as-is without any timers and if it fails to call it's `next` argument, the runner will freeze.
@@ -239,7 +258,7 @@ lab.experiment('math', { timeout: 1000 }, () => {
 The `script([options])` method takes an optional `options` argument where `options` is an object with the following optional keys:
 - `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly
   with node without having to use the cli (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
-  can be turned off by setting `schedule` to `false`. Defaults to `true`.
+  can be turned off by setting `schedule` to `false`. If you need to see the output with schedule disabled you should set `output` to `process.stdout`.  Defaults to `true`.
 - `cli` - allows setting command line options within the script. Note that the last script file loaded wins and usage of this is recommended
   only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests
   on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute
@@ -348,6 +367,53 @@ if (typeof value === 'symbol') {
 
 ```
 
+## `.labrc.js` file
+
+**lab** supports a `.labrc.js` configuration file for centralizing lab settings.  
+The `.labrc.js` file can be located in the current working directory, any
+directory that is the parent of the current working directory, or in the user's
+home directory.  The `.labrc.js` file needs to be able to be required by
+Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
+that exports an object with the keys that are the settings.  
+
+
+Below is an example of a `.labrc.js` file to enable linting and test coverage checking:
+
+```js
+module.exports = {
+    coverage: true,
+    threshold: 90,
+    lint: true
+};
+```
+
+### `.labrc.js` setting precedent
+
+The `.labrc.js` file will override the **lab** default settings. Any options passed
+to the **lab** runner will override the settings found in `.labrc.js`.  For example,
+assume you have the following `.labrc.js` file:
+
+```js
+module.exports = {
+    coverage: true,
+    threshold: 100
+};
+```
+
+If you need to reduce the coverage threshold for a single run, you can execute
+**lab** as follows:
+
+```sh
+lab -t 80
+```
+
+### `.labrc.js` available settings
+
+The `.labrc.js` file supports configuration keys that are named with the long name
+of the command line settings.  Therefore, if you need to specify an assert
+library, you would export a key named "assert" with the desired value.
+
+
 ## Extending the linter
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
@@ -359,10 +425,20 @@ if (typeof value === 'symbol') {
 Your project's eslint configuration will now extend the default **lab** configuration.
 
 ## Ignoring files in linting
+
 Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
 ```
 node_modules/*
 **/vendor/*.js
+```
+
+## Only run linting
+
+In order to run linting and not to execute tests you can combine the `dry` run
+flag with the `lint` flag.
+
+```
+lab -dL
 ```
 
 ## Running a custom linter

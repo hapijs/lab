@@ -678,6 +678,114 @@ describe('Runner', () => {
         });
     });
 
+    it('skips before function in non-run experiment', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment.skip('subexperiment1', () => {
+
+                script.before((beforeDone) => {
+
+                    throw new Error();
+                });
+
+                script.test('s1', (testDone) => testDone());
+            });
+
+            script.experiment('subexperiment2', () => {
+
+                script.before((beforeDone) => beforeDone());
+
+                script.test('s1', (testDone) => testDone());
+            });
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests.filter((test) => test.skipped)).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips before function when not run through index', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('subexperiment1', () => {
+
+                script.before((beforeDone) => {
+
+                    throw new Error();
+                });
+
+                script.test('s1', (testDone) => testDone());
+            });
+
+            script.experiment('subexperiment2', () => {
+
+                script.before((beforeDone) => beforeDone());
+
+                script.test('s1', (testDone) => testDone());
+            });
+        });
+
+        Lab.execute(script, { ids: [2] }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
+    it('skips before function when not run through index and in sub experiment', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('subexperiment1', () => {
+
+                script.before((beforeDone) => {
+
+                    throw new Error();
+                });
+
+                script.experiment('sub sub experiment1', () => {
+
+                    script.before((beforeDone) => {
+
+                        throw new Error();
+                    });
+
+                    script.test('s1', (testDone) => testDone());
+                });
+            });
+
+            script.experiment('subexperiment2', () => {
+
+                script.experiment('sub subexperiment2', () => {
+
+                    script.before((beforeDone) => beforeDone());
+
+                    script.test('s1', (testDone) => testDone());
+                });
+            });
+        });
+
+        Lab.execute(script, { ids: [2] }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('dry run', (done) => {
 
         const script = Lab.script();
@@ -803,7 +911,7 @@ describe('Runner', () => {
             Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook2) => {
 
                 expect(err).not.to.exist();
-                expect(notebook1.tests).to.not.deep.equal(notebook2.tests);
+                expect(notebook1.tests).to.not.equal(notebook2.tests);
                 Math.random = random;
                 done();
             });
@@ -874,7 +982,7 @@ describe('Runner', () => {
 
             expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before\' action failed');
-            expect(steps).to.deep.equal(['before']);
+            expect(steps).to.equal(['before']);
             done();
         });
     });
@@ -908,7 +1016,7 @@ describe('Runner', () => {
 
             expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before each\' action failed');
-            expect(steps).to.deep.equal(['before']);
+            expect(steps).to.equal(['before']);
             done();
         });
     });
@@ -974,7 +1082,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal([
+            expect(steps).to.equal([
                 'outer beforeEach',
                 'first test',
                 'outer afterEach 1',
@@ -1016,7 +1124,7 @@ describe('Runner', () => {
         Lab.execute(script, { parallel: true }, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal(['2', '1']);
+            expect(steps).to.equal(['2', '1']);
             done();
         });
     });
@@ -1046,7 +1154,7 @@ describe('Runner', () => {
         Lab.execute(script, { parallel: true }, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal(['1', '2']);
+            expect(steps).to.equal(['1', '2']);
             done();
         });
     });
@@ -1076,7 +1184,7 @@ describe('Runner', () => {
         Lab.execute(script, null, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(steps).to.deep.equal(['2', '1']);
+            expect(steps).to.equal(['2', '1']);
             done();
         });
     });

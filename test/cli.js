@@ -86,6 +86,25 @@ describe('CLI', () => {
         });
     });
 
+    it('runs a single test and uses .labrc when found', (done) => {
+
+        RunCli([Path.join(__dirname, 'cli_labrc', 'index.js')], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('1 tests complete');
+            expect(result.output).to.contain('sets environment from .labrc.js');
+            expect(result.output).to.contain('Coverage: 100');
+            expect(result.output).to.contain('Linting results');
+            expect(result.output).to.not.contain('No global variable leaks detected');
+            done();
+        }, Path.join(__dirname, 'cli_labrc'));
+    });
+
     it('exits with code 1 after function throws', (done) => {
 
         RunCli(['test/cli_throws/throws.js'], (error, result) => {
@@ -395,7 +414,7 @@ describe('CLI', () => {
 
     it('doesn\'t fail with coverage when no external file is being tested', (done) => {
 
-        RunCli(['test/cli/simple.js', '-t', '10'], (error, result) => {
+        RunCli(['test/cli/simple.js', '-t', '100'], (error, result) => {
 
             if (error) {
                 done(error);
@@ -789,6 +808,21 @@ describe('CLI', () => {
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
             expect(result.output).to.contain('2 tests complete');
+            done();
+        });
+    });
+
+    it('reports a warning when no files matching the pattern are found', (done) => {
+
+        RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'nofiles'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('The pattern provided (-P or --pattern) didn\'t match any files.');
             done();
         });
     });
