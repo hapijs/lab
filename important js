@@ -1,0 +1,8 @@
+<--------------form click open slide effect------------------>
+$(document).ready(function(){
+    $(".form-icon > a").click(function(){
+        $(".form").toggle();
+		 $(".form").animate({top:'50px'});
+});
+
+});
