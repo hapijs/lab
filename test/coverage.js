@@ -84,7 +84,7 @@ describe('Coverage', () => {
             if (line.miss) {
                 missedLines.push({
                     filename: line.originalFilename,
-                    lineNumber: lineNumber,
+                    lineNumber,
                     originalLineNumber: line.originalLine
                 });
             }
@@ -113,7 +113,7 @@ describe('Coverage', () => {
             if (line.miss) {
                 missedLines.push({
                     filename: line.originalFilename,
-                    lineNumber: lineNumber,
+                    lineNumber,
                     originalLineNumber: line.originalLine
                 });
             }

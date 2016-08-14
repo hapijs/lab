@@ -2117,7 +2117,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: reporter, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 done();
@@ -2137,7 +2137,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: reporter, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter, output: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 done();
