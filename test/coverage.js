@@ -147,9 +147,9 @@ describe('Coverage', () => {
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-misses') });
         expect(Math.floor(cov.percent)).to.equal(93);
-        expect(cov.sloc).to.equal(15);
+        expect(cov.sloc).to.equal(16);
         expect(cov.misses).to.equal(1);
-        expect(cov.hits).to.equal(14);
+        expect(cov.hits).to.equal(15);
         done();
     });
 
