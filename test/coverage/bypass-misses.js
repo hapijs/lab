@@ -19,8 +19,9 @@ const /*$lab:coverage:on$*/FiveMath = function () {
     this.subtractFive = function (value) {
 
       return value - 5;
-    };
+    };/*$lab:coverage:off$*/
 };
+/*$lab:coverage:on$*/
 
 const fiveMath = new FiveMath();
 
