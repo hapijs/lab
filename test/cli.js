@@ -203,6 +203,21 @@ describe('CLI', () => {
         });
     });
 
+    it('debug mode is disabled by default', (done) => {
+
+        RunCli(['test/cli_error/failure.js'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(1);
+            expect(result.combinedOutput).to.not.contain('Test script errors:');
+            done();
+        });
+    });
+
     it('shows the help (-h)', (done) => {
 
         RunCli(['-h'], (error, result) => {
