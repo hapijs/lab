@@ -447,6 +447,58 @@ If you would like to run a different linter, or even a custom version of eslint 
 pass the `-n` or `--linter` argument with the path to the lint runner.  For example,
 if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
 
+## Integration with an assertion library
+
+Using the `--assert` argument allows you to integrate Lab with your favourite assertion library. It works by
+requiring the imported assertion library via the `Lab.assertions` property. Here is an example
+using `--assert code`:
+
+```js
+// Testing shortcuts
+const expect = Lab.assertions.expect;
+const fail = Lab.assertions.fail;
+
+
+describe('expectation', () => {
+
+    it('should be able to expect', (done) => {
+
+        expect(true).to.be.true();
+
+        done();
+    });
+
+    it('should be able to fail (This test should fail)', (done) => {
+
+        fail('Should fail');
+
+        done();
+    });
+
+});
+```
+
+If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you
+have any missing assertions. An example of this is:
+
+```js
+describe('expectation', () => {
+
+    it('Test should pass but get marked as having a missing expectation', (done) => {
+
+        // Invalid and missing assertion - false is a method, not a property!
+        // This test will pass.
+        expect(true).to.be.false;
+
+        done();
+    });
+
+});
+```
+
+This is an invalid test but it will pass as the `.false` assertion was not actually called. Lab will report the
+number of incomplete assertions, their location in your code and return a failure of the tests.
+
 ## Best practices
 
 - Install **lab** as a global module:
