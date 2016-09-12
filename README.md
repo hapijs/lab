@@ -449,7 +449,7 @@ if you plan to use jslint, you can install `lab-jslint` then pass `--linter node
 
 ## Integration with an assertion library
 
-Using the `--assert` argument allows you to integrate Lab with your favourite assertion library. It works by
+Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. It works by
 requiring the imported assertion library via the `Lab.assertions` property. Here is an example
 using `--assert code`:
 
