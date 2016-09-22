@@ -7,11 +7,14 @@
       <div class="duration">{{duration}}</div>
   </div>
   <div id="filters">
-      <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success"><label for="show-success">Show Success</label></input>
-      <input type="checkbox" checked="" onchange="filter(this)" value="failure" id="show-failure"><label for="show-failure">Show Failure</label></input>
+      <input type="checkbox" checked="" onchange="filter(this)" value="success" id="show-success">
+      <label for="show-success">Show Success</label>
+      <input type="checkbox" checked="" onchange="filter(this)" value="failure" id="show-failure">
+      <label for="show-failure">Show Failure</label>
       <br>
       {{#each paths}}
-      <input type="checkbox" checked="" onchange="filter(this)" value="{{this}}" id="show-{{this}}"><label for="show-{{this}}">{{replace this "\_" " " "gi"}}</label></input>
+      <input type="checkbox" checked="" onchange="filter(this)" value="{{this}}" id="show-{{this}}">
+      <label for="show-{{this}}">{{replace this "\_" " " "gi"}}</label>
       {{/each}}
   </div>
   <table>
