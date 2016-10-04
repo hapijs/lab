@@ -39,7 +39,7 @@
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "node ./bin/_lab -fL -t 100 -m 3000 -v",
+    "test": "node ./bin/_lab -fL -t 100 -m 3000",
     "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
