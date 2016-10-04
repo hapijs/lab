@@ -219,12 +219,6 @@
         background: #f0f0f0;
     }
 
-    table td.sourcemaps {
-        width: 1%;
-        border-left: 1px solid #cbcbcb;
-        padding: 0 10px;
-    }
-
     table td.lint.empty {
         width: 0;
         padding: 0;
@@ -244,10 +238,6 @@
 
     table td.lint .warnings {
         background-color: orange;
-    }
-
-    td.sourcemaps.file {
-        background: #f0f0f0;
     }
 
     tr.miss td.line,
@@ -395,14 +385,6 @@
 
     .miss.never[data-tooltip]:hover:after {
         content: "Statement never reached";
-    }
-
-    .sourcemaps.file[data-tooltip]:hover:after {
-        content: "Original file";
-    }
-
-    .sourcemaps.line[data-tooltip]:hover:after {
-        content: "Original line";
     }
 
     .lint .errors[data-tooltip]:hover:after {

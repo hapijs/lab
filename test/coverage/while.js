@@ -10,7 +10,7 @@ const internals = {};
 
 exports.method = function (value) {
 
-    while (value) {
+    while ( value ) {
         value = false;
     }
 

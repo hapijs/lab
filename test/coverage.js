@@ -91,8 +91,8 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
-            { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
+            { filename: 'test/coverage/while.js', lineNumber: '4', originalLineNumber: 13 },
+            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 14 }
         ]);
 
         done();
@@ -120,8 +120,8 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
-            { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
+            { filename: 'while.js', lineNumber: '5', originalLineNumber: 11 },
+            { filename: 'while.js', lineNumber: '6', originalLineNumber: 12 }
         ]);
 
         done();
@@ -238,7 +238,7 @@ describe('Coverage', () => {
             }
         });
 
-        expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true' }]);
+        expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true', column: 22 }]);
 
         done();
     });

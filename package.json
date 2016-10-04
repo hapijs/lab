@@ -25,6 +25,7 @@
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
+    "source-map": "0.5.x",
     "source-map-support": "0.4.x"
   },
   "devDependencies": {
@@ -38,7 +39,7 @@
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "node ./bin/_lab -fL -t 100 -m 3000",
+    "test": "node ./bin/_lab -fL -t 100 -m 3000 -v",
     "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
