@@ -771,7 +771,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -855,7 +855,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -1018,7 +1018,7 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
-                expect(output).to.contain('test/coverage/while.js on line(s): 13, 14');
+                expect(output).to.contain('while.js on line(s): 13, 14');
                 done();
             });
         });
@@ -1108,7 +1108,7 @@ describe('Reporter', () => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                expect(output).to.match(/test\n  ✔ 1\) works \(\d+ ms\)\n  ✖ 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
+                expect(output).to.match(/test\n  [✔√] 1\) works \(\d+ ms\)\n  [✖×] 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
                 done();
             });
         });
@@ -1483,7 +1483,7 @@ describe('Reporter', () => {
             });
         });
 
-        it('generates a coverage report including sourcemaps information', (done) => {
+        it('generates a coverage report with original source from external sourcemaps', (done) => {
 
             const Test = require('./coverage/sourcemaps-external');
 
@@ -1500,14 +1500,70 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output, 'original filename not included').to.contains('<h2 id="test/coverage/while.js">test/coverage/while.js</h2>');
+                expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
+                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-external.js">test/coverage/sourcemaps-external.js)</a>');
                 expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
                 expect(output, 'original chunks not properly handled').to.contains([
-                    '<tr class="chunks">',
-                    '<div>    while ( </div><div class="miss false" data-tooltip>value ) </div><div>{</div>']);
+                    '<tr id="while.js__13" class="chunks">',
+                    '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) </div><div>{</div></td>']);
                 expect(output, 'missed original line not included').to.contains([
-                    '<tr class="miss">',
+                    '<tr id="while.js__14" class="miss">',
                     '<td class="source" data-tooltip>        value &#x3D; false;</td>']);
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('generates a coverage report with original source from inline sourcemaps', (done) => {
+
+            const Test = require('./coverage/sourcemaps-inline');
+
+            const script = Lab.script({ schedule: false });
+            script.experiment('test', () => {
+
+                script.test('something', (finished) => {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-inline'), sourcemaps: true, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
+                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-inline.js">test/coverage/sourcemaps-inline.js)</a>');
+                expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
+                expect(output, 'original chunks not properly handled').to.contains([
+                    '<tr id="while.js__13" class="chunks">',
+                    '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) {</div></td>']);
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+
+        it('generates a coverage report with concatenated original sources', (done) => {
+
+            const Test = require('./coverage/sourcemaps-multiple');
+
+            const script = Lab.script({ schedule: false });
+            script.experiment('test', () => {
+
+                script.test('something', (finished) => {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-multiple'), sourcemaps: true, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output, '1st original filename not included').to.contains('<h2 id="file1.js">file1.js');
+                expect(output, '2nd original filename not included').to.contains('<h2 id="file2.js">file2.js');
+                expect(output, '3rd original filename not included').to.contains('<h2 id="file3.js">file3.js');
+                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-multiple.js">test/coverage/sourcemaps-multiple.js)</a>');
                 delete global.__$$testCovHtml;
                 done();
             });
