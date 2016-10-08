@@ -1925,7 +1925,7 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
 
-                expect(output).to.contain('coverage/html.js');
+                expect(output).to.contain(Path.join('coverage', 'html.js'));
                 expect(output).to.contain('DA:1,1');                    // Check that line is marked as covered
                 expect(output).to.contain('LF:14');                     // Total Lines
                 expect(output).to.contain('LH:10');                     // Lines Hit

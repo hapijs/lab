@@ -107,6 +107,7 @@ describe('Coverage', () => {
 
         const source = cov.files[0].source;
         const missedLines = [];
+        const missedChunks = [];
         Object.keys(source).forEach((lineNumber) => {
 
             const line = source[lineNumber];
@@ -116,11 +117,27 @@ describe('Coverage', () => {
                     lineNumber,
                     originalLineNumber: line.originalLine
                 });
+                if (line.chunks) {
+                    line.chunks.forEach((chunk) => {
+
+                        if (chunk.miss) {
+                            missedChunks.push({
+                                filename: chunk.originalFilename,
+                                lineNumber,
+                                originalLineNumber: chunk.originalLine,
+                                originalColumn: chunk.originalColumn
+                            });
+                        }
+                    });
+                }
             }
         });
 
         expect(missedLines).to.include([
             { filename: 'while.js', lineNumber: '3', originalLineNumber: 8 }
+        ]);
+        expect(missedChunks).to.include([
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
         ]);
 
         done();
