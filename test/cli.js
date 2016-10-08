@@ -182,7 +182,7 @@ describe('CLI', () => {
         });
     });
 
-    it('requires a custom reporter from node_modules', (done) => {
+    it('requires a custom reporter from node_modules', { timeout: 5e3 }, (done) => {
 
         RunCli(['test/cli', '-r', 'lab-event-reporter'], (error, result) => {
 
