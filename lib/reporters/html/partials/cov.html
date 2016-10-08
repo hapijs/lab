@@ -6,6 +6,10 @@
         <div class="hits">{{coverage.cov.hits}}</div>
         <div class="misses">{{coverage.cov.misses}}</div>
     </div>
+    <div id="filters">
+      <input type="checkbox" checked="" onchange="filter(this)" value="generated" id="show-generated">
+      <label for="show-generated">Show generated files</label>
+    </div>
     <div id="files">
         {{#each coverage.cov.files}}
         {{> file }}

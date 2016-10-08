@@ -1,5 +1,5 @@
-<div class="file">
-    <h2 id="{{this.filename}}">{{this.filename}}</h2>
+<div class="file {{#if this.sourcemaps}}show generated{{/if}}">
+    <h2 id="{{this.filename}}">{{this.filename}} {{#if this.generated}}(transformed to <a href="#{{this.generated}}">{{this.generated}})</a>{{/if}}</h2>
     <div class="stats {{this.percentClass}}">
         <div class="percentage">{{this.percent}}%</div>
         <div class="sloc">{{this.sloc}}</div>
@@ -13,15 +13,12 @@
                 <th>Lint</th>
                 <th>Hits</th>
                 <th>Source</th>
-                {{#if this.sourcemaps}}
-                    <th>Original filename</th>
-                    <th>Original line</th>
-                {{/if}}
+                {{#if this.sourcemaps}}<th>Original line</th>{{/if}}
             </tr>
         </thead>
         <tbody>
         {{#each this.source}}
-            {{> line}}
+            {{> line filename=../filename}}
         {{/each}}
         </tbody>
     </table>

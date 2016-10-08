@@ -13,6 +13,12 @@
         text-decoration: none;
     }
 
+    a[href^="#"],
+    a[href^="#"]:visited {
+        color: inherit;
+        text-decoration: none;
+    }
+
     h2 {
         width: 80%;
         margin-top: 80px;
@@ -202,7 +208,8 @@
 
     table td.line,
     table td.lint,
-    table td.hits {
+    table td.hits,
+    table td.original-line {
         width: 20px;
         background: #eaeaea;
         text-align: right;
@@ -325,12 +332,11 @@
     }
 
     .hide {
-        position: absolute;
-        left: -9999em;
+        display: none;
     }
 
     .show {
-        position: relative;
+        display: inherit;
     }
 
     [data-tooltip] {
@@ -393,6 +399,10 @@
 
     .lint .warnings[data-tooltip]:hover:after {
         content: "Linting warnings:\A" attr(data-tooltip);
+    }
+
+    .original-line[data-tooltip]:hover:after {
+        content: "Original line in file " attr(data-tooltip);
     }
 
     #filters {

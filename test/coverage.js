@@ -91,8 +91,8 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: 'test/coverage/while.js', lineNumber: '4', originalLineNumber: 13 },
-            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 14 }
+            { filename: 'while.js', lineNumber: '4', originalLineNumber: 13 },
+            { filename: 'while.js', lineNumber: '5', originalLineNumber: 14 }
         ]);
 
         done();
@@ -120,8 +120,7 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: 'while.js', lineNumber: '5', originalLineNumber: 11 },
-            { filename: 'while.js', lineNumber: '6', originalLineNumber: 12 }
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 8 }
         ]);
 
         done();
@@ -211,7 +210,7 @@ describe('Coverage', () => {
         const Test = require('./coverage/use-strict.js');
         expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
 
-        const testFile = Path.join(__dirname, 'coverage/use-strict.js');
+        const testFile = Path.join(__dirname, 'coverage/use-strict.js').replace(/\\/g, '/');
         expect(Test.singleLine.toString()).to.contain('"use strict"; global.__$$labCov._line(\'' + testFile + '\',19);return value;');
 
         expect(Test.shouldFail).to.throw('unknownvar is not defined');
