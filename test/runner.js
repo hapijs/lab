@@ -1797,5 +1797,31 @@ describe('Runner', () => {
                 done();
             });
         });
+
+        it('setTimeout still functions correctly with non-integer timeout', (done) => {
+
+            const script = Lab.script();
+            script.before(overrideGlobals);
+
+            script.after(resetGlobals);
+
+            script.experiment('test', { timeout: 5 }, () => {
+
+                script.test('timeout', { timeout: 'a' }, (testDone) => {
+
+                    setTimeout(() => {
+
+                        testDone();
+                    }, 10);
+                });
+            });
+
+            Lab.execute(script, null, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.failures).to.equal(1);
+                done();
+            });
+        });
     });
 });
