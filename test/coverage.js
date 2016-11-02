@@ -120,8 +120,8 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: './while.js', lineNumber: '5', originalLineNumber: 11 },
-            { filename: './while.js', lineNumber: '6', originalLineNumber: 12 }
+            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
+            { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
         ]);
 
         done();
