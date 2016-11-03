@@ -53,6 +53,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
 - `--shuffle` - randomize the order that test scripts are executed.  Will not work with `--id`.
+- `--seed` - use this seed to randomize the order with `--shuffle`. This is useful to debug order dependent test failures.
 - `-s`, `--silence` - silence test output, defaults to false.
 - `-S`, `--sourcemaps` - enables sourcemap support for stack traces and code coverage, disabled by default.
 - `-t`, `--threshold` - sets the minimum code test coverage percentage to 100%.

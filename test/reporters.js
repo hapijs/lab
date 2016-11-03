@@ -325,6 +325,23 @@ describe('Reporter', () => {
         });
     });
 
+    it('includes the used seed for shuffle in the output', (done) => {
+
+        const reporter = Reporters.generate({ reporter: 'console' });
+        const notebook = {
+            tests: [],
+            seed: 1234
+        };
+
+        reporter.finalize(notebook, (err, code, output) => {
+
+            expect(output).to.contain('1234');
+            expect(output).to.contain('seed');
+            expect(err).not.to.exist();
+            done();
+        });
+    });
+
     describe('console', () => {
 
         it('generates a report', (done) => {

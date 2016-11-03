@@ -24,6 +24,7 @@
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
+    "seedrandom": "^2.4.2",
     "source-map-support": "0.4.x"
   },
   "devDependencies": {
