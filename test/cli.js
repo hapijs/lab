@@ -1024,10 +1024,7 @@ describe('CLI', () => {
 
         RunCli(['test/cli_reject_promise/reject_promise.js'], (error, result) => {
 
-            if (error) {
-                done(error);
-            }
-
+            expect(error).to.not.exist();
             expect(result.code).to.equal(0);
             done();
         });
@@ -1037,10 +1034,7 @@ describe('CLI', () => {
 
         RunCli(['test/cli_reject_promise/reject_promise.js', '-R'], (error, result) => {
 
-            if (error) {
-                done(error);
-            }
-
+            expect(error).to.not.exist();
             expect(result.code).to.equal(1);
             done();
         });
