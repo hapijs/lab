@@ -333,6 +333,21 @@ describe('CLI', () => {
         });
     });
 
+    it('reports the used seed for randomization', (done) => {
+
+        RunCli(['test/cli', '--shuffle'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.contain('seed');
+            done();
+        });
+    });
+
     it('runs a range of tests (-i 3-4)', (done) => {
 
         // The range may need to adjust as new tests are added (if they are skipped for example)

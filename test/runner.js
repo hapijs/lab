@@ -892,27 +892,74 @@ describe('Runner', () => {
             });
         });
 
-        const random = Math.random;
-        let first = true;
-        Math.random = function () {
-
-            if (first) {
-                first = false;
-                return 0.3;
-            }
-
-            return 0.7;
-        };
-
         const scripts = [script1, script2, script3, script4, script5];
-        Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook1) => {
+        Lab.execute(scripts, { dry: true, shuffle: true, seed: 0.3 }, null, (err, notebook1) => {
 
             expect(err).not.to.exist();
-            Lab.execute(scripts, { dry: true, shuffle: true }, null, (err, notebook2) => {
+            Lab.execute(scripts, { dry: true, shuffle: true, seed: 0.7 }, null, (err, notebook2) => {
 
                 expect(err).not.to.exist();
                 expect(notebook1.tests).to.not.equal(notebook2.tests);
-                Math.random = random;
+                done();
+            });
+        });
+    });
+
+    it('shuffle allows to set a seed to use to re-use order of a previous test run', (done) => {
+
+        const script1 = Lab.script();
+        script1.experiment('test1', () => {
+
+            script1.test('1', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script2 = Lab.script();
+        script2.experiment('test2', () => {
+
+            script2.test('2', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script3 = Lab.script();
+        script3.experiment('test3', () => {
+
+            script3.test('3', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script4 = Lab.script();
+        script4.experiment('test4', () => {
+
+            script4.test('4', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const script5 = Lab.script();
+        script5.experiment('test5', () => {
+
+            script5.test('5', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        const scripts = [script1, script2, script3, script4, script5];
+        Lab.execute(scripts, { dry: true, shuffle: true, seed: 1234 }, null, (err, notebook1) => {
+
+            expect(err).not.to.exist();
+            Lab.execute(scripts, { dry: true, shuffle: true, seed: 1234 }, null, (err, notebook2) => {
+
+                expect(err).not.to.exist();
+                expect(notebook1.tests).to.equal(notebook2.tests);
                 done();
             });
         });
@@ -1205,6 +1252,26 @@ describe('Runner', () => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
+            done();
+        });
+    });
+
+    it('reports the used seed', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.test('1', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.report(script, { output: false, seed: 1234, shuffle: true }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(0);
+            expect(output).to.contain('1234');
             done();
         });
     });
