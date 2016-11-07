@@ -1824,4 +1824,24 @@ describe('Runner', () => {
             });
         });
     });
+
+    it('fails with an unhandled Promise rejection if the specified flag is set', (done) => {
+
+        const script = Lab.script();
+        script.test('handles a Promise rejection', (done) => {
+
+            Promise.reject(new Error('Rejection!'));
+            setImmediate(done);
+        });
+
+        Lab.execute(script, { rejections: true }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('Rejection!');
+            done();
+        });
+
+    });
 });

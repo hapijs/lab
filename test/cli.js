@@ -1019,4 +1019,24 @@ describe('CLI', () => {
             done();
         });
     });
+
+    it('passes even with an unhandled Promise rejection in the code under test', (done) => {
+
+        RunCli(['test/cli_reject_promise/reject_promise.js'], (error, result) => {
+
+            expect(error).to.not.exist();
+            expect(result.code).to.equal(0);
+            done();
+        });
+    });
+
+    it('fails with an unhandled Promise rejection if the specified flag is set', (done) => {
+
+        RunCli(['test/cli_reject_promise/reject_promise.js', '-R'], (error, result) => {
+
+            expect(error).to.not.exist();
+            expect(result.code).to.equal(1);
+            done();
+        });
+    });
 });
