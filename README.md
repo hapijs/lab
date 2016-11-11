@@ -6,7 +6,7 @@ Node test utility
 
 Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 
-**lab** is sponsored by [nearForm](http://www.nearform.com/).
+**lab** is sponsored by [Joyent](http://www.joyent.com/). [Joyent](http://www.joyent.com) is currently looking for a [Node.js core engineer](https://www.joyent.com/about/careers/nodejs-core-engineer) to hire.
 
 ## Introduction
 
