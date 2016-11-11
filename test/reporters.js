@@ -330,13 +330,31 @@ describe('Reporter', () => {
         const reporter = Reporters.generate({ reporter: 'console' });
         const notebook = {
             tests: [],
-            seed: 1234
+            seed: 1234,
+            shuffle: true
         };
 
         reporter.finalize(notebook, (err, code, output) => {
 
             expect(output).to.contain('1234');
             expect(output).to.contain('seed');
+            expect(err).not.to.exist();
+            done();
+        });
+    });
+
+    it('does not include the seed if shuffle was not active', (done) => {
+
+        const reporter = Reporters.generate({ reporter: 'console' });
+        const notebook = {
+            tests: [],
+            seed: 1234
+        };
+
+        reporter.finalize(notebook, (err, code, output) => {
+
+            expect(output).to.not.contain('1234');
+            expect(output).to.not.contain('seed');
             expect(err).not.to.exist();
             done();
         });
