@@ -63,6 +63,17 @@ describe('Leaks', () => {
 
     it('works with missing DTrace globals', (done) => {
 
+        const globals = {
+            DTRACE_HTTP_SERVER_RESPONSE: global.DTRACE_HTTP_SERVER_RESPONSE,
+            DTRACE_HTTP_CLIENT_REQUEST: global.DTRACE_HTTP_CLIENT_REQUEST,
+            DTRACE_NET_STREAM_END: global.DTRACE_NET_STREAM_END,
+            DTRACE_HTTP_SERVER_REQUEST: global.DTRACE_HTTP_SERVER_REQUEST,
+            DTRACE_NET_SOCKET_READ: global.DTRACE_NET_SOCKET_READ,
+            DTRACE_HTTP_CLIENT_RESPONSE: global.DTRACE_HTTP_CLIENT_RESPONSE,
+            DTRACE_NET_SOCKET_WRITE: global.DTRACE_NET_SOCKET_WRITE,
+            DTRACE_NET_SERVER_CONNECTION: global.DTRACE_NET_SERVER_CONNECTION
+        };
+
         delete global.DTRACE_HTTP_SERVER_RESPONSE;
         delete global.DTRACE_HTTP_CLIENT_REQUEST;
         delete global.DTRACE_NET_STREAM_END;
@@ -73,6 +84,16 @@ describe('Leaks', () => {
         delete global.DTRACE_NET_SERVER_CONNECTION;
 
         const leaks = Lab.leaks.detect();
+
+        global.DTRACE_HTTP_SERVER_RESPONSE = globals.DTRACE_HTTP_SERVER_RESPONSE;
+        global.DTRACE_HTTP_CLIENT_REQUEST = globals.DTRACE_HTTP_CLIENT_REQUEST;
+        global.DTRACE_NET_STREAM_END = globals.DTRACE_NET_STREAM_END;
+        global.DTRACE_HTTP_SERVER_REQUEST = globals.DTRACE_HTTP_SERVER_REQUEST;
+        global.DTRACE_NET_SOCKET_READ = globals.DTRACE_NET_SOCKET_READ;
+        global.DTRACE_HTTP_CLIENT_RESPONSE = globals.DTRACE_HTTP_CLIENT_RESPONSE;
+        global.DTRACE_NET_SOCKET_WRITE = globals.DTRACE_NET_SOCKET_WRITE;
+        global.DTRACE_NET_SERVER_CONNECTION = globals.DTRACE_NET_SERVER_CONNECTION;
+
         expect(leaks.length).to.equal(0);
 
         done();
