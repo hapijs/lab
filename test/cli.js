@@ -623,7 +623,7 @@ describe('CLI', () => {
         let filename;
         beforeEach((done) => {
 
-            filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+            filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
             done();
         });
 

@@ -79,7 +79,7 @@ describe('Reporter', () => {
             });
         });
 
-        const filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+        const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
         Lab.report(script, { output: filename }, (err, code, output) => {
 
             expect(err).to.not.exist();
@@ -102,7 +102,7 @@ describe('Reporter', () => {
         });
 
         const randomname = [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-');
-        const folder = Path.join(Os.tmpDir(), randomname);
+        const folder = Path.join(Os.tmpdir(), randomname);
         const filename = Path.join(folder, randomname);
         Lab.report(script, { output: filename }, (err, code, output) => {
 
@@ -126,7 +126,7 @@ describe('Reporter', () => {
             });
         });
 
-        const filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(7).toString('hex')].join('-'));
+        const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(7).toString('hex')].join('-'));
         Lab.report(script, { reporter: ['console'], output: [filename] }, (err, code, output) => {
 
             expect(err).to.not.exist();
@@ -2080,7 +2080,7 @@ describe('Reporter', () => {
             });
 
             const recorder = new Recorder();
-            const filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+            const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
 
             Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true }, (err, code, output) => {
 
@@ -2122,7 +2122,7 @@ describe('Reporter', () => {
             });
 
             const recorder = new Recorder();
-            const filename = Path.join(Os.tmpDir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+            const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
 
             Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true }, (err, code, output) => {
 

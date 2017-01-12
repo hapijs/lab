@@ -73,6 +73,7 @@ describe('Leaks', () => {
         delete global.DTRACE_NET_SERVER_CONNECTION;
 
         const leaks = Lab.leaks.detect();
+
         expect(leaks.length).to.equal(0);
 
         done();
