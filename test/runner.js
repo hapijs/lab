@@ -810,9 +810,10 @@ describe('Runner', () => {
         Lab.execute(script, { bail: true }, null, (err, notebook) => {
 
             expect(err).not.to.exist();
-            expect(notebook.tests).to.have.length(2);
+            expect(notebook.tests).to.have.length(3);
             expect(notebook.failures).to.equal(1);
-            expect(notebook.errors[0].message).to.contain('bailing');
+            expect(notebook.tests[1].err.message).to.contain('bailing');
+            expect(notebook.tests[2].skipped).to.be.true();
             done();
         });
     });
