@@ -786,7 +786,39 @@ describe('Runner', () => {
         });
     });
 
-    it('dry run', (done) => {
+    it('bail will terminate on the first test failure', (done) => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.test('1', (testDone) => {
+
+                testDone();
+            });
+
+            script.test('2', (testDone) => {
+
+                throw new Error('bailing');
+            });
+
+            script.test('3', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, { bail: true }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(3);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[1].err.message).to.contain('bailing');
+            expect(notebook.tests[2].skipped).to.be.true();
+            done();
+        });
+    });
+
+    it('dry run won\'t execute tests', (done) => {
 
         const script = Lab.script();
         script.experiment('test', () => {
