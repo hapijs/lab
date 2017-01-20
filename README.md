@@ -31,6 +31,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-h`, `--help` - show command line usage.
 - `-i`, `--id` - only run the test for the given identifier (or identifiers range).
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
+- `--inspect` - start lab in debug mode using the native Node.js debugger.
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
 - `--lint-errors-threshold` - maximum absolute amount of linting errors. Defaults to 0.
@@ -501,6 +502,16 @@ describe('expectation', () => {
 
 This is an invalid test but it will pass as the `.false` assertion was not actually called. Lab will report the
 number of incomplete assertions, their location in your code and return a failure of the tests.
+
+## Debuggers
+
+**lab** can be started with the option `--inspect` which will run it with the Node.js native debugger enabled, breaking on the 1st instruction.
+
+This debugger can be accessed using the URL that is printed in the console, or used in association with a few Chrome extensions ([Node.js V8 Inspector](https://chrome.google.com/webstore/detail/nodejs-v8-inspector/lfnddfpljnhbneopljflpombpnkfhggl), [NIM](https://chrome.google.com/webstore/detail/nim-node-inspector-manage/gnhhdgbaldcilmgcpfddgdbkhjohddkj/related), ...).
+
+As you may know, if your tests are associated with the command `npm test`, you can already run `npm test -- --inspect` to run it with the inspector and avoid creating another command.
+
+**lab** also has automatic support for [WebStorm](https://www.jetbrains.com/webstorm/) debugger, just start a normal debugging session on your npm test script.
 
 ## Best practices
 
