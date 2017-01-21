@@ -2,4 +2,45 @@
 
 'use strict';
 
+if (process.env.NODE_DEBUG_OPTION || process.argv.some((argument) => argument === '--inspect')) {
+    const ChildProcess = require('child_process');
+
+    const node = process.argv[0];
+    const lab = process.argv[1];
+    const args = [];
+
+    if (process.env.NODE_DEBUG_OPTION) { // WebStorm debugger
+        args.push.apply(args, process.env.NODE_DEBUG_OPTION.split(' '));
+        delete process.env.NODE_DEBUG_OPTION;
+    }
+    else { // Node.js native debugger
+        args.push(
+            '--inspect', // node's inspect
+            '--debug-brk' // you probably want to break 1st if you want to have a chance to hook onto the debugger before the tests run
+        );
+    }
+
+    args.push(lab);
+
+    // Remove node, lab, and the --inspect that might have been provided in the options
+    args.push.apply(args, process.argv.slice(2).filter((argument) => argument !== '--inspect'));
+
+    const options = {
+        stdio: 'inherit'
+    };
+
+    const childLab = ChildProcess.spawn(
+        node,
+        args,
+        options
+    );
+
+    childLab.on('close', (code) => {
+
+        process.exit(code);
+    });
+
+    return;
+}
+
 require('../lib/cli').run();
