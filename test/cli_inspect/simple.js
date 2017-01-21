@@ -27,9 +27,3 @@ describe('Test CLI', () => {
         done();
     });
 });
-
-// Used to finally kill process to stop inspector
-setTimeout(() => {
-
-    process.exit(0);
-}, 1000);

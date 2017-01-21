@@ -20,8 +20,7 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     }
     else { // Node.js native debugger
         args.push(
-            inspectArg, // node's inspect
-            '--debug-brk' // you probably want to break 1st if you want to have a chance to hook onto the debugger before the tests run
+            inspectArg // node's inspect
         );
     }
 
