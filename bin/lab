@@ -2,32 +2,31 @@
 
 'use strict';
 
-const inspectArg = process.argv.find((argument) => {
+const inspectPattern = /^(--inspect|--inspect-brk|--debug-brk)(=\d+)?$/;
+const inspectArgs = process.argv.filter((argument) => {
 
-    return /^\-\-inspect/.test(argument);
+    return inspectPattern.test(argument);
 });
 
-if (process.env.NODE_DEBUG_OPTION || inspectArg) {
+if (process.env.NODE_DEBUG_OPTION || inspectArgs.length) {
     const ChildProcess = require('child_process');
 
     const node = process.argv[0];
     const lab = process.argv[1];
-    const args = [];
+    let args = [];
 
     if (process.env.NODE_DEBUG_OPTION) { // WebStorm debugger
         args.push.apply(args, process.env.NODE_DEBUG_OPTION.split(' '));
         delete process.env.NODE_DEBUG_OPTION;
     }
-    else { // Node.js native debugger
-        args.push(
-            inspectArg // node's inspect
-        );
+    else { // Node.js native inspector & debugger
+        args = args.concat(inspectArgs);
     }
 
     args.push(lab);
 
     // Remove node, lab, and the --inspect that might have been provided in the options
-    args.push.apply(args, process.argv.slice(2).filter((argument) => argument !== '--inspect'));
+    args.push.apply(args, process.argv.slice(2).filter((argument) => !inspectPattern.test(argument)));
 
     const options = {
         stdio: 'inherit'

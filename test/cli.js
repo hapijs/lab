@@ -310,48 +310,46 @@ describe('CLI', () => {
         });
     });
 
-    if (NODE_MAJOR > 4) {
-        it('starts the inspector with --inspect', (done) => {
+    it('starts the inspector with --inspect', { skip: (NODE_MAJOR <= 4) }, (done) => {
 
-            const httpServer = new Http.Server(() => {});
-            httpServer.listen(0, () => {
+        const httpServer = new Http.Server(() => {});
+        httpServer.listen(0, () => {
 
-                const port = httpServer.address().port;
-                httpServer.close(() => startInspector(port));
+            const port = httpServer.address().port;
+            httpServer.close(() => startInspector(port));
+        });
+
+        const startInspector = function (port) {
+
+            const labPath = Path.join(__dirname, '/../bin/lab');
+            const testPath = Path.join(__dirname, '/cli_inspect');
+            const childEnv = Object.assign({}, process.env);
+            delete childEnv.NODE_ENV;
+            const cli = ChildProcess.spawn(labPath, [].concat([testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
+            let combinedOutput = '';
+
+            cli.stderr.on('data', (data) => {
+
+                combinedOutput += data;
             });
 
-            const startInspector = function (port) {
+            cli.stdout.on('data', (data) => {
 
-                const labPath = Path.join(__dirname, '/../bin/lab');
-                const testPath = Path.join(__dirname, '/cli_inspect');
-                const childEnv = Object.assign({}, process.env);
-                delete childEnv.NODE_ENV;
-                const cli = ChildProcess.spawn(labPath, [].concat([testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
-                let combinedOutput = '';
+                combinedOutput += data;
+            });
 
-                cli.stderr.on('data', (data) => {
+            cli.once('exit', () => {
 
-                    combinedOutput += data;
-                });
+                expect(combinedOutput).to.contain(`Debugger listening on port ${port}`);
+                done();
+            });
 
-                cli.stdout.on('data', (data) => {
+            setTimeout(() => {
 
-                    combinedOutput += data;
-                });
-
-                cli.once('exit', () => {
-
-                    expect(combinedOutput).to.contain(`Debugger listening on port ${port}`);
-                    done();
-                });
-
-                setTimeout(() => {
-
-                    cli.kill();
-                }, 150);
-            };
-        });
-    }
+                cli.kill();
+            }, 150);
+        };
+    });
 
     it('silences output (-s)', (done) => {
 
