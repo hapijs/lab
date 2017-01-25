@@ -25,14 +25,13 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-D`, `--debug` - print the stack during a domain error event.
-- `--debug-brk` - break on the first line of application code.
 - `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
 - `-f`, `--flat` - do not perform a recursive load of test files within the test directory.
 - `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
 - `-h`, `--help` - show command line usage.
 - `-i`, `--id` - only run the test for the given identifier (or identifiers range).
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
-- `--inspect` - start lab using the [V8 Inspector](https://nodejs.org/dist/latest-v7.x/docs/api/debugger.html#debugger_v8_inspector_integration_for_node_js).
+- `--inspect` - start lab in debug mode using the [V8 Inspector](https://nodejs.org/dist/latest-v7.x/docs/api/debugger.html#debugger_v8_inspector_integration_for_node_js).
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
 - `--lint-errors-threshold` - maximum absolute amount of linting errors. Defaults to 0.
@@ -506,11 +505,11 @@ number of incomplete assertions, their location in your code and return a failur
 
 ## Debuggers
 
-**lab** can be started with the option `--inspect` which will run it with the V8 Inspector enabled. To break on the 1st instruction also include the `--debug-brk` argument.
+**lab** can be started with the option `--inspect` which will run it with the V8 Inspector and Node.js debugger enabled
 
 This debugger can be accessed using the URL that is printed in the console, or used in association with a few Chrome extensions ([Node.js V8 Inspector](https://chrome.google.com/webstore/detail/nodejs-v8-inspector/lfnddfpljnhbneopljflpombpnkfhggl), [NIM](https://chrome.google.com/webstore/detail/nim-node-inspector-manage/gnhhdgbaldcilmgcpfddgdbkhjohddkj/related), etc).
 
-As you may know, if your tests are associated with the command `npm test`, you can already run `npm test -- --inspect` to run it with the inspector and avoid creating another command. If you want to listen on a specific port for the inspector, pass `--inspect={port}`. If you wish to have the inspector break on the first test script, you can pass `--debug-brk`.
+As you may know, if your tests are associated with the command `npm test`, you can already run `npm test -- --inspect` to run it with the inspector and avoid creating another command. If you want to listen on a specific port for the inspector, pass `--inspect={port}`.
 
 **lab** also has automatic support for the [WebStorm](https://www.jetbrains.com/webstorm/) debugger, just start a normal debugging session on your npm test script.
 

@@ -341,12 +341,13 @@ describe('CLI', () => {
             cli.once('exit', () => {
 
                 expect(combinedOutput).to.contain(`Debugger listening on port ${port}`);
+
                 done();
             });
 
             setTimeout(() => {
 
-                cli.kill();
+                cli.kill('SIGINT');
             }, 150);
         };
     });

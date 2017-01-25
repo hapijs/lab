@@ -2,13 +2,13 @@
 
 'use strict';
 
-const inspectPattern = /^(--inspect|--inspect-brk|--debug-brk)(=\d+)?$/;
-const inspectArgs = process.argv.filter((argument) => {
+const inspectPattern = /^(--inspect|--inspect-brk)(=\d+)?$/;
+const inspectArg = process.argv.find((argument) => {
 
     return inspectPattern.test(argument);
 });
 
-if (process.env.NODE_DEBUG_OPTION || inspectArgs.length) {
+if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     const ChildProcess = require('child_process');
 
     const node = process.argv[0];
@@ -19,8 +19,8 @@ if (process.env.NODE_DEBUG_OPTION || inspectArgs.length) {
         args.push.apply(args, process.env.NODE_DEBUG_OPTION.split(' '));
         delete process.env.NODE_DEBUG_OPTION;
     }
-    else { // Node.js native inspector & debugger
-        args = args.concat(inspectArgs);
+    else { // V8 inspector
+        args = args.concat([inspectArg, '--debug-brk']);
     }
 
     args.push(lab);
