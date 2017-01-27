@@ -13,14 +13,15 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
 
     const node = process.argv[0];
     const lab = process.argv[1];
-    let args = [];
+    const args = [];
 
     if (process.env.NODE_DEBUG_OPTION) { // WebStorm debugger
         args.push.apply(args, process.env.NODE_DEBUG_OPTION.split(' '));
         delete process.env.NODE_DEBUG_OPTION;
     }
     else { // V8 inspector
-        args = args.concat([inspectArg, '--debug-brk']);
+        args.push(inspectArg);
+        args.push('--debug-brk');
     }
 
     args.push(lab);

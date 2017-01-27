@@ -505,7 +505,7 @@ number of incomplete assertions, their location in your code and return a failur
 
 ## Debuggers
 
-**lab** can be started with the option `--inspect` which will run it with the V8 Inspector and Node.js debugger enabled
+**lab** can be started with the option `--inspect` which will run it with the V8 Inspector.
 
 This debugger can be accessed using the URL that is printed in the console, or used in association with a few Chrome extensions ([Node.js V8 Inspector](https://chrome.google.com/webstore/detail/nodejs-v8-inspector/lfnddfpljnhbneopljflpombpnkfhggl), [NIM](https://chrome.google.com/webstore/detail/nim-node-inspector-manage/gnhhdgbaldcilmgcpfddgdbkhjohddkj/related), etc).
 
