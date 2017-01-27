@@ -2,8 +2,10 @@
 
 // Load modules
 
+const ChildProcess = require('child_process');
 const Crypto = require('crypto');
 const Fs = require('fs');
+const Http = require('http');
 const Os = require('os');
 const Path = require('path');
 const Code = require('code');
@@ -24,6 +26,11 @@ const it = lab.it;
 const beforeEach = lab.beforeEach;
 const afterEach = lab.afterEach;
 const expect = Code.expect;
+
+
+// Required for --inspect test, which won't succeed on node 4
+
+const NODE_MAJOR = parseInt(process.versions.node.split('.')[0], 10);
 
 
 describe('CLI', () => {
@@ -301,6 +308,48 @@ describe('CLI', () => {
 
             Fs.unlink('./test/cli/leaks.js', done);
         });
+    });
+
+    it('starts the inspector with --inspect', { skip: (NODE_MAJOR <= 4) }, (done) => {
+
+        const httpServer = new Http.Server(() => {});
+        httpServer.listen(0, () => {
+
+            const port = httpServer.address().port;
+            httpServer.close(() => startInspector(port));
+        });
+
+        const startInspector = function (port) {
+
+            const labPath = Path.join(__dirname, '/../bin/lab');
+            const testPath = Path.join(__dirname, '/cli_inspect');
+            const childEnv = Object.assign({}, process.env);
+            delete childEnv.NODE_ENV;
+            const cli = ChildProcess.spawn(labPath, [].concat([testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
+            let combinedOutput = '';
+
+            cli.stderr.on('data', (data) => {
+
+                combinedOutput += data;
+            });
+
+            cli.stdout.on('data', (data) => {
+
+                combinedOutput += data;
+            });
+
+            cli.once('exit', () => {
+
+                expect(combinedOutput).to.contain(`Debugger listening on port ${port}`);
+
+                done();
+            });
+
+            setTimeout(() => {
+
+                cli.kill('SIGINT');
+            }, 150);
+        };
     });
 
     it('silences output (-s)', (done) => {

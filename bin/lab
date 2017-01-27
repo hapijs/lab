@@ -2,7 +2,13 @@
 
 'use strict';
 
-if (process.env.NODE_DEBUG_OPTION || process.argv.some((argument) => argument === '--inspect')) {
+const inspectPattern = /^(--inspect|--inspect-brk)(=\d+)?$/;
+const inspectArg = process.argv.find((argument) => {
+
+    return inspectPattern.test(argument);
+});
+
+if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     const ChildProcess = require('child_process');
 
     const node = process.argv[0];
@@ -13,17 +19,15 @@ if (process.env.NODE_DEBUG_OPTION || process.argv.some((argument) => argument ==
         args.push.apply(args, process.env.NODE_DEBUG_OPTION.split(' '));
         delete process.env.NODE_DEBUG_OPTION;
     }
-    else { // Node.js native debugger
-        args.push(
-            '--inspect', // node's inspect
-            '--debug-brk' // you probably want to break 1st if you want to have a chance to hook onto the debugger before the tests run
-        );
+    else { // V8 inspector
+        args.push(inspectArg);
+        args.push('--debug-brk');
     }
 
     args.push(lab);
 
     // Remove node, lab, and the --inspect that might have been provided in the options
-    args.push.apply(args, process.argv.slice(2).filter((argument) => argument !== '--inspect'));
+    args.push.apply(args, process.argv.slice(2).filter((argument) => !inspectPattern.test(argument)));
 
     const options = {
         stdio: 'inherit'
