@@ -321,11 +321,11 @@ describe('CLI', () => {
 
         const startInspector = function (port) {
 
-            const labPath = Path.join(__dirname, '/../bin/lab');
-            const testPath = Path.join(__dirname, '/cli_inspect');
+            const labPath = Path.join(__dirname, '..', 'bin', 'lab');
+            const testPath = Path.join(__dirname, 'cli_inspect');
             const childEnv = Object.assign({}, process.env);
             delete childEnv.NODE_ENV;
-            const cli = ChildProcess.spawn(labPath, [].concat([testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
+            const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
             let combinedOutput = '';
 
             cli.stderr.on('data', (data) => {
@@ -348,7 +348,7 @@ describe('CLI', () => {
             setTimeout(() => {
 
                 cli.kill('SIGINT');
-            }, 150);
+            }, 500);
         };
     });
 
