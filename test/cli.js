@@ -500,7 +500,7 @@ describe('CLI', () => {
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(1);
             expect(result.output).to.contain('1 tests complete');
-            expect(result.output).to.contain('Coverage: 92.86% (1/14)');
+            expect(result.output).to.contain('Coverage: 90.00% (1/10)');
             expect(result.output).to.contain('missing.js missing coverage on line(s)');
             done();
         }, 'test/cli_coverage');

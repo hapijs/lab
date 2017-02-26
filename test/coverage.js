@@ -26,6 +26,16 @@ describe('Coverage', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
 
+    it('computes sloc without comments', (done) => {
+
+        const Test = require('./coverage/sloc');
+        Test.method(1);
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sloc') });
+        expect(cov.percent).to.equal(100);
+        done();
+    });
+
     it('instruments and measures coverage', (done) => {
 
         const Test = require('./coverage/basic');
@@ -52,10 +62,10 @@ describe('Coverage', () => {
         Test.method(1, 2, 3);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
-        expect(Math.floor(cov.percent)).to.equal(63);
-        expect(cov.sloc).to.equal(52);
+        expect(Math.floor(cov.percent)).to.equal(61);
+        expect(cov.sloc).to.equal(49);
         expect(cov.misses).to.equal(19);
-        expect(cov.hits).to.equal(33);
+        expect(cov.hits).to.equal(30);
         done();
     });
 
@@ -134,7 +144,7 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: 'while.js', lineNumber: '3', originalLineNumber: 8 }
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 11 }
         ]);
         expect(missedChunks).to.include([
             { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
@@ -150,9 +160,9 @@ describe('Coverage', () => {
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
         expect(Math.floor(cov.percent)).to.equal(100);
-        expect(cov.sloc).to.equal(16);
+        expect(cov.sloc).to.equal(12);
         expect(cov.misses).to.equal(0);
-        expect(cov.hits).to.equal(16);
+        expect(cov.hits).to.equal(12);
         done();
     });
 
@@ -162,10 +172,10 @@ describe('Coverage', () => {
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-misses') });
-        expect(Math.floor(cov.percent)).to.equal(93);
-        expect(cov.sloc).to.equal(16);
+        expect(Math.floor(cov.percent)).to.equal(76);
+        expect(cov.sloc).to.equal(13);
         expect(cov.misses).to.equal(1);
-        expect(cov.hits).to.equal(15);
+        expect(cov.hits).to.equal(10);
         done();
     });
 

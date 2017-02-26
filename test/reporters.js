@@ -974,7 +974,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.contain('Coverage: 80.95% (4/21)');
+                expect(output).to.contain('Coverage: 76.47% (4/17)');
                 expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
                 expect(output).to.not.contain('console-full');
                 done();
@@ -1477,7 +1477,7 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('<div class="stats medium">');
-                expect(output).to.contain('<span class="cov medium">71.43</span>');
+                expect(output).to.contain('<span class="cov medium">66.67</span>');
                 delete global.__$$testCovHtml;
                 done();
             });
