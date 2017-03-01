@@ -1,7 +1,7 @@
 <tr id="{{this.filename}}__{{@key}}" class="{{#if this.miss}}{{#if this.chunks}}chunks{{else}}miss{{/if}}{{else}}hit{{/if}}">
   <td class="line" data-tooltip>{{@key}}</td>
   {{> lint this.lintErrors }}
-  <td class="hits" data-tooltip>{{#if this.miss}}{{this.percent}}{{else}}{{hits this.hits}}{{/if}}</td>
+  <td class="hits" data-tooltip>{{#if this.miss}}{{number this.percent}}{{else}}{{number this.hits}}{{/if}}</td>
   {{#if this.chunks}}
   <td class="source">{{#each this.chunks}}{{#if this.miss}}<div class="miss {{this.miss}}" data-tooltip>{{this.source}}</div>{{else}}<div>{{this.source}}</div>{{/if}}{{/each}}</td>
   {{else}}
