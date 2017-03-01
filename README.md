@@ -1,6 +1,6 @@
 ![lab Logo](https://raw.github.com/hapijs/lab/master/images/lab.png)
 
-Node test utility
+Sanket test utility
 
 [![Build Status](https://secure.travis-ci.org/hapijs/lab.svg)](http://travis-ci.org/hapijs/lab)
 
