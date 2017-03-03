@@ -771,7 +771,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -855,7 +855,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m✔\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+                expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
                 done();
             });
         });
@@ -974,7 +974,7 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.contain('Coverage: 80.95% (4/21)');
+                expect(output).to.contain('Coverage: 76.47% (4/17)');
                 expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
                 expect(output).to.not.contain('console-full');
                 done();
@@ -1018,7 +1018,7 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
-                expect(output).to.contain('test/coverage/while.js on line(s): 11, 12');
+                expect(output).to.contain('while.js on line(s): 13, 14');
                 done();
             });
         });
@@ -1108,7 +1108,7 @@ describe('Reporter', () => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
-                expect(output).to.match(/test\n  ✔ 1\) works \(\d+ ms\)\n  ✖ 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
+                expect(output).to.match(/test\n  [✔√] 1\) works \(\d+ ms\)\n  [✖×] 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
                 done();
             });
         });
@@ -1353,7 +1353,7 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n\s+"a": 1,\n\s+"b": "\[undefined\]",\n\s+"c": "\[function \(\) \{\\n\\n\s+return 'foo';\\n\s+\}\]",\n\s+"d": "\[Infinity\]",\n\s+"e": "\[-Infinity\]"\n\s+}\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n\s+"a": 1,\n\s+"b": "\[undefined\]",\n\s+"c": "\[function \(\) \{((\\r)?\\n){2}\s+return 'foo';(\\r)?\\n\s+\}\]",\n\s+"d": "\[Infinity\]",\n\s+"e": "\[-Infinity\]"\n\s+}\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -1477,13 +1477,13 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 expect(output).to.contain('<div class="stats medium">');
-                expect(output).to.contain('<span class="cov medium">71.43</span>');
+                expect(output).to.contain('<span class="cov medium">66.67</span>');
                 delete global.__$$testCovHtml;
                 done();
             });
         });
 
-        it('generates a coverage report including sourcemaps information', (done) => {
+        it('generates a coverage report with original source from external sourcemaps', (done) => {
 
             const Test = require('./coverage/sourcemaps-external');
 
@@ -1500,18 +1500,70 @@ describe('Reporter', () => {
             Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
-                expect(output).to.contain([
-                    '<th>Original filename</th>',
-                    '<th>Original line</th>',
-                    '<td class="sourcemaps file" data-tooltip>test/coverage/sourcemaps-external.js</td>',
-                    '<td class="sourcemaps line" data-tooltip>1</td>',
-                    '<td class="sourcemaps line" data-tooltip>6</td>',
-                    '<td class="sourcemaps line" data-tooltip>9</td>',
-                    '<td class="sourcemaps line" data-tooltip>11</td>',
-                    '<td class="sourcemaps line" data-tooltip>12</td>',
-                    '<td class="sourcemaps line" data-tooltip>13</td>',
-                    '<td class="sourcemaps line" data-tooltip>16</td>'
-                ]);
+                expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
+                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-external.js">test/coverage/sourcemaps-external.js)</a>');
+                expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
+                expect(output, 'original chunks not properly handled').to.contains([
+                    '<tr id="while.js__13" class="chunks">',
+                    '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) </div><div>{</div></td>']);
+                expect(output, 'missed original line not included').to.contains([
+                    '<tr id="while.js__14" class="miss">',
+                    '<td class="source" data-tooltip>        value &#x3D; false;</td>']);
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+        it('generates a coverage report with original source from inline sourcemaps', (done) => {
+
+            const Test = require('./coverage/sourcemaps-inline');
+
+            const script = Lab.script({ schedule: false });
+            script.experiment('test', () => {
+
+                script.test('something', (finished) => {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-inline'), sourcemaps: true, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
+                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-inline.js">test/coverage/sourcemaps-inline.js)</a>');
+                expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
+                expect(output, 'original chunks not properly handled').to.contains([
+                    '<tr id="while.js__13" class="chunks">',
+                    '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) {</div></td>']);
+                delete global.__$$testCovHtml;
+                done();
+            });
+        });
+
+
+        it('generates a coverage report with concatenated original sources', (done) => {
+
+            const Test = require('./coverage/sourcemaps-multiple');
+
+            const script = Lab.script({ schedule: false });
+            script.experiment('test', () => {
+
+                script.test('something', (finished) => {
+
+                    Test.method(false);
+                    finished();
+                });
+            });
+
+            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-multiple'), sourcemaps: true, output: false }, (err, code, output) => {
+
+                expect(err).not.to.exist();
+                expect(output, '1st original filename not included').to.contains('<h2 id="file1.js">file1.js');
+                expect(output, '2nd original filename not included').to.contains('<h2 id="file2.js">file2.js');
+                expect(output, '3rd original filename not included').to.contains('<h2 id="file3.js">file3.js');
+                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-multiple.js">test/coverage/sourcemaps-multiple.js)</a>');
                 delete global.__$$testCovHtml;
                 done();
             });
@@ -1873,7 +1925,7 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
 
-                expect(output).to.contain('coverage/html.js');
+                expect(output).to.contain(Path.join('coverage', 'html.js'));
                 expect(output).to.contain('DA:1,1');                    // Check that line is marked as covered
                 expect(output).to.contain('LF:14');                     // Total Lines
                 expect(output).to.contain('LH:10');                     // Lines Hit

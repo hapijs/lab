@@ -182,7 +182,7 @@ describe('CLI', () => {
         });
     });
 
-    it('requires a custom reporter from node_modules', (done) => {
+    it('requires a custom reporter from node_modules', { timeout: 5e3 }, (done) => {
 
         RunCli(['test/cli', '-r', 'lab-event-reporter'], (error, result) => {
 
@@ -321,11 +321,11 @@ describe('CLI', () => {
 
         const startInspector = function (port) {
 
-            const labPath = Path.join(__dirname, '/../bin/lab');
-            const testPath = Path.join(__dirname, '/cli_inspect');
+            const labPath = Path.join(__dirname, '..', 'bin', 'lab');
+            const testPath = Path.join(__dirname, 'cli_inspect');
             const childEnv = Object.assign({}, process.env);
             delete childEnv.NODE_ENV;
-            const cli = ChildProcess.spawn(labPath, [].concat([testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
+            const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
             let combinedOutput = '';
 
             cli.stderr.on('data', (data) => {
@@ -348,7 +348,7 @@ describe('CLI', () => {
             setTimeout(() => {
 
                 cli.kill('SIGINT');
-            }, 150);
+            }, 500);
         };
     });
 
@@ -500,7 +500,7 @@ describe('CLI', () => {
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(1);
             expect(result.output).to.contain('1 tests complete');
-            expect(result.output).to.contain('Coverage: 92.86% (1/14)');
+            expect(result.output).to.contain('Coverage: 90.00% (1/10)');
             expect(result.output).to.contain('missing.js missing coverage on line(s)');
             done();
         }, 'test/cli_coverage');

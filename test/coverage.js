@@ -26,6 +26,16 @@ describe('Coverage', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
 
+    it('computes sloc without comments', (done) => {
+
+        const Test = require('./coverage/sloc');
+        Test.method(1);
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sloc') });
+        expect(cov.percent).to.equal(100);
+        done();
+    });
+
     it('instruments and measures coverage', (done) => {
 
         const Test = require('./coverage/basic');
@@ -52,10 +62,10 @@ describe('Coverage', () => {
         Test.method(1, 2, 3);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
-        expect(Math.floor(cov.percent)).to.equal(63);
-        expect(cov.sloc).to.equal(52);
+        expect(Math.floor(cov.percent)).to.equal(61);
+        expect(cov.sloc).to.equal(49);
         expect(cov.misses).to.equal(19);
-        expect(cov.hits).to.equal(33);
+        expect(cov.hits).to.equal(30);
         done();
     });
 
@@ -91,8 +101,8 @@ describe('Coverage', () => {
         });
 
         expect(missedLines).to.include([
-            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
-            { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
+            { filename: 'while.js', lineNumber: '4', originalLineNumber: 13 },
+            { filename: 'while.js', lineNumber: '5', originalLineNumber: 14 }
         ]);
 
         done();
@@ -107,6 +117,7 @@ describe('Coverage', () => {
 
         const source = cov.files[0].source;
         const missedLines = [];
+        const missedChunks = [];
         Object.keys(source).forEach((lineNumber) => {
 
             const line = source[lineNumber];
@@ -116,12 +127,27 @@ describe('Coverage', () => {
                     lineNumber,
                     originalLineNumber: line.originalLine
                 });
+                if (line.chunks) {
+                    line.chunks.forEach((chunk) => {
+
+                        if (chunk.miss) {
+                            missedChunks.push({
+                                filename: chunk.originalFilename,
+                                lineNumber,
+                                originalLineNumber: chunk.originalLine,
+                                originalColumn: chunk.originalColumn
+                            });
+                        }
+                    });
+                }
             }
         });
 
         expect(missedLines).to.include([
-            { filename: 'test/coverage/while.js', lineNumber: '5', originalLineNumber: 11 },
-            { filename: 'test/coverage/while.js', lineNumber: '6', originalLineNumber: 12 }
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 11 }
+        ]);
+        expect(missedChunks).to.include([
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
         ]);
 
         done();
@@ -134,9 +160,9 @@ describe('Coverage', () => {
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
         expect(Math.floor(cov.percent)).to.equal(100);
-        expect(cov.sloc).to.equal(16);
+        expect(cov.sloc).to.equal(12);
         expect(cov.misses).to.equal(0);
-        expect(cov.hits).to.equal(16);
+        expect(cov.hits).to.equal(12);
         done();
     });
 
@@ -146,10 +172,10 @@ describe('Coverage', () => {
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-misses') });
-        expect(Math.floor(cov.percent)).to.equal(93);
-        expect(cov.sloc).to.equal(16);
+        expect(Math.floor(cov.percent)).to.equal(92);
+        expect(cov.sloc).to.equal(13);
         expect(cov.misses).to.equal(1);
-        expect(cov.hits).to.equal(15);
+        expect(cov.hits).to.equal(12);
         done();
     });
 
@@ -211,7 +237,7 @@ describe('Coverage', () => {
         const Test = require('./coverage/use-strict.js');
         expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
 
-        const testFile = Path.join(__dirname, 'coverage/use-strict.js');
+        const testFile = Path.join(__dirname, 'coverage/use-strict.js').replace(/\\/g, '/');
         expect(Test.singleLine.toString()).to.contain('"use strict"; global.__$$labCov._line(\'' + testFile + '\',19);return value;');
 
         expect(Test.shouldFail).to.throw('unknownvar is not defined');
@@ -238,7 +264,7 @@ describe('Coverage', () => {
             }
         });
 
-        expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true' }]);
+        expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true', column: 22 }]);
 
         done();
     });

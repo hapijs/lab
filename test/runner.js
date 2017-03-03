@@ -3,6 +3,7 @@
 // Load modules
 
 const Code = require('code');
+const Path = require('path');
 const _Lab = require('../test_runner');
 const Lab = require('../');
 
@@ -1323,7 +1324,7 @@ describe('Runner', () => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
-            expect(output).to.contain(['eslint/', 'semi']);
+            expect(output).to.contain(['eslint' + Path.sep, 'semi']);
             done();
         });
     });

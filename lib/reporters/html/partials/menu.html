@@ -2,7 +2,7 @@
     <li><a href="#tests">Test Report</a></li>
     <li><a href="#coverage">Coverage Report</a></li>
     {{#each coverage.cov.files}}
-    <li>
+    <li class="{{#if this.sourcemaps}}generated{{/if}}">
         <span class="cov {{this.percentClass}}">{{this.percent}}</span>
         <a href="#{{this.filename}}">{{#if this.dirname}}<span class="dirname">{{this.dirname}}</span>{{/if}}<span class="basename">{{this.basename}}</span></a>
     </li>

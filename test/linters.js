@@ -165,7 +165,7 @@ describe('Linters - eslint', () => {
 
         Fs.writeFileSync = (path, output) => {
 
-            expect(path).to.endWith('test/lint/eslint/fix/success.js');
+            expect(path).to.endWith(Path.join('test', 'lint', 'eslint', 'fix', 'success.js'));
             expect(output).to.endWith('\n\n    return value;\n};\n');
         };
 
