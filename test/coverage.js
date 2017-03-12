@@ -36,6 +36,16 @@ describe('Coverage', () => {
         done();
     });
 
+    it('computes sloc on script that has no comments', (done) => {
+
+        const Test = require('./coverage/nocomment');
+        Test.method(1);
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/nocomment') });
+        expect(cov.percent).to.equal(100);
+        done();
+    });
+
     it('instruments and measures coverage', (done) => {
 
         const Test = require('./coverage/basic');
