@@ -312,6 +312,21 @@ describe('Coverage', () => {
         done();
     });
 
+    it('should measure coverage on conditional value', (done) => {
+
+        const Test = require('./coverage/conditional-value');
+        expect(Test.method(1)).to.be.undefined();
+        expect(Test.method(0)).to.be.undefined();
+        expect(Test.method(1, true)).to.equal(1);
+        expect(Test.method(0, true)).to.equal(42);
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-value') });
+        const source = cov.files[0].source;
+        const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+        expect(missedLines).to.be.empty();
+        done();
+    });
+
     describe('#analyze', () => {
 
         it('sorts file paths in report', (done) => {
