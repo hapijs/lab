@@ -315,10 +315,10 @@ describe('Coverage', () => {
     it('should measure coverage on conditional value', (done) => {
 
         const Test = require('./coverage/conditional-value');
-        expect(Test.method(1)).to.be.undefined();
-        expect(Test.method(0)).to.be.undefined();
-        expect(Test.method(1, true)).to.equal(1);
-        expect(Test.method(0, true)).to.equal(42);
+        expect(Test.method(false)).to.equal(false);
+        expect(Test.method(true, 1, 0)).to.equal(1);
+        expect(Test.method(true, 0, 1)).to.equal(1);
+        expect(Test.method(true, 0, 0)).to.equal(0);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-value') });
         const source = cov.files[0].source;
