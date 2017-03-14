@@ -3,15 +3,8 @@
 // Load modules
 
 
-// Declare internals
+exports.method = function (bool, value1, value2) {
 
-const internals = {
-    def: 42
-};
-
-
-exports.method = function (value, bool) {
-
-    const v = bool && (value || internals.def);
+    const v = bool && (value1 || value2);
     return v;
 };
