@@ -66,12 +66,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 
 ## Usage
 
-To install **lab** globally:
-```bash
-$ npm install -g lab
-```
-
-To use locally:
+To install locally:
 ```bash
 $ npm install --save-dev lab
 ```
