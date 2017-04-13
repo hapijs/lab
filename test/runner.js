@@ -819,6 +819,107 @@ describe('Runner', () => {
         });
     });
 
+    it('bail will terminate on the first test failure (skipping next befores)', (done) => {
+
+        const script = Lab.script();
+        let beforeRan = false;
+        script.experiment('root', () => {
+
+            script.experiment('test', () => {
+
+                script.test('1', (testDone) => {
+
+                    testDone();
+                });
+
+                script.test('2', (testDone) => {
+
+                    throw new Error('bailing');
+                });
+
+                script.test('3', (testDone) => {
+
+                    testDone();
+                });
+            });
+
+            script.experiment('test', () => {
+
+                script.before((done) => {
+
+                    beforeRan = true;
+                    done();
+                });
+
+                script.test('1', (testDone) => {
+
+                    testDone();
+                });
+            });
+        });
+
+        Lab.execute(script, { bail: true }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(4);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[1].err.message).to.contain('bailing');
+            expect(notebook.tests[2].skipped).to.be.true();
+            expect(notebook.tests[3].skipped).to.be.true();
+            expect(beforeRan).to.be.false();
+            done();
+        });
+    });
+
+    it('bail will terminate on the first test failure (skipping sub-experiments)', (done) => {
+
+        const script = Lab.script();
+        let beforeRan = false;
+        script.experiment('test', () => {
+
+            script.test('1', (testDone) => {
+
+                testDone();
+            });
+
+            script.test('2', (testDone) => {
+
+                throw new Error('bailing');
+            });
+
+            script.test('3', (testDone) => {
+
+                testDone();
+            });
+
+            script.experiment('test', () => {
+
+                script.before((done) => {
+
+                    beforeRan = true;
+                    done();
+                });
+
+                script.test('1', (testDone) => {
+
+                    testDone();
+                });
+            });
+        });
+
+        Lab.execute(script, { bail: true }, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(4);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[1].err.message).to.contain('bailing');
+            expect(notebook.tests[2].skipped).to.be.true();
+            expect(notebook.tests[3].skipped).to.be.true();
+            expect(beforeRan).to.be.false();
+            done();
+        });
+    });
+
     it('dry run won\'t execute tests', (done) => {
 
         const script = Lab.script();
