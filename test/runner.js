@@ -246,6 +246,24 @@ describe('Runner', () => {
         });
     });
 
+    it('should not fail test that returns a resolved promise with a value', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {
+
+            return Promise.resolve('a');
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
+
     it('should not fail test that calls the callback without an error', (done) => {
 
         const script = Lab.script({ schedule: false });
