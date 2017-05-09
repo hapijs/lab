@@ -142,6 +142,16 @@ describe('Leaks', () => {
         done();
     });
 
+    it('ignores WebAssembly global', (done) => {
+
+        testedKeys.push('WebAssembly');
+        global.WebAssembly = global.WebAssembly || 1;
+
+        const leaks = Lab.leaks.detect();
+        expect(leaks.length).to.equal(0);
+        done();
+    });
+
     it('ignores Harmony globals', (done) => {
 
         const harmonyGlobals = internals.harmonyGlobals;
