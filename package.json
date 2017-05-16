@@ -16,7 +16,7 @@
     "eslint": "3.19.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "espree": "3.x.x",
+    "espree": "3.4.x",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
     "hoek": "4.x.x",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "code": "4.x.x",
     "cpr": "2.0.x",
-    "eslint-plugin-markdown": "1.0.0-beta.4",
+    "eslint-plugin-markdown": "1.0.0-beta.6",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.6.x"
   },
