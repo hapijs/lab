@@ -340,7 +340,8 @@ describe('CLI', () => {
 
             cli.once('exit', () => {
 
-                expect(combinedOutput).to.contain(`Debugger listening on port ${port}`);
+                expect(combinedOutput).to.contain('Debugger listening on');
+                expect(combinedOutput).to.contain(`${port}`);
 
                 done();
             });
@@ -362,7 +363,7 @@ describe('CLI', () => {
 
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
-            expect(result.output).to.not.contain('.');
+            expect(result.output).to.not.contain('..');
             done();
         });
     });
@@ -1086,7 +1087,7 @@ describe('CLI', () => {
 
     it('runs a single test and fails with a plan and no assertion library', (done) => {
 
-        RunCli(['test/cli_plan/simple.js', '-m', '2000'], (error, result) => {
+        RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', ''], (error, result) => {
 
             if (error) {
                 done(error);

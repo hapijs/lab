@@ -839,4 +839,27 @@ describe('Lab', () => {
             done();
         });
     });
+
+    it('code is the default assertion library', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.experiment('experiment', () => {
+
+            script.test('test', { plan: 1 }, (testDone) => {
+
+                Lab.expect(testDone).to.exist();
+                testDone();
+            });
+        });
+
+        Lab.execute(script, null, null, (err, notebook) => {
+
+            expect(err).to.not.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.tests[0].assertions).to.equal(1);
+            expect(notebook.failures).to.equal(0);
+            done();
+        });
+    });
 });

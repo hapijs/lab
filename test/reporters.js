@@ -452,7 +452,7 @@ describe('Reporter', () => {
             });
 
             global.x1 = true;
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
 
                 delete global.x1;
                 expect(err).to.not.exist();
@@ -476,7 +476,7 @@ describe('Reporter', () => {
             });
 
             global.x1 = true;
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
 
                 delete global.x1;
                 expect(err).to.not.exist();
@@ -527,7 +527,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -551,7 +551,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -597,7 +597,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -617,7 +617,7 @@ describe('Reporter', () => {
                     script.test('works', (finished) => { });
                 });
 
-                Lab.report(script, { reporter: 'console', colors: false, timeout: 1, output: false }, (err, code, output) => {
+                Lab.report(script, { reporter: 'console', colors: false, timeout: 1, output: false, assert: false }, (err, code, output) => {
 
                     expect(err).to.not.exist();
                     expect(code).to.equal(1);
@@ -749,7 +749,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 0, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.match(/^\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
@@ -768,7 +768,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
@@ -1104,7 +1104,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, progress: 2, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, progress: 2, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
@@ -1132,7 +1132,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', output: false, assert: false }, (err, code, output) => {
 
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
@@ -1153,7 +1153,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
@@ -1317,7 +1317,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
@@ -1349,7 +1349,7 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
+            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');

@@ -1582,34 +1582,11 @@ describe('Runner', () => {
             });
         });
 
-        Lab.report(script, { output: false }, (err, code, output) => {
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('Expected 1 assertions, but no assertion library found');
-            done();
-        });
-    });
-
-    it('extends report with assertions library support (incomplete assertions)', (done) => {
-
-        const script = Lab.script();
-        const assertions = Code;
-        script.experiment('test', () => {
-
-            script.test('1', (testDone) => {
-
-                assertions.expect(true).to.be.true;
-                testDone();
-            });
-        });
-
-        Lab.report(script, { output: false, assert: assertions }, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            expect(output).to.match(/Assertions count: \d+/);
-            expect(output).to.contain('Incomplete assertion at');
             done();
         });
     });
@@ -1632,6 +1609,31 @@ describe('Runner', () => {
             expect(err).not.to.exist();
             expect(code).to.equal(0);
             expect(output).to.not.match(/Assertions count: \d+/);
+            done();
+        });
+    });
+
+    it('extends report with assertions library support (incomplete assertions)', (done) => {
+
+        const script = Lab.script();
+        const assertions = {
+            count: () => 1,
+            incomplete: () => ['line 42']
+        };
+        script.experiment('test', () => {
+
+            script.test('1', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: assertions }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.match(/Assertions count: \d+/);
+            expect(output).to.contain('Incomplete assertion at line 42');
             done();
         });
     });
@@ -1666,7 +1668,7 @@ describe('Runner', () => {
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, (err, code, output) => {
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
@@ -1719,7 +1721,7 @@ describe('Runner', () => {
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, (err, code, output) => {
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
@@ -1772,7 +1774,7 @@ describe('Runner', () => {
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, (err, code, output) => {
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
@@ -1840,7 +1842,7 @@ describe('Runner', () => {
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, (err, code, output) => {
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
@@ -1937,7 +1939,7 @@ describe('Runner', () => {
             });
         });
 
-        Lab.report(script, { output: false, assert: {} }, (err, code, output) => {
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
             expect(err).not.to.exist();
             expect(code).to.equal(1);
@@ -1987,7 +1989,7 @@ describe('Runner', () => {
                 });
             });
 
-            Lab.report(script, { output: false }, (err, code, output) => {
+            Lab.report(script, { output: false, assert: false }, (err, code, output) => {
 
                 expect(err).not.to.exist();
                 expect(code).to.equal(0);
