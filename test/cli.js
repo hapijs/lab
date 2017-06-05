@@ -341,7 +341,6 @@ describe('CLI', () => {
             cli.once('exit', () => {
 
                 expect(combinedOutput).to.contain('Debugger listening on').and.to.contain(port.toString());
-
                 done();
             });
 
@@ -362,7 +361,7 @@ describe('CLI', () => {
 
             expect(result.errorOutput).to.equal('');
             expect(result.code).to.equal(0);
-            expect(result.output).to.not.contain('.');
+            expect(result.output).to.not.contain('..');
             done();
         });
     });
@@ -891,6 +890,21 @@ describe('CLI', () => {
         });
     });
 
+    it('disables assertions with --assert false', (done) => {
+
+        RunCli(['test/cli_assert/no-assert.js', '-m', '2000', '-a', 'false'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.not.contain('Assertions');
+            done();
+        });
+    });
+
     it('only loads files matching pattern (-P)', (done) => {
 
         RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test'], (error, result) => {
@@ -1086,7 +1100,7 @@ describe('CLI', () => {
 
     it('runs a single test and fails with a plan and no assertion library', (done) => {
 
-        RunCli(['test/cli_plan/simple.js', '-m', '2000'], (error, result) => {
+        RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', ''], (error, result) => {
 
             if (error) {
                 done(error);

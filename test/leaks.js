@@ -10,7 +10,7 @@ const Lab = require('../');
 // Declare internals
 
 const internals = {
-    harmonyGlobals: ['Proxy', 'Reflect'],
+    harmonyGlobals: ['Proxy', 'Reflect', 'WebAssembly'],
     counterGlobals: [
         'COUNTER_NET_SERVER_CONNECTION',
         'COUNTER_NET_SERVER_CONNECTION_CLOSE',

@@ -17,7 +17,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 ## Command Line
 
 **lab** supports the following command line options:
-- `-a`, `--assert` - name of assert library to use.
+- `-a`, `--assert` - name of assert library to use. To disable assertion library set to `false`. Defaults to `code`.
 - `--bail` - terminate the process with a non-zero exit code on the first test failure. Defaults to `false`.
 - `-c`, `--coverage` - enables code coverage analysis.
 - `--coverage-path` - sets code coverage path.
@@ -79,13 +79,12 @@ $ lab unit.js
 
 Test files must require the **lab** module, and export a test script:
 ```javascript
-const Code = require('code');   // assertion library
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 
 lab.test('returns true when 1 + 1 equals 2', (done) => {
 
-    Code.expect(1 + 1).to.equal(2);
+    Lab.expect(1 + 1).to.equal(2);
     done();
 });
 ```
@@ -100,7 +99,7 @@ lab.experiment('math', () => {
 
     lab.test('returns true when 1 + 1 equals 2', (done) => {
 
-        Code.expect(1 + 1).to.equal(2);
+        Lab.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -129,7 +128,7 @@ lab.experiment('math', () => {
 
     lab.test('returns true when 1 + 1 equals 2', (done) => {
 
-        Code.expect(1 + 1).to.equal(2);
+        Lab.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -153,7 +152,7 @@ lab.experiment('math', () => {
         return aFunctionReturningAPromise()
             .then((aValue) => {
 
-                Code.expect(aValue).to.equal(expectedValue);
+                Lab.expect(aValue).to.equal(expectedValue);
             });
     });
 });
@@ -172,7 +171,7 @@ lab.experiment('with only', () => {
 
     lab.test.only('only this test will run', (done) => {
 
-        Code.expect(1 + 1).to.equal(2);
+        Lab.expect(1 + 1).to.equal(2);
         done();
     });
 
@@ -191,7 +190,7 @@ current time, your test case may look like the following:
 ```javascript
 lab.test('attaches notes', (done) => {
 
-    Code.expect(1 + 1).to.equal(2);
+    Lab.expect(1 + 1).to.equal(2);
     done.note(`The current time is ${Date.now()}`);
     done();
 });
@@ -214,7 +213,7 @@ lab.test('cleanups after test', (done, onCleanup) => {
         return next();
     });
 
-    Code.expect(1 + 1).to.equal(2);
+    Lab.expect(1 + 1).to.equal(2);
     done();
 });
 ```
@@ -228,7 +227,7 @@ lab.experiment('my plan', () => {
 
     lab.test('only a single assertion executes', { plan: 1 }, (done) => {
 
-        Code.expect(1 + 1).to.equal(2);
+        Lab.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -248,7 +247,7 @@ lab.experiment('math', { timeout: 1000 }, () => {
 
     lab.test('returns true when 1 + 1 equals 2', { parallel: true }, (done) =>  {
 
-        Code.expect(1 + 1).to.equal(2);
+        Lab.expect(1 + 1).to.equal(2);
         done();
     });
 });
@@ -265,7 +264,6 @@ The `script([options])` method takes an optional `options` argument where `optio
 
 To make **lab** look like BDD:
 ```javascript
-const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 
@@ -273,7 +271,7 @@ const describe = lab.describe;
 const it = lab.it;
 const before = lab.before;
 const after = lab.after;
-const expect = Code.expect;
+const expect = Lab.expect;
 
 describe('math', () => {
 
@@ -297,13 +295,12 @@ describe('math', () => {
 
 To make **lab** look like TDD:
 ```javascript
-const Code = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 
 const suite = lab.suite;
 const test = lab.test;
-const expect = Code.expect;
+const expect = Lab.expect;
 
 suite('math', () => {
 
@@ -442,15 +439,11 @@ lab -dL
 
 ## Running a custom linter
 
-If you would like to run a different linter, or even a custom version of eslint you should
-pass the `-n` or `--linter` argument with the path to the lint runner.  For example,
-if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
+If you would like to run a different linter, or even a custom version of eslint you should pass the `-n` or `--linter` argument with the path to the lint runner.  For example, if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
 
 ## Integration with an assertion library
 
-Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. It works by
-requiring the imported assertion library via the `Lab.assertions` property. Here is an example
-using `--assert code`:
+Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. By default the assertion library `code` is included and integrated. However, you can override this behavior by setting the CLI `--assert` argument or changing the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
 
 ```js
 // Testing shortcuts
@@ -477,8 +470,7 @@ describe('expectation', () => {
 });
 ```
 
-If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you
-have any missing assertions. An example of this is:
+If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you have any missing assertions. An example of this is:
 
 ```js
 describe('expectation', () => {
@@ -487,7 +479,7 @@ describe('expectation', () => {
 
         // Invalid and missing assertion - false is a method, not a property!
         // This test will pass.
-        expect(true).to.be.false;
+        Lab.expect(true).to.be.false;
 
         done();
     });
