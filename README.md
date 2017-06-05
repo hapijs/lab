@@ -17,7 +17,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 ## Command Line
 
 **lab** supports the following command line options:
-- `-a`, `--assert` - name of assert library to use. Defaults to `code`.
+- `-a`, `--assert` - name of assert library to use. To disable assertion library set to `false`. Defaults to `code`.
 - `--bail` - terminate the process with a non-zero exit code on the first test failure. Defaults to `false`.
 - `-c`, `--coverage` - enables code coverage analysis.
 - `--coverage-path` - sets code coverage path.

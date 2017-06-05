@@ -892,6 +892,21 @@ describe('CLI', () => {
         });
     });
 
+    it('disables assertions with --assert false', (done) => {
+
+        RunCli(['test/cli_assert/no-assert.js', '-m', '2000', '-a', 'false'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.errorOutput).to.equal('');
+            expect(result.code).to.equal(0);
+            expect(result.output).to.not.contain('Assertions');
+            done();
+        });
+    });
+
     it('only loads files matching pattern (-P)', (done) => {
 
         RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test'], (error, result) => {
