@@ -340,7 +340,7 @@ describe('CLI', () => {
 
             cli.once('exit', () => {
 
-                expect(combinedOutput).to.contain(`Debugger listening on port ${port}`);
+                expect(combinedOutput).to.contain('Debugger listening on').and.to.contain(port.toString());
 
                 done();
             });
