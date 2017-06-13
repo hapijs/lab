@@ -190,6 +190,31 @@ describe('Runner', () => {
         });
     });
 
+    it('should fail test that takes a callback and returns a promise', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', (testDone) => {
+
+            return new Promise((resolve) => {
+
+                resolve();
+            }).then(() => {
+
+                testDone();
+            });
+        });
+
+        Lab.execute(script, {}, null, (err, notebook) => {
+
+            expect(err).not.to.exist();
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('Function for "a" must either take a callback argument or return a promise, but not both');
+            done();
+        });
+    });
+
     it('should fail test that returns a rejected promise', (done) => {
 
         const script = Lab.script({ schedule: false });
