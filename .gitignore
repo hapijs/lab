@@ -19,3 +19,4 @@ coverage.html
 lib-cov
 test_runner
 test/cli/test/leaks.js
+package-lock.json
