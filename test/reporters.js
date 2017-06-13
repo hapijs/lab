@@ -458,7 +458,7 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Expected true to equal specified value: false\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -482,7 +482,7 @@ describe('Reporter', () => {
                 expect(err).to.not.exist();
                 expect(code).to.equal(1);
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"bc\"\n      \]\n\n      Expected \[ 'a', 'b' \] to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"bc\"\n      \]\n\n      Expected \[ 'a', 'b' \] to equal specified value: \[ 'a', 'c' \]\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
                 done();
             });
         });
@@ -1157,7 +1157,7 @@ describe('Reporter', () => {
 
                 expect(err).not.to.exist();
                 const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Not working right: Expected true to equal specified value\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Not working right: Expected true to equal specified value: false\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
                 done();
             });
         });
@@ -1393,7 +1393,7 @@ describe('Reporter', () => {
                 expect(result.tests.group[0].title).to.equal('works');
                 expect(result.tests.group[0].err).to.equal(false);
                 expect(result.tests.group[1].title).to.equal('fails');
-                expect(result.tests.group[1].err).to.equal('Expected true to equal specified value');
+                expect(result.tests.group[1].err).to.equal('Expected true to equal specified value: false');
                 expect(result.tests.group[2].title).to.equal('fails with non-error');
                 expect(result.tests.group[2].err).to.equal('Non Error object received or caught');
                 expect(result.leaks.length).to.equal(0);
@@ -1601,8 +1601,8 @@ describe('Reporter', () => {
                     .and.to.contain('<span class="lint-warnings low">1</span>')
                     .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
                     .and.to.contain('<li class="lint-entry">L14 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
-                    .and.to.contain('<li class="lint-entry">L15 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
-                    .and.to.contain('<li class="lint-entry">L18 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
+                    .and.to.contain('<li class="lint-entry">L15 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
+                    .and.to.contain('<li class="lint-entry">L18 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
                     .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
                     .and.to.contain('<li class="lint-entry">L21 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
                     .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
@@ -1896,7 +1896,7 @@ describe('Reporter', () => {
                     'errors="0"',
                     'skipped="2"',
                     'failures="2"',
-                    '<failure message="Expected true to equal specified value" type="Error">'
+                    '<failure message="Expected true to equal specified value: false" type="Error">'
                 ]);
 
                 done();

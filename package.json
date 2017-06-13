@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "bossy": "3.x.x",
-    "code": "4.x.x",
+    "code": "4.1.x",
     "diff": "3.x.x",
-    "eslint": "3.19.x",
+    "eslint": "4.0.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.4.x",
@@ -30,7 +30,7 @@
     "source-map-support": "0.4.x"
   },
   "devDependencies": {
-    "cpr": "2.0.x",
+    "cpr": "2.1.x",
     "eslint-plugin-markdown": "1.0.0-beta.6",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.6.x"
