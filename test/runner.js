@@ -1171,7 +1171,7 @@ describe('Runner', () => {
         });
     });
 
-    it('skips tests on failed before', (done) => {
+    it('skips and fails tests on failed before', (done) => {
 
         const steps = [];
         const script = Lab.script({ schedule: false });
@@ -1183,7 +1183,7 @@ describe('Runner', () => {
                 testDone(new Error('oops'));
             });
 
-            script.test('works', (testDone) => {
+            script.test('fails', (testDone) => {
 
                 steps.push('test');
                 testDone();
@@ -1199,7 +1199,7 @@ describe('Runner', () => {
 
             script.experiment('inner', { skip: true }, () => {
 
-                script.test('works', (testDone) => {
+                script.test('skips', (testDone) => {
 
                     steps.push('test');
                     testDone();
@@ -1207,7 +1207,7 @@ describe('Runner', () => {
 
                 script.experiment('inner', () => {
 
-                    script.test('works', (testDone) => {
+                    script.test('skips', (testDone) => {
 
                         steps.push('test');
                         testDone();
@@ -1217,10 +1217,25 @@ describe('Runner', () => {
 
             script.experiment('inner2', () => {
 
-                script.test('works', { skip: true }, (testDone) => {
+                script.test('skips', { skip: true }, (testDone) => {
 
                     steps.push('test');
                     testDone();
+                });
+
+                script.test('fails', (testDone) => {
+
+                    steps.push('test');
+                    testDone();
+                });
+
+                script.experiment('inner3', () => {
+
+                    script.test('fails', (testDone) => {
+
+                        steps.push('test');
+                        testDone();
+                    });
                 });
             });
 
@@ -1236,6 +1251,14 @@ describe('Runner', () => {
             expect(err).to.not.exist();
             expect(notebook.tests[0].err).to.equal('\'before\' action failed');
             expect(steps).to.equal(['before']);
+            expect(notebook.failures).to.equal(3);
+            notebook.tests.forEach((test) => {
+
+                if (test.title.indexOf('fails') !== -1) {
+                    expect(test.err).to.exist();
+                    expect(test.err).to.contain('before');
+                }
+            });
             done();
         });
     });
