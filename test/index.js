@@ -862,4 +862,24 @@ describe('Lab', () => {
             done();
         });
     });
+
+    it('exposes code on the script', (done) => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(script.expect).to.be.a.function();
+        expect(script.fail).to.be.a.function();
+        done();
+    });
+
+    it('does not expose code on the script if assert false', (done) => {
+
+        const assertions = Lab.assertions;
+        Lab.assertions = null;
+        const script = Lab.script({ schedule: false });
+        Lab.assertions = assertions;
+        expect(script.expect).not.to.exist();
+        expect(script.fail).not.to.exist();
+        done();
+    });
 });
