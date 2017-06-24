@@ -446,9 +446,15 @@ If you would like to run a different linter, or even a custom version of eslint 
 Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. By default the assertion library `code` is included and integrated. However, you can override this behavior by setting the CLI `--assert` argument or changing the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
 
 ```js
+const lab = exports.lab = Lab.script();
+const { describe, it } = lab;
+
 // Testing shortcuts
 const expect = Lab.assertions.expect;
 const fail = Lab.assertions.fail;
+// OR
+// const expect = lab.expect;
+// const fail = lab.fail;
 
 
 describe('expectation', () => {
