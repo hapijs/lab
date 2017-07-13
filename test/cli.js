@@ -310,7 +310,7 @@ describe('CLI', () => {
         });
     });
 
-    it('starts the inspector with --inspect', { skip: (NODE_MAJOR <= 4) }, (done) => {
+    it('starts the inspector with --inspect', { skip: (NODE_MAJOR <= 4), timeout: 3000 }, (done) => {
 
         const httpServer = new Http.Server(() => {});
         httpServer.listen(0, () => {
@@ -327,6 +327,11 @@ describe('CLI', () => {
             delete childEnv.NODE_ENV;
             const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
             let combinedOutput = '';
+
+            cli.once('error', (err) => {
+
+                expect(err).to.not.exist();
+            });
 
             cli.stderr.on('data', (data) => {
 
@@ -347,7 +352,7 @@ describe('CLI', () => {
             setTimeout(() => {
 
                 cli.kill('SIGINT');
-            }, 500);
+            }, 1500);
         };
     });
 
