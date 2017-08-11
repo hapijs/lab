@@ -1686,6 +1686,33 @@ describe('Runner', () => {
         });
     });
 
+    it('reports errors when beforeEach executes callback multiple times', (done) => {
+
+        const script = Lab.script();
+
+        script.experiment('shared test', () => {
+
+            script.beforeEach((testDone) => {
+
+                testDone();
+                testDone();
+            });
+
+            script.test('1', (testDone) => {
+
+                testDone();
+            });
+        });
+
+        Lab.report(script, { output: false, assert: false }, (err, code, output) => {
+
+            expect(err).not.to.exist();
+            expect(code).to.equal(1);
+            expect(output).to.contain('Multiple callbacks');
+            done();
+        });
+    });
+
     it('reports errors with shared event emitters', (done) => {
 
         const script = Lab.script();
@@ -1721,7 +1748,7 @@ describe('Runner', () => {
             expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('1 of 1 tests failed');
-            expect(output).to.contain('Multiple callbacks or thrown errors received in test "Before each shared test"');
+            expect(output).to.contain('Thrown error received in test "Before each shared test"');
             expect(output).to.contain('assertion failed !');
             done();
         });
@@ -1774,7 +1801,7 @@ describe('Runner', () => {
             expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('2 of 2 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each shared test"/g)).to.have.length(4);
+            expect(output.match(/Thrown error received in test "Before each shared test"/g)).to.have.length(4);
             expect(output.match(/assertion failed !/g)).to.have.length(4);
             done();
         });
@@ -1827,7 +1854,7 @@ describe('Runner', () => {
             expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('1 of 2 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each shared test"/g)).to.have.length(2);
+            expect(output.match(/Thrown error received in test "Before each shared test"/g)).to.have.length(2);
             expect(output.match(/assertion failed !/g)).to.have.length(2);
             done();
         });
@@ -1895,7 +1922,7 @@ describe('Runner', () => {
             expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('2 of 2 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each parallel shared test"/g)).to.have.length(4);
+            expect(output.match(/Thrown error received in test "Before each parallel shared test"/g)).to.have.length(4);
             expect(output.match(/foo failed/g).length).to.equal(3);
             done();
         });
@@ -1992,7 +2019,7 @@ describe('Runner', () => {
             expect(err).not.to.exist();
             expect(code).to.equal(1);
             expect(output).to.contain('4 of 4 tests failed');
-            expect(output.match(/Multiple callbacks or thrown errors received in test "Before each parallel shared test"/g)).to.have.length(8);
+            expect(output.match(/Thrown error received in test "Before each parallel shared test"/g)).to.have.length(8);
             expect(output.match(/foo failed/g).length).to.equal(3);
             expect(output.match(/beep failed/g).length).to.equal(3);
             done();
