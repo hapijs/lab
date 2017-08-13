@@ -78,6 +78,19 @@ $ lab unit.js
 ```
 
 Test files must require the **lab** module, and export a test script:
+
+```javascript
+const { expect, it } = exports.lab = require('lab').script();
+
+it('returns true when 1 + 1 equals 2', (done) => {
+
+    expect(1 + 1).to.equal(2);
+    done();
+});
+```
+
+Or
+
 ```javascript
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
@@ -182,6 +195,9 @@ lab.experiment('with only', () => {
 });
 ```
 
+
+### `note()`
+
 The `test()` callback has a `note()` function attached to it that can be used to
 attach notes to the test case.  These notes are included in the console reporter
 at the end of the output.  For example, if you would like to add a note with the
@@ -199,6 +215,8 @@ lab.test('attaches notes', (done) => {
 Multiple notes can be appended for the same test case by simply calling `note()`
 repeatedly.
 
+
+### `onCleanup()`
 
 The `test()` callback provides a second `onCleanup` argument which is a function used to register a runtime cleanup function
 to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup
@@ -218,6 +236,8 @@ lab.test('cleanups after test', (done, onCleanup) => {
 });
 ```
 
+### `plan()`
+
 Additionally, `test()` options support a `plan` setting to specify the expected number of assertions for your test to execute. This
 setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
 *`plan` may not work with parallel test executions*
@@ -232,6 +252,8 @@ lab.experiment('my plan', () => {
     });
 });
 ```
+
+### Timeouts
 
 `before()`, `after()`, `beforeEach()`, `afterEach()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
@@ -253,6 +275,8 @@ lab.experiment('math', { timeout: 1000 }, () => {
 });
 ```
 
+### Script options
+
 The `script([options])` method takes an optional `options` argument where `options` is an object with the following optional keys:
 - `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly
   with node without having to use the cli (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
@@ -261,6 +285,9 @@ The `script([options])` method takes an optional `options` argument where `optio
   only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests
   on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute
   the first test loaded.
+
+
+### Behavior Driven Development
 
 To make **lab** look like BDD:
 ```javascript
@@ -293,6 +320,9 @@ describe('math', () => {
 });
 ```
 
+
+### Test Driven Development
+
 To make **lab** look like TDD:
 ```javascript
 const Lab = require('lab');
@@ -312,45 +342,40 @@ suite('math', () => {
 });
 ```
 
-To use source transforms, you must specify a file with the `-T` command line option that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.coffee` or `.jsx`. A sample file using the babel transpiler and the CoffeeScript compiler could look like:
+### Transforms
 
-```javascript
-const Babel = require('babel-core');
-const Coffee = require('coffee-script');
-const Btoa = require('btoa');
+To use source transforms, you must specify a file with the `-T` command line option that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.ts` or `.jsx`.
 
-module.exports = [
-    { ext: '.js', transform: (content, filename) => {
+#### TypeScript
 
-        // Make sure to only transform your code or the dependencies you want
-        if (filename.indexOf('node_modules') === -1) {
-            const result = Babel.transform(content, { sourceMap: 'inline', filename, sourceFileName: filename });
-            return result.code;
-        }
+A TypeScript definition file is included with **lab** to make it easier to use inside of an existing TypeScript project. Below is a TypeScript test example that uses the [lab-transform-typescript](https://www.npmjs.com/package/lab-transform-typescript) module to manage the transform:
 
-        return content;
-    } },
-    { ext: '.coffee', transform: (content, filename) => {
+```typescript
+import * as Lab from 'lab';
 
-        // Again, make sure to only transform your code or the dependencies you want
-        if (filename.indexOf('node_modules') === -1) {
-            const result = Coffee.compile(content, {
-                sourceMap: true,
-                inline: true,
-                sourceRoot: '/',
-                sourceFiles: [filename]
-            });
+const lab = Lab.script();
+const { describe, it, before, expect } = lab;
+export { lab };
 
-            // append source map to end of compiled JS
-            return result.js +
-              '\n//# sourceMappingURL=data:application/json;base64,' +
-              Btoa(unescape(encodeURIComponent(result.v3SourceMap)));
-        }
+describe('experiment', () => {
+    before((done) => {
+        done();
+    });
 
-        return content;
-    } }
-];
+    it('verifies 1 equals 1', (done) => {
+        expect(1).to.equal(1);
+        done();
+    });
+});
 ```
+
+Then the test can be be executed using the following command line:
+
+```sh
+$ lab --sourcemaps --transform node_modules/lab-transform-typescript
+```
+
+### Disable Code Coverage
 
 Sometimes you want to disable code coverage for specific lines, and have the coverage report omit them entirely. To do so, use the `$lab:coverage:(off|on)$` comments. For example:
 ```javascript
@@ -365,12 +390,12 @@ if (typeof value === 'symbol') {
 
 ## `.labrc.js` file
 
-**lab** supports a `.labrc.js` configuration file for centralizing lab settings.  
+**lab** supports a `.labrc.js` configuration file for centralizing lab settings.
 The `.labrc.js` file can be located in the current working directory, any
 directory that is the parent of the current working directory, or in the user's
 home directory.  The `.labrc.js` file needs to be able to be required by
 Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
-that exports an object with the keys that are the settings.  
+that exports an object with the keys that are the settings.
 
 
 Below is an example of a `.labrc.js` file to enable linting and test coverage checking:
