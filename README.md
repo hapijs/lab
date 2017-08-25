@@ -536,6 +536,8 @@ describe('expectation', () => {
 This is an invalid test but it will pass as the `.false` assertion was not actually called. Lab will report the
 number of incomplete assertions, their location in your code and return a failure of the tests.
 
+Similarly, if you use an assertion library, **lab** will be able to report the verbosity of your tests. This is a measure of the number of assertions divided by the number of tests. The value will be output when using the console reporter and can be helpful in determining if too many or too few assertions exist in each test. What is too many or too few assertions is entirely up to you.
+
 ## Debuggers
 
 **lab** can be started with the option `--inspect` which will run it with the V8 Inspector.
@@ -548,33 +550,17 @@ As you may know, if your tests are associated with the command `npm test`, you c
 
 ## Best practices
 
-- Install **lab** as a global module:
-
-```bash
-$ npm install -g lab
-```
-
 - Add lab as a dev dependency to your project's `package.json` along with a `test` script:
 
 ```json
 {
-  "name": "example",
-  "version": "1.0.0",
-  "dependencies": {
-  },
   "devDependencies": {
-    "lab": "5.x.x"
+    "lab": "14.x.x"
   },
   "scripts": {
     "test": "lab -t 100",
     "test-cov-html": "lab -r html -o coverage.html"
-  },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "http://github.com/hapijs/lab/raw/master/LICENSE"
-    }
-  ]
+  }
 }
 ```
 
