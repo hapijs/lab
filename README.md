@@ -79,6 +79,7 @@ $ lab unit.js
 
 Test files must require the **lab** module, and export a test script:
 
+<!-- eslint-disable no-undef -->
 ```javascript
 const { expect, it } = exports.lab = require('lab').script();
 
@@ -91,6 +92,7 @@ it('returns true when 1 + 1 equals 2', (done) => {
 
 Or
 
+<!-- eslint-disable no-undef -->
 ```javascript
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
@@ -107,6 +109,7 @@ The test passes if `done()` is called once before the timeout, no exception thro
 If no callback function is provided, the test is considered a TODO reminder and will be skipped.
 
 Tests can be organized into experiments:
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('math', () => {
 
@@ -121,6 +124,7 @@ lab.experiment('math', () => {
 If you need to perform some async actions before or after executing the tests inside an experiment, the `before()` and
 `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('math', () => {
 
@@ -150,6 +154,7 @@ lab.experiment('math', () => {
 
 `test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises instead of using the `done` callback:
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('math', () => {
 
@@ -179,6 +184,7 @@ Both `test()` and `experiment()` accept an optional `options` argument which mus
 
 You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using the `options` flags:
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('with only', () => {
 
@@ -203,6 +209,7 @@ attach notes to the test case.  These notes are included in the console reporter
 at the end of the output.  For example, if you would like to add a note with the
 current time, your test case may look like the following:
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.test('attaches notes', (done) => {
 
@@ -222,6 +229,7 @@ The `test()` callback provides a second `onCleanup` argument which is a function
 to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup
 function will be executed as-is without any timers and if it fails to call it's `next` argument, the runner will freeze.
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.test('cleanups after test', (done, onCleanup) => {
 
@@ -242,6 +250,7 @@ Additionally, `test()` options support a `plan` setting to specify the expected 
 setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
 *`plan` may not work with parallel test executions*
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('my plan', () => {
 
@@ -258,6 +267,7 @@ lab.experiment('my plan', () => {
 `before()`, `after()`, `beforeEach()`, `afterEach()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
 
+<!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('math', { timeout: 1000 }, () => {
 
@@ -290,6 +300,7 @@ The `script([options])` method takes an optional `options` argument where `optio
 ### Behavior Driven Development
 
 To make **lab** look like BDD:
+<!-- eslint-disable no-undef -->
 ```javascript
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
@@ -324,6 +335,7 @@ describe('math', () => {
 ### Test Driven Development
 
 To make **lab** look like TDD:
+<!-- eslint-disable no-undef -->
 ```javascript
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
@@ -378,6 +390,7 @@ $ lab --sourcemaps --transform node_modules/lab-transform-typescript
 ### Disable Code Coverage
 
 Sometimes you want to disable code coverage for specific lines, and have the coverage report omit them entirely. To do so, use the `$lab:coverage:(off|on)$` comments. For example:
+<!-- eslint-disable no-undef -->
 ```javascript
 // There is no way to cover this in node 0.10
 /* $lab:coverage:off$ */
@@ -470,6 +483,7 @@ If you would like to run a different linter, or even a custom version of eslint 
 
 Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. By default the assertion library `code` is included and integrated. However, you can override this behavior by setting the CLI `--assert` argument or changing the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
 
+<!-- eslint-disable no-undef -->
 ```js
 const lab = exports.lab = Lab.script();
 const { describe, it } = lab;
@@ -503,6 +517,7 @@ describe('expectation', () => {
 
 If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you have any missing assertions. An example of this is:
 
+<!-- eslint-disable no-undef -->
 ```js
 describe('expectation', () => {
 
