@@ -2,7 +2,6 @@
 
 // Load modules
 
-const Tty = require('tty');
 const Code = require('code');
 const _Lab = require('../../test_runner');
 
@@ -20,11 +19,8 @@ const it = lab.it;
 const expect = Code.expect;
 
 
-Tty.isatty = function () {
-
-    return true;
-};
-
+process.stdout.isTTY = true;
+process.env.FORCE_COLOR = true;
 
 describe('Test CLI', () => {
 

@@ -7,7 +7,6 @@ const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
 const Stream = require('stream');
-const Tty = require('tty');
 const Code = require('code');
 const Hoek = require('hoek');
 const _Lab = require('../test_runner');
@@ -1115,12 +1114,13 @@ describe('Reporter', () => {
 
         it('excludes colors when terminal does not support', { parallel: false }, (done) => {
 
-            const orig = Tty.isatty;
-            Tty.isatty = function () {
-
-                Tty.isatty = orig;
-                return false;
+            delete require.cache[require.resolve('supports-color')];
+            const orig = {
+                isTTY: process.stdout.isTTY,
+                env: process.env
             };
+            process.stdout.isTTY = false;
+            process.env = {};
 
             const script = Lab.script();
             script.experiment('test', () => {
@@ -1134,6 +1134,8 @@ describe('Reporter', () => {
 
             Lab.report(script, { reporter: 'console', output: false, assert: false }, (err, code, output) => {
 
+                process.stdout.isTTY = orig.isTTY;
+                process.env = orig.env;
                 expect(err).to.not.exist();
                 expect(code).to.equal(0);
                 expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);

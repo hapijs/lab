@@ -27,7 +27,8 @@
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
     "source-map": "0.5.x",
-    "source-map-support": "0.4.x"
+    "source-map-support": "0.4.x",
+    "supports-color": "4.2.x"
   },
   "devDependencies": {
     "cpr": "2.2.x",
