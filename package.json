@@ -14,7 +14,7 @@
     "bossy": "3.x.x",
     "code": "4.1.x",
     "diff": "3.3.x",
-    "eslint": "4.4.x",
+    "eslint": "4.5.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.5.x",
@@ -28,7 +28,7 @@
     "seedrandom": "2.4.x",
     "source-map": "0.5.x",
     "source-map-support": "0.4.x",
-    "supports-color": "4.2.x"
+    "supports-color": "4.4.x"
   },
   "devDependencies": {
     "cpr": "2.2.x",
