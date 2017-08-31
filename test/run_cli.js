@@ -13,6 +13,7 @@ module.exports = (args, callback, root) => {
 
     const childEnv = Object.assign({}, process.env);
     delete childEnv.NODE_ENV;
+    delete childEnv.FORCE_COLOR;
     const cli = ChildProcess.spawn('node', [].concat(internals.labPath, args), { env: childEnv, cwd : root || '.' });
     let output = '';
     let errorOutput = '';
