@@ -594,10 +594,8 @@ In a `.labrc.js` file, multiple reporters and their associated output paths woul
 
 ```javascript
 module.exports = {
-  ...
   reporter: ['console', 'html', 'lcov', 'json'],
   output: ['stdout', 'coverage.html', 'lcov.info', 'data.json'],
-  ...
 };
 ```
 
