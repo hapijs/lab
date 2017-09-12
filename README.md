@@ -590,6 +590,15 @@ the order in which they were supplied. When specifying multiple outputs, use `st
 $ lab -r console -o stdout -r html -o coverage.html -r lcov -o lcov.info -r json -o data.json
 ```
 
+In a `.labrc.js` file, multiple reporters and their associated output paths would be represented as follows:
+
+```javascript
+module.exports = {
+    reporter: ['console', 'html', 'lcov', 'json'],
+    output: ['stdout', 'coverage.html', 'lcov.info', 'data.json']
+};
+```
+
 Multiple reporters of the same kind are also supported.
 
 ```bash
