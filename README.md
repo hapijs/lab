@@ -6,13 +6,15 @@ Node test utility
 
 Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 
-**lab** is sponsored by [Joyent](http://www.joyent.com/). [Joyent](http://www.joyent.com) is currently looking for a [Node.js core engineer](https://www.joyent.com/about/careers/nodejs-core-engineer) to hire.
+**lab** is sponsored by [Joyent](http://www.joyent.com/).
+
 
 ## Introduction
 
-**lab** is a simple test utility for node. Unlike other test utilities, lab uses domains instead of uncaught exception and other
-global manipulation. Our goal with **lab** is to keep the execution engine as simple as possible, and not try to build an extensible framework.
+**lab** is a simple test utility for Node.js. Unlike other test utilities, lab uses only async/await features and includes everything you should expect from a modern Node.js test utility. Our goal with **lab** is to keep the execution engine as simple as possible, and not try to build an extensible framework.
+
 **lab** works with any assertion library that throws an error when a condition isn't met.
+
 
 ## Command Line
 
@@ -24,7 +26,6 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `--coverage-exclude` - sets code coverage excludes.
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
-- `-D`, `--debug` - print the stack during a domain error event.
 - `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
 - `-f`, `--flat` - do not perform a recursive load of test files within the test directory.
 - `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
@@ -42,7 +43,6 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `--lint-fix` - apply any fixes from the linter, requires `-L` or `--lint` to be enabled. Disabled by default.
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
-- `-p`, `--parallel` - sets parallel execution as default test option. Defaults to serial execution.
 - `-P`, `--pattern` - only load files with the given pattern in the name.
 - `-r`, `--reporter` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - text report.
@@ -54,7 +54,6 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
     - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
-- `-R`, `--rejections` - fail tests on unhandled Promise rejections.
 - `--shuffle` - randomize the order that test scripts are executed.  Will not work with `--id`.
 - `--seed` - use this seed to randomize the order with `--shuffle`. This is useful to debug order dependent test failures.
 - `-s`, `--silence` - silence test output, defaults to false.
@@ -63,6 +62,7 @@ global manipulation. Our goal with **lab** is to keep the execution engine as si
 - `-T`, `--transform` - javascript file that exports an array of objects ie. `[ { ext: ".js", transform: (content, filename) => { ... } } ]`. Note that if you use this option with -c (--coverage), then you must generate sourcemaps and pass sourcemaps option to get proper line numbers.
 - `-v`, `--verbose` - verbose test output, defaults to false.
 - `-V`, `--version` - display lab version information.
+
 
 ## Usage
 
@@ -83,10 +83,9 @@ Test files must require the **lab** module, and export a test script:
 ```javascript
 const { expect, it } = exports.lab = require('lab').script();
 
-it('returns true when 1 + 1 equals 2', (done) => {
+it('returns true when 1 + 1 equals 2', () => {
 
     expect(1 + 1).to.equal(2);
-    done();
 });
 ```
 
@@ -97,26 +96,32 @@ Or
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 
-lab.test('returns true when 1 + 1 equals 2', (done) => {
+lab.test('returns true when 1 + 1 equals 2', () => {
 
     Lab.expect(1 + 1).to.equal(2);
-    done();
 });
 ```
 
-When a test is completed, `done(err)` must be called, otherwise the test will time out (2 seconds by default) and will fail.
-The test passes if `done()` is called once before the timeout, no exception thrown, and no arguments are passed to `done()`.
-If no callback function is provided, the test is considered a TODO reminder and will be skipped.
+If a test is performing an asynchronous operation then it should use the new `async`/`await` keywords or return a Promise. For example:
+
+<!-- eslint-disable no-undef -->
+```javascript
+lab.test('config file has correct value', async () => {
+
+    const file = await fs.readFile('config');
+    expect(file.toString()).to.contain('something');
+});
+```
+
 
 Tests can be organized into experiments:
 <!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('math', () => {
 
-    lab.test('returns true when 1 + 1 equals 2', (done) => {
+    lab.test('returns true when 1 + 1 equals 2', () => {
 
         Lab.expect(1 + 1).to.equal(2);
-        done();
     });
 });
 ```
@@ -128,31 +133,32 @@ If you need to perform some async actions before or after executing the tests in
 ```javascript
 lab.experiment('math', () => {
 
-    lab.before((done) => {
+    lab.before(() => {
 
-        // Wait 1 second
-        setTimeout(() => {
+        return new Promise((resolve) => {
 
-            done();
-        }, 1000);
+            // Wait 1 second
+            setTimeout(() => {
+
+                resolve();
+            }, 1000);
+        });
     });
 
-    lab.beforeEach((done) => {
+    lab.beforeEach(() => {
 
         // Run before every single test
-        done();
     });
 
-    lab.test('returns true when 1 + 1 equals 2', (done) => {
+    lab.test('returns true when 1 + 1 equals 2', () => {
 
         Lab.expect(1 + 1).to.equal(2);
-        done();
     });
 });
 
 ```
 
-`test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises instead of using the `done` callback:
+`test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises just as tests do:
 
 <!-- eslint-disable no-undef -->
 ```javascript
@@ -160,9 +166,7 @@ lab.experiment('math', () => {
 
     lab.before(() => {
 
-        const promise = aFunctionReturningAPromise();
-
-        return promise;
+        return aFunctionReturningAPromise();
     });
 
     lab.test('returns true when 1 + 1 equals 2', () => {
@@ -178,89 +182,79 @@ lab.experiment('math', () => {
 
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
-- `parallel` - sets parallel execution of tests within each experiment level. Defaults to `false` (serial execution).
 - `skip` - skip execution. Cannot be overridden in children once parent is set to skip.
 - `only` - marks all other tests or experiments with `skip`.
 
-You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using the `options` flags:
+You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using `options`:
 
 <!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('with only', () => {
 
-    lab.test.only('only this test will run', (done) => {
+    lab.test.only('only this test will run', () => {
 
         Lab.expect(1 + 1).to.equal(2);
-        done();
     });
 
-    lab.test('another test that will not be executed', (done) =>  {
-
-        done();
-    });
+    lab.test('another test that will not be executed', () => {});
 });
 ```
 
 
-### `note()`
+### `plan`
 
-The `test()` callback has a `note()` function attached to it that can be used to
-attach notes to the test case.  These notes are included in the console reporter
-at the end of the output.  For example, if you would like to add a note with the
-current time, your test case may look like the following:
-
-<!-- eslint-disable no-undef -->
-```javascript
-lab.test('attaches notes', (done) => {
-
-    Lab.expect(1 + 1).to.equal(2);
-    done.note(`The current time is ${Date.now()}`);
-    done();
-});
-```
-
-Multiple notes can be appended for the same test case by simply calling `note()`
-repeatedly.
-
-
-### `onCleanup()`
-
-The `test()` callback provides a second `onCleanup` argument which is a function used to register a runtime cleanup function
-to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup
-function will be executed as-is without any timers and if it fails to call it's `next` argument, the runner will freeze.
-
-<!-- eslint-disable no-undef -->
-```javascript
-lab.test('cleanups after test', (done, onCleanup) => {
-
-    onCleanup((next) => {
-
-        cleanup_logic();
-        return next();
-    });
-
-    Lab.expect(1 + 1).to.equal(2);
-    done();
-});
-```
-
-### `plan()`
-
-Additionally, `test()` options support a `plan` setting to specify the expected number of assertions for your test to execute. This
-setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
-*`plan` may not work with parallel test executions*
+The test function options support a `plan` property, used to specify the expected number of assertions for your test to execute. This setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
 
 <!-- eslint-disable no-undef -->
 ```javascript
 lab.experiment('my plan', () => {
 
-    lab.test('only a single assertion executes', { plan: 1 }, (done) => {
+    lab.test('only a single assertion executes', { plan: 1 }, () => {
 
         Lab.expect(1 + 1).to.equal(2);
-        done();
     });
 });
 ```
+
+
+### `flags`
+
+The `test` function is passed a `flags` object that can be used to create notes or set a function to execute for cleanup operations after the test is complete.
+
+
+#### `note()`
+
+Notes are included in the console reporter at the end of the output. For example, if you would like to add a note with the current time, your test case may look like the following:
+
+<!-- eslint-disable no-undef -->
+```javascript
+lab.test('attaches notes', (flags) => {
+
+    Lab.expect(1 + 1).to.equal(2);
+    flags.note(`The current time is ${Date.now()}`);
+});
+```
+
+Multiple notes can be appended for the same test case by simply calling `note()` repeatedly.
+
+
+#### `onCleanup()`
+
+You can assign a function to the `flags` object `onCleanup` property to register a runtime cleanup function to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup function will be executed as-is without any timers. Like the test, `onCleanup` can return a Promise that will be evaluated.
+
+<!-- eslint-disable no-undef -->
+```javascript
+lab.test('cleanups after test', (flags) => {
+
+    flags.onCleanup(() => {
+
+        cleanup_logic();
+    });
+
+    Lab.expect(1 + 1).to.equal(2);
+});
+```
+
 
 ### Timeouts
 
@@ -271,25 +265,24 @@ lab.experiment('my plan', () => {
 ```javascript
 lab.experiment('math', { timeout: 1000 }, () => {
 
-    lab.before({ timeout: 500 }, (done) =>  {
+    lab.before({ timeout: 500 }, () =>  {
 
         doSomething();
-        done();
     });
 
-    lab.test('returns true when 1 + 1 equals 2', { parallel: true }, (done) =>  {
+    lab.test('returns true when 1 + 1 equals 2', () =>  {
 
         Lab.expect(1 + 1).to.equal(2);
-        done();
     });
 });
 ```
+
 
 ### Script options
 
 The `script([options])` method takes an optional `options` argument where `options` is an object with the following optional keys:
 - `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly
-  with node without having to use the cli (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
+  with Node.js without having to use the CLI (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
   can be turned off by setting `schedule` to `false`. If you need to see the output with schedule disabled you should set `output` to `process.stdout`.  Defaults to `true`.
 - `cli` - allows setting command line options within the script. Note that the last script file loaded wins and usage of this is recommended
   only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests
@@ -303,30 +296,17 @@ To make **lab** look like BDD:
 <!-- eslint-disable no-undef -->
 ```javascript
 const Lab = require('lab');
-const lab = exports.lab = Lab.script();
-
-const describe = lab.describe;
-const it = lab.it;
-const before = lab.before;
-const after = lab.after;
-const expect = Lab.expect;
+const { after, before, describe, expect, it } = exports.lab = Lab.script();
 
 describe('math', () => {
 
-    before((done) => {
+    before(() => {});
 
-        done();
-    });
+    after(() => {});
 
-    after((done) => {
-
-        done();
-    });
-
-    it('returns true when 1 + 1 equals 2', (done) => {
+    it('returns true when 1 + 1 equals 2', () => {
 
         expect(1 + 1).to.equal(2);
-        done();
     });
 });
 ```
@@ -338,25 +318,22 @@ To make **lab** look like TDD:
 <!-- eslint-disable no-undef -->
 ```javascript
 const Lab = require('lab');
-const lab = exports.lab = Lab.script();
-
-const suite = lab.suite;
-const test = lab.test;
-const expect = Lab.expect;
+const { expect, suite, test } = exports.lab = Lab.script();
 
 suite('math', () => {
 
-    test('returns true when 1 + 1 equals 2', (done) => {
+    test('returns true when 1 + 1 equals 2', () => {
 
         expect(1 + 1).to.equal(2);
-        done();
     });
 });
 ```
 
+
 ### Transforms
 
 To use source transforms, you must specify a file with the `-T` command line option that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.ts` or `.jsx`.
+
 
 #### TypeScript
 
@@ -370,13 +347,10 @@ const { describe, it, before, expect } = lab;
 export { lab };
 
 describe('experiment', () => {
-    before((done) => {
-        done();
-    });
+    before(() => {});
 
-    it('verifies 1 equals 1', (done) => {
+    it('verifies 1 equals 1', () => {
         expect(1).to.equal(1);
-        done();
     });
 });
 ```
@@ -386,6 +360,7 @@ Then the test can be be executed using the following command line:
 ```sh
 $ lab --sourcemaps --transform node_modules/lab-transform-typescript
 ```
+
 
 ### Disable Code Coverage
 
@@ -400,6 +375,7 @@ if (typeof value === 'symbol') {
 /* $lab:coverage:on$ */
 
 ```
+
 
 ## `.labrc.js` file
 
@@ -421,6 +397,7 @@ module.exports = {
 };
 ```
 
+
 ### `.labrc.js` setting precedent
 
 The `.labrc.js` file will override the **lab** default settings. Any options passed
@@ -441,6 +418,7 @@ If you need to reduce the coverage threshold for a single run, you can execute
 lab -t 80
 ```
 
+
 ### `.labrc.js` available settings
 
 The `.labrc.js` file supports configuration keys that are named with the long name
@@ -458,6 +436,7 @@ library, you would export a key named "assert" with the desired value.
 
 Your project's eslint configuration will now extend the default **lab** configuration.
 
+
 ## Ignoring files in linting
 
 Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
@@ -465,6 +444,7 @@ Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintig
 node_modules/*
 **/vendor/*.js
 ```
+
 
 ## Only run linting
 
@@ -475,9 +455,11 @@ flag with the `lint` flag.
 lab -dL
 ```
 
+
 ## Running a custom linter
 
 If you would like to run a different linter, or even a custom version of eslint you should pass the `-n` or `--linter` argument with the path to the lint runner.  For example, if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
+
 
 ## Integration with an assertion library
 
@@ -498,18 +480,14 @@ const fail = Lab.assertions.fail;
 
 describe('expectation', () => {
 
-    it('should be able to expect', (done) => {
+    it('should be able to expect', () => {
 
         expect(true).to.be.true();
-
-        done();
     });
 
-    it('should be able to fail (This test should fail)', (done) => {
+    it('should be able to fail (This test should fail)', () => {
 
         fail('Should fail');
-
-        done();
     });
 
 });
@@ -521,13 +499,11 @@ If you use the [Code](https://github.com/hapijs/code) assertion library Lab will
 ```js
 describe('expectation', () => {
 
-    it('Test should pass but get marked as having a missing expectation', (done) => {
+    it('Test should pass but get marked as having a missing expectation', () => {
 
         // Invalid and missing assertion - false is a method, not a property!
         // This test will pass.
         Lab.expect(true).to.be.false;
-
-        done();
     });
 
 });
@@ -555,7 +531,7 @@ As you may know, if your tests are associated with the command `npm test`, you c
 ```json
 {
   "devDependencies": {
-    "lab": "14.x.x"
+    "lab": "15.x.x"
   },
   "scripts": {
     "test": "lab -t 100",

@@ -21,25 +21,20 @@ const expect = Code.expect;
 
 describe('Test Plan', () => {
 
-    it('adds two numbers together', { plan: 1 }, (done) => {
+    it('adds two numbers together', { plan: 1 }, () => {
 
         expect(1 + 1).to.equal(2);
-        done();
     });
 
-    it('subtracts two numbers', { plan: 2 }, (done) => {
+    it('subtracts two numbers', { plan: 2 }, () => {
 
         expect(2 - 2).to.equal(0);
         expect(4 - 4).to.equal(0);
-        done();
     });
 
-    it('multiplies numbers', { plan: 1 }, (done) => {
+    it('multiplies numbers', { plan: 1 }, () => {
 
         expect(2 * 2).to.equal(4);
-        if (done) {
-          expect(4 * 4).to.equal(16);
-        }
-        done();
+        expect(4 * 4).to.equal(16);
     });
 });

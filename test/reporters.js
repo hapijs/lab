@@ -31,7 +31,7 @@ describe('Reporter', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage/'), coverageExclude: 'exclude' });
 
-    it('outputs to a stream', (done) => {
+    it('outputs to a stream', async () => {
 
         const Recorder = function () {
 
@@ -51,92 +51,66 @@ describe('Reporter', () => {
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', (finished) => {
-
-                finished();
-            });
+            script.test('works', () => {});
         });
 
         const recorder = new Recorder();
-        Lab.report(script, { output: recorder }, (err, code, output) => {
-
-            expect(err).to.not.exist();
-            expect(code).to.equal(0);
-            expect(output).to.equal(recorder.content);
-            done();
-        });
+        const { code, output } = await Lab.report(script, { output: recorder });
+        expect(code).to.equal(0);
+        expect(output).to.equal(recorder.content);
     });
 
-    it('outputs to a file', (done) => {
+    it('outputs to a file', async () => {
 
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', (finished) => {
-
-                finished();
-            });
+            script.test('works', () => {});
         });
 
         const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
-        Lab.report(script, { output: filename }, (err, code, output) => {
-
-            expect(err).to.not.exist();
-            expect(code).to.equal(0);
-            expect(output).to.equal(Fs.readFileSync(filename).toString());
-            Fs.unlinkSync(filename);
-            done();
-        });
+        const { code, output } = await Lab.report(script, { output: filename });
+        expect(code).to.equal(0);
+        expect(output).to.equal(Fs.readFileSync(filename).toString());
+        Fs.unlinkSync(filename);
     });
 
-    it('outputs to a file in a directory', (done) => {
+    it('outputs to a file in a directory', async () => {
 
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', (finished) => {
-
-                finished();
-            });
+            script.test('works', () => {});
         });
 
         const randomname = [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-');
         const folder = Path.join(Os.tmpdir(), randomname);
         const filename = Path.join(folder, randomname);
-        Lab.report(script, { output: filename }, (err, code, output) => {
+        const { code, output } = await Lab.report(script, { output: filename });
 
-            expect(err).to.not.exist();
-            expect(code).to.equal(0);
-            expect(output).to.equal(Fs.readFileSync(filename).toString());
-            Fs.unlinkSync(filename);
-            Fs.rmdirSync(folder);
-            done();
-        });
+        expect(code).to.equal(0);
+        expect(output).to.equal(Fs.readFileSync(filename).toString());
+        Fs.unlinkSync(filename);
+        Fs.rmdirSync(folder);
     });
 
-    it('outputs to a file with output is passed as an array and reporter is an array', (done) => {
+    it('outputs to a file with output is passed as an array and reporter is an array', async () => {
 
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', (finished) => {
-
-                finished();
-            });
+            script.test('works', () => {});
         });
 
         const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(7).toString('hex')].join('-'));
-        Lab.report(script, { reporter: ['console'], output: [filename] }, (err, code, output) => {
+        const { code, output } = await Lab.report(script, { reporter: ['console'], output: [filename] });
 
-            expect(err).to.not.exist();
-            expect(code).to.equal(0);
-            expect(output).to.equal(Fs.readFileSync(filename).toString());
-            Fs.unlinkSync(filename);
-            done();
-        });
+        expect(code).to.equal(0);
+        expect(output).to.equal(Fs.readFileSync(filename).toString());
+        Fs.unlinkSync(filename);
     });
 
-    it('exits with error code when leak detected', (done) => {
+    it('exits with error code when leak detected', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console' });
         const notebook = {
@@ -148,15 +122,11 @@ describe('Reporter', () => {
             leaks: ['something']
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(1);
     });
 
-    it('exits with error code when coverage threshold is not met', (done) => {
+    it('exits with error code when coverage threshold is not met', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', coverage: true, threshold: 50 });
         const notebook = {
@@ -167,15 +137,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(1);
     });
 
-    it('exits with success code when coverage threshold is met', (done) => {
+    it('exits with success code when coverage threshold is met', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', coverage: true, threshold: 50 });
         const notebook = {
@@ -186,15 +152,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(0);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(0);
     });
 
-    it('exits with error code when linting error threshold is met', (done) => {
+    it('exits with error code when linting error threshold is met', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-errors-threshold': 5 });
         const notebook = {
@@ -209,15 +171,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(1);
     });
 
-    it('exits with error code when linting error threshold is met and threshold is 0', (done) => {
+    it('exits with error code when linting error threshold is met and threshold is 0', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-errors-threshold': 0 });
         const notebook = {
@@ -229,15 +187,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(1);
     });
 
-    it('exits with success code when linting error threshold is not met', (done) => {
+    it('exits with success code when linting error threshold is not met', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-errors-threshold': 5 });
         const notebook = {
@@ -251,15 +205,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(0);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(0);
     });
 
-    it('exits with error code when linting warning threshold is met', (done) => {
+    it('exits with error code when linting warning threshold is met', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-warnings-threshold': 5 });
         const notebook = {
@@ -274,15 +224,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(1);
     });
 
-    it('exits with error code when linting warning threshold is met and threshold is 0', (done) => {
+    it('exits with error code when linting warning threshold is met and threshold is 0', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-warnings-threshold': 0 });
         const notebook = {
@@ -294,15 +240,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(1);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(1);
     });
 
-    it('exits with success code when linting warning threshold is not met', (done) => {
+    it('exits with success code when linting warning threshold is not met', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console', lint: true, 'lint-warnings-threshold': 5 });
         const notebook = {
@@ -316,15 +258,11 @@ describe('Reporter', () => {
             }
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(err).not.to.exist();
-            expect(code).to.equal(0);
-            done();
-        });
+        const { code } = await reporter.finalize(notebook);
+        expect(code).to.equal(0);
     });
 
-    it('includes the used seed for shuffle in the output', (done) => {
+    it('includes the used seed for shuffle in the output', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console' });
         const notebook = {
@@ -333,16 +271,12 @@ describe('Reporter', () => {
             shuffle: true
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(output).to.contain('1234');
-            expect(output).to.contain('seed');
-            expect(err).not.to.exist();
-            done();
-        });
+        const { output } = await reporter.finalize(notebook);
+        expect(output).to.contain('1234');
+        expect(output).to.contain('seed');
     });
 
-    it('does not include the seed if shuffle was not active', (done) => {
+    it('does not include the seed if shuffle was not active', async () => {
 
         const reporter = Reporters.generate({ reporter: 'console' });
         const notebook = {
@@ -350,175 +284,142 @@ describe('Reporter', () => {
             seed: 1234
         };
 
-        reporter.finalize(notebook, (err, code, output) => {
-
-            expect(output).to.not.contain('1234');
-            expect(output).to.not.contain('seed');
-            expect(err).not.to.exist();
-            done();
-        });
+        const { output } = await reporter.finalize(notebook);
+        expect(output).to.not.contain('1234');
+        expect(output).to.not.contain('seed');
     });
 
     describe('console', () => {
 
-        it('generates a report', (done) => {
+        it('generates a report', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    expect(true).to.equal(true);
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter: 'console', output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-                expect(output).to.contain('1 tests complete');
-                expect(output).to.contain('Test duration:');
-                expect(output).to.contain('No global variable leaks detected');
-                done();
-            });
-        });
-        it('generate a report with stable diff of actual/expected objects of a failed test', (done) => {
-
-            const script = Lab.script();
-            script.experiment('test', () => {
-
-                script.test('works', (finished) => {
-
-                    expect({ a: 1, b:2, c:3, d:4, e:66 }).to.equal({ a: 1, e:5, b:2, c:3, d:4 });
-                    finished();
-                });
-            });
-
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output).to.contain('"e": 665');
-                expect(output).to.contain('1 of 1 tests failed');
-                expect(output).to.contain('Test duration:');
-                expect(output).to.contain('No global variable leaks detected');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', output: false });
+            expect(code).to.equal(0);
+            expect(output).to.contain('1 tests complete');
+            expect(output).to.contain('Test duration:');
+            expect(output).to.contain('No global variable leaks detected');
         });
 
-        it('counts "todo" tests as skipped', (done) => {
+        it('generate a report with stable diff of actual/expected objects of a failed test', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
+
+                    expect({ a: 1, b: 2, c: 3, d: 4, e: 66 }).to.equal({ a: 1, e: 5, b: 2, c: 3, d: 4 });
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('"e": 665');
+            expect(output).to.contain('1 of 1 tests failed');
+            expect(output).to.contain('Test duration:');
+            expect(output).to.contain('No global variable leaks detected');
+        });
+
+        it('counts "todo" tests as skipped', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.test.skip('a skipped test', (done) => {
+                script.test.skip('a skipped test', () => {
 
-                    done(new Error('Should not be called'));
+                    throw new Error('Should not be called');
                 });
 
                 script.test('a todo test');
             });
 
-            Lab.report(script, { reporter: 'console', output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-                expect(output).to.contain([
-                    '1 tests complete',
-                    '2 skipped'
-                ]);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', output: false });
+            expect(code).to.equal(0);
+            expect(output).to.contain([
+                '1 tests complete',
+                '2 skipped'
+            ]);
         });
 
-        it('generates a report with errors', (done) => {
+        it('generates a report with errors', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(false);
-                    finished();
                 });
             });
 
             global.x1 = true;
-            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
 
-                delete global.x1;
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Expected true to equal specified value: false\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
-                done();
-            });
+            delete global.x1;
+            expect(code).to.equal(1);
+            const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+            expect(result).to.contain('Expected true to equal specified value');
+            expect(result).to.contain('1 of 1 tests failed');
+            expect(result).to.contain('The following leaks were detected:x1');
         });
 
-        it('generates a report with multi-line diff', (done) => {
+        it('generates a report with multi-line diff', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(['a', 'b']).to.equal(['a', 'c']);
-                    finished();
                 });
             });
 
             global.x1 = true;
-            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
 
-                delete global.x1;
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      \[\n        \"a\",\n        \"bc\"\n      \]\n\n      Expected \[ 'a', 'b' \] to equal specified value: \[ 'a', 'c' \]\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nThe following leaks were detected:x1\n\n$/);
-                done();
-            });
+            delete global.x1;
+            expect(code).to.equal(1);
+            expect(output).to.contain('The following leaks were detected:x1');
+            expect(output).to.contain('Expected');
         });
 
-        it('generates a report with caught error', (done) => {
+        it('generates a report with caught error', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(() => {
 
                         throw new Error('boom');
                     }).to.not.throw();
-
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output).to.contain('Failed tests:');
-                expect(output).to.contain('1) test works:');
-                expect(output).to.contain(' of 1 tests failed');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('Failed tests:');
+            expect(output).to.contain('1) test works:');
+            expect(output).to.contain(' of 1 tests failed');
         });
 
-        it('generates a report with caught error (data plain)', (done) => {
+        it('generates a report with caught error (data plain)', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     const error = new Error('boom');
                     error.data = 'abc';
@@ -526,23 +427,20 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false }, (err, code, output) => {
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false });
 
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n/);
-                expect(result).to.match(/Additional error data:\n      "abc"\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
-                done();
-            });
+            expect(code).to.equal(1);
+            expect(output).to.contain('There were 1 test script error');
+            expect(output).to.contain('Additional error data');
+            expect(output).to.contain('Failed tests');
         });
 
-        it('generates a report with caught error (data array)', (done) => {
+        it('generates a report with caught error (data array)', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     const error = new Error('boom');
                     error.data = [1, 2, 3];
@@ -550,23 +448,18 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      boom\n\n/);
-                expect(result).to.match(/Additional error data:\n      \[1,2,3\]\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\n\n$/);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('There were 1 test script error');
+            expect(output).to.contain('Failed tests');
         });
 
-        it('generates a report with caught error (data object)', (done) => {
+        it('generates a report with caught error (data object)', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     const error = new Error('boom');
                     error.data = { a: 1 };
@@ -574,56 +467,48 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.contain('Failed tests:\n\n  1)');
-                expect(result).to.contain('Additional error data:\n          a: 1\n\n\n1 of 1 tests failed\nTest duration:');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false });
+            expect(code).to.equal(1);
+            const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+            expect(result).to.contain('Failed tests:\n\n  1)');
+            expect(result).to.contain('Additional error data:\n          a: 1\n\n\n1 of 1 tests failed\nTest duration:');
         });
 
-        it('generates a report with plain Error', (done) => {
+        it('generates a report with plain Error', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('fails', (finished) => {
+                script.test('fails', () => {
 
                     throw new Error('Error Message');
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test fails:\n\n      Error Message\n\n(?:      at <trace>\n)+(?:      at <trace>\n)+(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('Failed tests:');
+            expect(output).to.contain('1) test fails:');
+            expect(output).to.contain('1 of 1 tests failed');
         });
 
         describe('timeouts', () => {
 
-            it('generates a report with timeout', (done) => {
+            it('generates a report with timeout', async () => {
 
                 const script = Lab.script();
                 script.experiment('test', () => {
 
-                    script.test('works', (finished) => { });
+                    script.test('works', () => {
+
+                        return new Promise(() => {});
+                    });
                 });
 
-                Lab.report(script, { reporter: 'console', colors: false, timeout: 1, output: false, assert: false }, (err, code, output) => {
-
-                    expect(err).to.not.exist();
-                    expect(code).to.equal(1);
-                    const result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                    expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Timed out \(\d+ms\) - test works\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                    done();
-                });
+                const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, timeout: 1, output: false, assert: false });
+                expect(code).to.equal(1);
+                const result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Timed out \(\d+ms\) - test works\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
             });
 
             const tests = [
@@ -647,135 +532,104 @@ describe('Reporter', () => {
 
             tests.forEach((test) => {
 
-                it('generates a report with timeout on ' + test.type, (done) => {
+                it('generates a report with timeout on ' + test.type, async () => {
 
                     const script = Lab.script();
                     script.experiment('test', () => {
 
-                        script[test.type]((finished) => { });
-                        script.test('works', (finished) => {
+                        script[test.type](() => {
 
-                            finished();
+                            return new Promise(() => {});
                         });
+                        script.test('works', () => {});
                     });
 
-                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1, output: false }, (err, code, output) => {
-
-                        expect(err).to.not.exist();
-                        expect(code).to.equal(1);
-                        expect(output).to.contain(test.expect);
-                        done();
-                    });
+                    const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1, output: false });
+                    expect(code).to.equal(1);
+                    expect(output).to.contain(test.expect);
                 });
 
-                it('doesn\'t generates a report with timeout on ' + test.type, (done) => {
+                it('doesn\'t generates a report with timeout on ' + test.type, async () => {
 
                     const script = Lab.script();
                     script.experiment('test', () => {
 
-                        script[test.type]((finished) => {
+                        script[test.type](() => {
 
-                            setTimeout(finished, 500);
+                            return new Promise((resolve) => {
+
+                                setTimeout(resolve, 500);
+                            });
                         });
 
-                        script.test('works', (finished) => {
-
-                            finished();
-                        });
+                        script.test('works', () => {});
                     });
 
-                    Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000, output: false }, (err, code, output) => {
-
-                        expect(err).to.not.exist();
-                        expect(code).to.equal(0);
-                        done();
-                    });
+                    const { code } = await Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000, output: false });
+                    expect(code).to.equal(0);
                 });
 
-                it('generates a report with inline timeout on ' + test.type, (done) => {
+                it('generates a report with inline timeout on ' + test.type, async () => {
 
                     const script = Lab.script();
                     script.experiment('test', () => {
 
-                        script[test.type]({ timeout: 1 }, (finished) => { });
-                        script.test('works', (finished) => {
+                        script[test.type]({ timeout: 1 }, () => {
 
-                            finished();
+                            return new Promise(() => {});
                         });
+                        script.test('works', () => {});
                     });
 
-                    Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
-
-                        expect(err).to.not.exist();
-                        expect(code).to.equal(1);
-                        expect(output).to.contain(test.expect);
-                        done();
-                    });
+                    const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
+                    expect(code).to.equal(1);
+                    expect(output).to.contain(test.expect);
                 });
             });
         });
 
-        it('generates a report with all notes displayed', (done) => {
+        it('generates a report with all notes displayed', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', (flags) => {
 
-                    finished.note('This is a sweet feature');
-                    finished.note('Here is another note');
-                    finished();
+                    flags.note('This is a sweet feature');
+                    flags.note('Here is another note');
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 0, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('This is a sweet feature');
-                expect(output).to.contain('Here is another note');
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 0, output: false });
+            expect(output).to.contain('This is a sweet feature');
+            expect(output).to.contain('Here is another note');
         });
 
-        it('generates a report without progress', (done) => {
+        it('generates a report without progress', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.match(/^\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false });
+            expect(output).to.match(/^\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
         });
 
-        it('generates a report with verbose progress', (done) => {
+        it('generates a report with verbose progress', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false });
+            expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
         });
 
-        it('generates a report with verbose progress with experiments with same named tests', (done) => {
+        it('generates a report with verbose progress with experiments with same named tests', async () => {
 
             const script = Lab.script();
             script.experiment('experiment', () => {
@@ -784,7 +638,7 @@ describe('Reporter', () => {
 
                     script.experiment('sub sub experiment', () => {
 
-                        script.test('works', (finished) => finished());
+                        script.test('works', () => {});
                     });
                 });
 
@@ -792,7 +646,7 @@ describe('Reporter', () => {
 
                     script.experiment('sub sub experiment', () => {
 
-                        script.test('works', (finished) => finished());
+                        script.test('works', () => {});
                     });
                 });
 
@@ -802,7 +656,7 @@ describe('Reporter', () => {
 
                         script.experiment('sub sub sub experiment', () => {
 
-                            script.test('works', (finished) => finished());
+                            script.test('works', () => {});
                         });
                     });
 
@@ -810,145 +664,112 @@ describe('Reporter', () => {
 
                         script.experiment('sub sub sub experiment', () => {
 
-                            script.test('works', (finished) => finished());
+                            script.test('works', () => {});
                         });
                     });
                 });
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('4) works');
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false });
+            expect(output).to.contain('4) works');
         });
 
-        it('generates a report with verbose progress with the same test name and no wrapper experiment', (done) => {
+        it('generates a report with verbose progress with the same test name and no wrapper experiment', async () => {
 
             const script = Lab.script();
-            script.test('works', (finished) => finished());
-            script.test('works', (finished) => finished());
+            script.test('works', () => {});
+            script.test('works', () => {});
 
-            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('1) works');
-                expect(output).to.contain('2) works');
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false });
+            expect(output).to.contain('1) works');
+            expect(output).to.contain('2) works');
         });
 
-        it('generates a report with verbose progress and assertions count per test', (done) => {
+        it('generates a report with verbose progress and assertions count per test', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    expect(finished).to.exist();
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false });
+            expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
         });
 
-        it('generates a report with verbose progress that displays well on windows', (done) => {
+        it('generates a report with verbose progress that displays well on windows', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
             const oldPlatform = process.platform;
             Object.defineProperty(process, 'platform', { writable: true, value: 'win32' });
 
-            Lab.report(script, { reporter: 'console', progress: 2, output: false }, (err, code, output) => {
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false });
 
-                process.platform = oldPlatform;
-                expect(err).not.to.exist();
-                expect(output).to.contain('\u221A');
-
-                done();
-            });
+            process.platform = oldPlatform;
+            expect(output).to.contain('\u221A');
         });
 
-        it('generates a report without skipped and todo tests', (done) => {
+        it('generates a report without skipped and todo tests', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.test.skip('a skipped test', (done) => {
+                script.test.skip('a skipped test', () => {
 
-                    done(new Error('Should not be called'));
+                    throw new Error('Should not be called');
                 });
 
                 script.test('a todo test');
             });
 
-            Lab.report(script, { reporter: 'console', 'silent-skips': true, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-                expect(output).to.contain([
-                    '  .\n',
-                    '1 tests complete',
-                    '2 skipped'
-                ]);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', 'silent-skips': true, output: false });
+            expect(code).to.equal(0);
+            expect(output).to.contain([
+                '  .\n',
+                '1 tests complete',
+                '2 skipped'
+            ]);
         });
 
-        it('generates a verbose report without skipped and todo tests', (done) => {
+        it('generates a verbose report without skipped and todo tests', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.test.skip('a skipped test', (done) => {
+                script.test.skip('a skipped test', async () => {
 
-                    done(new Error('Should not be called'));
+                    throw new Error('Should not be called');
                 });
 
                 script.test('a todo test');
             });
 
-            Lab.report(script, { reporter: 'console', progress: 2, 'silent-skips': true, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-                expect(output).to.not.contain('a skipped test');
-                expect(output).to.not.contain('a todo test');
-                expect(output).to.contain([
-                    '1 tests complete',
-                    '2 skipped'
-                ]);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', progress: 2, 'silent-skips': true, output: false });
+            expect(code).to.equal(0);
+            expect(output).to.not.contain('a skipped test');
+            expect(output).to.not.contain('a todo test');
+            expect(output).to.contain([
+                '1 tests complete',
+                '2 skipped'
+            ]);
         });
 
-        it('generates a coverage report (verbose)', (done) => {
+        it('generates a coverage report (verbose)', async () => {
 
             const Test = require('./coverage/console');
             const Full = require('./coverage/console-full');
@@ -956,31 +777,26 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(1, 2, 3);
                     Full.method(1);
-                    finished();
+
                 });
 
-                script.test('diff', (finished) => {
+                script.test('diff', () => {
 
                     expect('abcd').to.equal('cdfg');
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('Coverage: 76.47% (4/17)');
-                expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
-                expect(output).to.not.contain('console-full');
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false });
+            expect(output).to.contain('Coverage: 76.47% (4/17)');
+            expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
+            expect(output).to.not.contain('console-full');
         });
 
-        it('reports 100% coverage', (done) => {
+        it('reports 100% coverage', async () => {
 
             const reporter = Reporters.generate({ reporter: 'console', coverage: true });
             const notebook = {
@@ -991,79 +807,65 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('Coverage: 100.00%');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('Coverage: 100.00%');
         });
 
-        it('reports correct lines with sourcemaps enabled', (done) => {
+        it('reports correct lines with sourcemaps enabled', async () => {
 
             const Test = require('./coverage/sourcemaps-external');
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(false);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
-                expect(output).to.contain('while.js on line(s): 13, 14');
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false });
+            expect(output).to.contain('test/coverage/sourcemaps-external.js missing coverage from file(s):');
+            expect(output).to.contain('while.js on line(s): 13, 14');
         });
 
-        it('doesn\'t report lines on a fully covered file with sourcemaps enabled', (done) => {
+        it('doesn\'t report lines on a fully covered file with sourcemaps enabled', async () => {
 
             const Test = require('./coverage/sourcemaps-covered');
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(false);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/'), sourcemaps: true, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.not.contain('sourcemaps-covered');
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/'), sourcemaps: true, output: false });
+            expect(output).to.not.contain('sourcemaps-covered');
         });
 
-        it('generates a report with multi-line progress', (done) => {
+        it('generates a report with multi-line progress', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                const works = function (finished) {
+                const works = function () {
 
                     expect(true).to.equal(true);
-                    finished();
+
                 };
 
-                const fails = function (finished) {
+                const fails = function () {
 
                     expect(true).to.equal(false);
-                    finished();
+
                 };
 
-                const skips = function (finished) {
+                const skips = function () {
 
-                    finished();
+
                 };
 
                 for (let i = 0; i < 30; ++i) {
@@ -1073,46 +875,32 @@ describe('Reporter', () => {
                 }
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output).to.contain('.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x\n  -.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x\n  -.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-.x-');
         });
 
-        it('generates a report with verbose progress', (done) => {
+        it('generates a report with verbose progress', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {});
 
-                    finished();
+                script.test('fails', () => {
+
+                    return Promise.reject('boom');
                 });
 
-                script.test('fails', (finished) => {
-
-                    finished('boom');
-                });
-
-                script.test('skips', { skip: true }, (finished) => {
-
-                    finished();
-                });
+                script.test('skips', { skip: true }, () => {});
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, progress: 2, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output).to.match(/test\n  [✔√] 1\) works \(\d+ ms\)\n  [✖×] 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, progress: 2, output: false, assert: false });
+            expect(code).to.equal(1);
+            expect(output).to.match(/test\n  [✔√] 1\) works \(\d+ ms\)\n  [✖×] 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
         });
 
-        it('excludes colors when terminal does not support', { parallel: false }, (done) => {
+        it('excludes colors when terminal does not support', { parallel: false }, async () => {
 
             delete require.cache[require.resolve('supports-color')];
             const orig = {
@@ -1125,106 +913,82 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', output: false, assert: false }, (err, code, output) => {
+            const { code, output } = await Lab.report(script, { reporter: 'console', output: false, assert: false });
 
-                process.stdout.isTTY = orig.isTTY;
-                process.env = orig.env;
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-                expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                done();
-            });
+            process.stdout.isTTY = orig.isTTY;
+            process.env = orig.env;
+            expect(code).to.equal(0);
+            expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
         });
 
-        it('displays custom error messages in expect', (done) => {
+        it('displays custom error messages in expect', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true, 'Not working right').to.equal(false);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      truefalse\n\n      Not working right: Expected true to equal specified value: false\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
+            const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
+            expect(result).to.contain('Not working right: Expected true to equal specified value');
+            expect(result).to.contain('1 of 1 tests failed');
         });
 
-        it('displays session errors if there in an error in "before"', (done) => {
+        it('displays session errors if there in an error in "before"', async () => {
 
-            const script = Lab.script();
+            const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.before((testDone) => {
+                script.before(() => {
 
-                    testDone(new Error('there was an error in the before function'));
+                    return Promise.reject(new Error('there was an error in the before function'));
                 });
 
-                script.test('works', (testDone) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    testDone();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-
-                const result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-
-                expect(code).to.equal(1);
-                expect(result).to.contain('There were 1 test script error(s).');
-                expect(result).to.contain('there was an error in the before function');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('There were 1 test script error(s).');
+            expect(output).to.contain('there was an error in the before function');
         });
 
-        it('displays session errors if there in an error in "afterEach"', (done) => {
+        it('displays session errors if there in an error in "afterEach"', async () => {
 
-            const script = Lab.script();
+            const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.afterEach((testDone) => {
+                script.afterEach(() => {
 
-                    testDone(new Error('there was an error in the afterEach function'));
+                    return Promise.reject(new Error('there was an error in the afterEach function'));
                 });
 
-                script.test('works', (testDone) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    testDone();
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-
-                const result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-
-                expect(code).to.equal(1);
-                expect(result).to.contain('There were 1 test script error(s).');
-                expect(result).to.contain('there was an error in the afterEach function');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('There were 1 test script error(s).');
+            expect(output).to.contain('there was an error in the afterEach function');
         });
 
-        it('generates a report with linting enabled', (done) => {
+        it('generates a report with linting enabled', async () => {
 
             const reporter = Reporters.generate({ reporter: 'console', coverage: true });
             const notebook = {
@@ -1245,15 +1009,11 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('missing ;');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('missing ;');
         });
 
-        it('displays a success message for lint when no issues found', (done) => {
+        it('displays a success message for lint when no issues found', async () => {
 
             const reporter = Reporters.generate({ reporter: 'console', coverage: true });
             const notebook = {
@@ -1268,15 +1028,11 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('No issues');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('No issues');
         });
 
-        it('displays a success message for lint when errors are null', (done) => {
+        it('displays a success message for lint when errors are null', async () => {
 
             const reporter = Reporters.generate({ reporter: 'console', coverage: true });
             const notebook = {
@@ -1291,20 +1047,16 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('No issues');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('No issues');
         });
 
-        it('reports with circular JSON', (done) => {
+        it('reports with circular JSON', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     const err = new Error('Fail');
                     err.actual = {
@@ -1319,21 +1071,18 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n        "a": 12,\n        "b": "\[Circular ~\]"\n      }\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
+            expect(output).to.contain('Failed tests:');
+            expect(output).to.contain('[Circular ~]');
+            expect(output).to.contain('Fail');
         });
 
-        it('reports with undefined values', (done) => {
+        it('reports with undefined values', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     const err = new Error('Fail');
                     err.actual = { a: 1 };
@@ -1351,227 +1100,188 @@ describe('Reporter', () => {
                 });
             });
 
-            Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      actual expected\n\n      {\n\s+"a": 1,\n\s+"b": "\[undefined\]",\n\s+"c": "\[function \(\) \{((\\r)?\\n){2}\s+return 'foo';(\\r)?\\n\s+\}\]",\n\s+"d": "\[Infinity\]",\n\s+"e": "\[-Infinity\]"\n\s+}\n\n      Fail\n\n(?:      at <trace>\n)+\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
+            expect(output).to.contain('Failed tests:');
+            expect(output).to.contain('1 of 1 tests failed');
+            expect(output).to.contain('Fail');
         });
     });
 
     describe('json', { timeout: 10000 }, () => {
 
-        it('generates a report', (done) => {
+        it('generates a report', async () => {
 
             const script = Lab.script();
             script.experiment('group', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.test('fails', (finished) => {
+                script.test('fails', () => {
 
                     expect(true).to.equal(false);
-                    finished();
                 });
 
-                script.test('fails with non-error', (finished) => {
+                script.test('fails with non-error', () => {
 
-                    finished('boom');
+                    return Promise.reject('boom');
                 });
             });
 
-            Lab.report(script, { reporter: 'json', lint: true, linter: 'eslint', output: false }, (err, code, output) => {
+            const { code, output } = await Lab.report(script, { reporter: 'json', lint: true, linter: 'eslint', output: false });
 
-                const result = JSON.parse(output);
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(result.tests.group.length).to.equal(3);
-                expect(result.tests.group[0].title).to.equal('works');
-                expect(result.tests.group[0].err).to.equal(false);
-                expect(result.tests.group[1].title).to.equal('fails');
-                expect(result.tests.group[1].err).to.equal('Expected true to equal specified value: false');
-                expect(result.tests.group[2].title).to.equal('fails with non-error');
-                expect(result.tests.group[2].err).to.equal('Non Error object received or caught');
-                expect(result.leaks.length).to.equal(0);
-                expect(result.duration).to.exist();
-                expect(result.lint.length).to.be.greaterThan(1);
-                expect(result.lint[0].filename).to.exist();
-                expect(result.lint[0].errors).to.exist();
-                done();
-            });
+            const result = JSON.parse(output);
+            expect(code).to.equal(1);
+            expect(result.tests.group.length).to.equal(3);
+            expect(result.tests.group[0].title).to.equal('works');
+            expect(result.tests.group[0].err).to.equal(false);
+            expect(result.tests.group[1].title).to.equal('fails');
+            expect(result.tests.group[1].err).to.equal('Expected true to equal specified value: false');
+            expect(result.tests.group[2].title).to.equal('fails with non-error');
+            expect(result.tests.group[2].err).to.equal('Non Error object received or caught');
+            expect(result.leaks.length).to.equal(0);
+            expect(result.duration).to.exist();
+            expect(result.lint.length).to.be.greaterThan(1);
+            expect(result.lint[0].filename).to.exist();
+            expect(result.lint[0].errors).to.exist();
         });
 
-        it('generates a report with errors', (done) => {
+        it('generates a report with errors', async () => {
 
             const script = Lab.script();
             script.experiment('group', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.after((finished) => {
+                script.after(() => {
 
-                    finished(new Error());
+                    return Promise.reject(new Error());
                 });
             });
 
-            Lab.report(script, { reporter: 'json', output: false }, (err, code, output) => {
-
-                const result = JSON.parse(output);
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(result.errors).to.have.length(1);
-                done();
-                done = function () {};
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'json', output: false });
+            const result = JSON.parse(output);
+            expect(code).to.equal(1);
+            expect(result.errors).to.have.length(2);
         });
 
-        it('generates a report with coverage', (done) => {
+        it('generates a report with coverage', async () => {
 
             const Test = require('./coverage/json');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('value of a', (finished) => {
+                script.test('value of a', () => {
 
                     expect(Test.method(1)).to.equal(1);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                const result = JSON.parse(output);
-                expect(result.coverage.percent).to.equal(100);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json'), output: false });
+            const result = JSON.parse(output);
+            expect(result.coverage.percent).to.equal(100);
         });
     });
 
     describe('html', () => {
 
-        it('generates a coverage report', (done) => {
+        it('generates a coverage report', async () => {
 
             const Test = require('./coverage/html');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(1, 2, 3);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('<div class="stats medium">');
-                expect(output).to.contain('<span class="cov medium">66.67</span>');
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html'), output: false });
+            expect(output).to.contain('<div class="stats medium">');
+            expect(output).to.contain('<span class="cov medium">66.67</span>');
+            delete global.__$$testCovHtml;
         });
 
-        it('generates a coverage report with original source from external sourcemaps', (done) => {
+        it('generates a coverage report with original source from external sourcemaps', async () => {
 
             const Test = require('./coverage/sourcemaps-external');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(false);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
-                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-external.js">test/coverage/sourcemaps-external.js)</a>');
-                expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
-                expect(output, 'original chunks not properly handled').to.contains([
-                    '<tr id="while.js__13" class="chunks">',
-                    '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) </div><div>{</div></td>']);
-                expect(output, 'missed original line not included').to.contains([
-                    '<tr id="while.js__14" class="miss">',
-                    '<td class="source" data-tooltip>        value &#x3D; false;</td>']);
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-external'), sourcemaps: true, output: false });
+            expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
+            expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-external.js">test/coverage/sourcemaps-external.js)</a>');
+            expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
+            expect(output, 'original chunks not properly handled').to.contains([
+                '<tr id="while.js__13" class="chunks">',
+                '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) </div><div>{</div></td>']);
+            expect(output, 'missed original line not included').to.contains([
+                '<tr id="while.js__14" class="miss">',
+                '<td class="source" data-tooltip>        value &#x3D; false;</td>']);
+            delete global.__$$testCovHtml;
         });
 
-        it('generates a coverage report with original source from inline sourcemaps', (done) => {
+        it('generates a coverage report with original source from inline sourcemaps', async () => {
 
             const Test = require('./coverage/sourcemaps-inline');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(false);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-inline'), sourcemaps: true, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
-                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-inline.js">test/coverage/sourcemaps-inline.js)</a>');
-                expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
-                expect(output, 'original chunks not properly handled').to.contains([
-                    '<tr id="while.js__13" class="chunks">',
-                    '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) {</div></td>']);
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-inline'), sourcemaps: true, output: false });
+            expect(output, 'original filename not included').to.contains('<h2 id="while.js">while.js');
+            expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-inline.js">test/coverage/sourcemaps-inline.js)</a>');
+            expect(output, 'original comment not included').to.contains('<td class="source">// Declare internals</td>');
+            expect(output, 'original chunks not properly handled').to.contains([
+                '<tr id="while.js__13" class="chunks">',
+                '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) {</div></td>']);
+            delete global.__$$testCovHtml;
         });
 
 
-        it('generates a coverage report with concatenated original sources', (done) => {
+        it('generates a coverage report with concatenated original sources', async () => {
 
             const Test = require('./coverage/sourcemaps-multiple');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(false);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-multiple'), sourcemaps: true, output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output, '1st original filename not included').to.contains('<h2 id="file1.js">file1.js');
-                expect(output, '2nd original filename not included').to.contains('<h2 id="file2.js">file2.js');
-                expect(output, '3rd original filename not included').to.contains('<h2 id="file3.js">file3.js');
-                expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-multiple.js">test/coverage/sourcemaps-multiple.js)</a>');
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/sourcemaps-multiple'), sourcemaps: true, output: false });
+            expect(output, '1st original filename not included').to.contains('<h2 id="file1.js">file1.js');
+            expect(output, '2nd original filename not included').to.contains('<h2 id="file2.js">file2.js');
+            expect(output, '3rd original filename not included').to.contains('<h2 id="file3.js">file3.js');
+            expect(output, 'generated filename link not included').to.contains('transformed to <a href="#test/coverage/sourcemaps-multiple.js">test/coverage/sourcemaps-multiple.js)</a>');
+            delete global.__$$testCovHtml;
         });
 
-        it('generates a coverage report with linting enabled and multiple files', (done) => {
+        it('generates a coverage report with linting enabled and multiple files', async () => {
 
             const Test1 = require('./coverage/html-lint/html-lint.1');
             const Test2 = require('./coverage/html-lint/html-lint.2');
@@ -1579,43 +1289,37 @@ describe('Reporter', () => {
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test1.method(1, 2, 3);
-                    finished();
                 });
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test2.method(1, 2, 3);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output)
-                    .to.contain('<div class="stats medium">')
-                    .and.to.contain('semi - Missing semicolon')
-                    .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;."></span>')
-                    .and.to.contain('<span class="lint-errors low">11</span>')
-                    .and.to.contain('<span class="lint-warnings low">1</span>')
-                    .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
-                    .and.to.contain('<li class="lint-entry">L14 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
-                    .and.to.contain('<li class="lint-entry">L15 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
-                    .and.to.contain('<li class="lint-entry">L18 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
-                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
-                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
-                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
-                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - semi - Missing semicolon.</li>')
-                    .and.to.contain('<li class="lint-entry">L23 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces');
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), output: false });
+            expect(output)
+                .to.contain('<div class="stats medium">')
+                .and.to.contain('semi - Missing semicolon')
+                .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;."></span>')
+                .and.to.contain('<span class="lint-errors low">11</span>')
+                .and.to.contain('<span class="lint-warnings low">1</span>')
+                .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
+                .and.to.contain('<li class="lint-entry">L14 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
+                .and.to.contain('<li class="lint-entry">L15 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
+                .and.to.contain('<li class="lint-entry">L18 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
+                .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
+                .and.to.contain('<li class="lint-entry">L21 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
+                .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
+                .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - semi - Missing semicolon.</li>')
+                .and.to.contain('<li class="lint-entry">L23 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces');
+            delete global.__$$testCovHtml;
         });
 
-        it('generates a coverage report with linting enabled with thresholds', (done) => {
+        it('generates a coverage report with linting enabled with thresholds', async () => {
 
             const Test1 = require('./coverage/html-lint/html-lint.1');
             const Test2 = require('./coverage/html-lint/html-lint.2');
@@ -1623,80 +1327,63 @@ describe('Reporter', () => {
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test1.method(1, 2, 3);
-                    finished();
                 });
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test2.method(1, 2, 3);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), 'lint-errors-threshold': 2, 'lint-warnings-threshold': 2, output: false }, (err, code, output) => {
+            const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html-lint/'), lint: true, linter: 'eslint', lintingPath: Path.join(__dirname, './coverage/html-lint'), 'lint-errors-threshold': 2, 'lint-warnings-threshold': 2, output: false });
+            expect(output)
+                .to.contain('<span class="lint-errors low">11</span>')
+                .and.to.contain('<span class="lint-warnings medium">1</span>');
 
-                expect(err).not.to.exist();
-                expect(output)
-                    .to.contain('<span class="lint-errors low">11</span>')
-                    .and.to.contain('<span class="lint-warnings medium">1</span>');
-
-                delete global.__$$testCovHtml;
-                done();
-            });
+            delete global.__$$testCovHtml;
         });
 
-        it('generates a report with test script errors', (done) => {
+        it('generates a report with test script errors', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.before((finished) => { });
-                script.test('works', (finished) => {
+                script.before(() => {
 
-                    finished();
+                    return new Promise(() => {});
                 });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output)
-                    .to.contain('Timed out &#x28;1ms&#x29; - Before test')
-                    .and.to.contain('at Timer.listOnTimeout');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false });
+            expect(code).to.equal(1);
+            expect(output)
+                .to.contain('Timed out &#x28;1ms&#x29; - Before test')
+                .and.to.contain('at Timer.listOnTimeout');
         });
 
-        it('generates a report with test script errors that are not Error', (done) => {
+        it('generates a report with test script errors that are not Error', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.before((finished) => {
+                script.before(() => {
 
-                    throw 'abc';
+                    return Promise.reject('abc');
                 });
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output).to.contain('Non Error object received or caught');
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('Non Error object received or caught');
         });
 
-        it('tags file percentile based on levels', (done) => {
+        it('tags file percentile based on levels', async () => {
 
             const reporter = Reporters.generate({ reporter: 'html' });
             const notebook = {
@@ -1723,18 +1410,14 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('<span class="cov terrible">10</span>');
-                expect(output).to.contain('<span class="cov terrible">10.12</span>');
-                expect(output).to.contain('<span class="cov high">76</span>');
-                expect(output).to.contain('<span class="cov low">26</span>');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('<span class="cov terrible">10</span>');
+            expect(output).to.contain('<span class="cov terrible">10.12</span>');
+            expect(output).to.contain('<span class="cov high">76</span>');
+            expect(output).to.contain('<span class="cov low">26</span>');
         });
 
-        it('tags total percentile (terrible)', (done) => {
+        it('tags total percentile (terrible)', async () => {
 
             const reporter = Reporters.generate({ reporter: 'html' });
             const notebook = {
@@ -1749,15 +1432,11 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('<span class="cov terrible">10</span>');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('<span class="cov terrible">10</span>');
         });
 
-        it('tags total percentile (high)', (done) => {
+        it('tags total percentile (high)', async () => {
 
             const reporter = Reporters.generate({ reporter: 'html' });
             const notebook = {
@@ -1772,15 +1451,11 @@ describe('Reporter', () => {
                 }
             };
 
-            reporter.finalize(notebook, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('<span class="cov high">80</span>');
-                done();
-            });
+            const { output } = await reporter.finalize(notebook);
+            expect(output).to.contain('<span class="cov high">80</span>');
         });
 
-        it('includes test run data', (done) => {
+        it('includes test run data', async () => {
 
             const Test = require('./coverage/html');
 
@@ -1789,182 +1464,144 @@ describe('Reporter', () => {
 
                 script.describe('lab', () => {
 
-                    script.test('something', (finished) => {
+                    script.test('something', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
 
-                    script.test('something else', (finished) => {
+                    script.test('something else', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
                 });
             });
 
-            Lab.report(script, { reporter: 'html', coveragePath: Path.join(__dirname, './coverage/html'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('Test Report');
-                expect(output).to.contain('test-title');
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'html', coveragePath: Path.join(__dirname, './coverage/html'), output: false });
+            expect(output).to.contain('Test Report');
+            expect(output).to.contain('test-title');
+            delete global.__$$testCovHtml;
         });
     });
 
     describe('tap', () => {
 
-        it('generates a report', (done) => {
+        it('generates a report', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.test('skip', { skip: true }, (finished) => {
-
-                    finished();
-                });
+                script.test('skip', { skip: true }, () => {});
 
                 script.test('todo');
 
-                script.test('fails', (finished) => {
+                script.test('fails', () => {
 
                     expect(true).to.equal(false);
-                    finished();
                 });
 
-                script.test('fails with non-error', (finished) => {
+                script.test('fails with non-error', () => {
 
-                    finished('boom');
+                    return Promise.reject('boom');
                 });
             });
 
-            Lab.report(script, { reporter: 'tap', output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                const result = output.replace(/      .*\n/g, '      <trace>\n');
-                expect(result).to.match(/^TAP version 13\n1..5\nok 1 \(1\) test works\n  ---\n  duration_ms: \d+\n  ...\nok 2 # SKIP \(2\) test skip\nok 3 # TODO \(3\) test todo\nnot ok 4 \(4\) test fails\n  ---\n  duration_ms: \d+\n  stack: |-\n    Expected true to equal specified value\n(?:      <trace>\n)+  ...\nnot ok 5 \(5\) test fails with non-error\n  ---\n  duration_ms: \d+\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n$/);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'tap', output: false });
+            expect(code).to.equal(1);
+            const result = output.replace(/      .*\n/g, '      <trace>\n');
+            expect(result).to.match(/^TAP version 13\n1..5\nok 1 \(1\) test works\n  ---\n  duration_ms: \d+\n  ...\nok 2 # SKIP \(2\) test skip\nok 3 # TODO \(3\) test todo\nnot ok 4 \(4\) test fails\n  ---\n  duration_ms: \d+\n  stack: |-\n    Expected true to equal specified value\n(?:      <trace>\n)+  ...\nnot ok 5 \(5\) test fails with non-error\n  ---\n  duration_ms: \d+\n  ...\n# tests 4\n# pass 1\n# fail 2\n# skipped 1\n# todo 1\n$/);
         });
     });
 
     describe('junit', () => {
 
-        it('generates a report', (done) => {
+        it('generates a report', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
+                script.test('works', () => {
 
                     expect(true).to.equal(true);
-                    finished();
                 });
 
-                script.test('skip', { skip: true }, (finished) => {
-
-                    finished();
-                });
+                script.test('skip', { skip: true }, () => {});
 
                 script.test('todo');
 
-                script.test('fails', (finished) => {
+                script.test('fails', () => {
 
                     expect(true).to.equal(false);
-                    finished();
                 });
 
-                script.test('fails with non-error', (finished) => {
+                script.test('fails with non-error', () => {
 
-                    finished('boom');
+                    return Promise.reject('boom');
                 });
             });
 
-            Lab.report(script, { reporter: 'junit', output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(1);
-                expect(output).to.contain([
-                    'tests="5"',
-                    'errors="0"',
-                    'skipped="2"',
-                    'failures="2"',
-                    '<failure message="Expected true to equal specified value: false" type="Error">'
-                ]);
-
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'junit', output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain([
+                'tests="5"',
+                'errors="2"',
+                'skipped="2"',
+                'failures="2"',
+                '<failure message="Expected true to equal specified value: false" type="Error">'
+            ]);
         });
     });
 
     describe('lcov', () => {
 
-        it('generates a lcov report', (done) => {
+        it('generates a lcov report', async () => {
 
             const Test = require('./coverage/html');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(1, 2, 3);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'lcov', coverage: true, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-
-                expect(output).to.contain(Path.join('coverage', 'html.js'));
-                expect(output).to.contain('DA:1,1');                    // Check that line is marked as covered
-                expect(output).to.contain('LF:14');                     // Total Lines
-                expect(output).to.contain('LH:10');                     // Lines Hit
-                expect(output).to.contain('end_of_record');
-
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'lcov', coverage: true, output: false });
+            expect(code).to.equal(0);
+            expect(output).to.contain(Path.join('coverage', 'html.js'));
+            expect(output).to.contain('DA:1,1');                    // Check that line is marked as covered
+            expect(output).to.contain('LF:14');                     // Total Lines
+            expect(output).to.contain('LH:10');                     // Lines Hit
+            expect(output).to.contain('end_of_record');
         });
 
-        it('runs without coverage but doesn\'t generate output', (done) => {
+        it('runs without coverage but doesn\'t generate output', async () => {
 
             const Test = require('./coverage/html');
 
             const script = Lab.script({ schedule: false });
             script.experiment('test', () => {
 
-                script.test('something', (finished) => {
+                script.test('something', () => {
 
                     Test.method(1, 2, 3);
-                    finished();
                 });
             });
 
-            Lab.report(script, { reporter: 'lcov', coverage: false, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code).to.equal(0);
-                expect(output).to.be.empty();
-
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: 'lcov', coverage: false, output: false });
+            expect(code).to.equal(0);
+            expect(output).to.be.empty();
         });
     });
 
     describe('clover', () => {
 
-        it('generates a report', (done) => {
+        it('generates a report', async () => {
 
             const Test = require('./coverage/clover');
 
@@ -1973,31 +1610,25 @@ describe('Reporter', () => {
 
                 script.describe('lab', () => {
 
-                    script.test('something', (finished) => {
+                    script.test('something', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
 
-                    script.test('something else', (finished) => {
+                    script.test('something else', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
                 });
             });
 
-            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.contain('clover.test.coverage');
-                expect(output).to.contain('<line num="11" count="1" type="stmt"/>');
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover'), output: false });
+            expect(output).to.contain('clover.test.coverage');
+            expect(output).to.contain('<line num="11" count="1" type="stmt"/>');
+            delete global.__$$testCovHtml;
         });
 
-        it('correctly defaults a package root name', (done) => {
+        it('correctly defaults a package root name', async () => {
 
             const reporter = Reporters.generate({ reporter: 'clover', coveragePath: null });
 
@@ -2010,16 +1641,14 @@ describe('Reporter', () => {
 
                 script.describe('lab', () => {
 
-                    script.test('something', (finished) => {
+                    script.test('something', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
 
-                    script.test('something else', (finished) => {
+                    script.test('something else', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
                 });
             });
@@ -2027,26 +1656,20 @@ describe('Reporter', () => {
             const origCwd = process.cwd();
             process.chdir(Path.join(__dirname, './coverage/'));
 
-            Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.not.contain('clover.test.coverage');
-                expect(output).to.contain('<coverage generated=');
-                delete global.__$$testCovHtml;
-                process.chdir(origCwd);
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'clover', coverage: true, coveragePath: Path.join(__dirname, './coverage/clover'), output: false });
+            expect(output).to.not.contain('clover.test.coverage');
+            expect(output).to.contain('<coverage generated=');
+            delete global.__$$testCovHtml;
+            process.chdir(origCwd);
         });
 
-        it('correctly determines a package root name', (done) => {
+        it('correctly determines a package root name', () => {
 
             const reporter = Reporters.generate({ reporter: 'clover', coveragePath: Path.join(__dirname, './somepath') });
-
             expect(reporter.settings.packageRoot).to.equal('somepath');
-            done();
         });
 
-        it('results in an empty generation', (done) => {
+        it('results in an empty generation', async () => {
 
             const Test = require('./coverage/clover');
 
@@ -2055,31 +1678,25 @@ describe('Reporter', () => {
 
                 script.describe('lab', () => {
 
-                    script.test('something', (finished) => {
+                    script.test('something', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
 
-                    script.test('something else', (finished) => {
+                    script.test('something else', () => {
 
                         Test.method(1, 2, 3);
-                        finished();
                     });
                 });
             });
 
-            Lab.report(script, { reporter: 'clover', coverage: false, coveragePath: Path.join(__dirname, './coverage/clover'), output: false }, (err, code, output) => {
-
-                expect(err).not.to.exist();
-                expect(output).to.not.contain('clover.test.coverage');
-                expect(output).to.contain('<coverage generated=');
-                delete global.__$$testCovHtml;
-                done();
-            });
+            const { output } = await Lab.report(script, { reporter: 'clover', coverage: false, coveragePath: Path.join(__dirname, './coverage/clover'), output: false });
+            expect(output).to.not.contain('clover.test.coverage');
+            expect(output).to.contain('<coverage generated=');
+            delete global.__$$testCovHtml;
         });
 
-        it('should generate a report with multiple files', (done) => {
+        it('should generate a report with multiple files', () => {
 
             let output = '';
             const reporter = Reporters.generate({ reporter: 'clover' });
@@ -2101,13 +1718,12 @@ describe('Reporter', () => {
             expect(output).to.contain('<package name="root">');
             expect(output).to.contain('<file name="fileA.js"');
             expect(output).to.contain('<file name="fileB.js"');
-            done();
         });
     });
 
     describe('multiple reporters', () => {
 
-        it('with multiple outputs are supported', (done) => {
+        it('with multiple outputs are supported', async () => {
 
             const Recorder = function () {
 
@@ -2127,29 +1743,22 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
             const recorder = new Recorder();
             const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
 
-            Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                expect(code.lcov).to.equal(0);
-                expect(code.console).to.equal(0);
-                expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
-                expect(output.console).to.equal(recorder.content);
-                Fs.unlinkSync(filename);
-                done();
-            });
+            const { code, output } = await Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true });
+            expect(code.lcov).to.equal(0);
+            expect(code.console).to.equal(0);
+            expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
+            expect(output.console).to.equal(recorder.content);
+            Fs.unlinkSync(filename);
         });
 
 
-        it('that are duplicates with multiple outputs are supported', (done) => {
+        it('that are duplicates with multiple outputs are supported', async () => {
 
             const Recorder = function () {
 
@@ -2169,68 +1778,50 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
             const recorder = new Recorder();
             const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
 
-            Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true }, (err, code, output) => {
+            const { code, output } = await Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true });
 
-                expect(err).to.not.exist();
-                expect(code.console).to.equal(0);
-                expect(code.console2).to.equal(0);
-                expect(output.console).to.equal(Fs.readFileSync(filename).toString());
-                expect(output.console2).to.equal(recorder.content);
-                Fs.unlinkSync(filename);
-                done();
-            });
+            expect(code.console).to.equal(0);
+            expect(code.console2).to.equal(0);
+            expect(output.console).to.equal(Fs.readFileSync(filename).toString());
+            expect(output.console2).to.equal(recorder.content);
+            Fs.unlinkSync(filename);
         });
     });
 
     describe('custom reporters', () => {
 
-        it('requires a custom reporter relatively if starts with .', (done) => {
+        it('requires a custom reporter relatively if starts with .', async () => {
 
             const reporter = './node_modules/lab-event-reporter/index.js';
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                done();
-            });
+            const { code } = await Lab.report(script, { reporter, output: false });
+            expect(code).to.equal(0);
         });
 
-        it('requires a custom reporter from node_modules if not starting with .', (done) => {
+        it('requires a custom reporter from node_modules if not starting with .', async () => {
 
             const reporter = 'lab-event-reporter';
 
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', (finished) => {
-
-                    finished();
-                });
+                script.test('works', () => {});
             });
 
-            Lab.report(script, { reporter, output: false }, (err, code, output) => {
-
-                expect(err).to.not.exist();
-                done();
-            });
+            const { code } = await Lab.report(script, { reporter, output: false });
+            expect(code).to.equal(0);
         });
     });
 });

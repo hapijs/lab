@@ -21,15 +21,13 @@ const expect = Code.expect;
 
 describe('Test CLI 2', () => {
 
-    it('adds multiplies numbers together', (done) => {
+    it('adds multiplies numbers together', () => {
 
         expect(5 * 5).to.equal(25);
-        done();
     });
 
-    it('divides two numbers', (done) => {
+    it('divides two numbers', () => {
 
         expect(25 / 5).to.equal(5);
-        done();
     });
 });

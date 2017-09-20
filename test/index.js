@@ -22,778 +22,568 @@ const expect = Code.expect;
 
 describe('Lab', () => {
 
-    it('creates a script and executes', (done) => {
+    it('creates a script and executes', async () => {
 
         let a = 0;
         const script = Lab.script({ schedule: false });
         script.experiment('test', () => {
 
-            script.before((testDone) => {
+            script.before(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.test('value of a', (testDone) => {
+            script.test('value of a', () => {
 
                 expect(a).to.equal(1);
-                testDone();
             });
 
-            script.after((testDone) => {
+            script.after(() => {
 
                 ++a;
-                testDone();
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(a).to.equal(2);
-            expect(notebook.tests).to.have.length(1);
-            expect(notebook.tests[0].id).to.equal(1);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(a).to.equal(2);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.tests[0].id).to.equal(1);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('creates a script and executes (BDD)', (done) => {
+    it('creates a script and executes (BDD)', async () => {
 
         let a = 0;
         const script = Lab.script({ schedule: false });
         script.describe('test', () => {
 
-            script.before((testDone) => {
+            script.before(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.it('value of a', (testDone) => {
+            script.it('value of a', () => {
 
                 expect(a).to.equal(1);
-                testDone();
             });
 
-            script.after((testDone) => {
+            script.after(() => {
 
                 ++a;
-                testDone();
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(a).to.equal(2);
-            expect(notebook.tests).to.have.length(1);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(a).to.equal(2);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('creates a script and executes (TDD)', (done) => {
+    it('creates a script and executes (TDD)', async () => {
 
         let a = 0;
         const script = Lab.script({ schedule: false });
         script.suite('test', () => {
 
-            script.before((testDone) => {
+            script.before(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.test('value of a', (testDone) => {
+            script.test('value of a', () => {
 
                 expect(a).to.equal(1);
-                testDone();
             });
 
-            script.after((testDone) => {
+            script.after(() => {
 
                 ++a;
-                testDone();
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(a).to.equal(2);
-            expect(notebook.tests).to.have.length(1);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(a).to.equal(2);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('executes beforeEach and afterEach', (done) => {
+    it('executes beforeEach and afterEach', async () => {
 
         let a = 0;
         let b = 0;
         const script = Lab.script({ schedule: false });
         script.experiment('test', () => {
 
-            script.before((testDone) => {
+            script.before(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.beforeEach((testDone) => {
+            script.beforeEach(() => {
 
                 ++b;
-                testDone();
             });
 
-            script.test('value of a', (testDone) => {
+            script.test('value of a', () => {
 
                 expect(a).to.equal(1);
                 expect(b).to.equal(1);
-                testDone();
             });
 
-            script.test('value of b', (testDone) => {
+            script.test('value of b', () => {
 
                 expect(a).to.equal(1);
                 expect(b).to.equal(3);
-                testDone();
             });
 
-            script.after((testDone) => {
+            script.after(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.afterEach((testDone) => {
+            script.afterEach(() => {
 
                 ++b;
-                testDone();
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(a).to.equal(2);
-            expect(b).to.equal(4);
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(a).to.equal(2);
+        expect(b).to.equal(4);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('executes multiple pre/post processors', (done) => {
+    it('executes multiple pre/post processors', async () => {
 
         let a = 0;
         let b = 0;
         const script = Lab.script({ schedule: false });
         script.experiment('test', () => {
 
-            script.before((testDone) => {
+            script.before(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.before((testDone) => {
+            script.before(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.beforeEach((testDone) => {
+            script.beforeEach(() => {
 
                 ++b;
-                testDone();
             });
 
-            script.beforeEach((testDone) => {
+            script.beforeEach(() => {
 
                 ++b;
-                testDone();
             });
 
-            script.test('value of a', (testDone) => {
+            script.test('value of a', () => {
 
                 expect(a).to.equal(2);
                 expect(b).to.equal(2);
-                testDone();
             });
 
-            script.test('value of b', (testDone) => {
+            script.test('value of b', () => {
 
                 expect(a).to.equal(2);
                 expect(b).to.equal(6);
-                testDone();
             });
 
-            script.after((testDone) => {
+            script.after(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.after((testDone) => {
+            script.after(() => {
 
                 ++a;
-                testDone();
             });
 
-            script.afterEach((testDone) => {
+            script.afterEach(() => {
 
                 ++b;
-                testDone();
             });
 
-            script.afterEach((testDone) => {
+            script.afterEach(() => {
 
                 ++b;
-                testDone();
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(a).to.equal(4);
-            expect(b).to.equal(8);
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(a).to.equal(4);
+        expect(b).to.equal(8);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('reports errors', (done) => {
+    it('reports errors', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test', () => {
 
-            script.test('works', (testDone) => {
+            script.test('works', () => {
 
                 expect(0).to.equal(1);
-                testDone();
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(1);
-            expect(notebook.failures).to.equal(1);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(1);
     });
 
-    it('multiple experiments', (done) => {
+    it('multiple experiments', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].id).to.equal(1);
-            expect(notebook.tests[1].id).to.equal(2);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].id).to.equal(1);
+        expect(notebook.tests[1].id).to.equal(2);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('nested experiments', (done) => {
+    it('nested experiments', async (done) => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('a', (testDone) => {
-
-                testDone();
-            });
+            script.test('a', () => {});
 
             script.experiment('test2', () => {
 
-                script.test('b', (testDone) => {
-
-                    testDone();
-                });
+                script.test('b', () => {});
             });
 
-            script.test('c', (testDone) => {
-
-                testDone();
-            });
+            script.test('c', () => {});
 
             script.experiment('test3', () => {
 
-                script.test('d', (testDone) => {
-
-                    testDone();
-                });
+                script.test('d', () => {});
             });
 
-            script.test('e', (testDone) => {
-
-                testDone();
-            });
+            script.test('e', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(5);
-            expect(notebook.tests[0].id).to.equal(1);
-            expect(notebook.tests[1].id).to.equal(2);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(5);
+        expect(notebook.tests[0].id).to.equal(1);
+        expect(notebook.tests[1].id).to.equal(2);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('skips experiment', (done) => {
+    it('skips experiment', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', { skip: true }, () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('skips experiment using helper (2 args)', (done) => {
+    it('skips experiment using helper (2 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment.skip('test2', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('skips experiment using helper (3 args)', (done) => {
+    it('skips experiment using helper (3 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment.skip('test2', {}, () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one experiment (only first)', (done) => {
+    it('runs only one experiment (only first)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', { only: true }, () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one experiment (only not first)', (done) => {
+    it('runs only one experiment (only not first)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', { only: true }, () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist();
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.equal(true);
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one experiment using helper (2 args)', (done) => {
+    it('runs only one experiment using helper (2 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment.only('test2', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist();
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.equal(true);
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one experiment using helper (3 args)', (done) => {
+    it('runs only one experiment using helper (3 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment.only('test2', {}, () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist();
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.equal(true);
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('skips test', (done) => {
+    it('skips test', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', () => {
 
-            script.test('works', { skip: true }, (testDone) => {
-
-                testDone();
-            });
+            script.test('works', { skip: true }, () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('skips test using helper (2 args)', (done) => {
+    it('skips test using helper (2 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', () => {
 
-            script.test.skip('works', (testDone) => {
-
-                testDone();
-            });
+            script.test.skip('works', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('skips test using helper (3 args)', (done) => {
+    it('skips test using helper (3 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('works', (testDone) => {
-
-                testDone();
-            });
+            script.test('works', () => {});
         });
 
         script.experiment('test2', () => {
 
-            script.test.skip('works', {}, (testDone) => {
-
-                testDone();
-            });
+            script.test.skip('works', {}, () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one test (only first)', (done) => {
+    it('runs only one test (only first)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('a', { only: true }, (testDone) => {
+            script.test('a', { only: true }, () => {});
 
-                testDone();
-            });
-
-            script.test('b', (testDone) => {
-
-                testDone();
-            });
+            script.test('b', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.not.exist();
-            expect(notebook.tests[1].skipped).to.equal(true);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.equal(true);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one test (only not first)', (done) => {
+    it('runs only one test (only not first)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('a', (testDone) => {
+            script.test('a', () => {});
 
-                testDone();
-            });
-
-            script.test('b', { only: true }, (testDone) => {
-
-                testDone();
-            });
+            script.test('b', { only: true }, () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist();
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.equal(true);
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one test using helper (2 args)', (done) => {
+    it('runs only one test using helper (2 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('a', (testDone) => {
+            script.test('a', () => {});
 
-                testDone();
-            });
-
-            script.test.only('b', (testDone) => {
-
-                testDone();
-            });
+            script.test.only('b', () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist();
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.equal(true);
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('runs only one test using helper (3 args)', (done) => {
+    it('runs only one test using helper (3 args)', async () => {
 
         const script = Lab.script({ schedule: false });
         script.experiment('test1', () => {
 
-            script.test('a', (testDone) => {
+            script.test('a', () => {});
 
-                testDone();
-            });
-
-            script.test.only('b', {}, (testDone) => {
-
-                testDone();
-            });
+            script.test.only('b', {}, () => {});
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(2);
-            expect(notebook.tests[0].skipped).to.equal(true);
-            expect(notebook.tests[1].skipped).to.not.exist();
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.equal(true);
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('schedules automatic execution', { parallel: false }, (done) => {
+    it('schedules automatic execution of scripts', async () => {
 
+        let executed = 0;
         const script = Lab.script({ output: false });
         script.experiment('test', () => {
 
-            script.test('works', (testDone) => {
+            script.test('works', () => {
 
-                testDone();
+                return new Promise((resolve) => {
+
+                    process.nextTick(() => {
+
+                        ++executed;
+                        resolve();
+                    });
+                });
             });
         });
 
-        const orig = process.exit;
-        process.exit = function (code) {
+        return new Promise((resolve) => {
 
-            process.exit = orig;
-            expect(code).to.equal(0);
-            done();
-        };
+            setTimeout(() => {
+
+                expect(executed).to.equal(1);
+                resolve();
+            }, 50);
+        });
     });
 
-    it('should not throw on tests without a function', (done) => {
+    it('should not throw on tests without a function', () => {
 
         const script = Lab.script({ schedule: false });
 
@@ -801,10 +591,9 @@ describe('Lab', () => {
 
             script.test('a');
         }).not.to.throw();
-        done();
     });
 
-    it('should not throw on tests with a function without arguments', (done) => {
+    it('should not throw on tests with a function without arguments', () => {
 
         const script = Lab.script({ schedule: false });
 
@@ -812,12 +601,11 @@ describe('Lab', () => {
 
             script.test('a', () => {});
         }).not.to.throw();
-        done();
     });
 
     ['before', 'beforeEach', 'after', 'afterEach'].forEach((fnName) => {
 
-        it(`should throw on "${fnName}" without a function`, (done) => {
+        it(`should throw on "${fnName}" without a function`, () => {
 
             const script = Lab.script({ schedule: false });
 
@@ -825,10 +613,9 @@ describe('Lab', () => {
 
                 script[fnName]();
             }).to.throw(`${fnName} in "script" requires a function argument`);
-            done();
         });
 
-        it(`should not throw on "${fnName}" with a function without arguments`, (done) => {
+        it(`should not throw on "${fnName}" with a function without arguments`, () => {
 
             const script = Lab.script({ schedule: false });
 
@@ -836,43 +623,36 @@ describe('Lab', () => {
 
                 script[fnName](() => {});
             }).not.to.throw();
-            done();
         });
     });
 
-    it('code is the default assertion library', (done) => {
+    it('code is the default assertion library', async () => {
 
         const script = Lab.script({ schedule: false });
 
         script.experiment('experiment', () => {
 
-            script.test('test', { plan: 1 }, (testDone) => {
+            script.test('test', { plan: 1 }, () => {
 
-                Lab.expect(testDone).to.exist();
-                testDone();
+                Lab.expect(1 + 1).to.equal(2);
             });
         });
 
-        Lab.execute(script, null, null, (err, notebook) => {
-
-            expect(err).to.not.exist();
-            expect(notebook.tests).to.have.length(1);
-            expect(notebook.tests[0].assertions).to.equal(1);
-            expect(notebook.failures).to.equal(0);
-            done();
-        });
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.tests[0].assertions).to.equal(1);
+        expect(notebook.failures).to.equal(0);
     });
 
-    it('exposes code on the script', (done) => {
+    it('exposes code on the script', () => {
 
         const script = Lab.script({ schedule: false });
 
         expect(script.expect).to.be.a.function();
         expect(script.fail).to.be.a.function();
-        done();
     });
 
-    it('does not expose code on the script if assert false', (done) => {
+    it('does not expose code on the script if assert false', () => {
 
         const assertions = Lab.assertions;
         Lab.assertions = null;
@@ -880,6 +660,5 @@ describe('Lab', () => {
         Lab.assertions = assertions;
         expect(script.expect).not.to.exist();
         expect(script.fail).not.to.exist();
-        done();
     });
 });

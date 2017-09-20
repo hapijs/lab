@@ -19,149 +19,121 @@ const expect = Code.expect;
 
 describe('Linters - eslint', () => {
 
-    it('should lint files in a folder', (done) => {
+    it('should lint files in a folder', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
-        Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint' });
 
-            expect(err).to.not.exist();
-            expect(result).to.include('lint');
+        expect(result).to.include('lint');
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
 
-            const checkedFile = eslintResults[0];
-            expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
-            expect(checkedFile.errors).to.include([
-                { line: 13, severity: 'ERROR', message: 'semi - Missing semicolon.' },
-                { line: 14, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
-            ]);
-
-            done();
-        });
+        const checkedFile = eslintResults[0];
+        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
+        expect(checkedFile.errors).to.include([
+            { line: 13, severity: 'ERROR', message: 'semi - Missing semicolon.' },
+            { line: 14, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+        ]);
     });
 
-    it('should default to eslint', (done) => {
+    it('should default to eslint', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
-        Linters.lint({ lintingPath: path }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path });
 
-            expect(err).to.not.exist();
-            expect(result).to.include('lint');
+        expect(result).to.include('lint');
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
 
-            const checkedFile = eslintResults[0];
-            expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
-            expect(checkedFile.errors).to.include([
-                { line: 13, severity: 'ERROR', message: 'semi - Missing semicolon.' },
-                { line: 14, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
-            ]);
-
-            done();
-        });
+        const checkedFile = eslintResults[0];
+        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
+        expect(checkedFile.errors).to.include([
+            { line: 13, severity: 'ERROR', message: 'semi - Missing semicolon.' },
+            { line: 14, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+        ]);
     });
 
-    it('should use local configuration files', (done) => {
+    it('should use local configuration files', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'with_config');
-        Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint' });
 
-            expect(err).to.not.exist();
-            expect(result).to.include('lint');
+        expect(result).to.include('lint');
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
 
-            const checkedFile = eslintResults[0];
-            expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
-            expect(checkedFile.errors).to.include([
-                { line: 14, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }]);
-            expect(checkedFile.errors).to.not.include({ line: 8, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });
-            done();
-        });
+        const checkedFile = eslintResults[0];
+        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
+        expect(checkedFile.errors).to.include([
+            { line: 14, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }]);
+        expect(checkedFile.errors).to.not.include({ line: 8, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });
     });
 
-    it('displays success message if no issues found', (done) => {
+    it('displays success message if no issues found', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'clean');
-        Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint' });
 
-            expect(err).to.not.exist();
-            expect(result.lint).to.exist();
+        expect(result.lint).to.exist();
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
 
-            const checkedFile = eslintResults[0];
-            expect(checkedFile.errors.length).to.equal(0);
-
-            done();
-        });
+        const checkedFile = eslintResults[0];
+        expect(checkedFile.errors.length).to.equal(0);
     });
 
-    it('allows err to be shadowed', (done) => {
+    it('allows err to be shadowed', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'shadow');
-        Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint' });
 
-            expect(err).to.not.exist();
-            expect(result.lint).to.exist();
+        expect(result.lint).to.exist();
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
 
-            const checkedFile = eslintResults[0];
-            expect(checkedFile.errors.length).to.equal(0);
-
-            done();
-        });
+        const checkedFile = eslintResults[0];
+        expect(checkedFile.errors.length).to.equal(0);
     });
 
-    it('doesn\'t allow res to be shadowed', (done) => {
+    it('doesn\'t allow res to be shadowed', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'shadow-res');
-        Linters.lint({ lintingPath: path, linter: 'eslint' }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint' });
 
-            expect(err).to.not.exist();
-            expect(result.lint).to.exist();
+        expect(result.lint).to.exist();
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
 
-            const checkedFile = eslintResults[0];
-            expect(checkedFile.errors.length).to.equal(1);
-
-            done();
-        });
+        const checkedFile = eslintResults[0];
+        expect(checkedFile.errors.length).to.equal(1);
     });
 
-    it('should pass options and not find any files', (done) => {
+    it('should pass options and not find any files', async () => {
 
         const lintOptions = JSON.stringify({ extensions: ['.jsx'] });
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
-        Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': lintOptions }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': lintOptions });
 
-            expect(err).to.not.exist();
-            expect(result).to.include('lint');
+        expect(result).to.include('lint');
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(0);
-
-            done();
-        });
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(0);
     });
 
-    it('should fix lint rules when --lint-fix used', (done, onCleanup) => {
+    it('should fix lint rules when --lint-fix used', async (flags) => {
 
         const originalWriteFileSync = Fs.writeFileSync;
 
-        onCleanup((next) => {
+        flags.onCleanup = () => {
 
             Fs.writeFileSync = originalWriteFileSync;
-            next();
-        });
+        };
 
         Fs.writeFileSync = (path, output) => {
 
@@ -170,53 +142,45 @@ describe('Linters - eslint', () => {
         };
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'fix');
-        Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-fix': true }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-fix': true });
 
-            expect(err).to.not.exist();
-            expect(result).to.include('lint');
+        expect(result).to.include('lint');
 
-            const eslintResults = result.lint;
-            expect(eslintResults).to.have.length(1);
-            expect(eslintResults[0]).to.include({
-                totalErrors: 0,
-                totalWarnings: 0
-            });
-            done();
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
+        expect(eslintResults[0]).to.include({
+            totalErrors: 0,
+            totalWarnings: 0
         });
     });
 
-    it('should error on malformed lint-options', (done) => {
+    it('should error on malformed lint-options', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'fix');
 
-        const f = () => {
-
-            Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': '}' }, () => {});
-        };
-
-        expect(f).to.throw('lint-options could not be parsed');
-        done();
+        try {
+            await Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': '}' });
+        }
+        catch (ex) {
+            expect(ex.message).to.equal('lint-options could not be parsed');
+        }
     });
 });
 
 describe('Linters - custom', () => {
 
-    it('can run custom linter', (done) => {
+    it('can run custom linter', async () => {
 
         const path = Path.join(__dirname, 'lint');
-        Linters.lint({ lintingPath: path, linter: Path.join(__dirname, 'lint', 'custom') }, (err, result) => {
+        const result = await Linters.lint({ lintingPath: path, linter: Path.join(__dirname, 'lint', 'custom') });
 
-            expect(err).to.not.exist();
-            expect(result).to.include('lint');
+        expect(result).to.include('lint');
 
-            const results = result.lint;
-            expect(results).to.have.length(1);
+        const results = result.lint;
+        expect(results).to.have.length(1);
 
-            const checkedFile = results[0];
-            expect(checkedFile.filename).to.equal('custom');
-            expect(checkedFile.errors.length).to.equal(1);
-
-            done();
-        });
+        const checkedFile = results[0];
+        expect(checkedFile.filename).to.equal('custom');
+        expect(checkedFile.errors.length).to.equal(1);
     });
 });

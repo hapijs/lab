@@ -21,15 +21,13 @@ const expect = Code.expect;
 
 describe('Test CLI 3', () => {
 
-    it('supports negative numbers', (done) => {
+    it('supports negative numbers', () => {
 
         expect(1 - 2).to.equal(-1);
-        done();
     });
 
-    it('supports infinity', (done) => {
+    it('supports infinity', () => {
 
         expect(Infinity + 1).to.equal(Infinity);
-        done();
     });
 });

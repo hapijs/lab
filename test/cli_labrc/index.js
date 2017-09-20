@@ -21,9 +21,8 @@ const expect = Code.expect;
 
 describe('Test .labrc.js', () => {
 
-    it('sets environment from .labrc.js', (done) => {
+    it('sets environment from .labrc.js', () => {
 
         expect(process.env.NODE_ENV).to.equal('labrc');
-        done();
     });
 });

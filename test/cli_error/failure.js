@@ -21,8 +21,30 @@ const expect = Code.expect;
 
 describe('Test CLI', () => {
 
-    it('handles failure', (done) => {
+    it('handles return rejection', () => {
 
-        done(new Error('fail'));
+        return Promise.reject(new Error('fail'));
+    });
+
+    it('handles return rejection in next tick', () => {
+
+        return new Promise(() => {
+
+            setImmediate(() => {
+
+                Promise.reject(new Error('rejection'));
+            });
+        });
+    });
+
+    it('handles throw in next tick', () => {
+
+        return new Promise(() => {
+
+            setImmediate(() => {
+
+                throw new Error('throw');
+            });
+        });
     });
 });

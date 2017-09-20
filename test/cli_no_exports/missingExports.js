@@ -21,9 +21,8 @@ const expect = Code.expect;
 
 describe('Test CLI', () => {
 
-    it('adds two numbers together', (done) => {
+    it('adds two numbers together', () => {
 
         expect(1 + 1).to.equal(2);
-        done();
     });
 });

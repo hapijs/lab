@@ -21,8 +21,7 @@ const expect = Code.expect;
 
 describe('Test Promises', () => {
 
-    it('handles a Promise rejection', ( done ) => {
-        Promise.reject(new Error('Rejection!'));
-        done();
+    it('handles a Promise rejection', () => {
+        return Promise.reject(new Error('Rejection!'));
     });
 });

@@ -26,47 +26,43 @@ describe('Coverage', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
 
-    it('computes sloc without comments', (done) => {
+    it('computes sloc without comments', () => {
 
         const Test = require('./coverage/sloc');
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sloc') });
         expect(cov.percent).to.equal(100);
-        done();
     });
 
-    it('computes sloc on script that has no comments', (done) => {
+    it('computes sloc on script that has no comments', () => {
 
         const Test = require('./coverage/nocomment');
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/nocomment') });
         expect(cov.percent).to.equal(100);
-        done();
     });
 
-    it('instruments and measures coverage', (done) => {
+    it('instruments and measures coverage', () => {
 
         const Test = require('./coverage/basic');
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/basic') });
         expect(cov.percent).to.equal(100);
-        done();
     });
 
-    it('measures coverage on an empty return statement', (done) => {
+    it('measures coverage on an empty return statement', () => {
 
         const Test = require('./coverage/return');
         Test.method();
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/return') });
         expect(cov.percent).to.equal(100);
-        done();
     });
 
-    it('identifies lines with partial coverage', (done) => {
+    it('identifies lines with partial coverage', () => {
 
         const Test = require('./coverage/partial');
         Test.method(1, 2, 3);
@@ -76,20 +72,18 @@ describe('Coverage', () => {
         expect(cov.sloc).to.equal(49);
         expect(cov.misses).to.equal(19);
         expect(cov.hits).to.equal(30);
-        done();
     });
 
-    it('measures coverage a file with test in the name', (done) => {
+    it('measures coverage a file with test in the name', () => {
 
         const Test = require('./coverage/test-folder/test-name.js');
         Test.method();
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules'] });
         expect(cov.percent).to.equal(100);
-        done();
     });
 
-    it('identifies lines with partial coverage when having external sourcemap', (done) => {
+    it('identifies lines with partial coverage when having external sourcemap', () => {
 
         const Test = require('./coverage/sourcemaps-external');
         Test.method(false);
@@ -114,11 +108,9 @@ describe('Coverage', () => {
             { filename: 'while.js', lineNumber: '4', originalLineNumber: 13 },
             { filename: 'while.js', lineNumber: '5', originalLineNumber: 14 }
         ]);
-
-        done();
     });
 
-    it('identifies lines with partial coverage when having inline sourcemap', (done) => {
+    it('identifies lines with partial coverage when having inline sourcemap', () => {
 
         const Test = require('./coverage/sourcemaps-inline');
         Test.method(false);
@@ -159,11 +151,9 @@ describe('Coverage', () => {
         expect(missedChunks).to.include([
             { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
         ]);
-
-        done();
     });
 
-    it('bypasses marked code', (done) => {
+    it('bypasses marked code', () => {
 
         const Test = require('./coverage/bypass');
         Test.method(1, 2, 3);
@@ -173,10 +163,9 @@ describe('Coverage', () => {
         expect(cov.sloc).to.equal(12);
         expect(cov.misses).to.equal(0);
         expect(cov.hits).to.equal(12);
-        done();
     });
 
-    it('bypasses marked code and reports misses correctly', (done) => {
+    it('bypasses marked code and reports misses correctly', () => {
 
         const Test = require('./coverage/bypass-misses');
         Test.method(1);
@@ -186,30 +175,27 @@ describe('Coverage', () => {
         expect(cov.sloc).to.equal(13);
         expect(cov.misses).to.equal(1);
         expect(cov.hits).to.equal(12);
-        done();
     });
 
-    it('ignores non-matching files', (done) => {
+    it('ignores non-matching files', () => {
 
         require('./coverage/exclude/ignore');
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/exclude/ignore') });
         expect(Math.floor(cov.percent)).to.equal(0);
         expect(cov.files).to.have.length(0);
-        done();
     });
 
-    it('measures missing while statement coverage', (done) => {
+    it('measures missing while statement coverage', () => {
 
         const Test = require('./coverage/while');
         Test.method(false);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/while') });
         expect(cov.percent).to.be.lessThan(100);
-        done();
     });
 
-    it('measures when errors are thrown', (done) => {
+    it('measures when errors are thrown', () => {
 
         const Test = require('./coverage/throws');
 
@@ -223,26 +209,23 @@ describe('Coverage', () => {
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/throws') });
         expect(cov.percent).to.equal(100);
-        done();
     });
 
-    it('retains original value of conditional result', (done) => {
+    it('retains original value of conditional result', () => {
 
         const Test = require('./coverage/conditional');
         const value = { a: 1 };
         expect(Test.method(value)).to.equal(value);
-        done();
     });
 
-    it('retains original value of conditional result with comma operator', (done) => {
+    it('retains original value of conditional result with comma operator', () => {
 
         const Test = require('./coverage/conditional2');
         const value = 4711;
         expect(Test.method(value)).to.equal(value);
-        done();
     });
 
-    it('should not change use strict instructions', (done) => {
+    it('should not change use strict instructions', () => {
 
         const Test = require('./coverage/use-strict.js');
         expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
@@ -251,11 +234,9 @@ describe('Coverage', () => {
         expect(Test.singleLine.toString()).to.contain('"use strict"; global.__$$labCov._line(\'' + testFile + '\',19);return value;');
 
         expect(Test.shouldFail).to.throw('unknownvar is not defined');
-
-        done();
     });
 
-    it('should work with loop labels', (done) => {
+    it('should work with loop labels', () => {
 
         const Test = require('./coverage/loop-labels.js');
         expect(Test.method()).to.equal([1, 0]);
@@ -275,11 +256,9 @@ describe('Coverage', () => {
         });
 
         expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true', column: 22 }]);
-
-        done();
     });
 
-    it('should measure missing coverage on single-line functions correctly', (done) => {
+    it('should measure missing coverage on single-line functions correctly', () => {
 
         const Test = require('./coverage/single-line-functions');
         const results = [];
@@ -296,10 +275,9 @@ describe('Coverage', () => {
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(results).to.equal([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 10, 5]);
         expect(missedLines).to.equal(['12', '15', '21', '27', '30', '33', '39', '46', '50', '53', '56']);
-        done();
     });
 
-    it('should measure missing coverage on trailing function declarations correctly', (done) => {
+    it('should measure missing coverage on trailing function declarations correctly', () => {
 
         const Test = require('./coverage/trailing-function-declarations');
         const result = Test.method(3, 4);
@@ -309,10 +287,9 @@ describe('Coverage', () => {
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(result).to.equal(7);
         expect(missedLines).to.equal(['19', '22']);
-        done();
     });
 
-    it('should measure coverage on conditional value', (done) => {
+    it('should measure coverage on conditional value', () => {
 
         const Test = require('./coverage/conditional-value');
         expect(Test.method(false)).to.equal(false);
@@ -324,12 +301,11 @@ describe('Coverage', () => {
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(missedLines).to.be.empty();
-        done();
     });
 
     describe('#analyze', () => {
 
-        it('sorts file paths in report', (done) => {
+        it('sorts file paths in report', () => {
 
             const files = global.__$$labCov.files;
             const paths = ['/a/b', '/a/b/c', '/a/c/b', '/a/c', '/a/b/c', '/a/b/a'];
@@ -345,13 +321,12 @@ describe('Coverage', () => {
             });
 
             expect(sorted).to.equal(['/a/b', '/a/c', '/a/b/a', '/a/b/c', '/a/c/b']);
-            done();
         });
     });
 
     describe('Clear require cache', () => {
 
-        it('does not reset file coverage', (done) => {
+        it('does not reset file coverage', () => {
 
             const cacheBackup = require.cache; // backup require cache
             const filename = Path.resolve(__dirname, './coverage/basic.js');
@@ -363,7 +338,6 @@ describe('Coverage', () => {
 
             const fileCovAfter = global.__$$labCov.files[filename];
             expect(fileCovAfter).to.equal(fileCovBefore);
-            done();
         });
     });
 });

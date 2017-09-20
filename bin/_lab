@@ -2,26 +2,48 @@
 
 'use strict';
 
-if (process.env.ROOT_SPAWN) {
-    require('../test_runner/cli').run();
-    return;
-}
-
+const Util = require('util');
 const Cpr = require('cpr');
 const Rimraf = require('rimraf');
 
-Cpr('./lib', './test_runner', { deleteFirst: true, confirm: true }, (err) => {
 
-    if (err) {
-        console.error(err);
+if (process.env.ROOT_SPAWN) {
+    (async () => {
+        try {
+        const { code } = await require('../test_runner/cli').run();
+        process.exit(code);
+        }
+        catch (ex) {
+            console.error(ex);
+            process.exit(1);
+        }
+    })();
+    return;
+}
+
+
+const main = async function () {
+
+    const cpr = Util.promisify(Cpr);
+
+    try {
+        await cpr('./lib', './test_runner', { deleteFirst: true, confirm: true });
+        process.env.ROOT_SPAWN = true;
+        const { code } = await require('../test_runner/cli').run();
+        process.exit(code);
+    }
+    catch (ex) {
+        console.error(ex);
         process.exit(1);
     }
+};
 
-    process.env.ROOT_SPAWN = true;
-    require('../test_runner/cli').run();
-});
+main();
 
-process.on('exit', (code) => {
 
-    Rimraf.sync('./test_runner');
+
+process.on('exit', async () => {
+
+    const rimraf = Util.promisify(Rimraf);
+    await rimraf('./test_runner');
 });

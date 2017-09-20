@@ -22,7 +22,7 @@ const expect = Code.expect;
 
 describe('Utils', () => {
 
-    it('merges options', (done) => {
+    it('merges options', () => {
 
         const parent = {
             a: 1,
@@ -36,10 +36,9 @@ describe('Utils', () => {
 
         const merged = Utils.mergeOptions(parent, child);
         expect(merged).to.equal({ a: 1, b: 3, c: 4 });
-        done();
     });
 
-    it('merges options (no child)', (done) => {
+    it('merges options (no child)', () => {
 
         const parent = {
             a: 1,
@@ -48,10 +47,9 @@ describe('Utils', () => {
 
         const merged = Utils.mergeOptions(parent, null);
         expect(merged).to.equal({ a: 1, b: 2 });
-        done();
     });
 
-    it('merges options (no parent)', (done) => {
+    it('merges options (no parent)', () => {
 
         const child = {
             b: 3,
@@ -60,10 +58,9 @@ describe('Utils', () => {
 
         const merged = Utils.mergeOptions(null, child);
         expect(merged).to.equal({ b: 3, c: 4 });
-        done();
     });
 
-    it('ignores parent options', (done) => {
+    it('ignores parent options', () => {
 
         const parent = {
             a: 1,
@@ -79,10 +76,9 @@ describe('Utils', () => {
 
         const merged = Utils.mergeOptions(parent, child, ['e', 'f']);
         expect(merged).to.equal({ a: 1, b: 3, c: 4 });
-        done();
     });
 
-    it('copy child keys onto parent', (done) => {
+    it('copy child keys onto parent', () => {
 
         const parent = {
             a: 1,
@@ -98,6 +94,5 @@ describe('Utils', () => {
 
         Utils.applyOptions(parent, child);
         expect(parent).to.equal({ a: 1, b: 3, c: 4, e: 5, f: 6 });
-        done();
     });
 });

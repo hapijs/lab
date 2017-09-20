@@ -36,13 +36,12 @@ describe('Leaks', () => {
 
     let testedKeys = [];
 
-    beforeEach((done) => {
+    beforeEach(() => {
 
         testedKeys = [];
-        done();
     });
 
-    afterEach((done) => {
+    afterEach(() => {
 
         testedKeys.forEach((key) => {
             // Only delete globals that were manually set, and avoid deleting pre-existing globals
@@ -50,47 +49,42 @@ describe('Leaks', () => {
                 delete global[testedKeys];
             }
         });
-        done();
     });
 
-    it('identifies global leaks', (done) => {
+    it('identifies global leaks', () => {
 
         testedKeys.push('abc');
         global.abc = 1;
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(1);
-        done();
     });
 
-    it('identifies global leaks for non-enumerable properties', (done) => {
+    it('identifies global leaks for non-enumerable properties', () => {
 
         testedKeys.push('abc');
         Object.defineProperty(global, 'abc', { enumerable: false, configurable: true, value: 1 });
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(1);
-        done();
     });
 
-    it('verifies no leaks', (done) => {
+    it('verifies no leaks', () => {
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
-        done();
     });
 
-    it('ignores DTrace globals', (done) => {
+    it('ignores DTrace globals', () => {
 
         testedKeys.push('DTRACE_HTTP_SERVER_RESPONSE');
         global.DTRACE_HTTP_SERVER_RESPONSE = global.DTRACE_HTTP_SERVER_RESPONSE || 1;
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
-        done();
     });
 
-    it('works with missing DTrace globals', (done) => {
+    it('works with missing DTrace globals', () => {
 
         delete global.DTRACE_HTTP_SERVER_RESPONSE;
         delete global.DTRACE_HTTP_CLIENT_REQUEST;
@@ -104,10 +98,9 @@ describe('Leaks', () => {
         const leaks = Lab.leaks.detect();
 
         expect(leaks.length).to.equal(0);
-        done();
     });
 
-    it('ignores Counter globals', (done) => {
+    it('ignores Counter globals', () => {
 
         const counterGlobals = internals.counterGlobals;
         testedKeys = internals.counterGlobals;
@@ -119,10 +112,9 @@ describe('Leaks', () => {
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
-        done();
     });
 
-    it('handles case where Counter globals do not exist', (done) => {
+    it('handles case where Counter globals do not exist', () => {
 
         const counterGlobals = internals.counterGlobals;
         const originalValues = {};
@@ -139,20 +131,18 @@ describe('Leaks', () => {
         for (const counterGlobal in originalValues) {
             global[counterGlobal] = originalValues[counterGlobal];
         }
-        done();
     });
 
-    it('ignores WebAssembly global', (done) => {
+    it('ignores WebAssembly global', () => {
 
         testedKeys.push('WebAssembly');
         global.WebAssembly = global.WebAssembly || 1;
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
-        done();
     });
 
-    it('ignores Harmony globals', (done) => {
+    it('ignores Harmony globals', () => {
 
         const harmonyGlobals = internals.harmonyGlobals;
         testedKeys = internals.harmonyGlobals;
@@ -164,10 +154,9 @@ describe('Leaks', () => {
 
         const leaks = Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
-        done();
     });
 
-    it('handles case where Harmony globals do not exist', (done) => {
+    it('handles case where Harmony globals do not exist', () => {
 
         const harmonyGlobals = internals.harmonyGlobals;
         const originalValues = {};
@@ -184,15 +173,13 @@ describe('Leaks', () => {
         for (const harmonyGlobal in originalValues) {
             global[harmonyGlobal] = originalValues[harmonyGlobal];
         }
-        done();
     });
 
-    it('identifies custom globals', (done) => {
+    it('identifies custom globals', () => {
 
         testedKeys.push('abc');
         global.abc = 1;
         const leaks = Lab.leaks.detect(['abc']);
         expect(leaks.length).to.equal(0);
-        done();
     });
 });

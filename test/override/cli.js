@@ -21,13 +21,12 @@ const expect = Code.expect;
 
 describe('Test CLI Not Only', () => {
 
-    it('should not run', (done) => {
+    it('should not run', () => {
 
         throw new Error();
     });
 
-    it('should run', (done) => {
+    it('should run', () => {
 
-        done();
     });
 });
