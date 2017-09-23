@@ -522,6 +522,33 @@ describe('Runner', () => {
         });
     });
 
+    it('handles large number of skipped tests', (done) => {
+
+        const script = Lab.script();
+
+        script.experiment('test', () => {
+
+            const test = (testDone) => testDone();
+
+            for (let i = 0; i < 2000; ++i) {
+                script.test('' + i, test);
+            }
+        });
+
+        const execute = () => {
+
+            Lab.execute(script, { ids: [1] }, null, (err, notebook) => {
+
+                expect(err).not.to.exist();
+                expect(notebook.tests).to.have.length(1);
+                expect(notebook.failures).to.equal(0);
+                done();
+            });
+        };
+
+        execute();
+    });
+
     it('filters on grep', (done) => {
 
         const script = Lab.script();
