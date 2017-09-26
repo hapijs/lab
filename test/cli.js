@@ -112,6 +112,21 @@ describe('CLI', () => {
         }, Path.join(__dirname, 'cli_labrc'));
     });
 
+    it('exits with code 1 when the test path does not exist', (done) => {
+
+        RunCli(['test/not_there'], (error, result) => {
+
+            if (error) {
+                done(error);
+            }
+
+            expect(result.code).to.equal(1);
+            expect(result.output).to.contain('Could not find');
+            expect(result.output).to.contain('test/not_there');
+            done();
+        });
+    });
+
     it('exits with code 1 after function throws', (done) => {
 
         RunCli(['test/cli_throws/throws.js'], (error, result) => {
