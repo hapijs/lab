@@ -10,8 +10,8 @@ const Rimraf = require('rimraf');
 if (process.env.ROOT_SPAWN) {
     (async () => {
         try {
-        const { code } = await require('../test_runner/cli').run();
-        process.exit(code);
+            const { code } = await require('../test_runner/cli').run();
+            process.exit(code);
         }
         catch (ex) {
             console.error(ex);

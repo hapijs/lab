@@ -626,39 +626,13 @@ describe('Lab', () => {
         });
     });
 
-    it('code is the default assertion library', async () => {
+    it('exposes assertions on the script', () => {
 
-        const script = Lab.script({ schedule: false });
-
-        script.experiment('experiment', () => {
-
-            script.test('test', { plan: 1 }, () => {
-
-                Lab.expect(1 + 1).to.equal(2);
-            });
-        });
-
-        const notebook = await Lab.execute(script, null, null);
-        expect(notebook.tests).to.have.length(1);
-        expect(notebook.tests[0].assertions).to.equal(1);
-        expect(notebook.failures).to.equal(0);
-    });
-
-    it('exposes code on the script', () => {
+        Lab.assertions = Code;
 
         const script = Lab.script({ schedule: false });
 
         expect(script.expect).to.be.a.function();
         expect(script.fail).to.be.a.function();
-    });
-
-    it('does not expose code on the script if assert false', () => {
-
-        const assertions = Lab.assertions;
-        Lab.assertions = null;
-        const script = Lab.script({ schedule: false });
-        Lab.assertions = assertions;
-        expect(script.expect).not.to.exist();
-        expect(script.fail).not.to.exist();
     });
 });

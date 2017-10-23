@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "bossy": "3.x.x",
-    "code": "5.1.x",
     "diff": "3.4.x",
     "eslint": "4.8.x",
     "eslint-config-hapi": "10.x.x",
@@ -30,6 +29,7 @@
     "supports-color": "4.4.x"
   },
   "devDependencies": {
+    "code": "5.1.x",
     "cpr": "2.2.x",
     "eslint-plugin-markdown": "1.0.0-beta.6",
     "lab-event-reporter": "1.x.x",

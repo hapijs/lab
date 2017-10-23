@@ -621,15 +621,6 @@ describe('CLI', () => {
         expect(result.output).to.contain('2 tests complete');
     });
 
-    it('disables assertions with --assert false', async () => {
-
-        const result = await RunCli(['test/cli_assert/no-assert.js', '-m', '2000', '-a', 'false']);
-
-        expect(result.errorOutput).to.equal('');
-        expect(result.code).to.equal(0);
-        expect(result.output).to.not.contain('Assertions');
-    });
-
     it('only loads files matching pattern (-P)', async () => {
 
         const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test']);
