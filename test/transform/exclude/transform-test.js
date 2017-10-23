@@ -21,9 +21,8 @@ const expect = Code.expect;
 
 describe('Test a transformed file', () => {
 
-    it('that adds 2 to input', (done) => {
+    it('that adds 2 to input', () => {
 
         expect(Test.method(1)).to.equal(3);
-        done();
     });
 });

@@ -20,19 +20,18 @@ const it = lab.it;
 
 describe('Test CLI domain error debug', () => {
 
-    after((done) => {
+    after(() => {
 
-        done();
     });
 
-    it('throws badly', (done) => {
+    it('throws badly', () => {
 
         setTimeout(() => {
 
             throw new Error('throwing later');
         }, 0);
 
-        done();
+        return Promise.resolve();
     });
 });
 

@@ -8,6 +8,8 @@ const Fs = require('fs');
 const Http = require('http');
 const Os = require('os');
 const Path = require('path');
+const Util = require('util');
+
 const Code = require('code');
 const Pkg = require('../package.json');
 const _Lab = require('../test_runner');
@@ -27,1129 +29,746 @@ const beforeEach = lab.beforeEach;
 const afterEach = lab.afterEach;
 const expect = Code.expect;
 
-
-// Required for --inspect test, which won't succeed on node 4
-
-const NODE_MAJOR = parseInt(process.versions.node.split('.')[0], 10);
+const unlink = Util.promisify(Fs.unlink);
+const writeFile = Util.promisify(Fs.writeFile);
 
 
 describe('CLI', () => {
 
-    it('runs a single test from the command line', (done) => {
+    it('runs a single test from the command line', async () => {
 
-        RunCli(['test/cli/simple.js', '-m', '2000'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('2 tests complete');
-            done();
-        });
+        const result = await RunCli(['test/cli/simple.js', '-m', '2000']);
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
     });
 
-    it('runs multiple tests from the command line', (done) => {
+    it('runs multiple tests from the command line', async () => {
 
-        RunCli(['test/cli/simple.js', 'test/cli/simple2.js', '-m', '2000'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('4 tests complete');
-            done();
-        });
+        const result = await RunCli(['test/cli/simple.js', 'test/cli/simple2.js', '-m', '2000']);
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('4 tests complete');
     });
 
-    it('runs a directory of tests from the command line', (done) => {
+    it('runs a directory of tests from the command line', async () => {
 
-        RunCli(['test/cli', '-m', '2000'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('9 tests complete');
-            done();
-        });
+        const result = await RunCli(['test/cli', '-m', '2000', '-l']);
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('9 tests complete');
     });
 
-    it('runs a directory of tests with async code from the command line', (done) => {
+    it('runs a directory of tests with async code from the command line', async () => {
 
-        RunCli(['test/cli_multi', '-l', '-v'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('2 tests complete');
-            done();
-        });
+        const result = await RunCli(['test/cli_multi', '-l', '-v']);
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
     });
 
-    it('runs a single test and uses .labrc when found', (done) => {
+    it('runs a single test and uses .labrc when found', async () => {
 
-        RunCli([Path.join(__dirname, 'cli_labrc', 'index.js')], (error, result) => {
+        const result = await RunCli([Path.join(__dirname, 'cli_labrc', 'index.js')], Path.join(__dirname, 'cli_labrc'));
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            expect(result.output).to.contain('sets environment from .labrc.js');
-            expect(result.output).to.contain('Coverage: 100');
-            expect(result.output).to.contain('Linting results');
-            expect(result.output).to.not.contain('No global variable leaks detected');
-            done();
-        }, Path.join(__dirname, 'cli_labrc'));
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('sets environment from .labrc.js');
+        expect(result.output).to.contain('Coverage: 100');
+        expect(result.output).to.contain('Linting results');
+        expect(result.output).to.not.contain('No global variable leaks detected');
     });
 
-    it('exits with code 1 when the test path does not exist', (done) => {
+    it('exits with code 1 after function throws', async () => {
 
-        RunCli(['test/not_there'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(1);
-            expect(result.output).to.contain('Could not find');
-            expect(result.output).to.contain('test/not_there');
-            done();
-        });
+        const result = await RunCli(['test/cli_throws/throws.js']);
+        expect(result.code).to.equal(1);
     });
 
-    it('exits with code 1 after function throws', (done) => {
+    it('handles uncaught exceptions', async () => {
 
-        RunCli(['test/cli_throws/throws.js'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(1);
-            done();
-        });
+        const result = await RunCli(['test/cli_error/failure.js']);
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('failure.js:26');
+        expect(result.output).to.contain('failure.js:35');
+        expect(result.output).to.contain('failure.js:46');
+        expect(result.output).to.contain('3 of 3 tests failed');
     });
 
-    it('(--bail) exits with code 1 running a directory of tests after one fails', (done) => {
+    it('(--bail) exits with code 1 running a directory of tests after one fails', async () => {
 
-        RunCli(['test/cli_bail', '-m', '2000', '--bail'], (error, result) => {
+        const result = await RunCli(['test/cli_bail', '-m', '2000', '--bail']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(1);
-            expect(result.output).to.contain('Expected 1 to equal specified value');
-            expect(result.output).to.contain('1 of 2 tests failed');
-            done();
-        });
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('Expected 1 to equal specified value');
+        expect(result.output).to.contain('1 of 2 tests failed');
     });
 
-    it('exits with code 1 when function returns error with multiple reporters', (done) => {
+    it('exits with code 1 when function returns error with multiple reporters', async () => {
 
-        RunCli(['test/cli_failure/failure.js', '-r', 'console', '-r', 'lcov'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(1);
-            done();
-        });
+        const result = await RunCli(['test/cli_failure/failure.js', '-r', 'console', '-r', 'lcov']);
+        expect(result.code).to.equal(1);
     });
 
-    it('runs tests with multiple reporters', (done) => {
+    it('runs tests with multiple reporters', async () => {
 
-        RunCli(['test/cli', '-r', 'console', '-r', 'lcov'], (error, result) => {
+        const result = await RunCli(['test/cli', '-r', 'console', '-r', 'lcov']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('9 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('9 tests complete');
     });
 
-    it('runs tests with a custom reporter starting with .', (done) => {
+    it('runs tests with a custom reporter starting with .', async () => {
 
-        RunCli(['test/cli', '-r', './node_modules/lab-event-reporter/index.js'], (error, result) => {
+        const result = await RunCli(['test/cli', '-r', './node_modules/lab-event-reporter/index.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(0);
-            expect(result.combinedOutput).to.equal('');
-            done();
-        });
+        expect(result.code).to.equal(0);
+        expect(result.combinedOutput).to.equal('');
     });
 
-    it('requires a custom reporter from node_modules', { timeout: 5e3 }, (done) => {
+    it('requires a custom reporter from node_modules', { timeout: 5e3 }, async () => {
 
-        RunCli(['test/cli', '-r', 'lab-event-reporter'], (error, result) => {
+        const result = await RunCli(['test/cli', '-r', 'lab-event-reporter']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(0);
-            expect(result.combinedOutput).to.equal('');
-            done();
-        });
+        expect(result.code).to.equal(0);
+        expect(result.combinedOutput).to.equal('');
     });
 
-    it('displays error message when an unknown reporter is specified', (done) => {
+    it('displays error message when an unknown reporter is specified', async () => {
 
-        RunCli(['test/cli', '-r', 'unknown'], (error, result) => {
+        const result = await RunCli(['test/cli', '-r', 'unknown']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.code).to.equal(1);
-            expect(result.combinedOutput).to.contain('Cannot find module');
-            done();
-        });
+        expect(result.code).to.equal(1);
+        expect(result.combinedOutput).to.contain('Cannot find module');
     });
 
-    it('displays a domain\'s error stack (-D)', (done) => {
+    it('displays a domain\'s error stack (-D)', async () => {
 
-        RunCli(['test/cli_throws/debug.js', '--debug'], (error, result) => {
+        const result = await RunCli(['test/cli_throws/debug.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(1);
-            expect(result.combinedOutput).to.contain('Test script errors:');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.combinedOutput).to.contain('Test script errors:');
     });
 
-    it('debug mode is disabled by default', (done) => {
+    it('shows the help (-h)', async () => {
 
-        RunCli(['test/cli_error/failure.js'], (error, result) => {
+        const result = await RunCli(['-h']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(1);
-            expect(result.combinedOutput).to.not.contain('Test script errors:');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('Usage: lab [options] [path]');
     });
 
-    it('shows the help (-h)', (done) => {
+    it('shows the version (-V)', async () => {
 
-        RunCli(['-h'], (error, result) => {
+        const result = await RunCli(['-V']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('Usage: lab [options] [path]');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain(Pkg.version);
     });
 
-    it('shows the version (-V)', (done) => {
-
-        RunCli(['-V'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain(Pkg.version);
-            done();
-        });
-    });
-
-    it('ignores the list of predefined globals (-I)', (done) => {
+    it('ignores the list of predefined globals (-I)', async () => {
 
         const scriptFile = 'global.foo = 1; global.bar = 2';
 
-        Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
+        await writeFile(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
 
-        RunCli(['test/cli/leaks.js', '-I', 'foo,bar'], (error, result) => {
+        const result = await RunCli(['test/cli/leaks.js', '-I', 'foo,bar']);
 
-            if (error) {
-                done(error);
-            }
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('No global variable leaks detected');
 
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('No global variable leaks detected');
-
-            Fs.unlink('./test/cli/leaks.js', done);
-        });
+        await unlink('./test/cli/leaks.js');
     });
 
-    it('ignores the list of predefined globals when using --ignore', (done) => {
+    it('ignores the list of predefined globals when using --ignore', async () => {
 
         const scriptFile = 'global.foo = 1; global.bar = 2';
 
-        Fs.writeFileSync(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
+        await writeFile(Path.join(__dirname, 'cli', 'leaks.js'), scriptFile);
 
-        RunCli(['test/cli/leaks.js', '--ignore', 'foo,bar'], (error, result) => {
+        const result = await RunCli(['test/cli/leaks.js', '--ignore', 'foo,bar']);
 
-            if (error) {
-                done(error);
-            }
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('No global variable leaks detected');
 
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('No global variable leaks detected');
-
-            Fs.unlink('./test/cli/leaks.js', done);
-        });
+        await unlink('./test/cli/leaks.js');
     });
 
-    it('starts the inspector with --inspect', { skip: (NODE_MAJOR <= 4), timeout: 3000 }, (done) => {
+    it('starts the inspector with --inspect', { timeout: 3000 }, () => {
 
-        const httpServer = new Http.Server(() => {});
-        httpServer.listen(0, () => {
+        return new Promise((resolve, reject) => {
 
-            const port = httpServer.address().port;
-            httpServer.close(() => startInspector(port));
-        });
+            const httpServer = new Http.Server(() => {});
+            httpServer.listen(0, () => {
 
-        const startInspector = function (port) {
-
-            const labPath = Path.join(__dirname, '..', 'bin', 'lab');
-            const testPath = Path.join(__dirname, 'cli_inspect');
-            const childEnv = Object.assign({}, process.env);
-            delete childEnv.NODE_ENV;
-            const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
-            let combinedOutput = '';
-
-            cli.once('error', (err) => {
-
-                expect(err).to.not.exist();
+                const port = httpServer.address().port;
+                httpServer.close(() => startInspector(port));
             });
 
-            cli.stderr.on('data', (data) => {
 
-                combinedOutput += data;
-            });
+            const startInspector = function (port) {
 
-            cli.stdout.on('data', (data) => {
+                const labPath = Path.join(__dirname, '..', 'bin', 'lab');
+                const testPath = Path.join(__dirname, 'cli_inspect');
+                const childEnv = Object.assign({}, process.env);
+                delete childEnv.NODE_ENV;
+                const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
+                let combinedOutput = '';
 
-                combinedOutput += data;
-            });
+                cli.once('error', (err) => {
 
-            cli.once('exit', () => {
+                    expect(err).to.not.exist();
+                });
 
-                expect(combinedOutput).to.contain('Debugger listening on').and.to.contain(port.toString());
-                done();
-            });
+                cli.stderr.on('data', (data) => {
 
-            setTimeout(() => {
+                    combinedOutput += data;
+                });
 
-                cli.kill('SIGINT');
-            }, 1500);
-        };
-    });
+                cli.stdout.on('data', (data) => {
 
-    it('silences output (-s)', (done) => {
+                    combinedOutput += data;
+                });
 
-        RunCli(['test/cli/simple.js', '-s'], (error, result) => {
+                cli.once('exit', () => {
 
-            if (error) {
-                done(error);
-            }
+                    expect(combinedOutput).to.contain('Debugger listening on').and.to.contain(port.toString());
+                    if (!cli.killed) {
+                        cli.kill();
+                    }
 
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.not.contain('..');
-            done();
+                    resolve();
+                });
+
+                setTimeout(() => {
+
+                    cli.kill();
+                }, 1000);
+            };
         });
     });
 
-    it('displays verbose output (-v)', (done) => {
+    it('silences output (-s)', async () => {
 
-        RunCli(['test/cli/simple.js', '-v'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-s']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('2) subtracts two numbers');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.not.contain('..');
     });
 
-    it('runs a single test (-i 1)', (done) => {
+    it('displays verbose output (-v)', async () => {
 
-        RunCli(['test/cli', '-i', '1'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-v']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2) subtracts two numbers');
     });
 
-    it('reports the used seed for randomization', (done) => {
+    it('runs a single test (-i 1)', async () => {
 
-        RunCli(['test/cli', '--shuffle'], (error, result) => {
+        const result = await RunCli(['test/cli', '-i', '1']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('seed');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
-    it('runs a range of tests (-i 3-4)', (done) => {
+    it('reports the used seed for randomization', async () => {
+
+        const result = await RunCli(['test/cli', '--shuffle']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('seed');
+    });
+
+    it('runs a range of tests (-i 3-4)', async () => {
 
         // The range may need to adjust as new tests are added (if they are skipped for example)
-        RunCli(['test/cli', '-i', '3-4'], (error, result) => {
+        const result = await RunCli(['test/cli', '-i', '3-4']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('2 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
     });
 
-    it('runs in color mode with (-C)', (done) => {
+    it('runs in color mode with (-C)', async () => {
 
-        RunCli(['test/cli/simple.js', '-C'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-C']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('\u001b[');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('\u001b[');
     });
 
-    it('disables color output when tty doesn\'t support it', (done) => {
+    it('disables color output when tty doesn\'t support it', async () => {
 
-        RunCli(['test/cli/simple.js'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.not.contain('\u001b[');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.not.contain('\u001b[');
     });
 
-    it('defaults to color output when tty supports it', (done) => {
+    it('defaults to color output when tty supports it', async () => {
 
-        RunCli(['test/cli/simpleTty.js'], (error, result) => {
+        const result = await RunCli(['test/cli/simpleTty.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('\u001b[');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('\u001b[');
     });
 
-    it('uses custom coverage path with the --coverage-path argument', (done) => {
+    it('uses custom coverage path with the --coverage-path argument', async () => {
 
-        RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code'], (error, result) => {
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            expect(result.output).to.contain('Coverage: 100.00%');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 100.00%');
     });
 
-    it('uses custom coverage excludes with the --coverage-exclude argument', (done) => {
+    it('uses custom coverage excludes with the --coverage-exclude argument', async () => {
 
-        RunCli(['.', '-t', '100', '--coverage-exclude', 'exclude', '-a', 'code'], (error, result) => {
+        const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'exclude', '-a', 'code'], 'test/cli_coverage');
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.contain('1 tests complete');
-            expect(result.output).to.contain('Coverage: 90.00% (1/10)');
-            expect(result.output).to.contain('missing.js missing coverage on line(s)');
-            done();
-        }, 'test/cli_coverage');
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 90.00% (1/10)');
+        expect(result.output).to.contain('missing.js missing coverage on line(s)');
     });
 
-    it('doesn\'t fail with coverage when no external file is being tested', (done) => {
+    it('doesn\'t fail with coverage when no external file is being tested', async () => {
 
-        RunCli(['test/cli/simple.js', '-t', '100'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-t', '100']);
 
-            if (error) {
-                done(error);
-            }
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.contain('2 tests complete');
-            expect(result.output).to.contain('Coverage: 0.00%');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('2 tests complete');
+        expect(result.output).to.contain('Coverage: 0.00%');
     });
 
-    it('defaults NODE_ENV environment variable to test', (done) => {
+    it('defaults NODE_ENV environment variable to test', async () => {
 
-        RunCli(['test/cli/environment.js'], (error, result) => {
+        const result = await RunCli(['test/cli/environment.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
-    it('changes the NODE_ENV based on -e param', (done) => {
+    it('changes the NODE_ENV based on -e param', async () => {
 
-        RunCli(['test/cli/environment.js', '-e', 'lab'], (error, result) => {
+        const result = await RunCli(['test/cli/environment.js', '-e', 'lab']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
-    it('runs tests within a nestd "only" experiment and reports ran and skipped test count', (done) => {
+    it('runs tests within a nested "only" experiment and reports ran and skipped test count', async () => {
 
-        RunCli(['test/cli_only-skip/onlyExperiment.js'], (error, result) => {
+        const result = await RunCli(['test/cli_only-skip/onlyExperiment.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.output).to.contain([
-                'Should execute before 1',
-                'Should execute beforeEach 1',
-                'Should execute after 1',
-                'Should execute afterEach 1',
-                'Should execute before 2',
-                'Should execute beforeEach 2',
-                'Should execute after 2',
-                'Should execute afterEach 2',
-                'Should execute before 3',
-                'Should execute beforeEach 3',
-                'Should execute after 3',
-                'Should execute afterEach 3',
-                'Should execute before 4',
-                'Should execute beforeEach 4',
-                'Should execute after 4',
-                'Should execute afterEach 4',
-                '3 tests complete (6 skipped)'
-            ]);
-            expect(result.code).to.equal(0);
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.output).to.contain([
+            'Should execute before 1',
+            'Should execute beforeEach 1',
+            'Should execute after 1',
+            'Should execute afterEach 1',
+            'Should execute before 2',
+            'Should execute beforeEach 2',
+            'Should execute after 2',
+            'Should execute afterEach 2',
+            'Should execute before 3',
+            'Should execute beforeEach 3',
+            'Should execute after 3',
+            'Should execute afterEach 3',
+            'Should execute before 4',
+            'Should execute beforeEach 4',
+            'Should execute after 4',
+            'Should execute afterEach 4',
+            '3 tests complete (6 skipped)'
+        ]);
+        expect(result.code).to.equal(0);
     });
 
-    it('runs tests within a root "only" experiment and reports ran and skipped test count', (done) => {
+    it('runs tests within a root "only" experiment and reports ran and skipped test count', async () => {
 
-        RunCli(['test/cli_only-skip/onlyRootExperiment.js'], (error, result) => {
+        const result = await RunCli(['test/cli_only-skip/onlyRootExperiment.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.output).to.contain([
-                'Should execute before 1',
-                'Should execute beforeEach 1',
-                'Should execute after 1',
-                'Should execute afterEach 1',
-                'Should execute before 2',
-                'Should execute beforeEach 2',
-                'Should execute after 2',
-                'Should execute afterEach 2',
-                'Should execute before 3',
-                'Should execute beforeEach 3',
-                'Should execute after 3',
-                'Should execute afterEach 3',
-                'Should execute before 4',
-                'Should execute beforeEach 4',
-                'Should execute after 4',
-                'Should execute afterEach 4',
-                'Should execute before 5',
-                'Should execute beforeEach 5',
-                'Should execute after 5',
-                'Should execute afterEach 5',
-                'Should execute before 6',
-                'Should execute beforeEach 6',
-                'Should execute after 6',
-                'Should execute afterEach 6',
-                '8 tests complete (1 skipped)'
-            ]);
-            expect(result.code).to.equal(0);
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.output).to.contain([
+            'Should execute before 1',
+            'Should execute beforeEach 1',
+            'Should execute after 1',
+            'Should execute afterEach 1',
+            'Should execute before 2',
+            'Should execute beforeEach 2',
+            'Should execute after 2',
+            'Should execute afterEach 2',
+            'Should execute before 3',
+            'Should execute beforeEach 3',
+            'Should execute after 3',
+            'Should execute afterEach 3',
+            'Should execute before 4',
+            'Should execute beforeEach 4',
+            'Should execute after 4',
+            'Should execute afterEach 4',
+            'Should execute before 5',
+            'Should execute beforeEach 5',
+            'Should execute after 5',
+            'Should execute afterEach 5',
+            'Should execute before 6',
+            'Should execute beforeEach 6',
+            'Should execute after 6',
+            'Should execute afterEach 6',
+            '8 tests complete (1 skipped)'
+        ]);
+        expect(result.code).to.equal(0);
     });
 
-    it('runs "only" test and reports ran and skipped test count', (done) => {
+    it('runs "only" test and reports ran and skipped test count', async () => {
 
-        RunCli(['test/cli_only-skip/onlyTest.js'], (error, result) => {
+        const result = await RunCli(['test/cli_only-skip/onlyTest.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.output).to.contain([
-                'Should execute before 1',
-                'Should execute beforeEach 1',
-                'Should execute after 1',
-                'Should execute afterEach 1',
-                'Should execute before 2',
-                'Should execute beforeEach 2',
-                'Should execute after 2',
-                'Should execute afterEach 2',
-                'Should execute before 3',
-                'Should execute beforeEach 3',
-                'Should execute after 3',
-                'Should execute afterEach 3',
-                '1 tests complete (8 skipped)'
-            ]);
-            expect(result.code).to.equal(0);
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.output).to.contain([
+            'Should execute before 1',
+            'Should execute beforeEach 1',
+            'Should execute after 1',
+            'Should execute afterEach 1',
+            'Should execute before 2',
+            'Should execute beforeEach 2',
+            'Should execute after 2',
+            'Should execute afterEach 2',
+            'Should execute before 3',
+            'Should execute beforeEach 3',
+            'Should execute after 3',
+            'Should execute afterEach 3',
+            '1 tests complete (8 skipped)'
+        ]);
+        expect(result.code).to.equal(0);
     });
 
-    it('displays error message when there is more than one "only" within one file', (done) => {
+    it('displays error message when there is more than one "only" within one file', async () => {
 
-        RunCli(['test/cli_only-skip/onlyMultiple.js'], (error, result) => {
+        const result = await RunCli(['test/cli_only-skip/onlyMultiple.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-            expect(result.code).to.equal(1);
-            done();
-        });
+        expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
+        expect(result.code).to.equal(1);
     });
 
-    it('displays error message when there is more than one "only" accross multiple files', (done) => {
+    it('displays error message when there is more than one "only" accross multiple files', async () => {
 
-        RunCli(['test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
+        const result = await RunCli(['test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-            expect(result.code).to.equal(1);
-            done();
-        });
+        expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
+        expect(result.code).to.equal(1);
     });
 
     describe('when using multiple reporters', () => {
 
         let filename;
-        beforeEach((done) => {
+        beforeEach(() => {
 
             filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
-            done();
         });
 
-        afterEach((done) => {
+        afterEach(async () => {
 
-            Fs.unlink(filename, () => done());
+            await unlink(filename);
         });
 
-        it('displays error message when there is more than one "only" accross multiple files', (done) => {
+        it('displays error message when there is more than one "only" accross multiple files', async () => {
 
-            RunCli(['-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
+            const result = await RunCli(['-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-                if (error) {
-                    done(error);
-                }
-
-                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-                expect(result.code).to.equal(1);
-                done();
-            });
-        });
-
-        it('displays error message when there is more than one "only" accross multiple files and the first reporter is not console', (done) => {
-
-            RunCli(['-r', 'json', '-o', filename, '-r', 'console', '-o', 'stdout', 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
-
-                if (error) {
-                    done(error);
-                }
-
-                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-                expect(result.code).to.equal(1);
-                done();
-            });
-        });
-
-        it('displays error message when there is more than one "only" accross multiple files and there’s no console reporter', (done) => {
-
-            RunCli(['-r', 'json', '-o', filename, '-r', 'junit', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js'], (error, result) => {
-
-                if (error) {
-                    done(error);
-                }
-
-                expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-                expect(result.code).to.equal(1);
-                done();
-            });
-        });
-    });
-
-    it('skips "skip" test and reports ran and skipped test count', (done) => {
-
-        RunCli(['test/cli_only-skip/skip.js'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.output).to.contain([
-                'Should execute before 1',
-                'Should execute beforeEach 1',
-                'Should execute after 1',
-                'Should execute afterEach 1',
-                'Should execute before 2',
-                'Should execute beforeEach 2',
-                'Should execute after 2',
-                'Should execute afterEach 2',
-                'Should execute before 3',
-                'Should execute beforeEach 3',
-                'Should execute after 3',
-                'Should execute afterEach 3',
-                'Should execute before 4',
-                'Should execute beforeEach 4',
-                'Should execute after 4',
-                'Should execute afterEach 4',
-                'Should execute before 5',
-                'Should execute beforeEach 5',
-                'Should execute after 5',
-                'Should execute afterEach 5',
-                '5 tests complete (4 skipped)'
-            ]);
-            expect(result.code).to.equal(0);
-            done();
-        });
-    });
-
-    it('overrides cli options using script', (done) => {
-
-        RunCli(['test/override/cli.js'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
-    });
-
-    it('displays error message when a script is detected without an exports.lab', (done) => {
-
-        RunCli(['test/cli_no_exports/missingExports.js'], (error, result) => {
-
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
+            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
             expect(result.code).to.equal(1);
-            expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
-            done();
         });
-    });
 
-    it('displays error message when a script is missing exports and other scripts contain them', (done) => {
+        it('displays error message when there is more than one "only" accross multiple files and the first reporter is not console', async () => {
 
-        RunCli(['test/cli_no_exports/'], (error, result) => {
+            const result = await RunCli(['-r', 'json', '-o', filename, '-r', 'console', '-o', 'stdout', 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
+            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
             expect(result.code).to.equal(1);
-            expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
-            done();
         });
-    });
 
-    it('displays error message when an unknown argument is specified', (done) => {
+        it('displays error message when there is more than one "only" accross multiple files and there’s no console reporter', async () => {
 
-        RunCli(['-z'], (error, result) => {
+            const result = await RunCli(['-r', 'json', '-o', filename, '-r', 'junit', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.contain('Unknown option: z');
+            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
             expect(result.code).to.equal(1);
-            done();
         });
     });
 
-    it('supports junit reporter', (done) => {
+    it('skips "skip" test and reports ran and skipped test count', async () => {
 
-        RunCli(['test/cli/simple.js', '-r', 'junit'], (error, result) => {
+        const result = await RunCli(['test/cli_only-skip/skip.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('<testsuite tests="2"');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.output).to.contain([
+            'Should execute before 1',
+            'Should execute beforeEach 1',
+            'Should execute after 1',
+            'Should execute afterEach 1',
+            'Should execute before 2',
+            'Should execute beforeEach 2',
+            'Should execute after 2',
+            'Should execute afterEach 2',
+            'Should execute before 3',
+            'Should execute beforeEach 3',
+            'Should execute after 3',
+            'Should execute afterEach 3',
+            'Should execute before 4',
+            'Should execute beforeEach 4',
+            'Should execute after 4',
+            'Should execute afterEach 4',
+            'Should execute before 5',
+            'Should execute beforeEach 5',
+            'Should execute after 5',
+            'Should execute afterEach 5',
+            '5 tests complete (4 skipped)'
+        ]);
+        expect(result.code).to.equal(0);
     });
 
-    it('outputs to file passed with -o argument', (done) => {
+    it('overrides cli options using script', async () => {
+
+        const result = await RunCli(['test/override/cli.js']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
+    });
+
+    it('displays error message when a script is detected without an exports.lab', async () => {
+
+        const result = await RunCli(['test/cli_no_exports/missingExports.js']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
+    });
+
+    it('displays error message when a script is missing exports and other scripts contain them', async () => {
+
+        const result = await RunCli(['test/cli_no_exports/']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
+    });
+
+    it('displays error message when an unknown argument is specified', async () => {
+
+        const result = await RunCli(['-z']);
+
+        expect(result.errorOutput).to.contain('Unknown option: z');
+        expect(result.code).to.equal(1);
+    });
+
+    it('supports junit reporter', async () => {
+
+        const result = await RunCli(['test/cli/simple.js', '-r', 'junit']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('<testsuite tests="2"');
+    });
+
+    it('outputs to file passed with -o argument', async () => {
 
         const outputPath = __dirname + '/_no_exist';
         try {
-            Fs.unlinkSync(outputPath);
+            await unlink(outputPath);
         }
         catch (err) {
 
             // Error is ok here
         }
 
-        RunCli(['test/cli/simple.js', '-m', '2000', '-o', outputPath], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-m', '2000', '-o', outputPath]);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.equal('');
-            const file = Fs.readFileSync(outputPath);
-            expect(file.toString()).to.contain('No global variable leaks detected');
-            Fs.unlink(outputPath, done);
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.equal('');
+        const file = Fs.readFileSync(outputPath);
+        expect(file.toString()).to.contain('No global variable leaks detected');
+        await unlink(outputPath);
     });
 
-    it('loads assertions library', (done) => {
+    it('loads assertions library', async () => {
 
-        RunCli(['test/cli_assert/assert.js', '-m', '2000', '-a', 'code'], (error, result) => {
+        const result = await RunCli(['test/cli_assert/assert.js', '-m', '2000', '-a', 'code']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('2 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
     });
 
-    it('disables assertions with --assert false', (done) => {
+    it('disables assertions with --assert false', async () => {
 
-        RunCli(['test/cli_assert/no-assert.js', '-m', '2000', '-a', 'false'], (error, result) => {
+        const result = await RunCli(['test/cli_assert/no-assert.js', '-m', '2000', '-a', 'false']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.not.contain('Assertions');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.not.contain('Assertions');
     });
 
-    it('only loads files matching pattern (-P)', (done) => {
+    it('only loads files matching pattern (-P)', async () => {
 
-        RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test'], (error, result) => {
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('2 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
     });
 
-    it('reports a warning when no files matching the pattern are found', (done) => {
+    it('reports a warning when no files matching the pattern are found', async () => {
 
-        RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'nofiles'], (error, result) => {
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'nofiles']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('The pattern provided (-P or --pattern) didn\'t match any files.');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('The pattern provided (-P or --pattern) didn\'t match any files.');
     });
 
-    it('only loads files matching pattern when pattern at beginning of name (-P)', (done) => {
+    it('only loads files matching pattern when pattern at beginning of name (-P)', async () => {
 
-        RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file'], (error, result) => {
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('3 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('3 tests complete');
     });
 
-    it('loads all files when pattern is empty (-P)', (done) => {
+    it('loads all files when pattern is empty (-P)', async () => {
 
-        RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', ''], (error, result) => {
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', '']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('3 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('3 tests complete');
     });
 
-    it('errors out when unknown module is specified in transform option', (done) => {
+    it('errors out when unknown module is specified in transform option', async () => {
 
-        RunCli(['test/cli/simple.js', '-T', 'not-a-transform-module'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-T', 'not-a-transform-module']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.contain('Cannot find module');
-            expect(result.code).to.equal(1);
-            done();
-        });
+        expect(result.errorOutput).to.contain('Cannot find module');
+        expect(result.code).to.equal(1);
     });
 
-    it('displays error message when transform module does not export', (done) => {
+    it('displays error message when transform module does not export', async () => {
 
-        RunCli(['test/cli/simple.js', '-m', '2000', '-T', 'test/transform/exclude/lab-noexport'], (error, result) => {
+        const result = await RunCli(['test/cli/simple.js', '-m', '2000', '-T', 'test/transform/exclude/lab-noexport']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.contain('transform module must export');
-            expect(result.code).to.equal(1);
-            done();
-        });
+        expect(result.errorOutput).to.contain('transform module must export');
+        expect(result.code).to.equal(1);
     });
 
-    it('uses transforms to run a test', (done) => {
+    it('uses transforms to run a test', async () => {
 
-        RunCli(['-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/transform-test.js'], (error, result) => {
+        const result = await RunCli(['-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/transform-test.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
-    it('uses transforms to run a test file that has to be transformed', (done) => {
+    it('uses transforms to run a test file that has to be transformed', async () => {
 
-        RunCli(['-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js'], (error, result) => {
+        const result = await RunCli(['-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
-    it('uses transforms to run a test file that has to be transformed with coverage support', (done) => {
+    it('uses transforms to run a test file that has to be transformed with coverage support', async () => {
 
-        RunCli(['-c', '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js'], (error, result) => {
+        const result = await RunCli(['-c', '-T', 'test/transform/exclude/lab-transform', 'test/transform/exclude/ext-test.new.js']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(0);
-            expect(result.output).to.contain('1 tests complete');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
-    it('displays error message when multiple reporters with only one output are specified', (done) => {
+    it('displays error message when multiple reporters with only one output are specified', async () => {
 
-        RunCli(['-r', 'console', '-r', 'console', '-o', 'stdout'], (error, result) => {
+        const result = await RunCli(['-r', 'console', '-r', 'console', '-o', 'stdout']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.contain('Usage');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.equal('');
-            done();
-        });
+        expect(result.errorOutput).to.contain('Usage');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.equal('');
     });
 
-    it('displays error message when multiple reporters with less outputs are specified', (done) => {
+    it('displays error message when multiple reporters with less outputs are specified', async () => {
 
-        RunCli(['-r', 'console', '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout'], (error, result) => {
+        const result = await RunCli(['-r', 'console', '-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.contain('Usage');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.equal('');
-            done();
-        });
+        expect(result.errorOutput).to.contain('Usage');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.equal('');
     });
 
-    it('displays error message when multiple reporters with more outputs are specified', (done) => {
+    it('displays error message when multiple reporters with more outputs are specified', async () => {
 
-        RunCli(['-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout', '-o', 'stdout'], (error, result) => {
+        const result = await RunCli(['-r', 'console', '-r', 'console', '-o', 'stdout', '-o', 'stdout', '-o', 'stdout']);
 
-            if (error) {
-                done(error);
-            }
-
-            expect(result.errorOutput).to.contain('Usage');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.equal('');
-            done();
-        });
+        expect(result.errorOutput).to.contain('Usage');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.equal('');
     });
 
-    it('runs a single test and reports failed test plans', (done) => {
+    it('runs a single test and reports failed test plans', async () => {
 
-        RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', 'code'], (error, result) => {
+        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', 'code']);
 
-            if (error) {
-                done(error);
-            }
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.contain('Expected 1 assertions, but found 2');
-            expect(result.output).to.contain('1 of 3 tests failed');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('Expected 1 assertions, but found 2');
+        expect(result.output).to.contain('1 of 3 tests failed');
     });
 
-    it('runs a single test and fails with a plan and no assertion library', (done) => {
+    it('runs a single test and fails with a plan and no assertion library', async () => {
 
-        RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', ''], (error, result) => {
+        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', '']);
 
-            if (error) {
-                done(error);
-            }
-            expect(result.errorOutput).to.equal('');
-            expect(result.code).to.equal(1);
-            expect(result.output).to.contain('Expected 1 assertions, but no assertion library found');
-            expect(result.output).to.contain('3 of 3 tests failed');
-            done();
-        });
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('Expected 1 assertions, but no assertion library found');
+        expect(result.output).to.contain('3 of 3 tests failed');
     });
 
-    it('passes even with an unhandled Promise rejection in the code under test', (done) => {
+    it('fails with an unhandled Promise rejection if the specified flag is set', async () => {
 
-        RunCli(['test/cli_reject_promise/reject_promise.js'], (error, result) => {
+        const result = await RunCli(['test/cli_reject_promise/reject_promise.js', '-R']);
 
-            expect(error).to.not.exist();
-            expect(result.code).to.equal(0);
-            done();
-        });
+        expect(result.code).to.equal(1);
     });
 
-    it('fails with an unhandled Promise rejection if the specified flag is set', (done) => {
+    it('fails with an unhandled exception in onCleanup', async () => {
 
-        RunCli(['test/cli_reject_promise/reject_promise.js', '-R'], (error, result) => {
+        const result = await RunCli(['test/cli_oncleanup/throws.js']);
 
-            expect(error).to.not.exist();
-            expect(result.code).to.equal(1);
-            done();
-        });
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 of 2 tests failed');
+        expect(result.output).to.contain('oops');
     });
 });

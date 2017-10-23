@@ -47,4 +47,12 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     return;
 }
 
-require('../lib/cli').run();
+const main = async () => {
+
+    const { code } = await require('../lib/cli').run();
+    process.exit(code);
+};
+
+main();
+
+

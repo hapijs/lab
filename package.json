@@ -12,22 +12,21 @@
   },
   "dependencies": {
     "bossy": "3.x.x",
-    "code": "4.1.x",
-    "diff": "3.3.x",
-    "eslint": "4.7.x",
+    "code": "5.1.x",
+    "diff": "3.4.x",
+    "eslint": "4.8.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "espree": "3.5.x",
+    "espree": "^3.5.1",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
-    "hoek": "4.x.x",
-    "items": "2.x.x",
+    "hoek": "5.x.x",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
     "source-map": "0.6.x",
-    "source-map-support": "0.4.x",
+    "source-map-support": "0.5.x",
     "supports-color": "4.4.x"
   },
   "devDependencies": {
@@ -44,7 +43,7 @@
     "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
-    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md  ."
+    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md --parser-options 'ecmaVersion: 8' ."
   },
   "license": "BSD-3-Clause"
 }

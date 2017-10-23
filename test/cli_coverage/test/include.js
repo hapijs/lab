@@ -20,10 +20,9 @@ const expect = _Lab.assertions.expect;
 
 describe('Test CLI', () => {
 
-    it('returns the specified value', (done) => {
+    it('returns the specified value', () => {
 
         const result = Include.method('test');
         expect(result).to.equal('test');
-        done();
     });
 });

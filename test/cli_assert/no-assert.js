@@ -19,9 +19,8 @@ const it = lab.it;
 
 describe('Test CLI', () => {
 
-    it('assertions property doesn\'t exist', (done) => {
+    it('assertions property doesn\'t exist', () => {
 
         _Lab.expect(_Lab.assertions).to.not.exist();
-        done();
     });
 });

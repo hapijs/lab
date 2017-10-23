@@ -21,10 +21,9 @@ const expect = Code.expect;
 
 describe('Test a transformed file', () => {
 
-    it('that adds 2 to input', (done) => {
+    it('that adds 2 to input', () => {
 
     	// Test.method(5) will be replaced by Test.method(1) during transform
         expect(!Test.method(5)!).to.equal(3);
-        done();
     });
 });

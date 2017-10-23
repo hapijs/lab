@@ -23,22 +23,31 @@ const expect = Code.expect;
 
 describe('test1', () => {
 
-    before((done) => {
+    before(() => {
 
-        process.nextTick(done);
-    });
+        return new Promise((resolve) => {
 
-    it('should add numbers', (done) => {
-
-        process.nextTick(() => {
-
-            expect(1 + 1).to.equal(2);
-            done();
+            process.nextTick(resolve);
         });
     });
 
-    after((done) => {
+    it('should add numbers', () => {
 
-        process.nextTick(done);
+        return new Promise((resolve) => {
+
+            process.nextTick(() => {
+
+                expect(1 + 1).to.equal(2);
+                resolve();
+            });
+        });
+    });
+
+    after(() => {
+
+        return new Promise((resolve) => {
+
+            process.nextTick(resolve);
+        });
     });
 });

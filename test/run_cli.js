@@ -9,7 +9,7 @@ const internals = {
     labPath: Path.join(__dirname, '..', 'bin', '_lab')
 };
 
-module.exports = (args, callback, root) => {
+module.exports = (args, root) => {
 
     const childEnv = Object.assign({}, process.env);
     delete childEnv.NODE_ENV;
@@ -31,11 +31,14 @@ module.exports = (args, callback, root) => {
         combinedOutput += data;
     });
 
-    cli.once('close', (code, signal) => {
+    return new Promise((resolve, reject) => {
 
-        if (signal) {
-            callback(new Error('Unexpected signal: ' + signal));
-        }
-        callback(null, { output, errorOutput, combinedOutput, code, signal });
+        cli.once('close', (code, signal) => {
+
+            if (signal) {
+                return reject(new Error('Unexpected signal: ' + signal));
+            }
+            resolve({ output, errorOutput, combinedOutput, code, signal });
+        });
     });
 };

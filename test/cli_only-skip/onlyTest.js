@@ -22,246 +22,212 @@ const beforeEach = lab.beforeEach;
 const after = lab.after;
 const afterEach = lab.afterEach;
 
+
 describe('math', () => {
 
-    before((done) => {
+    before(() => {
 
         console.log('Should execute before 1');
-        done();
     });
 
-    beforeEach((done) => {
+    beforeEach(() => {
 
         console.log('Should execute beforeEach 1');
-        done();
     });
 
-    after((done) => {
+    after(() => {
 
         console.log('Should execute after 1');
-        done();
     });
 
-    afterEach((done) => {
+    afterEach(() => {
 
         console.log('Should execute afterEach 1');
-        done();
     });
 
     describe('addition', () => {
 
-        before((done) => {
+        before(() => {
 
             console.log('Should execute before 2');
-            done();
         });
 
-        beforeEach((done) => {
+        beforeEach(() => {
 
             console.log('Should execute beforeEach 2');
-            done();
         });
 
-        after((done) => {
+        after(() => {
 
             console.log('Should execute after 2');
-            done();
         });
 
-        afterEach((done) => {
+        afterEach(() => {
 
             console.log('Should execute afterEach 2');
-            done();
         });
 
-        it('returns true when 1 + 1 equals 2', (done) => {
+        it('returns true when 1 + 1 equals 2', () => {
 
             throw new Error("Should not execute this test");
-            done();
         });
 
-        it('returns true when 2 + 2 equals 4', (done) => {
+        it('returns true when 2 + 2 equals 4', () => {
 
             throw new Error("Should not execute this test");
-            done();
         });
 
         describe('nested addition', () => {
 
-            before((done) => {
+            before(() => {
 
                 console.log('Should execute before 3');
-                done();
+
             });
 
-            beforeEach((done) => {
+            beforeEach(() => {
 
                 console.log('Should execute beforeEach 3');
-                done();
+
             });
 
-            after((done) => {
+            after(() => {
 
                 console.log('Should execute after 3');
-                done();
             });
 
-            afterEach((done) => {
+            afterEach(() => {
 
                 console.log('Should execute afterEach 3');
-                done();
             });
 
-            it.only('returns true when 3 + 3 equals 6', (done) => {
+            it.only('returns true when 3 + 3 equals 6', () => {
 
                 expect(3 + 3).to.equal(6);
-                done();
             });
 
-            it('returns true when 4 + 4 equals 8', (done) => {
+            it('returns true when 4 + 4 equals 8', () => {
 
                 throw new Error("Should not execute this test");
-                done();
             });
 
             describe('deeply nested addtion', () => {
 
-                before((done) => {
+                before(() => {
 
                     throw new Error('Should not execute nested before');
-                    done();
                 });
 
-                beforeEach((done) => {
+                beforeEach(() => {
 
                     throw new Error('Should not execute nested beforeEach');
-                    done();
                 });
 
-                after((done) => {
+                after(() => {
 
                     throw new Error('Should not execute nested after');
-                    done();
                 });
 
-                afterEach((done) => {
+                afterEach(() => {
 
                     throw new Error('Should not execute nested afterEach');
-                    done();
                 });
 
-                it('returns true when 5 + 5 equals 10', (done) => {
+                it('returns true when 5 + 5 equals 10', () => {
 
                     throw new Error("Should not execute this test");
-                    done();
                 });
             });
         });
 
         describe('another nested addition', () => {
 
-            before((done) => {
+            before(() => {
 
                 throw new Error('Should not execute sibling before');
-                done();
             });
 
-            beforeEach((done) => {
+            beforeEach(() => {
 
                 throw new Error('Should not execute sibling beforeEach');
-                done();
             });
 
-            after((done) => {
+            after(() => {
 
                 throw new Error('Should not execute sibling after');
-                done();
             });
 
-            afterEach((done) => {
+            afterEach(() => {
 
                 throw new Error('Should not execute sibling afterEach');
-                done();
             });
 
-            it('returns true when 6 + 6 equals 12', (done) => {
+            it('returns true when 6 + 6 equals 12', () => {
 
                 throw new Error("Should not execute this test");
-                done();
-            });
 
+            });
         });
     });
 
     describe('subtract', () => {
 
-        before((done) => {
+        before(() => {
 
             throw new Error('Should not execute unrelated before');
-            done();
         });
 
-        beforeEach((done) => {
+        beforeEach(() => {
 
             throw new Error('Should not execute unrelated beforeEach');
-            done();
         });
 
-        after((done) => {
+        after(() => {
 
             throw new Error('Should not execute unrelated after');
-            done();
         });
 
-        afterEach((done) => {
+        afterEach(() => {
 
             throw new Error('Should not execute unrelated afterEach');
-            done();
         });
 
-        it('returns true when 1 - 1 equals 0', (done) => {
+        it('returns true when 1 - 1 equals 0', () => {
 
             throw new Error("Should not execute this test");
-            done();
         });
 
-        it('returns true when 2 - 1 equals 1', (done) => {
+        it('returns true when 2 - 1 equals 1', () => {
 
             throw new Error("Should not execute this test");
-            done();
         });
     });
 });
 
 describe('unrelated subtract', () => {
 
-    before((done) => {
+    before(() => {
 
         throw new Error('Should not execute unrelated before');
-        done();
     });
 
-    beforeEach((done) => {
+    beforeEach(() => {
 
         throw new Error('Should not execute unrelated beforeEach');
-        done();
     });
 
-    after((done) => {
+    after(() => {
 
         throw new Error('Should not execute unrelated after');
-        done();
     });
 
-    afterEach((done) => {
+    afterEach(() => {
 
         throw new Error('Should not execute unrelated afterEach');
-        done();
     });
 
-    it('returns true when 3 - 3 equals 0', (done) => {
+    it('returns true when 3 - 3 equals 0', () => {
 
         throw new Error("Should not execute this test");
-        done();
     });
 });
