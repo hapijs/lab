@@ -670,7 +670,7 @@ describe('Runner', () => {
 
             script.experiment('test', () => {
 
-                script.before(async () => {
+                script.before(() => {
 
                     beforeRan = true;
                 });
@@ -705,7 +705,7 @@ describe('Runner', () => {
 
             script.experiment('test', () => {
 
-                script.before(async () => {
+                script.before(() => {
 
                     beforeRan = true;
                 });

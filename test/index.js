@@ -3,6 +3,7 @@
 // Load modules
 
 const Code = require('code');
+
 const _Lab = require('../test_runner');
 const Lab = require('../');
 
@@ -554,7 +555,7 @@ describe('Lab', () => {
         expect(notebook.failures).to.equal(0);
     });
 
-    it('schedules automatic execution of scripts', async () => {
+    it('schedules automatic execution of scripts', () => {
 
         let executed = 0;
         const script = Lab.script({ output: false });

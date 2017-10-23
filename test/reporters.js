@@ -751,7 +751,7 @@ describe('Reporter', () => {
                     expect(true).to.equal(true);
                 });
 
-                script.test.skip('a skipped test', async () => {
+                script.test.skip('a skipped test', () => {
 
                     throw new Error('Should not be called');
                 });

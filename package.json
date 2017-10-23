@@ -1,20 +1,20 @@
 {
   "name": "lab",
   "description": "Test utility",
-  "version": "14.3.1",
+  "version": "15.0.0",
   "repository": "git://github.com/hapijs/lab",
   "main": "lib/index.js",
   "keywords": [
     "test"
   ],
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8.7.0"
   },
   "dependencies": {
-    "bossy": "3.x.x",
+    "bossy": "4.x.x",
     "diff": "3.4.x",
     "eslint": "4.8.x",
-    "eslint-config-hapi": "10.x.x",
+    "eslint-config-hapi": "11.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "^3.5.1",
     "find-rc": "3.0.x",
