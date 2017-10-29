@@ -255,43 +255,11 @@ describe('Runner', () => {
             });
 
             const notebook = await Lab.execute(script, {}, null);
-            expect(notebook.errors[0].message).to.contain('A reason why this test failed');
-        });
-
-        it(`should fail "${fnName}" that calls the callback with an error`, async () => {
-
-            const script = Lab.script({ schedule: false });
-            script.describe('a test group', () => {
-
-                script.test('a', () => {});
-
-                script[fnName](() => {
-
-                    return Promise.reject(new Error('A reason why this test failed'));
-                });
-            });
-
-            const notebook = await Lab.execute(script, {}, null);
+            expect(notebook.failures).to.equal(1);
             expect(notebook.errors[0].message).to.contain('A reason why this test failed');
         });
 
         it(`should not fail "${fnName}" that returns a resolved promise`, async () => {
-
-            const script = Lab.script({ schedule: false });
-            script.describe('a test group', () => {
-
-                script.test('a', () => {});
-
-                script[fnName](() => {});
-            });
-
-            const notebook = await Lab.execute(script, {}, null);
-            expect(notebook.tests).to.have.length(1);
-            expect(notebook.failures).to.equal(0);
-            expect(notebook.errors.length).to.equal(0);
-        });
-
-        it(`should not fail "${fnName}" calls the callback without an error`, async () => {
 
             const script = Lab.script({ schedule: false });
             script.describe('a test group', () => {
@@ -1228,7 +1196,7 @@ describe('Runner', () => {
         const { code, output } = await Lab.report(script, { output: false, assert: false });
         expect(code).to.equal(1);
         expect(output).to.contain('2 of 2 tests failed');
-        expect(output.match(/assertion failed !/g)).to.have.length(4);
+        expect(output.match(/assertion failed !/g)).to.have.length(2);
     });
 
     it('reports errors with shared event emitters and nested experiments with a single deep failure', async () => {
@@ -1272,7 +1240,7 @@ describe('Runner', () => {
         const { code, output } = await  Lab.report(script, { output: false, assert: false });
         expect(code).to.equal(1);
         expect(output).to.contain('1 of 2 tests failed');
-        expect(output.match(/assertion failed !/g)).to.have.length(2);
+        expect(output.match(/assertion failed !/g)).to.have.length(1);
     });
 
     describe('global timeout functions', () => {

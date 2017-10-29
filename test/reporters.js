@@ -419,7 +419,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {
+                script.test('fails', () => {
 
                     const error = new Error('boom');
                     error.data = 'abc';
@@ -430,8 +430,7 @@ describe('Reporter', () => {
             const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false });
 
             expect(code).to.equal(1);
-            expect(output).to.contain('There were 1 test script error');
-            expect(output).to.contain('Additional error data');
+            expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Failed tests');
         });
 
@@ -440,7 +439,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {
+                script.test('fails', () => {
 
                     const error = new Error('boom');
                     error.data = [1, 2, 3];
@@ -450,8 +449,10 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false, assert: false });
             expect(code).to.equal(1);
-            expect(output).to.contain('There were 1 test script error');
+            expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Failed tests');
+            expect(output).to.contain('Additional error data:');
+            expect(output).to.contain('[1,2,3]');
         });
 
         it('generates a report with caught error (data object)', async () => {
@@ -1160,14 +1161,15 @@ describe('Reporter', () => {
 
                 script.after(() => {
 
-                    return Promise.reject(new Error());
+                    throw new Error('failed');
                 });
             });
 
             const { code, output } = await Lab.report(script, { reporter: 'json', output: false });
             const result = JSON.parse(output);
             expect(code).to.equal(1);
-            expect(result.errors).to.have.length(2);
+            expect(result.errors).to.have.length(1);
+            expect(result.errors[0].message).to.equal('failed');
         });
 
         it('generates a report with coverage', async () => {
@@ -1548,7 +1550,7 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output).to.contain([
                 'tests="5"',
-                'errors="2"',
+                'errors="0"',
                 'skipped="2"',
                 'failures="2"',
                 '<failure message="Expected true to equal specified value: false" type="Error">'
