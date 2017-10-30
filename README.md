@@ -463,7 +463,7 @@ If you would like to run a different linter, or even a custom version of eslint 
 
 ## Integration with an assertion library
 
-Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. By default the assertion library `code` is included and integrated. However, you can override this behavior by setting the CLI `--assert` argument or changing the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
+Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. Aside from `--assert` from the CLI you can change the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
 
 <!-- eslint-disable no-undef -->
 ```js
@@ -489,8 +489,11 @@ describe('expectation', () => {
 
         fail('Should fail');
     });
-
 });
+```
+
+```
+$ lab --assert code
 ```
 
 If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you have any missing assertions. An example of this is:
@@ -505,7 +508,6 @@ describe('expectation', () => {
         // This test will pass.
         Lab.expect(true).to.be.false;
     });
-
 });
 ```
 
