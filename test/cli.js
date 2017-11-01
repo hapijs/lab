@@ -102,7 +102,6 @@ describe('CLI', () => {
         expect(result.code).to.equal(1);
         expect(result.output).to.contain('Error requiring file');
         expect(result.output).to.contain('cli_error/parse_invalid.js:5');
-        expect(result.output).to.contain('Unexpected identifier');
         expect(result.output).to.not.contain('UnhandledPromiseRejectionWarning');
     });
 
