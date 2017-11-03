@@ -8,7 +8,7 @@
     "test"
   ],
   "engines": {
-    "node": ">=8.7.0"
+    "node": ">=8.9.0"
   },
   "dependencies": {
     "bossy": "4.x.x",
@@ -29,7 +29,7 @@
     "supports-color": "4.4.x"
   },
   "devDependencies": {
-    "code": "5.1.x",
+    "code": "5.x.x",
     "cpr": "2.2.x",
     "eslint-plugin-markdown": "1.0.0-beta.6",
     "lab-event-reporter": "1.x.x",
