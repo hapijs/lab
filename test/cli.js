@@ -96,6 +96,15 @@ describe('CLI', () => {
         expect(result.output).to.contain('3 of 3 tests failed');
     });
 
+    it('handles parser error', async () => {
+
+        const result = await RunCli(['test/cli_error/parse.js']);
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('Error requiring file');
+        expect(result.output).to.contain('cli_error/parse_invalid.js:5');
+        expect(result.output).to.not.contain('UnhandledPromiseRejectionWarning');
+    });
+
     it('(--bail) exits with code 1 running a directory of tests after one fails', async () => {
 
         const result = await RunCli(['test/cli_bail', '-m', '2000', '--bail']);
