@@ -31,7 +31,7 @@ Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 - `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
 - `-h`, `--help` - show command line usage.
 - `-i`, `--id` - only run the test for the given identifier (or identifiers range).
-- `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated)
+- `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated), this is an alias of `globals` property in `.labrc` file
 - `--inspect` - start lab in debug mode using the [V8 Inspector](https://nodejs.org/dist/latest-v7.x/docs/api/debugger.html#debugger_v8_inspector_integration_for_node_js).
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
@@ -386,7 +386,6 @@ home directory.  The `.labrc.js` file needs to be able to be required by
 Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
 that exports an object with the keys that are the settings.
 
-
 Below is an example of a `.labrc.js` file to enable linting and test coverage checking:
 
 ```js
@@ -425,6 +424,7 @@ The `.labrc.js` file supports configuration keys that are named with the long na
 of the command line settings.  Therefore, if you need to specify an assert
 library, you would export a key named "assert" with the desired value.
 
+As stated at the beginning of the document, `--ignore` parameter is an alias for `globals` option in the `.labrc` file. Therefore if you wish to ignore specific files you'll need to append a `globals` setting, **not** an `ignore` one, as stated on #641.
 
 ## Extending the linter
 
