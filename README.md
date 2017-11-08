@@ -237,6 +237,25 @@ lab.test('attaches notes', (flags) => {
 
 Multiple notes can be appended for the same test case by simply calling `note()` repeatedly.
 
+#### `mustCall()`
+
+Declare that a particular function must be called a certain number of times. The signature to `mustCall` is `(fn, numberOfExecutions)` and it returns a wrapped copy of the `fn`. After the test is complete, each `mustCall` assertion will be checked and the test will fail if any function was called the incorrect number of times.
+
+Below is an example demonstrating how to use `mustCall` to verify that `fn` is called exactly two times.
+
+<!-- eslint-disable no-undef -->
+```javascript
+lab.test('fn must be called twice', async (flags) => {
+
+    const fn = () => {};
+    const wrapped = flags.mustCall(fn, 2);
+    wrapped();
+
+    await doSomeAsyncOperation();
+    wrapped();
+});
+```
+
 
 #### `onCleanup()`
 
