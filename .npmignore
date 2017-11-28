@@ -4,3 +4,4 @@
 !.npmignore
 !.eslintignore
 !README.md
+!index.d.ts
