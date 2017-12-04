@@ -246,10 +246,10 @@ You can assign a function to the `flags` object `onCleanup` property to register
 ```javascript
 lab.test('cleanups after test', (flags) => {
 
-    flags.onCleanup(() => {
+    flags.onCleanup = () => {
 
         cleanup_logic();
-    });
+    };
 
     Lab.expect(1 + 1).to.equal(2);
 });
