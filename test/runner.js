@@ -163,6 +163,47 @@ describe('Runner', () => {
         expect(notebook.failures).to.equal(1);
     });
 
+    it('passes when mustCall function called correct times', async () => {
+
+        const script = Lab.script();
+
+        script.test('a', (flags) => {
+
+            const noop = () => {};
+            const wrapped1 = flags.mustCall(noop, 2);
+            wrapped1();
+            wrapped1();
+
+            const wrapped2 = flags.mustCall(noop, 1);
+            wrapped2();
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('fails when mustCall function not called correct times', async () => {
+
+        const script = Lab.script();
+
+        script.test('a', (flags) => {
+
+            const noop = () => {};
+            const wrapped1 = flags.mustCall(noop, 2);
+            wrapped1();
+            wrapped1();
+
+            const wrapped2 = flags.mustCall(noop, 2);
+            wrapped2();
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(1);
+        expect(notebook.tests[0].err.stack).to.contain('test/runner.js');
+    });
+
     it('should fail test that returns a rejected promise', async () => {
 
         const script = Lab.script({ schedule: false });
