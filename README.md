@@ -81,7 +81,8 @@ Test files must require the **lab** module, and export a test script:
 
 <!-- eslint-disable no-undef -->
 ```javascript
-const { expect, it } = exports.lab = require('lab').script();
+const { expect } = require('code');
+const { it } = exports.lab = require('lab').script();
 
 it('returns true when 1 + 1 equals 2', () => {
 
@@ -93,12 +94,13 @@ Or
 
 <!-- eslint-disable no-undef -->
 ```javascript
+const { expect } = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 
 lab.test('returns true when 1 + 1 equals 2', () => {
 
-    Lab.expect(1 + 1).to.equal(2);
+    expect(1 + 1).to.equal(2);
 });
 ```
 
@@ -121,7 +123,7 @@ lab.experiment('math', () => {
 
     lab.test('returns true when 1 + 1 equals 2', () => {
 
-        Lab.expect(1 + 1).to.equal(2);
+        expect(1 + 1).to.equal(2);
     });
 });
 ```
@@ -152,7 +154,7 @@ lab.experiment('math', () => {
 
     lab.test('returns true when 1 + 1 equals 2', () => {
 
-        Lab.expect(1 + 1).to.equal(2);
+        expect(1 + 1).to.equal(2);
     });
 });
 
@@ -174,7 +176,7 @@ lab.experiment('math', () => {
         return aFunctionReturningAPromise()
             .then((aValue) => {
 
-                Lab.expect(aValue).to.equal(expectedValue);
+                expect(aValue).to.equal(expectedValue);
             });
     });
 });
@@ -193,7 +195,7 @@ lab.experiment('with only', () => {
 
     lab.test.only('only this test will run', () => {
 
-        Lab.expect(1 + 1).to.equal(2);
+        expect(1 + 1).to.equal(2);
     });
 
     lab.test('another test that will not be executed', () => {});
@@ -211,7 +213,7 @@ lab.experiment('my plan', () => {
 
     lab.test('only a single assertion executes', { plan: 1 }, () => {
 
-        Lab.expect(1 + 1).to.equal(2);
+        expect(1 + 1).to.equal(2);
     });
 });
 ```
@@ -230,7 +232,7 @@ Notes are included in the console reporter at the end of the output. For example
 ```javascript
 lab.test('attaches notes', (flags) => {
 
-    Lab.expect(1 + 1).to.equal(2);
+    expect(1 + 1).to.equal(2);
     flags.note(`The current time is ${Date.now()}`);
 });
 ```
@@ -270,7 +272,7 @@ lab.test('cleanups after test', (flags) => {
         cleanup_logic();
     };
 
-    Lab.expect(1 + 1).to.equal(2);
+    expect(1 + 1).to.equal(2);
 });
 ```
 
@@ -291,7 +293,7 @@ lab.experiment('math', { timeout: 1000 }, () => {
 
     lab.test('returns true when 1 + 1 equals 2', () =>  {
 
-        Lab.expect(1 + 1).to.equal(2);
+        expect(1 + 1).to.equal(2);
     });
 });
 ```
@@ -314,8 +316,9 @@ The `script([options])` method takes an optional `options` argument where `optio
 To make **lab** look like BDD:
 <!-- eslint-disable no-undef -->
 ```javascript
+const { expect } = require('code');
 const Lab = require('lab');
-const { after, before, describe, expect, it } = exports.lab = Lab.script();
+const { after, before, describe, it } = exports.lab = Lab.script();
 
 describe('math', () => {
 
@@ -336,8 +339,9 @@ describe('math', () => {
 To make **lab** look like TDD:
 <!-- eslint-disable no-undef -->
 ```javascript
+const { expect } = require('code');
 const Lab = require('lab');
-const { expect, suite, test } = exports.lab = Lab.script();
+const { suite, test } = exports.lab = Lab.script();
 
 suite('math', () => {
 
@@ -361,8 +365,9 @@ A TypeScript definition file is included with **lab** to make it easier to use i
 ```typescript
 import * as Lab from 'lab';
 
+const { expect } = require('code');
 const lab = Lab.script();
-const { describe, it, before, expect } = lab;
+const { describe, it, before } = lab;
 export { lab };
 
 describe('experiment', () => {
@@ -490,12 +495,7 @@ const lab = exports.lab = Lab.script();
 const { describe, it } = lab;
 
 // Testing shortcuts
-const expect = Lab.assertions.expect;
-const fail = Lab.assertions.fail;
-// OR
-// const expect = lab.expect;
-// const fail = lab.fail;
-
+const { expect, fail } = require('code');
 
 describe('expectation', () => {
 
