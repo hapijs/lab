@@ -114,6 +114,20 @@ describe('Linters - eslint', () => {
         expect(checkedFile.errors.length).to.equal(1);
     });
 
+    it('allows object rest/spread properties', async () => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'object-rest-spread');
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint' });
+
+        expect(result.lint).to.exist();
+
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
+
+        const checkedFile = eslintResults[0];
+        expect(checkedFile.errors.length).to.equal(0);
+    });
+
     it('should pass options and not find any files', async () => {
 
         const lintOptions = JSON.stringify({ extensions: ['.jsx'] });
