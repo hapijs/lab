@@ -1759,6 +1759,87 @@ describe('Reporter', () => {
             Fs.unlinkSync(filename);
         });
 
+        it('has correct exit code when test fails', async () => {
+
+            const Recorder = function () {
+
+                Stream.Writable.call(this);
+
+                this.content = '';
+            };
+
+            Hoek.inherits(Recorder, Stream.Writable);
+
+            Recorder.prototype._write = function (chunk, encoding, next) {
+
+                this.content += chunk.toString();
+                next();
+            };
+
+            const Test = require('./coverage/basic');
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('succeeds', () => {
+
+                    Test.method(true);
+                });
+
+                script.test('fails', () => {
+
+                    return Promise.reject('error');
+                });
+            });
+
+            const consoleRecorder = new Recorder();
+            const htmlRecorder = new Recorder();
+            const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
+
+            const { code, output } = await Lab.report(script, { reporter: ['lcov', 'html', 'console'], output: [filename, htmlRecorder, consoleRecorder], coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
+            expect(code.console).to.equal(1);
+            expect(code.lcov).to.equal(1);
+            expect(code.html).to.equal(1);
+            expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
+            expect(output.html).to.equal(htmlRecorder.content);
+            expect(consoleRecorder.content).to.contain('Coverage: 100.00%');
+
+            Fs.unlinkSync(filename);
+        });
+
+        it('can run a single reporter', async () => {
+
+            const Recorder = function () {
+
+                Stream.Writable.call(this);
+
+                this.content = '';
+            };
+
+            Hoek.inherits(Recorder, Stream.Writable);
+
+            Recorder.prototype._write = function (chunk, encoding, next) {
+
+                this.content += chunk.toString();
+                next();
+            };
+
+            const Test = require('./coverage/basic');
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('succeeds', () => {
+
+                    Test.method(true);
+                });
+            });
+
+            const consoleRecorder = new Recorder();
+
+            const { code, output } = await Lab.report(script, { reporter: ['console'], output: [consoleRecorder], verbose: true, coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
+            expect(code).to.equal(0);
+            expect(consoleRecorder.content).to.contain('Coverage: 100.00%');
+            expect(consoleRecorder.content).to.equal(output);
+        });
 
         it('that are duplicates with multiple outputs are supported', async () => {
 
