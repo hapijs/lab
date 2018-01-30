@@ -523,6 +523,12 @@ describe('CLI', () => {
             expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
             expect(result.code).to.equal(1);
         });
+
+        it('has exit code of 1 when there is an error and using code coverage', async () => {
+
+            const result = await RunCli(['-t', '100', '-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
+            expect(result.code).to.equal(1);
+        });
     });
 
     it('skips "skip" test and reports ran and skipped test count', async () => {
