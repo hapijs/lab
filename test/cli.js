@@ -100,9 +100,9 @@ describe('CLI', () => {
 
         const result = await RunCli(['test/cli_error/parse.js']);
         expect(result.code).to.equal(1);
-        expect(result.output).to.contain('Error requiring file');
-        expect(result.output).to.contain('cli_error/parse_invalid.js:5');
-        expect(result.output).to.not.contain('UnhandledPromiseRejectionWarning');
+        expect(result.errorOutput).to.contain('Error requiring file');
+        expect(result.errorOutput).to.contain('cli_error/parse_invalid.js:5');
+        expect(result.errorOutput).to.not.contain('UnhandledPromiseRejectionWarning');
     });
 
     it('(--bail) exits with code 1 running a directory of tests after one fails', async () => {
@@ -571,22 +571,22 @@ describe('CLI', () => {
         expect(result.output).to.contain('1 tests complete');
     });
 
-    it('displays error message when a script is detected without an exports.lab', async () => {
+    it('writes error message to stderr when a script is detected without an exports.lab', async () => {
 
         const result = await RunCli(['test/cli_no_exports/missingExports.js']);
 
-        expect(result.errorOutput).to.equal('');
+        expect(result.output).to.equal('');
         expect(result.code).to.equal(1);
-        expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
+        expect(result.errorOutput).to.contain('includes a lab script that is not exported via exports.lab');
     });
 
-    it('displays error message when a script is missing exports and other scripts contain them', async () => {
+    it('writes error message to stderr when a script is missing exports and other scripts contain them', async () => {
 
         const result = await RunCli(['test/cli_no_exports/']);
 
-        expect(result.errorOutput).to.equal('');
+        expect(result.output).to.equal('');
         expect(result.code).to.equal(1);
-        expect(result.output).to.contain('includes a lab script that is not exported via exports.lab');
+        expect(result.errorOutput).to.contain('includes a lab script that is not exported via exports.lab');
     });
 
     it('displays error message when an unknown argument is specified', async () => {
