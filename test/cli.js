@@ -337,7 +337,7 @@ describe('CLI', () => {
         expect(result.output).to.contain('\u001b[');
     });
 
-    it('uses custom coverage path with the --coverage-path argument', async () => {
+    it('can include all files for coverage with the --coverage-path argument', async () => {
 
         const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
 
@@ -347,7 +347,7 @@ describe('CLI', () => {
         expect(result.output).to.contain('Coverage: 100.00%');
     });
 
-    it('uses custom coverage excludes with the --coverage-exclude argument', async () => {
+    it('can exclude directories from coverage with the --coverage-exclude argument', async () => {
 
         const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'exclude', '-a', 'code'], 'test/cli_coverage');
 
@@ -356,6 +356,16 @@ describe('CLI', () => {
         expect(result.output).to.contain('1 tests complete');
         expect(result.output).to.contain('Coverage: 90.00% (1/10)');
         expect(result.output).to.contain('missing.js missing coverage on line(s)');
+    });
+
+    it('can exclude files from coverage with the --coverage-exclude argument', async () => {
+
+        const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'missing.js', '--coverage-exclude', 'include/include.js', '--coverage-exclude', 'exclude', '-a', 'code'], 'test/cli_coverage');
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 0.00% (0/0)');
     });
 
     it('doesn\'t fail with coverage when no external file is being tested', async () => {

@@ -2,6 +2,7 @@
 
 // Load modules
 
+const Fs = require('fs');
 const Path = require('path');
 const Module = require('module');
 const Code = require('code');
@@ -74,12 +75,47 @@ describe('Coverage', () => {
         expect(cov.hits).to.equal(30);
     });
 
-    it('measures coverage a file with test in the name', () => {
+    it('measures coverage of a file with test in the name', () => {
 
         const Test = require('./coverage/test-folder/test-name.js');
         Test.method();
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules'] });
+        expect(cov.percent).to.equal(100);
+    });
+
+    it('can exclude individual files by name', () => {
+
+        const Test = require('./coverage/test-folder/test-name.js');
+        Test.method();
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules', 'test-name.js'] });
+        expect(cov.percent).to.equal(0);
+    });
+
+    it('logs to stderr when coverageExclude file has fs.stat issue', () => {
+
+        const Test = require('./coverage/test-folder/test-name.js');
+        Test.method();
+
+        const origStatSync = Fs.statSync;
+        const origErrorLog = console.error;
+
+        Fs.statSync = () => {
+
+            const err = new Error();
+            err.code = 'BOOM';
+            throw err;
+        };
+
+        console.error = (data) => {
+
+            expect(data.code).to.equal('BOOM');
+        };
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules', 'test-name.js'] });
+        Fs.statSync = origStatSync;
+        console.error = origErrorLog;
         expect(cov.percent).to.equal(100);
     });
 
