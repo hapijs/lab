@@ -279,6 +279,45 @@ describe('Runner', () => {
         expect(notebook.tests[1].err.toString()).to.contain('A different reason why this test failed');
     });
 
+    it('should fail tests that throw a falsy value', async () => {
+
+        for (const falsy of ['', null, undefined]) {
+
+            const script = Lab.script({ schedule: false });
+
+            script.test('a', () => {
+
+                throw falsy;
+            });
+
+            const notebook = await Lab.execute(script, {}, null);
+            expect(notebook.tests).to.have.length(1);
+            expect(notebook.failures, 'When throwing ' + falsy).to.equal(1);
+            expect(notebook.tests[0].err.toString()).to.contain('Non Error object received or caught');
+        }
+    });
+
+    it('should fail test when returning an empty rejected promise', async () => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', () => {
+
+            let rejectPromise;
+            const promise = new Promise((_, reject) => {
+
+                rejectPromise = reject;
+            });
+            setTimeout(rejectPromise, 10);
+
+            return promise;
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(1);
+        expect(notebook.tests[0].err.toString()).to.contain('Non Error object received or caught');
+    });
 
     ['before', 'beforeEach', 'after', 'afterEach'].forEach((fnName) => {
 
@@ -298,6 +337,28 @@ describe('Runner', () => {
             const notebook = await Lab.execute(script, {}, null);
             expect(notebook.failures).to.equal(1);
             expect(notebook.errors[0].message).to.contain('A reason why this test failed');
+        });
+
+        it(`should fail "${fnName}" that throw a falsy value`, async () => {
+
+            for (const falsy of ['', null, undefined]) {
+
+                const script = Lab.script({ schedule: false });
+
+                script.describe('a test group', () => {
+
+                    script.test('a', () => {});
+
+                    script[fnName](() => {
+
+                        throw falsy;
+                    });
+                });
+
+                const notebook = await Lab.execute(script, {}, null);
+                expect(notebook.failures, 'When throwing ' + falsy).to.equal(1);
+                expect(notebook.errors[0].message).to.contain('Non Error object received or caught');
+            }
         });
 
         it(`should not fail "${fnName}" that returns a resolved promise`, async () => {
