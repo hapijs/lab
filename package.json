@@ -13,7 +13,7 @@
   "dependencies": {
     "bossy": "3.x.x",
     "code": "4.1.x",
-    "diff": "3.3.x",
+    "diff": "3.5.x",
     "eslint": "4.7.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-hapi": "4.x.x",
