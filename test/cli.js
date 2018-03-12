@@ -759,7 +759,18 @@ describe('CLI', () => {
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
         expect(result.output).to.contain('Expected 1 assertions, but found 2');
-        expect(result.output).to.contain('1 of 3 tests failed');
+        expect(result.output).to.contain('1 of 4 tests failed');
+    });
+
+    it('runs a single test and reports failed test plans', async () => {
+
+        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', 'code', '-p', '3']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('Expected 1 assertions, but found 2');
+        expect(result.output).to.contain('Expected at least 3 assertions, but found 2');
+        expect(result.output).to.contain('2 of 4 tests failed');
     });
 
     it('runs a single test and fails with a plan and no assertion library', async () => {
@@ -769,7 +780,18 @@ describe('CLI', () => {
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
         expect(result.output).to.contain('Expected 1 assertions, but no assertion library found');
-        expect(result.output).to.contain('3 of 3 tests failed');
+        expect(result.output).to.contain('3 of 4 tests failed');
+    });
+
+    it('runs a single test and fails with a plan and no assertion library', async () => {
+
+        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-p', '3', '-a', '']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('Expected 1 assertions, but no assertion library found');
+        expect(result.output).to.contain('Expected at least 3 assertions, but no assertion library found');
+        expect(result.output).to.contain('4 of 4 tests failed');
     });
 
     it('fails with an unhandled Promise rejection if the specified flag is set', async () => {

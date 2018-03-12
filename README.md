@@ -43,6 +43,7 @@ Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 - `--lint-fix` - apply any fixes from the linter, requires `-L` or `--lint` to be enabled. Disabled by default.
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
+- `-p`, `--default-plan-threshold` - sets the minimum number of assertions a test must run. Overridable with [`plan`](#plan).
 - `-P`, `--pattern` - only load files with the given pattern in the name.
 - `-r`, `--reporter` - the reporter used to generate the test results. Defaults to `console`. Options are:
     - `console` - text report.

@@ -37,4 +37,10 @@ describe('Test Plan', () => {
         expect(2 * 2).to.equal(4);
         expect(4 * 4).to.equal(16);
     });
+
+    it('divides numbers', () => {
+
+        expect(2 / 2).to.equal(1);
+        expect(4 / 4).to.equal(1);
+    });
 });
