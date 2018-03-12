@@ -1184,6 +1184,97 @@ describe('Runner', () => {
         expect(output).to.contain('Expected 1 assertions, but no assertion library found');
     });
 
+    it('extends report with assertions library support (default minimum planned assertions)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', () => {
+
+                assertions.expect(true).to.be.true();
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions, 'default-plan-threshold': 1 });
+        expect(code).to.equal(0);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.not.match(/Expected at least \d+ assertions, but found \d+/);
+    });
+
+    it('extends report with assertions library support (local override and default minimum planned assertions error)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', { plan: 2 }, () => {
+
+                assertions.expect(true).to.be.true();
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions, 'default-plan-threshold': 1 });
+        expect(code).to.equal(1);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.match(/Expected \d+ assertions, but found \d+/);
+    });
+
+    it('extends report with assertions library support (default minimum planned assertions error)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', () => {
+
+                assertions.expect(true).to.be.true();
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions, 'default-plan-threshold': 2 });
+        expect(code).to.equal(1);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.match(/Expected at least \d+ assertions, but found \d+/);
+    });
+
+    it('extends report with assertions library support (planned assertions error with existing error)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', () => {
+
+                assertions.expect(true).to.be.true();
+                return Promise.reject(new Error('My Error'));
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions, 'default-plan-threshold': 2 });
+        expect(code).to.equal(1);
+        expect(output).to.match(/My Error/);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.match(/Expected at least \d+ assertions, but found \d+/);
+    });
+
+    it('extends report with planned assertions and missing assertion library', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', () => {
+
+                assertions.expect(true).to.be.true();
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: false, 'default-plan-threshold': 1 });
+        expect(code).to.equal(1);
+        expect(output).to.contain('Expected at least 1 assertions, but no assertion library found');
+    });
+
     it('extends report with assertions library support (incompatible)', async () => {
 
         const script = Lab.script();
