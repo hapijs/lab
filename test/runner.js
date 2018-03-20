@@ -1202,6 +1202,26 @@ describe('Runner', () => {
         expect(output).to.not.match(/Expected at least \d+ assertions, but found \d+/);
     });
 
+    it('extends report with assertions library support (default minimum planned assertions)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.before(() => {});
+
+            script.test('1', () => {
+
+                assertions.expect(true).to.be.true();
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions, 'default-plan-threshold': 1 });
+        expect(code).to.equal(0);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.not.match(/Expected at least \d+ assertions, but found \d+/);
+    });
+
     it('extends report with assertions library support (local override and default minimum planned assertions error)', async () => {
 
         const script = Lab.script();
