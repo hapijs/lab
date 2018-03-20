@@ -395,10 +395,9 @@ Sometimes you want to disable code coverage for specific lines, and have the cov
 // There is no way to cover this in node 0.10
 /* $lab:coverage:off$ */
 if (typeof value === 'symbol') {
-    return '[' + value.toString() + ']';
+    // do something with value
 }
 /* $lab:coverage:on$ */
-
 ```
 
 
