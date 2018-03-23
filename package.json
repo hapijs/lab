@@ -14,7 +14,7 @@
     "bossy": "3.x.x",
     "code": "4.1.x",
     "diff": "3.5.x",
-    "eslint": "4.7.x",
+    "eslint": "4.19.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.5.x",
@@ -44,7 +44,7 @@
     "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
-    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md  ."
+    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md --parser-options 'ecmaVersion: 6' ."
   },
   "license": "BSD-3-Clause"
 }
