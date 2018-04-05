@@ -1598,7 +1598,7 @@ describe('Reporter', () => {
                 expect(output)
                     .to.contain('<div class="stats medium">')
                     .and.to.contain('semi - Missing semicolon')
-                    .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;."></span>')
+                    .and.to.contain('<span class="warnings" data-tooltip="no-eq-null - Use &#x27;&#x3d;&#x3d;&#x3d;&#x27; to compare with null."></span>')
                     .and.to.contain('<span class="lint-errors low">11</span>')
                     .and.to.contain('<span class="lint-warnings low">1</span>')
                     .and.to.contain('<li class="lint-entry">L13 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
@@ -1606,7 +1606,7 @@ describe('Reporter', () => {
                     .and.to.contain('<li class="lint-entry">L15 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
                     .and.to.contain('<li class="lint-entry">L18 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 8 spaces')
                     .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces')
-                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#8216;&#x3d;&#x3d;&#x3d;&#8217; to compare with &#8216;null&#8217;.</li>')
+                    .and.to.contain('<li class="lint-entry">L21 - <span class="level-WARNING">WARNING</span> - no-eq-null - Use &#x27;&#x3d;&#x3d;&#x3d;&#x27; to compare with null.</li>')
                     .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - eqeqeq - Expected &#x27;&#x3d;&#x3d;&#x3d;&#x27; and instead saw &#x27;&#x3d;&#x3d;&#x27;.</li>')
                     .and.to.contain('<li class="lint-entry">L21 - <span class="level-ERROR">ERROR</span> - semi - Missing semicolon.</li>')
                     .and.to.contain('<li class="lint-entry">L23 - <span class="level-ERROR">ERROR</span> - indent - Expected indentation of 4 spaces');
