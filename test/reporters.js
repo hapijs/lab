@@ -1362,9 +1362,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false });
             expect(code).to.equal(1);
-            expect(output)
-                .to.contain('Timed out &#x28;1ms&#x29; - Before test')
-                .and.to.contain('at Timer.listOnTimeout');
+            expect(output).to.contain('Timed out &#x28;1ms&#x29; - Before test');
         });
 
         it('generates a report with test script errors that are not Error', async () => {

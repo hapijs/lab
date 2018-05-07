@@ -36,6 +36,15 @@ describe('Coverage', () => {
         expect(cov.percent).to.equal(100);
     });
 
+    it('computes sloc without comments on transformed file', () => {
+
+        const Test = require('./coverage/transformed');
+        Test.method(1);
+
+        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/transformed') });
+        expect(cov.percent).to.equal(100);
+    });
+
     it('computes sloc on script that has no comments', () => {
 
         const Test = require('./coverage/nocomment');
