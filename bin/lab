@@ -53,19 +53,7 @@ const main = async () => {
     if (typeof code !== 'number') {
         code = code[Object.keys(code)[0]];
     }
-
-    let exitTimeout;
-    const tryToStop = () => {
-
-        clearTimeout(exitTimeout);
-        exitTimeout = setTimeout(() => {
-
-            process.exit(code);
-        }, 5);
-    };
-
-    process.stdout.on('data', tryToStop);
-    tryToStop();
+    process.exit(code);
 };
 
 main();
