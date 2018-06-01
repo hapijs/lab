@@ -253,7 +253,7 @@ describe('Lab', () => {
                 expect(context.second).to.equal(2);
                 expect(context.third).to.equal(3);
                 expect(context.fourth).to.equal(4);
-                context.fifth = 5;
+                context.test = true;
             });
 
             script.test('context cannot be manipulated', ({ context }) => {
@@ -262,34 +262,40 @@ describe('Lab', () => {
                 expect(context.second).to.equal(2);
                 expect(context.third).to.equal(3);
                 expect(context.fourth).to.equal(4);
-                expect(context.fifth).to.not.exist();
+                expect(context.test).to.not.exist();
             });
 
             script.after(({ context }) => {
 
                 expect(context.third).to.equal(3);
                 expect(context.fourth).to.equal(4);
-                expect(context.fifth).to.not.exist();
+                expect(context.test).to.not.exist();
             });
 
             script.afterEach(({ context }) => {
 
+                expect(context.first).to.equal(1);
+                expect(context.second).to.equal(2);
                 expect(context.third).to.equal(3);
                 expect(context.fourth).to.equal(4);
-                expect(context.fifth).to.not.exist();
+                expect(context.test).to.not.exist();
             });
 
             script.experiment('sub experiment', () => {
 
                 script.before(({ context }) => {
 
-                    expect(context.first).to.not.exist();
+                    expect(context.first).to.equal(1);
+                    expect(context.second).to.equal(2);
+                    expect(context.third).to.equal(3);
+                    expect(context.fourth).to.equal(4);
                     context.subExperiment = true;
                 });
 
                 script.test('context passed from parent beforeEach', ({ context }) => {
 
-                    expect(context.first).to.not.exist();
+                    expect(context.first).to.equal(1);
+                    expect(context.second).to.equal(2);
                     expect(context.subExperiment).to.equal(true);
                     expect(context.third).to.equal(3);
                     expect(context.fourth).to.equal(4);
@@ -299,7 +305,7 @@ describe('Lab', () => {
 
         const notebook = await Lab.execute(script, null, null);
         expect(notebook.tests).to.have.length(3);
-        //expect(notebook.failures).to.equal(0);
+        expect(notebook.failures).to.equal(0);
     });
 
     it('reports errors', async () => {
