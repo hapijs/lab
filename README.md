@@ -279,7 +279,7 @@ lab.test('cleanups after test', (flags) => {
 
 #### `context`
 
-`context` is an object that is passed to before and after functions in addition to tests themselves. The intent is to be able to set properties on `context` inside of a before function that can be used by a test function later. This should help reduce module level variables that are set by `before`/`beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
+`context` is an object that is passed to `before` and `after` functions in addition to tests themselves. The intent is to be able to set properties on `context` inside of a before function that can be used by a test function later. This should help reduce module level variables that are set by `before`/`beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
 
 <!-- eslint-disable no-undef -->
 ```javascript
