@@ -1775,6 +1775,7 @@ describe('Reporter', () => {
             };
 
             const Test = require('./coverage/basic');
+
             const script = Lab.script();
             script.experiment('test', () => {
 
@@ -1822,6 +1823,7 @@ describe('Reporter', () => {
             };
 
             const Test = require('./coverage/basic');
+
             const script = Lab.script();
             script.experiment('test', () => {
 

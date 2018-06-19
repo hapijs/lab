@@ -14,7 +14,7 @@
     "bossy": "4.x.x",
     "diff": "3.5.x",
     "eslint": "4.19.x",
-    "eslint-config-hapi": "11.x.x",
+    "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
     "espree": "3.5.x",
     "find-rc": "3.0.x",
