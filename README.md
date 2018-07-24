@@ -289,13 +289,14 @@ lab.test('leaves an unhandled rejection', (flags) => {
     
         flags.onUnhandledRejection = (err) => {
     
-            expect(err).to.be.an.error('I want this rejection to remain unhandled');
+            expect(err).to.be.an.error('I want this rejection to remain unhandled in production');
             resolve(); // finish the test
         };
         
+        // sample production code
         setTimeout(() => {
             
-            Promise.reject(new Error('I want this rejection to remain unhandled'));
+            Promise.reject(new Error('I want this rejection to remain unhandled in production'));
         });
     });
 });
@@ -313,13 +314,14 @@ lab.test('leaves an uncaught rejection', (flags) => {
     
         flags.onUncaughtException = (err) => {
     
-            expect(err).to.be.an.error('I want this exception to remain uncaught');
+            expect(err).to.be.an.error('I want this exception to remain uncaught in production');
             resolve(); // finish the test
         };
         
+        // sample production code
         setTimeout(() => {
             
-            throw new Error('I want this exception to remain uncaught');
+            throw new Error('I want this exception to remain uncaught in production');
         });
     });
 });
