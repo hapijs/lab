@@ -93,7 +93,9 @@ describe('CLI', () => {
         expect(result.output).to.contain('failure.js:26');
         expect(result.output).to.contain('failure.js:35');
         expect(result.output).to.contain('failure.js:46');
-        expect(result.output).to.contain('3 of 3 tests failed');
+        expect(result.output).to.contain('failure.js:74');
+        expect(result.output).to.contain('failure.js:107');
+        expect(result.output).to.contain('5 of 7 tests failed');
     });
 
     it('handles parser error', async () => {
