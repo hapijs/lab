@@ -277,6 +277,54 @@ lab.test('cleanups after test', (flags) => {
 });
 ```
 
+#### `flags.onUnhandledRejection()`
+
+You can assign a synchronous function to the `flags` object `onUnhandledRejection` property to register an override for global rejection handling. This can be used to test the code that is explicitly meant to result in unhandled rejections. 
+
+<!-- eslint-disable no-undef -->
+```javascript
+lab.test('leaves an unhandled rejection', (flags) => {
+
+    return new Promise((resolve) => {
+    
+        flags.onUnhandledRejection = (err) => {
+    
+            expect(err).to.be.an.error('I want this rejection to remain unhandled');
+            resolve(); // finish the test
+        };
+        
+        setTimeout(() => {
+            
+            Promise.reject(new Error('I want this rejection to remain unhandled'));
+        });
+    });
+});
+```
+
+#### `flags.onUncaughtException()`
+
+You can assign a synchronous function to the `flags` object `onUncaughtException` property to register an override for global exception handling. This can be used to test the code that is explicitly meant to result in uncaught exceptions. 
+
+<!-- eslint-disable no-undef -->
+```javascript
+lab.test('leaves an uncaught rejection', (flags) => {
+
+    return new Promise((resolve) => {
+    
+        flags.onUncaughtException = (err) => {
+    
+            expect(err).to.be.an.error('I want this exception to remain uncaught');
+            resolve(); // finish the test
+        };
+        
+        setTimeout(() => {
+            
+            throw new Error('I want this exception to remain uncaught');
+        });
+    });
+});
+```
+
 #### `context`
 
 `context` is an object that is passed to `before` and `after` functions in addition to tests themselves. The intent is to be able to set properties on `context` inside of a before function that can be used by a test function later. This should help reduce module level variables that are set by `before`/`beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
