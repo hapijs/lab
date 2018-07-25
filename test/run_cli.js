@@ -38,6 +38,7 @@ module.exports = (args, root) => {
             if (signal) {
                 return reject(new Error('Unexpected signal: ' + signal));
             }
+
             resolve({ output, errorOutput, combinedOutput, code, signal });
         });
     });

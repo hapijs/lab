@@ -30,6 +30,7 @@ describe('Coverage', () => {
     it('computes sloc without comments', () => {
 
         const Test = require('./coverage/sloc');
+
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sloc') });
@@ -39,6 +40,7 @@ describe('Coverage', () => {
     it('computes sloc without comments on transformed file', () => {
 
         const Test = require('./coverage/transformed');
+
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/transformed') });
@@ -48,6 +50,7 @@ describe('Coverage', () => {
     it('computes sloc on script that has no comments', () => {
 
         const Test = require('./coverage/nocomment');
+
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/nocomment') });
@@ -57,6 +60,7 @@ describe('Coverage', () => {
     it('instruments and measures coverage', () => {
 
         const Test = require('./coverage/basic');
+
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/basic') });
@@ -66,6 +70,7 @@ describe('Coverage', () => {
     it('measures coverage on an empty return statement', () => {
 
         const Test = require('./coverage/return');
+
         Test.method();
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/return') });
@@ -75,6 +80,7 @@ describe('Coverage', () => {
     it('identifies lines with partial coverage', () => {
 
         const Test = require('./coverage/partial');
+
         Test.method(1, 2, 3);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/partial') });
@@ -87,6 +93,7 @@ describe('Coverage', () => {
     it('measures coverage of a file with test in the name', () => {
 
         const Test = require('./coverage/test-folder/test-name.js');
+
         Test.method();
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules'] });
@@ -96,6 +103,7 @@ describe('Coverage', () => {
     it('can exclude individual files by name', () => {
 
         const Test = require('./coverage/test-folder/test-name.js');
+
         Test.method();
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules', 'test-name.js'] });
@@ -105,6 +113,7 @@ describe('Coverage', () => {
     it('logs to stderr when coverageExclude file has fs.stat issue', () => {
 
         const Test = require('./coverage/test-folder/test-name.js');
+
         Test.method();
 
         const origStatSync = Fs.statSync;
@@ -131,6 +140,7 @@ describe('Coverage', () => {
     it('identifies lines with partial coverage when having external sourcemap', () => {
 
         const Test = require('./coverage/sourcemaps-external');
+
         Test.method(false);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-external'), sourcemaps: true });
@@ -158,6 +168,7 @@ describe('Coverage', () => {
     it('identifies lines with partial coverage when having inline sourcemap', () => {
 
         const Test = require('./coverage/sourcemaps-inline');
+
         Test.method(false);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-inline'), sourcemaps: true });
@@ -201,6 +212,7 @@ describe('Coverage', () => {
     it('bypasses marked code', () => {
 
         const Test = require('./coverage/bypass');
+
         Test.method(1, 2, 3);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass') });
@@ -213,6 +225,7 @@ describe('Coverage', () => {
     it('bypasses marked code and reports misses correctly', () => {
 
         const Test = require('./coverage/bypass-misses');
+
         Test.method(1);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-misses') });
@@ -234,6 +247,7 @@ describe('Coverage', () => {
     it('measures missing while statement coverage', () => {
 
         const Test = require('./coverage/while');
+
         Test.method(false);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/while') });
@@ -259,6 +273,7 @@ describe('Coverage', () => {
     it('retains original value of conditional result', () => {
 
         const Test = require('./coverage/conditional');
+
         const value = { a: 1 };
         expect(Test.method(value)).to.equal(value);
     });
@@ -266,6 +281,7 @@ describe('Coverage', () => {
     it('retains original value of conditional result with comma operator', () => {
 
         const Test = require('./coverage/conditional2');
+
         const value = 4711;
         expect(Test.method(value)).to.equal(value);
     });
@@ -273,6 +289,7 @@ describe('Coverage', () => {
     it('should not change use strict instructions', () => {
 
         const Test = require('./coverage/use-strict.js');
+
         expect(Test.method.toString()).to.not.contain('13'); // This is the line of the inner use strict
 
         const testFile = Path.join(__dirname, 'coverage/use-strict.js').replace(/\\/g, '/');
@@ -284,6 +301,7 @@ describe('Coverage', () => {
     it('should work with loop labels', () => {
 
         const Test = require('./coverage/loop-labels.js');
+
         expect(Test.method()).to.equal([1, 0]);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/loop-labels') });
@@ -293,6 +311,7 @@ describe('Coverage', () => {
 
             const line = source[lineNumber];
             if (line.miss) {
+                // eslint-disable-next-line prefer-spread
                 missedChunks.push.apply(missedChunks, line.chunks.filter((chunk) => {
 
                     return !!chunk.miss;
@@ -306,6 +325,7 @@ describe('Coverage', () => {
     it('should measure missing coverage on single-line functions correctly', () => {
 
         const Test = require('./coverage/single-line-functions');
+
         const results = [];
         for (let i = 1; i <= 10; ++i) {
             results.push(Test[`method${i}`](3, 4));
@@ -325,6 +345,7 @@ describe('Coverage', () => {
     it('should measure missing coverage on trailing function declarations correctly', () => {
 
         const Test = require('./coverage/trailing-function-declarations');
+
         const result = Test.method(3, 4);
 
         const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/trailing-function-declarations') });
@@ -337,6 +358,7 @@ describe('Coverage', () => {
     it('should measure coverage on conditional value', () => {
 
         const Test = require('./coverage/conditional-value');
+
         expect(Test.method(false)).to.equal(false);
         expect(Test.method(true, 1, 0)).to.equal(1);
         expect(Test.method(true, 0, 1)).to.equal(1);
@@ -376,6 +398,7 @@ describe('Coverage', () => {
             const cacheBackup = require.cache; // backup require cache
             const filename = Path.resolve(__dirname, './coverage/basic.js');
             let file = require('./coverage/basic'); //eslint-disable-line no-unused-vars
+
             const fileCovBefore = global.__$$labCov.files[filename];
             require.cache = Module._cache = {}; // clear require cache before additional require
             file = require('./coverage/basic');
