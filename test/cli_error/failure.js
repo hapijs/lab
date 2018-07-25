@@ -47,4 +47,70 @@ describe('Test CLI', () => {
             });
         });
     });
+
+    it('passes rejection to flags.onUnhandledRejection handler', (flags) => {
+
+        return new Promise((resolve) => {
+
+            flags.onUnhandledRejection = (err) => {
+
+                expect(err).to.be.an.error('rejection');
+                resolve();
+            };
+
+            setImmediate(() => {
+
+                Promise.reject(new Error('rejection'));
+            });
+        });
+    });
+
+    it('handles an error inside flags.onUnhandledRejection handler', (flags) => {
+
+        return new Promise(() => {
+
+            flags.onUnhandledRejection = () => {
+
+                throw new Error('incorrectly implemented error handling or a failed assertion');
+            };
+
+            setImmediate(() => {
+
+                Promise.reject(new Error('rejection'));
+            });
+        });
+    });
+
+    it('passes asynchronously thrown exception into flags.onUncaughtException handler', (flags) => {
+
+        return new Promise((resolve) => {
+
+            flags.onUncaughtException = (err) => {
+
+                expect(err).to.be.an.error('throw');
+                resolve();
+            };
+
+            setImmediate(() => {
+
+                throw new Error('throw');
+            });
+        });
+    });
+
+    it('handles an error inside flags.onUncaughtException handler', (flags) => {
+
+        return new Promise(() => {
+
+            flags.onUncaughtException = () => {
+
+                throw new Error('incorrectly implemented error handling or a failed assertion');
+            };
+
+            setImmediate(() => {
+
+                throw new Error('throw');
+            });
+        });
+    });
 });
