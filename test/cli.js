@@ -339,6 +339,23 @@ describe('CLI', () => {
         expect(result.output).to.contain('\u001b[');
     });
 
+    it('defaults to no context-timeout for before functions', { timeout: 3400 }, async () => {
+
+        const result = await RunCli(['test/cli_timeout/before.js']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('##before##');
+    });
+
+    it('can specify context-timeout for before functions', async () => {
+
+        const result = await RunCli(['test/cli_timeout/before.js', '--context-timeout', '500']);
+
+        expect(result.code).to.equal(1);
+        expect(result.output).to.not.contain('##before##');
+    });
+
     it('can include all files for coverage with the --coverage-path argument', async () => {
 
         const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
