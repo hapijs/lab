@@ -500,20 +500,20 @@ describe('CLI', () => {
         expect(result.code).to.equal(0);
     });
 
-    it('displays error message when there is more than one "only" within one file', async () => {
+    it('does not display error message when there is more than one "only" within one file', async () => {
 
         const result = await RunCli(['test/cli_only-skip/onlyMultiple.js']);
 
-        expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-        expect(result.code).to.equal(1);
+        expect(result.combinedOutput).to.contain('8 skipped');
+        expect(result.code).to.equal(0);
     });
 
-    it('displays error message when there is more than one "only" accross multiple files', async () => {
+    it('does not display error message when there is more than one "only" accross multiple files', async () => {
 
         const result = await RunCli(['test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-        expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-        expect(result.code).to.equal(1);
+        expect(result.combinedOutput).to.contain('18 skipped');
+        expect(result.code).to.equal(0);
     });
 
     describe('when using multiple reporters', () => {
@@ -529,34 +529,20 @@ describe('CLI', () => {
             await unlink(filename);
         });
 
-        it('displays error message when there is more than one "only" accross multiple files', async () => {
+        it('does not display error message when there is more than one "only" accross multiple files', async () => {
 
             const result = await RunCli(['-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-            expect(result.code).to.equal(1);
+            expect(result.combinedOutput).to.contain('18 skipped');
+            expect(result.code).to.equal(0);
         });
 
         it('displays error message when there is more than one "only" accross multiple files and the first reporter is not console', async () => {
 
             const result = await RunCli(['-r', 'json', '-o', filename, '-r', 'console', '-o', 'stdout', 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-            expect(result.code).to.equal(1);
-        });
-
-        it('displays error message when there is more than one "only" accross multiple files and there’s no console reporter', async () => {
-
-            const result = await RunCli(['-r', 'json', '-o', filename, '-r', 'junit', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
-
-            expect(result.combinedOutput).to.contain('Multiple tests are marked as "only":');
-            expect(result.code).to.equal(1);
-        });
-
-        it('has exit code of 1 when there is an error and using code coverage', async () => {
-
-            const result = await RunCli(['-t', '100', '-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
-            expect(result.code).to.equal(1);
+            expect(result.combinedOutput).to.contain('18 skipped');
+            expect(result.code).to.equal(0);
         });
     });
 
