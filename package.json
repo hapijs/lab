@@ -13,10 +13,10 @@
   "dependencies": {
     "bossy": "4.x.x",
     "diff": "3.5.x",
-    "eslint": "4.19.x",
+    "eslint": "5.4.x",
     "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "espree": "3.5.x",
+    "espree": "4.0.x",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
     "hoek": "5.x.x",
