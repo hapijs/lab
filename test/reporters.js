@@ -414,6 +414,26 @@ describe('Reporter', () => {
             expect(output).to.contain(' of 1 tests failed');
         });
 
+        it('generates a report with caught error (multiline)', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    throw new Error('boom\nbam');
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, leaks: false, output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain('Failed tests:');
+            expect(output).to.contain('1) test works:');
+            expect(output).to.contain('boom\nbam');
+            expect(output).to.contain('at script.test');
+            expect(output).to.contain('1 of 1 tests failed');
+        });
+
         it('generates a report with caught error (data plain)', async () => {
 
             const script = Lab.script();
