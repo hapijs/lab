@@ -411,7 +411,9 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output).to.contain('Failed tests:');
             expect(output).to.contain('1) test works:');
-            expect(output).to.contain(' of 1 tests failed');
+            expect(output).to.contain('Error: boom');
+            expect(output).to.contain('at script.test');
+            expect(output).to.contain('1 of 1 tests failed');
         });
 
         it('generates a report with caught error (multiline)', async () => {
@@ -452,6 +454,8 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Failed tests');
+            expect(output).to.contain('Additional error data:');
+            expect(output).to.contain('abc');
         });
 
         it('generates a report with caught error (data array)', async () => {
