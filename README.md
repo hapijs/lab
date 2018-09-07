@@ -515,6 +515,13 @@ The `.labrc.js` file supports configuration keys that are named with the long na
 of the command line settings.  Therefore, if you need to specify an assert
 library, you would export a key named "assert" with the desired value.
 
+In addition, you can use the `paths` parameter to override the default test directory (i.e. `./test`):
+```js
+module.exports = {
+    paths: ['test/lab'],
+};
+```
+
 As stated at the beginning of the document, `--ignore` parameter is an alias for `globals` option in the `.labrc` file. Therefore if you wish to ignore specific files you'll need to append a `globals` setting, **not** an `ignore` one, as stated on #641.
 
 ## Extending the linter
