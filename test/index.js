@@ -548,7 +548,6 @@ describe('Lab', () => {
 
         const notebook = await Lab.execute(script, null, null);
         expect(notebook.tests).to.have.length(2);
-        //console.log(notebook.tests)
         expect(notebook.tests[0].skipped).to.not.exist();
         expect(notebook.tests[1].skipped).to.not.exist();
         expect(notebook.failures).to.equal(0);
