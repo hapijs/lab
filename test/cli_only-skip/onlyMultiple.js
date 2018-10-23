@@ -76,7 +76,7 @@ describe('math', () => {
             throw new Error("Should not execute this test");
         });
 
-        describe.only('nested addition', () => {
+        describe('nested addition', () => {
 
             before(() => {
 
@@ -98,9 +98,9 @@ describe('math', () => {
                 console.log('Should execute afterEach 3');
             });
 
-            it('returns true when 3 + 3 equals 6', () => {
+            it.only('returns true when 3 + 3 equals 6', () => {
 
-	            throw new Error("Should not execute this test");
+	            expect(3 + 3).to.equal(6);
             });
 
             it('returns true when 4 + 4 equals 8', () => {
@@ -130,9 +130,9 @@ describe('math', () => {
                     console.log('Should execute afterEach 4');
                 });
 
-                it('returns true when 5 + 5 equals 10', () => {
+                it.only('returns true when 5 + 5 equals 10', () => {
 
-		            throw new Error("Should not execute this test");
+		            expect(5 + 5).to.equal(10);
                 });
             });
         });
@@ -159,7 +159,7 @@ describe('math', () => {
                 throw new Error('Should not execute sibling afterEach');
             });
 
-            it.only('returns true when 6 + 6 equals 12', () => {
+            it('returns true when 6 + 6 equals 12', () => {
 
                 throw new Error("Should not execute this test");
             });

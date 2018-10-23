@@ -513,6 +513,46 @@ describe('Lab', () => {
         expect(notebook.failures).to.equal(0);
     });
 
+    it('multiple only experiments do not cause a failure', async () => {
+
+        const script = Lab.script({ schedule: false });
+        script.experiment.only('test1', () => {
+
+            script.test('works', () => {});
+        });
+
+        script.experiment.only('test2', {}, () => {
+
+            script.test('works', () => {});
+        });
+
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('multiple only tests do not cause a failure', async () => {
+
+        const script = Lab.script({ schedule: false });
+        script.experiment('test1', () => {
+
+            script.test.only('works', () => {});
+        });
+
+        script.experiment('test2', {}, () => {
+
+            script.test.only('works', () => {});
+        });
+
+        const notebook = await Lab.execute(script, null, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.tests[0].skipped).to.not.exist();
+        expect(notebook.tests[1].skipped).to.not.exist();
+        expect(notebook.failures).to.equal(0);
+    });
+
     it('skips test', async () => {
 
         const script = Lab.script({ schedule: false });
