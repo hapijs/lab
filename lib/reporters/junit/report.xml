@@ -1,6 +1,8 @@
-<testsuite tests="{{this.count}}" skipped="{{this.skipped}}" errors="{{this.errors}}" failures="{{this.failures}}" time="{{this.time}}">
+<testsuites tests="{{this.count}}" errors="{{this.errors}}" failures="{{this.failures}}" time="{{this.time}}">
+{{#each this.testsuites~}}
+<testsuite name="{{this.name}}" tests="{{this.count}}" skipped="{{this.skipped}}" errors="{{this.errors}}" time="{{this.time}}">
     {{#each this.tests~}}
-    <testcase classname="{{this.title}}" name="{{this.title}}" time="{{this.time}}">
+    <testcase classname="{{this.path}}" name="{{this.relativeTitle}}" time="{{this.time}}">
       {{#if this.err~}}
       <failure message="{{this.err.message}}" type="{{this.err.name}}">
         <![CDATA[{{this.err.details}}]]>
@@ -10,3 +12,5 @@
     </testcase>
     {{/each}}
 </testsuite>
+{{/each}}
+</testsuites>

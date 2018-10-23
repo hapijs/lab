@@ -632,7 +632,8 @@ describe('CLI', () => {
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
-        expect(result.output).to.contain('<testsuite tests="2"');
+        expect(result.output).to.contain('<testsuites tests="2"');
+        expect(result.output).to.contain('<testsuite name="Test CLI" tests="2"');
     });
 
     it('outputs to file passed with -o argument', async () => {
