@@ -24,7 +24,7 @@
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
-    "source-map": "0.6.x",
+    "source-map": "0.7.x",
     "source-map-support": "0.5.x",
     "supports-color": "4.4.x",
     "will-call": "1.x.x"

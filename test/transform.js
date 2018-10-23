@@ -46,23 +46,23 @@ describe('Transform', () => {
 
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', transform: internals.transform });
 
-    it('instruments and measures coverage', () => {
+    it('instruments and measures coverage', async () => {
 
         const Test = require('./transform/basic-transform');
 
         expect(Test.method(1)).to.equal(3);
 
-        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic-transform') });
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic-transform') });
         expect(cov.percent).to.equal(100);
     });
 
-    it('does not transform unneeded files', () => {
+    it('does not transform unneeded files', async () => {
 
         const Test = require('./transform/basic');
 
         expect(Test.method(1)).to.equal('!NOCOMPILE!');
 
-        const cov = Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic') });
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'transform/basic') });
         expect(cov.percent).to.equal(100);
     });
 

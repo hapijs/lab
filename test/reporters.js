@@ -1265,7 +1265,7 @@ describe('Reporter', () => {
 
             const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html'), output: false });
             expect(output).to.contain('<div class="stats medium">');
-            expect(output).to.contain('<span class="cov medium">66.67</span>');
+            expect(output).to.contain('66.67%');
             delete global.__$$testCovHtml;
         });
 
