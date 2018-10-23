@@ -1,0 +1,127 @@
+{
+  "ms": 20,
+  "tests": [
+    {
+      "path": [
+        "testFunction"
+      ],
+      "title": "testFunction behaves as expected without bar",
+      "relativeTitle": "behaves as expected without bar",
+      "options": {},
+      "id": 1,
+      "context": {},
+      "notes": [],
+      "duration": 15
+    }
+  ],
+  "failures": 0,
+  "errors": [],
+  "leaks": [],
+  "coverage": {
+    "sloc": 9,
+    "hits": 6,
+    "misses": 3,
+    "percent": 66.66666666666666,
+    "files": [
+      {
+        "filename": "src/test.ts",
+        "percent": 66.66666666666666,
+        "hits": 6,
+        "misses": 3,
+        "sloc": 9,
+        "source": {
+          "1": {
+            "source": "\"use strict\";",
+            "originalFilename": null,
+            "originalLine": null,
+            "miss": false
+          },
+          "2": {
+            "source": "Object.defineProperty(exports, \"__esModule\", { value: true });",
+            "originalFilename": null,
+            "originalLine": null,
+            "hits": 1,
+            "miss": false
+          },
+          "3": {
+            "source": "exports.testFunction = (options) => {",
+            "originalFilename": "src/test.ts",
+            "originalLine": 6,
+            "hits": 1,
+            "miss": false
+          },
+          "4": {
+            "source": "    if (options.bar) {",
+            "chunks": [
+              {
+                "source": "    if (",
+                "column": 0,
+                "originalFilename": null,
+                "originalLine": null,
+                "originalColumn": null
+              },
+              {
+                "source": "options.bar",
+                "miss": "false",
+                "column": 8,
+                "originalFilename": "src/test.ts",
+                "originalLine": 8,
+                "originalColumn": 6
+              },
+              {
+                "source": ") {",
+                "column": 19,
+                "originalFilename": "src/test.ts",
+                "originalLine": 8,
+                "originalColumn": 17
+              }
+            ],
+            "originalFilename": "src/test.ts",
+            "originalLine": 8,
+            "miss": true
+          },
+          "5": {
+            "source": "        console.log('Bar');",
+            "originalFilename": "src/test.ts",
+            "originalLine": 9,
+            "hits": 0,
+            "miss": true
+          },
+          "6": {
+            "source": "        return false;",
+            "originalFilename": "src/test.ts",
+            "originalLine": 10,
+            "hits": 0,
+            "miss": true
+          },
+          "7": {
+            "source": "    }",
+            "originalFilename": "src/test.ts",
+            "originalLine": 11,
+            "miss": false
+          },
+          "8": {
+            "source": "    return true;",
+            "originalFilename": "src/test.ts",
+            "originalLine": 13,
+            "hits": 1,
+            "miss": false
+          },
+          "9": {
+            "source": "};",
+            "originalFilename": "src/test.ts",
+            "originalLine": 14,
+            "miss": false
+          },
+          "10": {
+            "source": "",
+            "originalFilename": null,
+            "originalLine": null,
+            "miss": false
+          }
+        },
+        "sourcemaps": true
+      }
+    ]
+  }
+}

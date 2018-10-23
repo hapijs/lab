@@ -27,7 +27,7 @@ before(() => {
 
       console.log('##before##');
       resolve();
-    }, 3000)
+    }, 2000)
   });
 });
 

@@ -1265,7 +1265,7 @@ describe('Reporter', () => {
 
             const { output } = await Lab.report(script, { reporter: 'html', coverage: true, coveragePath: Path.join(__dirname, './coverage/html'), output: false });
             expect(output).to.contain('<div class="stats medium">');
-            expect(output).to.contain('<span class="cov medium">66.67</span>');
+            expect(output).to.contain('66.67%');
             delete global.__$$testCovHtml;
         });
 
@@ -1292,6 +1292,28 @@ describe('Reporter', () => {
             expect(output, 'missed original line not included').to.contains([
                 '<tr id="while.js__14" class="miss">',
                 '<td class="source" data-tooltip>        value &#x3D; false;</td>']);
+            delete global.__$$testCovHtml;
+        });
+
+        it('generates a coverage report for TypeScript notebook with missing source', async () => {
+
+            const SourceMapSupport = require('source-map-support');
+
+            SourceMapSupport.install({
+                retrieveSourceMap: (path) => {
+
+                    if (path === 'src/test.ts') {
+                        return { map: require('./coverage/ts-notebook-map.json') };
+                    }
+                }
+            });
+
+            const Notebook = require('./coverage/ts-notebook.json');
+
+            const reporter = Reporters.generate({ reporter: 'html' });
+
+            const { output } = await reporter.finalize(Notebook);
+            expect(output).to.contain('class="percentage">66.67%');
             delete global.__$$testCovHtml;
         });
 
