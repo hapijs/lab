@@ -339,7 +339,7 @@ describe('CLI', () => {
         expect(result.output).to.contain('\u001b[');
     });
 
-    it('defaults to no context-timeout for before functions', { timeout: 3400 }, async () => {
+    it('defaults to no context-timeout for before functions', { timeout: 4000 }, async () => {
 
         const result = await RunCli(['test/cli_timeout/before.js']);
 

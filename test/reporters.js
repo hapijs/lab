@@ -1295,6 +1295,28 @@ describe('Reporter', () => {
             delete global.__$$testCovHtml;
         });
 
+        it('generates a coverage report for TypeScript notebook with missing source', async () => {
+
+            const SourceMapSupport = require('source-map-support');
+
+            SourceMapSupport.install({
+                retrieveSourceMap: (path) => {
+
+                    if (path === 'src/test.ts') {
+                        return { map: require('./coverage/ts-notebook-map.json') };
+                    }
+                }
+            });
+
+            const Notebook = require('./coverage/ts-notebook.json');
+
+            const reporter = Reporters.generate({ reporter: 'html' });
+
+            const { output } = await reporter.finalize(Notebook);
+            expect(output).to.contain('class="percentage">66.67%');
+            delete global.__$$testCovHtml;
+        });
+
         it('generates a coverage report with original source from inline sourcemaps', async () => {
 
             const Test = require('./coverage/sourcemaps-inline');
