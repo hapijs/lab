@@ -412,7 +412,7 @@ describe('Reporter', () => {
             expect(output).to.contain('Failed tests:');
             expect(output).to.contain('1) test works:');
             expect(output).to.contain('Error: boom');
-            expect(output).to.contain('at script.test');
+            expect(output).to.contain('at ');
             expect(output).to.contain('1 of 1 tests failed');
         });
 
