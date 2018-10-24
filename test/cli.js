@@ -512,7 +512,7 @@ describe('CLI', () => {
 
         const result = await RunCli(['test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-        expect(result.combinedOutput).to.contain('18 skipped');
+        expect(result.combinedOutput).to.contain('14 skipped');
         expect(result.code).to.equal(0);
     });
 
@@ -533,7 +533,7 @@ describe('CLI', () => {
 
             const result = await RunCli(['-r', 'console', '-o', 'stdout', '-r', 'json', '-o', filename, 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            expect(result.combinedOutput).to.contain('18 skipped');
+            expect(result.combinedOutput).to.contain('14 skipped');
             expect(result.code).to.equal(0);
         });
 
@@ -541,7 +541,7 @@ describe('CLI', () => {
 
             const result = await RunCli(['-r', 'json', '-o', filename, '-r', 'console', '-o', 'stdout', 'test/cli_only-skip/onlyExperiment.js', 'test/cli_only-skip/onlyTest.js']);
 
-            expect(result.combinedOutput).to.contain('18 skipped');
+            expect(result.combinedOutput).to.contain('14 skipped');
             expect(result.code).to.equal(0);
         });
     });
