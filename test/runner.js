@@ -1592,4 +1592,42 @@ describe('Runner', () => {
         expect(notebook.tests).to.have.length(1);
         expect(notebook.failures).to.equal(1);
     });
+
+    it('nullifies test context on finish', async () => {
+
+        const script = Lab.script({ schedule: false });
+
+        const testContext = {
+            testData: { hello: 'there' }
+        };
+
+        script.experiment('test', () => {
+
+            script.beforeEach(({ context }) => {
+
+                context.testData = testContext.testData;
+            });
+
+            script.test('has test context', ({ context }) => {
+
+                expect(context,'has proper context').to.equal(testContext);
+            });
+
+            script.test('still has test context', ({ context }) => {
+
+                expect(context,'has proper context').to.equal(testContext);
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests.length,'has 2 tests').to.equal(2);
+        expect(notebook.failures,'has 0 failures').to.equal(0);
+
+        const assertNulledContext = (test) => {
+
+            expect(test.context,'nulled context').to.be.null();
+        };
+
+        notebook.tests.forEach(assertNulledContext);
+    });
 });
