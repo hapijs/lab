@@ -849,8 +849,8 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false });
-            expect(output).to.contain('Coverage: 76.47% (4/17)');
-            expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
+            expect(output).to.contain('Coverage: 68.42% (6/19)');
+            expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17-19, 22, 23');
             expect(output).to.not.contain('console-full');
         });
 
