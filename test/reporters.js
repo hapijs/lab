@@ -1198,7 +1198,7 @@ describe('Reporter', () => {
             expect(result.tests.group[1].title).to.equal('fails');
             expect(result.tests.group[1].err).to.equal('Expected true to equal specified value: false');
             expect(result.tests.group[2].title).to.equal('fails with non-error');
-            expect(result.tests.group[2].err).to.equal('Non Error object received or caught');
+            expect(result.tests.group[2].err).to.equal('Non Error object received or caught (unit test)');
             expect(result.leaks.length).to.equal(0);
             expect(result.duration).to.exist();
             expect(result.lint.length).to.be.greaterThan(1);
@@ -1459,7 +1459,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false });
             expect(code).to.equal(1);
-            expect(output).to.contain('Non Error object received or caught');
+            expect(output).to.contain('Non Error object received or caught &#x28;unit test&#x29;');
         });
 
         it('tags file percentile based on levels', async () => {

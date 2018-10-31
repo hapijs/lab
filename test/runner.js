@@ -219,6 +219,22 @@ describe('Runner', () => {
         expect(notebook.tests[0].err.toString()).to.contain('A reason why this test failed');
     });
 
+    it('should fail test that returns a non-error response', async () => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a', async () => {
+
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            throw undefined;
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.failures).to.equal(1);
+        expect(notebook.tests[0].err.toString()).to.contain('Error: Non Error object received or caught (unit test)');
+    });
+
     it('should not fail test that returns a resolved promise', async () => {
 
         const script = Lab.script({ schedule: false });
@@ -293,7 +309,7 @@ describe('Runner', () => {
             const notebook = await Lab.execute(script, {}, null);
             expect(notebook.tests).to.have.length(1);
             expect(notebook.failures, 'When throwing ' + falsy).to.equal(1);
-            expect(notebook.tests[0].err.toString()).to.contain('Non Error object received or caught');
+            expect(notebook.tests[0].err.toString()).to.contain('Non Error object received or caught (unit test)');
         }
     });
 
@@ -316,7 +332,7 @@ describe('Runner', () => {
         const notebook = await Lab.execute(script, {}, null);
         expect(notebook.tests).to.have.length(1);
         expect(notebook.failures).to.equal(1);
-        expect(notebook.tests[0].err.toString()).to.contain('Non Error object received or caught');
+        expect(notebook.tests[0].err.toString()).to.contain('Non Error object received or caught (unit test)');
     });
 
     ['before', 'beforeEach', 'after', 'afterEach'].forEach((fnName) => {
@@ -357,7 +373,7 @@ describe('Runner', () => {
 
                 const notebook = await Lab.execute(script, {}, null);
                 expect(notebook.failures, 'When throwing ' + falsy).to.equal(1);
-                expect(notebook.errors[0].message).to.contain('Non Error object received or caught');
+                expect(notebook.errors[0].message).to.contain('Non Error object received or caught (unit test)');
             }
         });
 
