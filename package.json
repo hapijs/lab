@@ -19,7 +19,7 @@
     "espree": "4.0.x",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
-    "hoek": "5.x.x",
+    "hoek": "6.x.x",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",

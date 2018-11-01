@@ -8,7 +8,6 @@ const Os = require('os');
 const Path = require('path');
 const Stream = require('stream');
 const Code = require('code');
-const Hoek = require('hoek');
 const _Lab = require('../test_runner');
 const Lab = require('../');
 const Reporters = require('../lib/reporters');
@@ -33,19 +32,19 @@ describe('Reporter', () => {
 
     it('outputs to a stream', async () => {
 
-        const Recorder = function () {
+        const Recorder = class extends Stream.Writable {
 
-            Stream.Writable.call(this);
+            constructor() {
 
-            this.content = '';
-        };
+                super();
+                this.content = '';
+            }
 
-        Hoek.inherits(Recorder, Stream.Writable);
+            _write(chunk, encoding, next) {
 
-        Recorder.prototype._write = function (chunk, encoding, next) {
-
-            this.content += chunk.toString();
-            next();
+                this.content += chunk.toString();
+                next();
+            }
         };
 
         const script = Lab.script();
@@ -1804,19 +1803,19 @@ describe('Reporter', () => {
 
         it('with multiple outputs are supported', async () => {
 
-            const Recorder = function () {
+            const Recorder = class extends Stream.Writable {
 
-                Stream.Writable.call(this);
+                constructor() {
 
-                this.content = '';
-            };
+                    super();
+                    this.content = '';
+                }
 
-            Hoek.inherits(Recorder, Stream.Writable);
+                _write(chunk, encoding, next) {
 
-            Recorder.prototype._write = function (chunk, encoding, next) {
-
-                this.content += chunk.toString();
-                next();
+                    this.content += chunk.toString();
+                    next();
+                }
             };
 
             const script = Lab.script();
@@ -1838,19 +1837,19 @@ describe('Reporter', () => {
 
         it('has correct exit code when test fails', async () => {
 
-            const Recorder = function () {
+            const Recorder = class extends Stream.Writable {
 
-                Stream.Writable.call(this);
+                constructor() {
 
-                this.content = '';
-            };
+                    super();
+                    this.content = '';
+                }
 
-            Hoek.inherits(Recorder, Stream.Writable);
+                _write(chunk, encoding, next) {
 
-            Recorder.prototype._write = function (chunk, encoding, next) {
-
-                this.content += chunk.toString();
-                next();
+                    this.content += chunk.toString();
+                    next();
+                }
             };
 
             const Test = require('./coverage/basic');
@@ -1886,19 +1885,19 @@ describe('Reporter', () => {
 
         it('can run a single reporter', async () => {
 
-            const Recorder = function () {
+            const Recorder = class extends Stream.Writable {
 
-                Stream.Writable.call(this);
+                constructor() {
 
-                this.content = '';
-            };
+                    super();
+                    this.content = '';
+                }
 
-            Hoek.inherits(Recorder, Stream.Writable);
+                _write(chunk, encoding, next) {
 
-            Recorder.prototype._write = function (chunk, encoding, next) {
-
-                this.content += chunk.toString();
-                next();
+                    this.content += chunk.toString();
+                    next();
+                }
             };
 
             const Test = require('./coverage/basic');
@@ -1922,19 +1921,19 @@ describe('Reporter', () => {
 
         it('that are duplicates with multiple outputs are supported', async () => {
 
-            const Recorder = function () {
+            const Recorder = class extends Stream.Writable {
 
-                Stream.Writable.call(this);
+                constructor() {
 
-                this.content = '';
-            };
+                    super();
+                    this.content = '';
+                }
 
-            Hoek.inherits(Recorder, Stream.Writable);
+                _write(chunk, encoding, next) {
 
-            Recorder.prototype._write = function (chunk, encoding, next) {
-
-                this.content += chunk.toString();
-                next();
+                    this.content += chunk.toString();
+                    next();
+                }
             };
 
             const script = Lab.script();
