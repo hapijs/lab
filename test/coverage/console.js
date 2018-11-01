@@ -16,7 +16,9 @@ exports.method = function (a, b, c) {
 	}
 	else if (c > 10) {
 		d += 1;
+		d += 1;
 	}
 
-	return d + (a || b || c);
+	const e = d ? a : b;
+	return d + (a || b || c) - e;
 };

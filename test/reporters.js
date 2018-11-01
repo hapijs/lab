@@ -828,7 +828,8 @@ describe('Reporter', () => {
 
         it('generates a coverage report (verbose)', async () => {
 
-            const Test = require('./coverage/console');
+            const Test1 = require('./coverage/console');
+            const Test2 = require('./coverage/console-large-file');
             const Full = require('./coverage/console-full');
 
             const script = Lab.script();
@@ -836,7 +837,8 @@ describe('Reporter', () => {
 
                 script.test('something', () => {
 
-                    Test.method(1, 2, 3);
+                    Test1.method(1, 2, 3);
+                    Test2.method(1);
                     Full.method(1);
 
                 });
@@ -848,8 +850,9 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false });
-            expect(output).to.contain('Coverage: 76.47% (4/17)');
-            expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17, 18, 21');
+            expect(output).to.contain('Coverage: 64.86% (26/74)');
+            expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17-19, 22, 23');
+            expect(output).to.contain('test/coverage/console-large-file.js missing coverage on line(s): 13, 17, 20, 25, 26, 29, 35-37, 40, and 10 more');
             expect(output).to.not.contain('console-full');
         });
 
