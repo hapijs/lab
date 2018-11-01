@@ -13,10 +13,10 @@
   "dependencies": {
     "bossy": "4.x.x",
     "diff": "3.5.x",
-    "eslint": "5.7.x",
+    "eslint": "5.8.x",
     "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "espree": "4.0.x",
+    "espree": "4.1.x",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
     "hoek": "6.x.x",
@@ -32,7 +32,7 @@
   "devDependencies": {
     "code": "5.x.x",
     "cpr": "3.0.x",
-    "eslint-plugin-markdown": "1.0.0-beta.6",
+    "eslint-plugin-markdown": "1.0.0-rc.0",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.6.x"
   },
