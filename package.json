@@ -33,6 +33,7 @@
     "code": "5.x.x",
     "cpr": "3.0.x",
     "eslint-plugin-markdown": "1.0.0-rc.0",
+    "graceful-fs": "4.1.11",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.6.x"
   },
