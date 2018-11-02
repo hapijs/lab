@@ -407,6 +407,16 @@ describe('CLI', () => {
         expect(result.output).to.contain('Coverage: 86.67%');
     });
 
+    it('reports coverage with --coverage-all and without -c or -t', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '--coverage-path', 'test/cli_coverage', '--coverage-all', '-a', 'code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 86.67%');
+    });
+
     it('can prevent recursive coverage inclusion with the --coverage-flat argument', async () => {
 
         const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', 'code']);
@@ -425,6 +435,13 @@ describe('CLI', () => {
         expect(result.code).to.equal(1);
         expect(result.output).to.contain('1 tests complete');
         expect(result.output).to.contain('Coverage: 0.00%');
+    });
+
+    it('outputs an error when --coverage-flat is used without --coverage-all', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100',  '--coverage-path', 'test/cli_coverage', '--coverage-flat', '-a', 'code']);
+
+        expect(result.errorOutput).to.include('The "coverage-flat" option can only be used with "coverage-all"');
     });
 
     it('defaults NODE_ENV environment variable to test', async () => {
