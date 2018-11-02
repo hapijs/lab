@@ -7,9 +7,6 @@
   "keywords": [
     "test"
   ],
-  "engines": {
-    "node": ">=8.12.0"
-  },
   "dependencies": {
     "bossy": "4.x.x",
     "diff": "3.5.x",
