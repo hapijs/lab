@@ -356,7 +356,7 @@ describe('CLI', () => {
         expect(result.output).to.not.contain('##before##');
     });
 
-    it('can include all files for coverage with the --coverage-path argument', async () => {
+    it('can include files for coverage with the --coverage-path argument', async () => {
 
         const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
 
@@ -394,6 +394,36 @@ describe('CLI', () => {
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
         expect(result.output).to.contain('2 tests complete');
+        expect(result.output).to.contain('Coverage: 0.00%');
+    });
+
+    it('can include all files in coverage with the --coverage-all argument', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '-a', 'code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 86.67%');
+    });
+
+    it('can prevent recursive coverage inclusion with the --coverage-flat argument', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', 'code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 80.00%');
+    });
+
+    it('can still exclude files with the --coverage-all argument', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-exclude', 'missing.js', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', 'code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 tests complete');
         expect(result.output).to.contain('Coverage: 0.00%');
     });
 

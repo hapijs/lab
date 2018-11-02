@@ -444,7 +444,7 @@ describe('Coverage', () => {
 
             expect(Test.method(true)).to.equal(true);
 
-            const cov = await Lab.coverage.analyze({ 'coverage-all': true, ['coverage-flat']: true, coveragePath: Path.join(__dirname, 'coverage/coverage-all/covered.js') });
+            const cov = await Lab.coverage.analyze({ 'coverage-all': true, 'coverage-flat': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all/covered.js') });
             expect(cov.percent).to.equal(100);
         });
     });
