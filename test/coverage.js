@@ -374,11 +374,11 @@ describe('Coverage', () => {
 
         const Test = require('./coverage/conditional-value2');
 
-        expect(Test.method(true, true, true)).to.equal(true);
-        expect(Test.method(false, true, true)).to.equal(false);
-        expect(Test.method(true, false, true)).to.equal(false);
+        expect(Test.method(false, false, false)).to.equal(false);
+        expect(Test.method(true, false, false)).to.equal(true);
+        expect(Test.method(false, true, false)).to.equal(true);
 
-        const cov = await  Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-value') });
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-value2') });
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(missedLines).to.equal(['7']);
