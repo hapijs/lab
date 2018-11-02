@@ -408,4 +408,50 @@ describe('Coverage', () => {
             expect(fileCovAfter).to.equal(fileCovBefore);
         });
     });
+
+    describe('coverage-all option', () => {
+
+        it('reports coverage for all matching files', async () => {
+
+            const Test = require('./coverage/coverage-all/covered');
+
+            expect(Test.method(true)).to.equal(true);
+
+            const cov = await Lab.coverage.analyze({ 'coverage-all': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all') });
+            expect(cov.percent).to.equal(70);
+
+            expect(cov.files).to.have.length(2);
+
+            const filename = cov.files[1].filename;
+            expect(filename).to.equal('test/coverage/coverage-all/nested-folder/uncovered.js');
+
+            const source = cov.files[1].source;
+            const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+            expect(missedLines).to.equal(['8', '11', '13']);
+        });
+
+        it('reports coverage when the path is a single file', async () => {
+
+            const Test = require('./coverage/coverage-all/covered');
+
+            expect(Test.method(true)).to.equal(true);
+
+            const cov = await Lab.coverage.analyze({ 'coverage-all': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all/covered.js') });
+
+            expect(cov.files).to.have.length(1);
+            expect(cov.percent).to.equal(100);
+        });
+
+        it('respects the coverage-flat option', async () => {
+
+            const Test = require('./coverage/coverage-all/covered');
+
+            expect(Test.method(true)).to.equal(true);
+
+            const cov = await Lab.coverage.analyze({ 'coverage-all': true, 'coverage-flat': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all') });
+
+            expect(cov.files).to.have.length(1);
+            expect(cov.percent).to.equal(100);
+        });
+    });
 });
