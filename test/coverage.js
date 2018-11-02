@@ -420,6 +420,8 @@ describe('Coverage', () => {
             const cov = await Lab.coverage.analyze({ 'coverage-all': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all') });
             expect(cov.percent).to.equal(70);
 
+            expect(cov.files).to.have.length(2);
+
             const filename = cov.files[1].filename;
             expect(filename).to.equal('test/coverage/coverage-all/nested-folder/uncovered.js');
 
@@ -435,6 +437,8 @@ describe('Coverage', () => {
             expect(Test.method(true)).to.equal(true);
 
             const cov = await Lab.coverage.analyze({ 'coverage-all': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all/covered.js') });
+
+            expect(cov.files).to.have.length(1);
             expect(cov.percent).to.equal(100);
         });
 
@@ -444,7 +448,9 @@ describe('Coverage', () => {
 
             expect(Test.method(true)).to.equal(true);
 
-            const cov = await Lab.coverage.analyze({ 'coverage-all': true, 'coverage-flat': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all/covered.js') });
+            const cov = await Lab.coverage.analyze({ 'coverage-all': true, 'coverage-flat': true, coveragePath: Path.join(__dirname, 'coverage/coverage-all') });
+
+            expect(cov.files).to.have.length(1);
             expect(cov.percent).to.equal(100);
         });
     });
