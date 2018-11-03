@@ -25,8 +25,8 @@ Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 - `--coverage-path` - sets code coverage path.
 - `--coverage-exclude` - sets code coverage excludes.
 - `--coverage-all` - report coverage for all matched files, not just those tested.
-- `--coverage-flat` - do not perform a recursive find of files for coverage report. Requires --coverage-all
-- `--coverage-pattern` - only report coverage for files with the given pattern in the name. Requires --coverage-all
+- `--coverage-flat` - do not perform a recursive find of files for coverage report. Requires `--coverage-all`
+- `--coverage-pattern` - only report coverage for files with the given pattern in the name. Defaults to `pattern`. Requires `--coverage-all`
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
