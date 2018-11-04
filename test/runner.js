@@ -1552,7 +1552,7 @@ describe('Runner', () => {
 
             const now = Date.now();
             await Lab.execute(script, null, null);
-            expect(Date.now() - now).to.be.above(9);
+            expect(Date.now() - now).to.be.above(8);
         });
 
         it('setTimeout still functions correctly with non-integer timeout', async () => {
