@@ -444,6 +444,33 @@ describe('CLI', () => {
         expect(result.errorOutput).to.include('The "coverage-flat" option can only be used with "coverage-all"');
     });
 
+    it('matches coverage files using --pattern', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--pattern', 'include', '-a', 'code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 100.00%');
+    });
+
+    it('matches coverage files using --coverage-pattern', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-pattern', '.*?', '--pattern', 'include', '-a', 'code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 tests complete');
+        expect(result.output).to.contain('Coverage: 60.00%');
+    });
+
+    it('outputs an error when --coverage-pattern is used without --coverage-all', async () => {
+
+        const result = await RunCli(['test/cli_coverage', '-t', '100',  '--coverage-path', 'test/cli_coverage', '--coverage-pattern', 'include', '-a', 'code']);
+
+        expect(result.errorOutput).to.include('The "coverage-pattern" option can only be used with "coverage-all"');
+    });
+
     it('defaults NODE_ENV environment variable to test', async () => {
 
         const result = await RunCli(['test/cli/environment.js']);
