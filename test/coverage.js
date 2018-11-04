@@ -322,6 +322,31 @@ describe('Coverage', () => {
         expect(missedChunks).to.have.length(1).and.to.equal([{ source: 'j < 1', miss: 'true', column: 22 }]);
     });
 
+    it('should work with switch statements', async () => {
+
+        const Test = require('./coverage/switch.js');
+
+        expect(Test.method(1)).to.equal(1);
+        expect(Test.method()).to.equal(2);
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/switch') });
+        const source = cov.files[0].source;
+        const missedChunks = [];
+        Object.keys(source).forEach((lineNumber) => {
+
+            const line = source[lineNumber];
+            if (line.miss) {
+                // eslint-disable-next-line prefer-spread
+                missedChunks.push.apply(missedChunks, line.chunks.filter((chunk) => {
+
+                    return !!chunk.miss;
+                }));
+            }
+        });
+
+        expect(missedChunks).to.have.length(0);
+    });
+
     it('should measure missing coverage on single-line functions correctly', async () => {
 
         const Test = require('./coverage/single-line-functions');
