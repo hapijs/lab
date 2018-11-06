@@ -235,6 +235,17 @@ describe('Runner', () => {
         expect(notebook.tests[0].err.toString()).to.contain('Error: Non Error object received or caught (unit test)');
     });
 
+    it('should mark a test that isn\'t a function as a todo', async () => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a');
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.tests[0].todo).to.be.true();
+    });
+
     it('should not fail test that returns a resolved promise', async () => {
 
         const script = Lab.script({ schedule: false });
@@ -530,7 +541,6 @@ describe('Runner', () => {
         expect(notebook.tests.filter((test) => test.skipped)).to.have.length(3);
         expect(notebook.failures).to.equal(0);
     });
-
 
     it('skips everything except the "only" test when executing multiple scripts', async () => {
 
