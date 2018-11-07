@@ -235,6 +235,17 @@ describe('Runner', () => {
         expect(notebook.tests[0].err.toString()).to.contain('Error: Non Error object received or caught (unit test)');
     });
 
+    it('should mark a test that isn\'t a function as a todo', async () => {
+
+        const script = Lab.script({ schedule: false });
+
+        script.test('a');
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.tests[0].todo).to.be.true();
+    });
+
     it('should not fail test that returns a resolved promise', async () => {
 
         const script = Lab.script({ schedule: false });
@@ -530,7 +541,6 @@ describe('Runner', () => {
         expect(notebook.tests.filter((test) => test.skipped)).to.have.length(3);
         expect(notebook.failures).to.equal(0);
     });
-
 
     it('skips everything except the "only" test when executing multiple scripts', async () => {
 
@@ -1216,6 +1226,43 @@ describe('Runner', () => {
         expect(code).to.equal(0);
         expect(output).to.match(/Assertions count: \d+/);
         expect(output).to.not.match(/Expected at least \d+ assertions, but found \d+/);
+    });
+
+    it('extends report with assertions library support and test error (minimum planned assertions)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', { plan: 2 }, () => {
+
+                throw new Error('Expected 3 assertions');
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions });
+        expect(code).to.equal(1);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.match(/Expected \d+ assertions/);
+    });
+
+    it('extends report with assertions library support and test error (default minimum planned assertions)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            script.test('1', () => {
+
+                assertions.expect(true).to.be.true();
+                throw new Error('Expected 3 assertions');
+            });
+        });
+
+        const { code, output } = await Lab.report(script, { output: false, assert: assertions, 'default-plan-threshold': 2 });
+        expect(code).to.equal(1);
+        expect(output).to.match(/Assertions count: \d+/);
+        expect(output).to.match(/Expected at least \d+ assertions/);
     });
 
     it('extends report with assertions library support (default minimum planned assertions)', async () => {

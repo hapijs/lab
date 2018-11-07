@@ -59,6 +59,18 @@ describe('Reporter', () => {
         expect(output).to.equal(recorder.content);
     });
 
+    it('outputs to stdout', async () => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.test('works', () => {});
+        });
+
+        const { code } = await Lab.report(script, { output: process.stdout });
+        expect(code).to.equal(0);
+    });
+
     it('outputs to a file', async () => {
 
         const script = Lab.script();
@@ -1247,6 +1259,26 @@ describe('Reporter', () => {
             const { output } = await Lab.report(script, { reporter: 'json', coverage: true, coveragePath: Path.join(__dirname, './coverage/json'), output: false });
             const result = JSON.parse(output);
             expect(result.coverage.percent).to.equal(100);
+        });
+
+        it('generates a report with child linting', async () => {
+
+            const reporter = Reporters.generate({ reporter: 'json', lint: true });
+            const notebook = {
+                tests: [],
+                lint: {
+                    lint: [
+                        { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] },
+                        { errors: [{ severity: 'ERROR' }, { severity: 'ERROR' }] },
+                        { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] },
+                        { errors: [{ severity: 'WARNING' }, { severity: 'ERROR' }] }
+                    ]
+                }
+            };
+
+            const { output } = await reporter.finalize(notebook);
+            const result = JSON.parse(output);
+            expect(result.lint.length).to.equal(4);
         });
     });
 
