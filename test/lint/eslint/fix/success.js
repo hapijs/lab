@@ -8,7 +8,6 @@
 const internals = {};
 
 
-exports.method = function (value) {
-
-    return value;
+exports.method = function (value){
+return value
 };
