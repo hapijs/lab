@@ -972,7 +972,7 @@ describe('Reporter', () => {
             expect(output).to.match(/test\n  [✔√] 1\) works \(\d+ ms\)\n  [✖×] 2\) fails\n  \- 3\) skips \(\d+ ms\)\n/);
         });
 
-        it('excludes colors when terminal does not support', { parallel: false }, async () => {
+        it('excludes colors when terminal does not support', async () => {
 
             delete require.cache[require.resolve('supports-color')];
             const orig = {
