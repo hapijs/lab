@@ -695,7 +695,7 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false });
-            expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+            expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[90m1\) works \(\d+ ms\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
         });
 
         it('generates a report with verbose progress with experiments with same named tests', async () => {
@@ -763,7 +763,7 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false });
-            expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[92m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+            expect(output).to.match(/^test\n  \u001b\[32m[✔√]\u001b\[0m \u001b\[90m1\) works \(\d+ ms and \d+ assertions\)\u001b\[0m\n\n\n\u001b\[32m1 tests complete\u001b\[0m\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
         });
 
         it('generates a report with verbose progress that displays well on windows', async () => {
