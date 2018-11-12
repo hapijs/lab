@@ -40,11 +40,10 @@ Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
 - `--lint-errors-threshold` - maximum absolute amount of linting errors. Defaults to 0.
 - `--lint-warnings-threshold` - maximum absolute amount of linting warnings. Defaults to 0.
-- `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
-- `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
-- `-n`, `--linter` - specify linting program file path; default is `eslint`.
 - `--lint-fix` - apply any fixes from the linter, requires `-L` or `--lint` to be enabled. Disabled by default.
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
+- `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
+- `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--default-plan-threshold` - sets the minimum number of assertions a test must run. Overridable with [`plan`](#plan).
 - `-P`, `--pattern` - only load files with the given pattern in the name.
@@ -282,23 +281,23 @@ lab.test('cleanups after test', (flags) => {
 
 #### `flags.onUnhandledRejection()`
 
-You can assign a synchronous function to the `flags` object `onUnhandledRejection` property to register an override for global rejection handling. This can be used to test the code that is explicitly meant to result in unhandled rejections. 
+You can assign a synchronous function to the `flags` object `onUnhandledRejection` property to register an override for global rejection handling. This can be used to test the code that is explicitly meant to result in unhandled rejections.
 
 <!-- eslint-disable no-undef -->
 ```javascript
 lab.test('leaves an unhandled rejection', (flags) => {
 
     return new Promise((resolve) => {
-    
+
         flags.onUnhandledRejection = (err) => {
-    
+
             expect(err).to.be.an.error('I want this rejection to remain unhandled in production');
             resolve(); // finish the test
         };
-        
+
         // sample production code
         setTimeout(() => {
-            
+
             Promise.reject(new Error('I want this rejection to remain unhandled in production'));
         });
     });
@@ -307,23 +306,23 @@ lab.test('leaves an unhandled rejection', (flags) => {
 
 #### `flags.onUncaughtException()`
 
-You can assign a synchronous function to the `flags` object `onUncaughtException` property to register an override for global exception handling. This can be used to test the code that is explicitly meant to result in uncaught exceptions. 
+You can assign a synchronous function to the `flags` object `onUncaughtException` property to register an override for global exception handling. This can be used to test the code that is explicitly meant to result in uncaught exceptions.
 
 <!-- eslint-disable no-undef -->
 ```javascript
 lab.test('leaves an uncaught rejection', (flags) => {
 
     return new Promise((resolve) => {
-    
+
         flags.onUncaughtException = (err) => {
-    
+
             expect(err).to.be.an.error('I want this exception to remain uncaught in production');
             resolve(); // finish the test
         };
-        
+
         // sample production code
         setTimeout(() => {
-            
+
             throw new Error('I want this exception to remain uncaught in production');
         });
     });
@@ -555,12 +554,6 @@ flag with the `lint` flag.
 ```
 lab -dL
 ```
-
-
-## Running a custom linter
-
-If you would like to run a different linter, or even a custom version of eslint you should pass the `-n` or `--linter` argument with the path to the lint runner.  For example, if you plan to use jslint, you can install `lab-jslint` then pass `--linter node_modules/lab-jslint`.
-
 
 ## Integration with an assertion library
 
