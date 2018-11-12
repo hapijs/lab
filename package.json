@@ -42,7 +42,7 @@
     "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
-    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md --parser-options 'ecmaVersion: 8' ."
+    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md --parser-options 'ecmaVersion: 9' ."
   },
   "license": "BSD-3-Clause"
 }
