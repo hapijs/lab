@@ -252,7 +252,7 @@ describe('CLI', () => {
 
                     expect(combinedOutput).to.contain('Debugger listening on').and.to.contain(port.toString());
                     if (!cli.killed) {
-                        cli.kill();
+                        cli.kill('SIGTERM');
                     }
 
                     resolve();
