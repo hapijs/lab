@@ -20,14 +20,14 @@ const it = lab.it;
 
 describe('Test CLI throws', () => {
 
-    after((done) => {
+    after(() => {
 
         throw new Error('throwing after');
     });
 
-    it('handles thrown error', (done) => {
+    it('handles thrown error', () => {
 
-        done();
+        throw new Error('throwing in test');
     });
 });
 

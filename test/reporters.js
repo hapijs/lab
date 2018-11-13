@@ -1863,8 +1863,7 @@ describe('Reporter', () => {
             const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
 
             const { code, output } = await Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true });
-            expect(code.lcov).to.equal(0);
-            expect(code.console).to.equal(0);
+            expect(code).to.equal(0);
             expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
             expect(output.console).to.equal(recorder.content);
             Fs.unlinkSync(filename);
@@ -1908,9 +1907,7 @@ describe('Reporter', () => {
             const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
 
             const { code, output } = await Lab.report(script, { reporter: ['lcov', 'html', 'console'], output: [filename, htmlRecorder, consoleRecorder], coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
-            expect(code.console).to.equal(1);
-            expect(code.lcov).to.equal(1);
-            expect(code.html).to.equal(1);
+            expect(code).to.equal(1);
             expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
             expect(output.html).to.equal(htmlRecorder.content);
             expect(consoleRecorder.content).to.contain('Coverage: 100.00%');
@@ -1982,8 +1979,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true });
 
-            expect(code.console).to.equal(0);
-            expect(code.console2).to.equal(0);
+            expect(code).to.equal(0);
             expect(output.console).to.equal(Fs.readFileSync(filename).toString());
             expect(output.console2).to.equal(recorder.content);
             Fs.unlinkSync(filename);
