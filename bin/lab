@@ -50,9 +50,6 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
 const main = async () => {
 
     let { code } = await require('../lib/cli').run();
-    if (typeof code !== 'number') {
-        code = code[Object.keys(code)[0]];
-    }
     process.exit(code);
 };
 

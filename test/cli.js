@@ -118,7 +118,7 @@ describe('CLI', () => {
 
     it('exits with code 1 when function returns error with multiple reporters', async () => {
 
-        const result = await RunCli(['test/cli_failure/failure.js', '-r', 'console', '-r', 'lcov']);
+        const result = await RunCli(['test/cli_throws/throws.js', '-r', 'console', '-r', 'lcov']);
         expect(result.code).to.equal(1);
     });
 
