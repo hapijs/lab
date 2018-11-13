@@ -44,6 +44,11 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
         process.exit(code);
     });
 
+    process.on('SIGTERM', () => {
+
+        childLab.kill();
+    });
+
     return;
 }
 
