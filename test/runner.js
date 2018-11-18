@@ -201,7 +201,7 @@ describe('Runner', () => {
         const notebook = await Lab.execute(script, {}, null);
         expect(notebook.tests).to.have.length(1);
         expect(notebook.failures).to.equal(1);
-        expect(notebook.tests[0].err.stack).to.contain('test/runner.js');
+        expect(notebook.tests[0].err.stack).to.contain(Path.normalize('test/runner.js'));
     });
 
     it('should fail test that returns a rejected promise', async () => {

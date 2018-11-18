@@ -3,6 +3,7 @@
 // Load modules
 
 const Fs = require('fs');
+const Os = require('os');
 const Path = require('path');
 const Module = require('module');
 const Code = require('code');
@@ -12,7 +13,21 @@ const Lab = require('../');
 
 // Declare internals
 
-const internals = {};
+const internals = {
+    transform: [
+        {
+            ext: '.inl', transform: function (content, filename) {
+
+                if (Buffer.isBuffer(content)) {
+                    content = content.toString();
+                }
+
+                return content.concat(Os.EOL).concat('//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndoaWxlLmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLGFBRUE7QUFHQTtBQUVBLEtBQU0sV0FBWSxFQUFsQixDQUdBLFFBQVEsTUFBUixDQUFpQixTQUFVLEtBQVYsQ0FBaUIsQ0FFOUIsTUFBUSxLQUFSLENBQWdCLENBQ1osTUFBUSxLQUFSLENBQ0gsQ0FFRCxNQUFPLE1BQVAsQ0FDSCxDQVBEIiwiZmlsZSI6InNvdXJjZW1hcHMtaW5saW5lLmpzIiwic291cmNlc0NvbnRlbnQiOlsiJ3VzZSBzdHJpY3QnO1xuXG4vLyBMb2FkIG1vZHVsZXNcblxuXG4vLyBEZWNsYXJlIGludGVybmFsc1xuXG5jb25zdCBpbnRlcm5hbHMgPSB7fTtcblxuXG5leHBvcnRzLm1ldGhvZCA9IGZ1bmN0aW9uICh2YWx1ZSkge1xuXG4gICAgd2hpbGUgKCB2YWx1ZSApIHtcbiAgICAgICAgdmFsdWUgPSBmYWxzZTtcbiAgICB9XG5cbiAgICByZXR1cm4gdmFsdWU7XG59O1xuIl19').concat(Os.EOL);
+            }
+        },
+        { ext: '.js', transform: null }
+    ]
+};
 
 
 // Test shortcuts
@@ -501,5 +516,66 @@ describe('Coverage', () => {
             expect(cov.files).to.have.length(1);
             expect(cov.percent).to.equal(100);
         });
+    });
+});
+
+describe('Coverage via Transform API', () => {
+
+    lab.before(() => {
+
+        internals.js = require.extensions['.js'];
+        internals.inl = require.extensions['.inl'];
+
+        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
+    });
+
+    lab.after(() => {
+
+        require.extensions['.js'] = internals.js;
+        require.extensions['.inl'] = internals.inl;
+    });
+
+    it('identifies lines with partial coverage when having inline sourcemap', async () => {
+
+        const Test = require('./coverage/sourcemaps-transformed');
+
+        Test.method(false);
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/sourcemaps-transformed'), sourcemaps: true });
+
+        const source = cov.files[0].source;
+        const missedLines = [];
+        const missedChunks = [];
+        Object.keys(source).forEach((lineNumber) => {
+
+            const line = source[lineNumber];
+            if (line.miss) {
+                missedLines.push({
+                    filename: line.originalFilename,
+                    lineNumber,
+                    originalLineNumber: line.originalLine
+                });
+                if (line.chunks) {
+                    line.chunks.forEach((chunk) => {
+
+                        if (chunk.miss) {
+                            missedChunks.push({
+                                filename: chunk.originalFilename,
+                                lineNumber,
+                                originalLineNumber: chunk.originalLine,
+                                originalColumn: chunk.originalColumn
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        expect(missedLines).to.include([
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 11 }
+        ]);
+        expect(missedChunks).to.include([
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
+        ]);
     });
 });
