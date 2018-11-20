@@ -1656,6 +1656,58 @@ describe('Runner', () => {
         expect(notebook.failures).to.equal(1);
     });
 
+    it('defaults to an immutable test context', async () => {
+
+        const script = Lab.script({ schedule: false });
+        script.experiment('context', () => {
+
+            script.before(({ context }) => {
+
+                context._message = '##original##';
+            });
+
+            script.test('test attempts to mutate context', ({ context }) => {
+
+                context._message = '##mutated##';
+            });
+
+            script.test('test successfully mutated context', ({ context: { _message } }) => {
+
+                expect(_message).to.equal('##mutated##');
+            });
+        });
+
+        const notebook = await Lab.execute(script, null);
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.failures).to.equal(1);
+    });
+
+    it('allows mutable test context', async () => {
+
+        const script = Lab.script({ schedule: false });
+        script.experiment('context', () => {
+
+            script.before(({ context }) => {
+
+                context._message = '##original##';
+            });
+
+            script.test('test attempts to mutate context', ({ context }) => {
+
+                context._message = '##mutated##';
+            });
+
+            script.test('test successfully mutated context', ({ context: { _message } }) => {
+
+                expect(_message).to.equal('##mutated##');
+            });
+        });
+
+        const notebook = await Lab.execute(script, { 'mutable-context': true });
+        expect(notebook.tests).to.have.length(2);
+        expect(notebook.failures).to.equal(0);
+    });
+
     it('nullifies test context on finish', async () => {
 
         const script = Lab.script({ schedule: false });

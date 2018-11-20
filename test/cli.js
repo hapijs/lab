@@ -356,6 +356,24 @@ describe('CLI', () => {
         expect(result.output).to.not.contain('##before##');
     });
 
+    it('defaults to immutable context', async () => {
+
+        const result = await RunCli(['test/cli_context/before.js']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('##original##');
+    });
+
+    it('can specify mutable-context for test functions', async () => {
+
+        const result = await RunCli(['test/cli_context/before.js', '--mutable-context']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('##mutated##');
+    });
+
     it('can include files for coverage with the --coverage-path argument', async () => {
 
         const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);

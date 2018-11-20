@@ -44,6 +44,7 @@ Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 - `--lint-options` - specify options to pass to linting program. It must be a string that is JSON.parse(able).
 - `-m`, `--timeout` - individual tests timeout in milliseconds (zero disables timeout). Defaults to 2 seconds.
 - `-M`, `--context-timeout` - default timeouts for before, after, beforeEach and afterEach in milliseconds. Disabled by default.
+- `--mutable-context` - allow tests to mutate flags.context. Disabled by default.
 - `-o`, `--output` - file to write the report to, otherwise sent to stdout.
 - `-p`, `--default-plan-threshold` - sets the minimum number of assertions a test must run. Overridable with [`plan`](#plan).
 - `-P`, `--pattern` - only load files with the given pattern in the name.
