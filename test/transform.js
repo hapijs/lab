@@ -82,10 +82,10 @@ describe('Transform', () => {
 
         require('./transform/basic-transform'); // prime the cache
 
-        const rel = Transform.retrieveFile('test/transform/basic-transform.new');
+        const rel = Transform.retrieveFile(Path.normalize('test/transform/basic-transform.new'));
         expect(rel).to.not.contain('!NOCOMPILE!');
 
-        const abs = Transform.retrieveFile(process.cwd() + '/test/transform/basic-transform.new');
+        const abs = Transform.retrieveFile(Path.normalize(process.cwd() + '/test/transform/basic-transform.new'));
         expect(abs).to.not.contain('!NOCOMPILE!');
     });
 });
@@ -112,7 +112,7 @@ describe('Transform.install', () => {
 
         const Test = require('./transform/sourcemaps');
 
-        expect(Test.method(false)).to.equal(false);
+        expect(Test.method(true)).to.equal(false);
 
         const Test2 = require('./transform/exclude/transform-basic');
 

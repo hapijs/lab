@@ -103,7 +103,7 @@ describe('CLI', () => {
         const result = await RunCli(['test/cli_error/parse.js']);
         expect(result.code).to.equal(1);
         expect(result.errorOutput).to.contain('Error requiring file');
-        expect(result.errorOutput).to.contain('cli_error/parse_invalid.js:5');
+        expect(result.errorOutput).to.contain(Path.normalize('cli_error/parse_invalid.js') + ':5');
         expect(result.errorOutput).to.not.contain('UnhandledPromiseRejectionWarning');
     });
 

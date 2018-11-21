@@ -19,6 +19,7 @@
     "hoek": "6.x.x",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
+    "lodash": "^4.17.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
     "source-map": "0.7.x",
