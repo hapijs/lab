@@ -16,10 +16,9 @@
     "espree": "4.1.x",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
-    "hoek": "6.x.x",
+    "hoek": "^6.0.4",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
-    "lodash": "^4.17.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
     "source-map": "0.7.x",
@@ -42,7 +41,7 @@
     "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
-    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md --parser-options 'ecmaVersion: 9' ."
+    "lint-md": "eslint --config hapi --rule \"strict: 0, eol-last: 0\" --plugin markdown --ext md --parser-options \"ecmaVersion: 9\" ."
   },
   "license": "BSD-3-Clause"
 }
