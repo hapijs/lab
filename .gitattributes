@@ -1,0 +1,3 @@
+*.new text eol=lf
+*.inl text eol=lf
+*.js text eol=lf
