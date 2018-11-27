@@ -6,4 +6,9 @@ node_js:
   - "11"
   - "node"
 
+os:
+  - linux
+  - osx
+  - windows
+
 sudo: false
