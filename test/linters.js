@@ -3,7 +3,6 @@
 // Load modules
 
 const Fs = require('fs');
-const Os = require('os');
 const Path = require('path');
 const _Lab = require('../test_runner');
 const Code = require('code');
@@ -155,8 +154,7 @@ describe('Linters - eslint', () => {
         Fs.writeFileSync = (path, output) => {
 
             expect(path).to.endWith(Path.join('test', 'lint', 'eslint', 'fix', 'success.js'));
-            
-            expect(output).to.endWith(Os.EOL + '    return value;' + Os.EOL + '};' + Os.EOL);
+            expect(output).to.match(/\r?\n    return value;\r?\n\};\r?\n/);
             isFixed = true;
         };
 
