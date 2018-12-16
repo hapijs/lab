@@ -38,9 +38,9 @@
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "node ./bin/_lab -fL -t 100 -m 3000",
+    "test": "node ./bin/_lab -fL -t 100 -m 10000",
     "posttest": "npm run lint-md",
-    "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
+    "test-cov-html": "node ./bin/_lab -fL -r html -m 10000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
     "lint-md": "eslint --config hapi --rule \"strict: 0, eol-last: 0\" --plugin markdown --ext md --parser-options \"ecmaVersion: 9\" ."
   },

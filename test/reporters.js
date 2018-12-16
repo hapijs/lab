@@ -999,6 +999,39 @@ describe('Reporter', () => {
             expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
         });
 
+        it('includes colors when terminal supports', async () => {
+
+            delete require.cache[require.resolve('supports-color')];
+            const orig = {
+                isTTY: process.stdout.isTTY,
+                env: process.env
+            };
+            process.stdout.isTTY = true;
+            process.env = {
+                FORCE_COLOR: true
+            };
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    expect(true).to.equal(true);
+                });
+                script.test('does not work', () => {
+
+                    expect(true).to.equal(false);
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', output: false, assert: false });
+
+            process.stdout.isTTY = orig.isTTY;
+            process.env = orig.env;
+            expect(code).to.equal(1);
+            expect(output).to.match(/^\n  \n  \.\u001b\[31mx\u001b\[0m\n\nFailed tests:\n\n  2\) test does not work:\n\n      \u001b\[37;41mactual\u001b\[0m \u001b\[30;42mexpected\u001b\[0m\n\n      \u001b\[37;41mtrue\u001b\[0m\u001b\[30;42mfalse\u001b\[0m\n\n      \u001b\[33mExpected true to equal specified value: false\u001b\[0m\n\n.*?\u001b\[0m\n\n\n\u001b\[31m1 of 2 tests failed\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+        });
+
         it('displays custom error messages in expect', async () => {
 
             const script = Lab.script();
