@@ -3,6 +3,7 @@
 // Load modules
 
 const Code = require('code');
+const Semver = require('semver');
 const _Lab = require('../test_runner');
 const Lab = require('../');
 
@@ -100,7 +101,7 @@ describe('Leaks', () => {
         expect(leaks.length).to.equal(0);
     });
 
-    it('ignores Counter globals', () => {
+    it('ignores Counter globals', { skip: process.platform === 'win32' && Semver.gte(process.version, '11.0.0') }, () => {
 
         const counterGlobals = internals.counterGlobals;
         testedKeys = internals.counterGlobals;

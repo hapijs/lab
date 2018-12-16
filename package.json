@@ -31,7 +31,8 @@
     "cpr": "3.0.x",
     "eslint-plugin-markdown": "1.0.0-rc.0",
     "lab-event-reporter": "1.x.x",
-    "rimraf": "2.6.x"
+    "rimraf": "2.6.x",
+    "semver": "5.6.x"
   },
   "bin": {
     "lab": "./bin/lab"

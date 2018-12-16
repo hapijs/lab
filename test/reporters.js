@@ -6,6 +6,7 @@ const Crypto = require('crypto');
 const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
+const Rimraf = require('rimraf');
 const Stream = require('stream');
 const Code = require('code');
 const _Lab = require('../test_runner');
@@ -101,8 +102,7 @@ describe('Reporter', () => {
 
         expect(code).to.equal(0);
         expect(output).to.equal(Fs.readFileSync(filename).toString());
-        Fs.unlinkSync(filename);
-        Fs.rmdirSync(folder);
+        Rimraf.sync(folder);
     });
 
     it('outputs to a file with output is passed as an array and reporter is an array', async () => {
