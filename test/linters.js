@@ -154,7 +154,7 @@ describe('Linters - eslint', () => {
         Fs.writeFileSync = (path, output) => {
 
             expect(path).to.endWith(Path.join('test', 'lint', 'eslint', 'fix', 'success.js'));
-            expect(output).to.endWith('\n    return value;\n};\n');
+            expect(output).to.match(/\r?\n    return value;\r?\n\};\r?\n/);
             isFixed = true;
         };
 

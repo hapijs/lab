@@ -10,21 +10,20 @@
   "dependencies": {
     "bossy": "4.x.x",
     "diff": "3.5.x",
-    "eslint": "5.9.x",
+    "eslint": "5.10.x",
     "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "espree": "4.1.x",
+    "espree": "5.0.x",
     "find-rc": "3.0.x",
     "handlebars": "4.x.x",
-    "hoek": "6.x.x",
+    "hoek": "6.1.x",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
-    "lodash": "^4.17.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.4.x",
     "source-map": "0.7.x",
     "source-map-support": "0.5.x",
-    "supports-color": "4.4.x",
+    "supports-color": "5.5.x",
     "will-call": "1.x.x"
   },
   "devDependencies": {
@@ -32,17 +31,18 @@
     "cpr": "3.0.x",
     "eslint-plugin-markdown": "1.0.0-rc.0",
     "lab-event-reporter": "1.x.x",
-    "rimraf": "2.6.x"
+    "rimraf": "2.6.x",
+    "semver": "5.6.x"
   },
   "bin": {
     "lab": "./bin/lab"
   },
   "scripts": {
-    "test": "node ./bin/_lab -fL -t 100 -m 3000",
+    "test": "node ./bin/_lab -fL -t 100 -m 10000",
     "posttest": "npm run lint-md",
-    "test-cov-html": "node ./bin/_lab -fL -r html -m 3000 -o coverage.html",
+    "test-cov-html": "node ./bin/_lab -fL -r html -m 10000 -o coverage.html",
     "lint": "node ./bin/_lab -d -f -L",
-    "lint-md": "eslint --config hapi --rule 'strict: 0, eol-last: 0' --plugin markdown --ext md --parser-options 'ecmaVersion: 9' ."
+    "lint-md": "eslint --config hapi --rule \"strict: 0, eol-last: 0\" --plugin markdown --ext md --parser-options \"ecmaVersion: 9\" ."
   },
   "license": "BSD-3-Clause"
 }
