@@ -1,14 +1,13 @@
 {
-  "name": "lab",
+  "name": "@hapi/lab",
   "description": "Test utility",
   "version": "18.0.2",
   "repository": "git://github.com/hapijs/lab",
   "main": "lib/index.js",
-  "keywords": [
-    "test"
-  ],
+  "keywords": ["test", "runner"],
   "dependencies": {
-    "bossy": "4.x.x",
+    "@hapi/bossy": "4.x.x",
+    "@hapi/hoek": "6.x.x",
     "diff": "4.x.x",
     "eslint": "5.x.x",
     "eslint-config-hapi": "12.x.x",
@@ -16,7 +15,6 @@
     "espree": "5.x.x",
     "find-rc": "4.x.x",
     "handlebars": "4.x.x",
-    "hoek": "6.x.x",
     "json-stable-stringify": "1.x.x",
     "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",

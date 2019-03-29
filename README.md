@@ -1,4 +1,4 @@
-![lab Logo](https://raw.github.com/hapijs/lab/master/images/lab.png)
+# lab
 
 Node test utility
 
