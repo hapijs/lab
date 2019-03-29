@@ -1,10 +1,13 @@
 {
   "name": "@hapi/lab",
   "description": "Test utility",
-  "version": "18.0.2",
+  "version": "18.1.0",
   "repository": "git://github.com/hapijs/lab",
   "main": "lib/index.js",
-  "keywords": ["test", "runner"],
+  "keywords": [
+    "test",
+    "runner"
+  ],
   "dependencies": {
     "@hapi/bossy": "4.x.x",
     "@hapi/hoek": "6.x.x",
