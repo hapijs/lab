@@ -28,7 +28,7 @@
     "will-call": "1.x.x"
   },
   "devDependencies": {
-    "code": "5.x.x",
+    "@hapi/code": "5.x.x",
     "cpr": "3.0.x",
     "eslint-plugin-markdown": "1.0.0-rc.0",
     "lab-event-reporter": "1.x.x",

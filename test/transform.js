@@ -4,7 +4,7 @@
 
 const Os = require('os');
 const Path = require('path');
-const Code = require('code');
+const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
 const Transform = require('../lib/transform');

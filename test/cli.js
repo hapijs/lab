@@ -10,7 +10,7 @@ const Os = require('os');
 const Path = require('path');
 const Util = require('util');
 
-const Code = require('code');
+const Code = require('@hapi/code');
 const Pkg = require('../package.json');
 const _Lab = require('../test_runner');
 const RunCli = require('./run_cli');
@@ -216,7 +216,7 @@ describe('CLI', () => {
 
         return new Promise((resolve, reject) => {
 
-            const httpServer = new Http.Server(() => {});
+            const httpServer = new Http.Server(() => { });
             httpServer.listen(0, () => {
 
                 const port = httpServer.address().port;
@@ -230,7 +230,7 @@ describe('CLI', () => {
                 const testPath = Path.join(__dirname, 'cli_inspect');
                 const childEnv = Object.assign({}, process.env);
                 delete childEnv.NODE_ENV;
-                const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd : '.' });
+                const cli = ChildProcess.spawn('node', [].concat([labPath, testPath, `--inspect=${port}`]), { env: childEnv, cwd: '.' });
                 let combinedOutput = '';
 
                 cli.once('error', (err) => {
@@ -358,7 +358,7 @@ describe('CLI', () => {
 
     it('can include files for coverage with the --coverage-path argument', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage/include', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -368,7 +368,7 @@ describe('CLI', () => {
 
     it('can exclude directories from coverage with the --coverage-exclude argument', async () => {
 
-        const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'exclude', '-a', 'code'], 'test/cli_coverage');
+        const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'exclude', '-a', '@hapi/code'], 'test/cli_coverage');
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -379,7 +379,7 @@ describe('CLI', () => {
 
     it('can exclude files from coverage with the --coverage-exclude argument', async () => {
 
-        const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'missing.js', '--coverage-exclude', 'include/include.js', '--coverage-exclude', 'exclude', '-a', 'code'], 'test/cli_coverage');
+        const result = await RunCli(['.', '-t', '100', '--coverage-exclude', 'missing.js', '--coverage-exclude', 'include/include.js', '--coverage-exclude', 'exclude', '-a', '@hapi/code'], 'test/cli_coverage');
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -399,7 +399,7 @@ describe('CLI', () => {
 
     it('can include all files in coverage with the --coverage-all argument', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -409,7 +409,7 @@ describe('CLI', () => {
 
     it('reports coverage with --coverage-all and without -c or -t', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '--coverage-path', 'test/cli_coverage', '--coverage-all', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '--coverage-path', 'test/cli_coverage', '--coverage-all', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -419,7 +419,7 @@ describe('CLI', () => {
 
     it('can prevent recursive coverage inclusion with the --coverage-flat argument', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -429,7 +429,7 @@ describe('CLI', () => {
 
     it('can still exclude files with the --coverage-all argument', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-exclude', 'missing.js', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-exclude', 'missing.js', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-flat', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -439,14 +439,14 @@ describe('CLI', () => {
 
     it('outputs an error when --coverage-flat is used without --coverage-all', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100',  '--coverage-path', 'test/cli_coverage', '--coverage-flat', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-flat', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.include('The "coverage-flat" option can only be used with "coverage-all"');
     });
 
     it('matches coverage files using --pattern', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--pattern', 'include', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--pattern', 'include', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -456,7 +456,7 @@ describe('CLI', () => {
 
     it('matches coverage files using --coverage-pattern', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-pattern', '.*?', '--pattern', 'include', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-all', '--coverage-pattern', '.*?', '--pattern', 'include', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -466,7 +466,7 @@ describe('CLI', () => {
 
     it('outputs an error when --coverage-pattern is used without --coverage-all', async () => {
 
-        const result = await RunCli(['test/cli_coverage', '-t', '100',  '--coverage-path', 'test/cli_coverage', '--coverage-pattern', 'include', '-a', 'code']);
+        const result = await RunCli(['test/cli_coverage', '-t', '100', '--coverage-path', 'test/cli_coverage', '--coverage-pattern', 'include', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.include('The "coverage-pattern" option can only be used with "coverage-all"');
     });
@@ -719,7 +719,7 @@ describe('CLI', () => {
 
     it('loads assertions library', async () => {
 
-        const result = await RunCli(['test/cli_assert/assert.js', '-m', '2000', '-a', 'code']);
+        const result = await RunCli(['test/cli_assert/assert.js', '-m', '2000', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -728,7 +728,7 @@ describe('CLI', () => {
 
     it('only loads files matching pattern (-P)', async () => {
 
-        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'test']);
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', '@hapi/code', '-P', 'test']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -737,7 +737,7 @@ describe('CLI', () => {
 
     it('reports a warning when no files matching the pattern are found', async () => {
 
-        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'nofiles']);
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', '@hapi/code', '-P', 'nofiles']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -746,7 +746,7 @@ describe('CLI', () => {
 
     it('only loads files matching pattern when pattern at beginning of name (-P)', async () => {
 
-        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', 'file']);
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', '@hapi/code', '-P', 'file']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -755,7 +755,7 @@ describe('CLI', () => {
 
     it('loads all files when pattern is empty (-P)', async () => {
 
-        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', 'code', '-P', '']);
+        const result = await RunCli(['test/cli_pattern', '-m', '2000', '-a', '@hapi/code', '-P', '']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
@@ -834,7 +834,7 @@ describe('CLI', () => {
 
     it('runs a single test and reports failed test plans', async () => {
 
-        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', 'code']);
+        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', '@hapi/code']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);
@@ -844,7 +844,7 @@ describe('CLI', () => {
 
     it('runs a single test and reports failed test plans', async () => {
 
-        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', 'code', '-p', '3']);
+        const result = await RunCli(['test/cli_plan/simple.js', '-m', '2000', '-a', '@hapi/code', '-p', '3']);
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(1);

@@ -71,7 +71,7 @@ Lead Maintainer: [Wyatt Preul](https://github.com/geek)
 
 To install locally:
 ```bash
-$ npm install --save-dev lab
+$ npm install --save-dev @hapi/lab
 ```
 
 By default, **lab** loads all the '\*.js' files inside the local 'test' directory and executes the tests found.  To use different directories or files, pass the file or directories as arguments:
@@ -84,8 +84,8 @@ Test files must require the **lab** module, and export a test script:
 
 <!-- eslint-disable no-undef -->
 ```javascript
-const { expect } = require('code');
-const { it } = exports.lab = require('lab').script();
+const { expect } = require('@hapi/code');
+const { it } = exports.lab = require('@hapi/lab').script();
 
 it('returns true when 1 + 1 equals 2', () => {
 
@@ -97,8 +97,8 @@ Or
 
 <!-- eslint-disable no-undef -->
 ```javascript
-const { expect } = require('code');
-const Lab = require('lab');
+const { expect } = require('@hapi/code');
+const Lab = require('@hapi/lab');
 const lab = exports.lab = Lab.script();
 
 lab.test('returns true when 1 + 1 equals 2', () => {
@@ -386,8 +386,8 @@ The `script([options])` method takes an optional `options` argument where `optio
 To make **lab** look like BDD:
 <!-- eslint-disable no-undef -->
 ```javascript
-const { expect } = require('code');
-const Lab = require('lab');
+const { expect } = require('@hapi/code');
+const Lab = require('@hapi/lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 
 describe('math', () => {
@@ -409,8 +409,8 @@ describe('math', () => {
 To make **lab** look like TDD:
 <!-- eslint-disable no-undef -->
 ```javascript
-const { expect } = require('code');
-const Lab = require('lab');
+const { expect } = require('@hapi/code');
+const Lab = require('@hapi/lab');
 const { suite, test } = exports.lab = Lab.script();
 
 suite('math', () => {
@@ -435,7 +435,7 @@ A TypeScript definition file is included with **lab** to make it easier to use i
 ```typescript
 import * as Lab from 'lab';
 
-const { expect } = require('code');
+const { expect } = require('@hapi/code');
 const lab = Lab.script();
 const { describe, it, before } = lab;
 export { lab };
@@ -565,7 +565,7 @@ const lab = exports.lab = Lab.script();
 const { describe, it } = lab;
 
 // Testing shortcuts
-const { expect, fail } = require('code');
+const { expect, fail } = require('@hapi/code');
 
 describe('expectation', () => {
 

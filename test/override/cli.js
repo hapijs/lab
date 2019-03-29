@@ -3,7 +3,7 @@
 // Load modules
 
 const _Lab = require('../../test_runner');
-const Code = require('code');
+const Code = require('@hapi/code');
 
 
 // Declare internals

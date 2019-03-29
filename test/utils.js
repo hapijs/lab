@@ -2,7 +2,7 @@
 
 // Load modules
 
-const Code = require('code');
+const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Utils = require('../lib/utils');
 

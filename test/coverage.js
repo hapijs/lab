@@ -6,7 +6,7 @@ const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
 const Module = require('module');
-const Code = require('code');
+const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
 
