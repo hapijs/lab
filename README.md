@@ -1,13 +1,10 @@
+<a href="http://hapijs.com"><img src="https://github.com/hapijs/assets/blob/master/images/family.svg" width="180px" align="right" /></a>
+
 # lab
 
 Node test utility
 
 [![Build Status](https://secure.travis-ci.org/hapijs/lab.svg)](http://travis-ci.org/hapijs/lab)
-
-Lead Maintainer: [Wyatt Preul](https://github.com/geek)
-
-**lab** is sponsored by [Joyent](http://www.joyent.com/).
-
 
 ## Introduction
 
