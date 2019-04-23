@@ -10,11 +10,11 @@
   ],
   "dependencies": {
     "@hapi/bossy": "4.x.x",
+    "@hapi/eslint-config-hapi": "12.x.x",
+    "@hapi/eslint-plugin-hapi": "4.x.x",
     "@hapi/hoek": "6.x.x",
     "diff": "4.x.x",
     "eslint": "5.x.x",
-    "eslint-config-hapi": "12.x.x",
-    "eslint-plugin-hapi": "4.x.x",
     "espree": "5.x.x",
     "find-rc": "4.x.x",
     "handlebars": "4.x.x",
@@ -30,7 +30,6 @@
   "devDependencies": {
     "@hapi/code": "5.x.x",
     "cpr": "3.0.x",
-    "eslint-plugin-markdown": "1.0.0-rc.0",
     "lab-event-reporter": "1.x.x",
     "rimraf": "2.6.x",
     "semver": "5.6.x"
@@ -40,10 +39,8 @@
   },
   "scripts": {
     "test": "node ./bin/_lab -fL -t 100 -m 10000",
-    "posttest": "npm run lint-md",
     "test-cov-html": "node ./bin/_lab -fL -r html -m 10000 -o coverage.html",
-    "lint": "node ./bin/_lab -d -f -L",
-    "lint-md": "eslint --config hapi --rule \"strict: 0, eol-last: 0\" --plugin markdown --ext md --parser-options \"ecmaVersion: 9\" ."
+    "lint": "node ./bin/_lab -d -f -L"
   },
   "license": "BSD-3-Clause"
 }
