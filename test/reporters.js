@@ -330,7 +330,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
             expect(code).to.equal(1);
-            expect(output).to.contain('"e": 665');
+            expect(output).to.contain('e: 665');
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Test duration:');
             expect(output).to.contain('No global variable leaks detected');
@@ -520,7 +520,7 @@ describe('Reporter', () => {
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Failed tests');
             expect(output).to.contain('Additional error data:');
-            expect(output).to.contain('[1,2,3]');
+            expect(output).to.contain('[ 1, 2, 3 ]');
         });
 
         it('generates a report with caught error (data object)', async () => {
@@ -1178,7 +1178,7 @@ describe('Reporter', () => {
 
             const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
             expect(output).to.contain('Failed tests:');
-            expect(output).to.contain('[Circular ~]');
+            expect(output).to.contain('[Circular]');
             expect(output).to.contain('Fail');
         });
 
