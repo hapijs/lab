@@ -18,8 +18,6 @@
     "espree": "5.x.x",
     "find-rc": "4.x.x",
     "handlebars": "4.x.x",
-    "json-stable-stringify": "1.x.x",
-    "json-stringify-safe": "5.x.x",
     "mkdirp": "0.5.x",
     "seedrandom": "2.x.x",
     "source-map": "0.7.x",
