@@ -21,7 +21,6 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     }
     else { // V8 inspector
         args.push(inspectArg);
-        args.push('--debug-brk');
     }
 
     args.push(lab);

@@ -32,7 +32,8 @@ Node test utility
 - `-h`, `--help` - show command line usage.
 - `-i`, `--id` - only run the test for the given identifier (or identifiers range, e.g. `lab -i 1-3,5`). Use `lab -dv` to print all tests and their identifier without running the tests.
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated), this is an alias of `globals` property in `.labrc` file
-- `--inspect` - start lab in debug mode using the [V8 Inspector](https://nodejs.org/dist/latest-v7.x/docs/api/debugger.html#debugger_v8_inspector_integration_for_node_js).
+- `--inspect` - start lab in debug mode using the [V8 Inspector](https://nodejs.org/dist/latest-v12.x/docs/api/debugger.html#debugger_v8_inspector_integration_for_node_js).
+- `--inspect-brk` - see `--inspect`.
 - `-l`, `--leaks` - disables global variable leak detection.
 - `-L`, `--lint` - run linting rules using linter.  Disabled by default.
 - `--lint-errors-threshold` - maximum absolute amount of linting errors. Defaults to 0.
