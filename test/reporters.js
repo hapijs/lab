@@ -51,7 +51,7 @@ describe('Reporter', () => {
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', () => {});
+            script.test('works', () => { });
         });
 
         const recorder = new Recorder();
@@ -60,16 +60,36 @@ describe('Reporter', () => {
         expect(output).to.equal(recorder.content);
     });
 
-    it('outputs to stdout', async () => {
+    it('outputs to a stdout', async () => {
+
+        const Recorder = class extends Stream.Writable {
+
+            constructor() {
+
+                super();
+                this.content = '';
+            }
+
+            _write(chunk, encoding, next) {
+
+                this.content += chunk.toString();
+                next();
+            }
+        };
 
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', () => {});
+            script.test('works', () => { });
         });
 
-        const { code } = await Lab.report(script, { output: process.stdout });
+        const recorder = new Recorder();
+        const orig = process.stdout.write;
+        process.stdout.write = (...args) => recorder.write(...args);
+        const { code, output } = await Lab.report(script, { output: process.stdout });
+        process.stdout.write = orig;
         expect(code).to.equal(0);
+        expect(output).to.equal(recorder.content);
     });
 
     it('outputs to a file', async () => {
@@ -77,7 +97,7 @@ describe('Reporter', () => {
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', () => {});
+            script.test('works', () => { });
         });
 
         const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
@@ -92,7 +112,7 @@ describe('Reporter', () => {
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', () => {});
+            script.test('works', () => { });
         });
 
         const randomname = [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-');
@@ -110,7 +130,7 @@ describe('Reporter', () => {
         const script = Lab.script();
         script.experiment('test', () => {
 
-            script.test('works', () => {});
+            script.test('works', () => { });
         });
 
         const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(7).toString('hex')].join('-'));
@@ -307,7 +327,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { code, output } = await Lab.report(script, { reporter: 'console', output: false });
@@ -330,7 +350,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
             expect(code).to.equal(1);
-            expect(output).to.contain('"e": 665');
+            expect(output).to.contain('e: 665');
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Test duration:');
             expect(output).to.contain('No global variable leaks detected');
@@ -520,7 +540,7 @@ describe('Reporter', () => {
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Failed tests');
             expect(output).to.contain('Additional error data:');
-            expect(output).to.contain('[1,2,3]');
+            expect(output).to.contain('[ 1, 2, 3 ]');
         });
 
         it('generates a report with caught error (data object)', async () => {
@@ -570,7 +590,7 @@ describe('Reporter', () => {
 
                     script.test('works', () => {
 
-                        return new Promise(() => {});
+                        return new Promise(() => { });
                     });
                 });
 
@@ -608,9 +628,9 @@ describe('Reporter', () => {
 
                         script[test.type](() => {
 
-                            return new Promise(() => {});
+                            return new Promise(() => { });
                         });
-                        script.test('works', () => {});
+                        script.test('works', () => { });
                     });
 
                     const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1, output: false });
@@ -631,7 +651,7 @@ describe('Reporter', () => {
                             });
                         });
 
-                        script.test('works', () => {});
+                        script.test('works', () => { });
                     });
 
                     const { code } = await Lab.report(script, { reporter: 'console', colors: false, 'context-timeout': 1000, output: false });
@@ -645,9 +665,9 @@ describe('Reporter', () => {
 
                         script[test.type]({ timeout: 1 }, () => {
 
-                            return new Promise(() => {});
+                            return new Promise(() => { });
                         });
-                        script.test('works', () => {});
+                        script.test('works', () => { });
                     });
 
                     const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
@@ -679,7 +699,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false });
@@ -691,7 +711,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false });
@@ -707,7 +727,7 @@ describe('Reporter', () => {
 
                     script.experiment('sub sub experiment', () => {
 
-                        script.test('works', () => {});
+                        script.test('works', () => { });
                     });
                 });
 
@@ -715,7 +735,7 @@ describe('Reporter', () => {
 
                     script.experiment('sub sub experiment', () => {
 
-                        script.test('works', () => {});
+                        script.test('works', () => { });
                     });
                 });
 
@@ -725,7 +745,7 @@ describe('Reporter', () => {
 
                         script.experiment('sub sub sub experiment', () => {
 
-                            script.test('works', () => {});
+                            script.test('works', () => { });
                         });
                     });
 
@@ -733,7 +753,7 @@ describe('Reporter', () => {
 
                         script.experiment('sub sub sub experiment', () => {
 
-                            script.test('works', () => {});
+                            script.test('works', () => { });
                         });
                     });
                 });
@@ -746,8 +766,8 @@ describe('Reporter', () => {
         it('generates a report with verbose progress with the same test name and no wrapper experiment', async () => {
 
             const script = Lab.script();
-            script.test('works', () => {});
-            script.test('works', () => {});
+            script.test('works', () => { });
+            script.test('works', () => { });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false });
             expect(output).to.contain('1) works');
@@ -759,7 +779,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false });
@@ -771,7 +791,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const oldPlatform = process.platform;
@@ -957,14 +977,14 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
 
                 script.test('fails', () => {
 
                     return Promise.reject('boom');
                 });
 
-                script.test('skips', { skip: true }, () => {});
+                script.test('skips', { skip: true }, () => { });
             });
 
             const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, progress: 2, output: false, assert: false });
@@ -1178,7 +1198,7 @@ describe('Reporter', () => {
 
             const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
             expect(output).to.contain('Failed tests:');
-            expect(output).to.contain('[Circular ~]');
+            expect(output).to.contain('[Circular]');
             expect(output).to.contain('Fail');
         });
 
@@ -1501,9 +1521,9 @@ describe('Reporter', () => {
 
                 script.before(() => {
 
-                    return new Promise(() => {});
+                    return new Promise(() => { });
                 });
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { code, output } = await Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false });
@@ -1521,7 +1541,7 @@ describe('Reporter', () => {
                     return Promise.reject('abc');
                 });
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { code, output } = await Lab.report(script, { reporter: 'html', 'context-timeout': 1, output: false });
@@ -1641,7 +1661,7 @@ describe('Reporter', () => {
                     expect(true).to.equal(true);
                 });
 
-                script.test('skip', { skip: true }, () => {});
+                script.test('skip', { skip: true }, () => { });
 
                 script.test('todo');
 
@@ -1675,7 +1695,7 @@ describe('Reporter', () => {
                     expect(true).to.equal(true);
                 });
 
-                script.test('skip', { skip: true }, () => {});
+                script.test('skip', { skip: true }, () => { });
 
                 script.test('todo');
 
@@ -1889,7 +1909,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const recorder = new Recorder();
@@ -2004,7 +2024,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const recorder = new Recorder();
@@ -2028,7 +2048,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { code } = await Lab.report(script, { reporter, output: false });
@@ -2042,7 +2062,7 @@ describe('Reporter', () => {
             const script = Lab.script();
             script.experiment('test', () => {
 
-                script.test('works', () => {});
+                script.test('works', () => { });
             });
 
             const { code } = await Lab.report(script, { reporter, output: false });
