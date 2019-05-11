@@ -1,46 +1,52 @@
 {
-  "name": "@hapi/lab",
-  "description": "Test utility",
-  "version": "18.1.2",
-  "repository": "git://github.com/hapijs/lab",
-  "main": "lib/index.js",
-  "keywords": [
-    "test",
-    "runner"
-  ],
-  "dependencies": {
-    "@hapi/bossy": "4.x.x",
-    "@hapi/eslint-config-hapi": "12.x.x",
-    "@hapi/eslint-plugin-hapi": "4.x.x",
-    "@hapi/hoek": "6.x.x",
-    "diff": "4.x.x",
-    "eslint": "5.x.x",
-    "espree": "5.x.x",
-    "find-rc": "4.x.x",
-    "handlebars": "4.x.x",
-    "json-stable-stringify": "1.x.x",
-    "json-stringify-safe": "5.x.x",
-    "mkdirp": "0.5.x",
-    "seedrandom": "2.x.x",
-    "source-map": "0.7.x",
-    "source-map-support": "0.5.x",
-    "supports-color": "6.x.x",
-    "will-call": "1.x.x"
-  },
-  "devDependencies": {
-    "@hapi/code": "5.x.x",
-    "cpr": "3.0.x",
-    "lab-event-reporter": "1.x.x",
-    "rimraf": "2.6.x",
-    "semver": "5.6.x"
-  },
-  "bin": {
-    "lab": "./bin/lab"
-  },
-  "scripts": {
-    "test": "node ./bin/_lab -fL -t 100 -m 10000",
-    "test-cov-html": "node ./bin/_lab -fL -r html -m 10000 -o coverage.html",
-    "lint": "node ./bin/_lab -d -f -L"
-  },
-  "license": "BSD-3-Clause"
+    "name": "@hapi/lab",
+    "description": "Test utility",
+    "version": "18.1.2",
+    "repository": "git://github.com/hapijs/lab",
+    "main": "lib/index.js",
+    "types": "index.d.ts",
+    "keywords": [
+        "test",
+        "runner"
+    ],
+    "files": [
+        "lib",
+        "index.d.ts",
+        "bin/lab"
+    ],
+    "dependencies": {
+        "@hapi/bossy": "4.x.x",
+        "@hapi/eslint-config-hapi": "12.x.x",
+        "@hapi/eslint-plugin-hapi": "4.x.x",
+        "@hapi/hoek": "6.x.x",
+        "diff": "4.x.x",
+        "tsd": "0.7.x",
+        "eslint": "5.x.x",
+        "espree": "5.x.x",
+        "find-rc": "4.x.x",
+        "handlebars": "4.x.x",
+        "json-stable-stringify": "1.x.x",
+        "json-stringify-safe": "5.x.x",
+        "mkdirp": "0.5.x",
+        "seedrandom": "2.x.x",
+        "source-map": "0.7.x",
+        "source-map-support": "0.5.x",
+        "supports-color": "6.x.x",
+        "will-call": "1.x.x"
+    },
+    "devDependencies": {
+        "@hapi/code": "5.x.x",
+        "cpr": "3.0.x",
+        "lab-event-reporter": "1.x.x",
+        "rimraf": "2.6.x",
+        "semver": "5.6.x"
+    },
+    "bin": {
+        "lab": "./bin/lab"
+    },
+    "scripts": {
+        "test": "node ./bin/_lab -f -L -t 100 -m 10000",
+        "test-cov-html": "node ./bin/_lab -f -L -r html -m 10000 -o coverage.html"
+    },
+    "license": "BSD-3-Clause"
 }

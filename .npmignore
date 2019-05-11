@@ -1,7 +1,0 @@
-*
-!lib/**
-!bin/lab
-!.npmignore
-!.eslintignore
-!README.md
-!index.d.ts
