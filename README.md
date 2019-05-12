@@ -30,7 +30,7 @@ Node test utility
 - `-f`, `--flat` - do not perform a recursive load of test files within the test directory.
 - `-g`, `--grep` - only run tests matching the given pattern which is internally compiled to a RegExp.
 - `-h`, `--help` - show command line usage.
-- `-i`, `--id` - only run the test for the given identifier (or identifiers range, e.g. `lab -i 1-3,5`). Use `lab -dv` to print all tests and their identifier without running the tests.
+- `-i`, `--id` - only run the test for the given identifier (or identifiers range, e.g. `lab -i 1-3,5`). Use `lab -dv` to print all tests and their identifier without running the tests. This is an alias of `ids` array property in `.labrc` file.
 - `-I`, `--ignore` - ignore a list of globals for the leak detection (comma separated), this is an alias of `globals` property in `.labrc` file
 - `--inspect` - start lab in debug mode using the [V8 Inspector](https://nodejs.org/dist/latest-v12.x/docs/api/debugger.html#debugger_v8_inspector_integration_for_node_js).
 - `--inspect-brk` - see `--inspect`.
