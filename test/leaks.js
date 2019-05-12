@@ -61,6 +61,16 @@ describe('Leaks', () => {
         expect(leaks.length).to.equal(1);
     });
 
+    it('identifies global leaks (symbol)', () => {
+
+        const symbol = Symbol('test');
+        global[symbol] = 1;
+
+        const leaks = Lab.leaks.detect();
+        expect(leaks.length).to.equal(1);
+        delete global[symbol];
+    });
+
     it('identifies global leaks for non-enumerable properties', () => {
 
         testedKeys.push('abc');
