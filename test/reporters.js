@@ -560,7 +560,7 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
             expect(result).to.contain('Failed tests:\n\n  1)');
-            expect(result).to.contain('Additional error data:\n          a: 1\n\n\n1 of 1 tests failed\nTest duration:');
+            expect(result).to.match(/Additional error data\:\n +a\: 1\n\n\n1 of 1 tests failed\nTest duration\:/);
         });
 
         it('generates a report with plain Error', async () => {
