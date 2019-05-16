@@ -2,6 +2,8 @@ export function script(options?: ScriptOptions): Script;
 
 export const assertions: any;
 
+export const types: Types;
+
 interface Script {
     after: After;
     afterEach: After;
@@ -91,4 +93,23 @@ interface Experiment extends ExperimentFunction {
     only: ExperimentFunction;
     /** skip this experiment */
     skip: ExperimentFunction;
+}
+
+interface Types {
+    expect: TypesExpect;
+}
+
+interface TypesExpect {
+    /** Assert the type of the value expected */
+    type: TypeFunction;
+    /** Assert the value to throw an argument error */
+    error: AssertFunction
+}
+
+interface TypeFunction {
+    <T>(value: T): void;
+}
+
+interface AssertFunction {
+    <T = any>(value: T): void;
 }

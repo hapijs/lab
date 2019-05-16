@@ -76,8 +76,8 @@ describe('CLI', () => {
         expect(result.output).to.contain('1 tests complete');
         expect(result.output).to.contain('sets environment from .labrc.js');
         expect(result.output).to.contain('Coverage: 100');
-        expect(result.output).to.contain('Linting results');
-        expect(result.output).to.not.contain('No global variable leaks detected');
+        expect(result.output).to.contain('Lint: No issues');
+        expect(result.output).to.not.contain('Leaks: No issues');
     });
 
     it('exits with code 1 after function throws', async () => {
@@ -192,7 +192,7 @@ describe('CLI', () => {
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
-        expect(result.output).to.contain('No global variable leaks detected');
+        expect(result.output).to.contain('Leaks: No issues');
 
         await unlink('./test/cli/leaks.js');
     });
@@ -207,7 +207,7 @@ describe('CLI', () => {
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
-        expect(result.output).to.contain('No global variable leaks detected');
+        expect(result.output).to.contain('Leaks: No issues');
 
         await unlink('./test/cli/leaks.js');
     });
@@ -713,7 +713,7 @@ describe('CLI', () => {
         expect(result.code).to.equal(0);
         expect(result.output).to.equal('');
         const file = Fs.readFileSync(outputPath);
-        expect(file.toString()).to.contain('No global variable leaks detected');
+        expect(file.toString()).to.contain('Leaks: No issues');
         await unlink(outputPath);
     });
 

@@ -4,14 +4,13 @@
     "version": "18.1.2",
     "repository": "git://github.com/hapijs/lab",
     "main": "lib/index.js",
-    "types": "index.d.ts",
+    "types": "lib/index.d.ts",
     "keywords": [
         "test",
         "runner"
     ],
     "files": [
         "bin/lab",
-        "index.d.ts",
         "lib"
     ],
     "dependencies": {
@@ -20,16 +19,17 @@
         "@hapi/eslint-plugin-hapi": "4.x.x",
         "@hapi/hoek": "6.x.x",
         "diff": "4.x.x",
-        "tsd": "0.7.x",
         "eslint": "5.x.x",
         "espree": "5.x.x",
         "find-rc": "4.x.x",
+        "globby": "9.x.x",
         "handlebars": "4.x.x",
         "mkdirp": "0.5.x",
         "seedrandom": "2.x.x",
         "source-map": "0.7.x",
         "source-map-support": "0.5.x",
         "supports-color": "6.x.x",
+        "typescript": "3.x.x",
         "will-call": "1.x.x"
     },
     "devDependencies": {
@@ -43,7 +43,7 @@
         "lab": "./bin/lab"
     },
     "scripts": {
-        "test": "node ./bin/_lab -f -L -t 100 -m 10000",
+        "test": "node ./bin/_lab -f -L -t 100 -m 10000 --types-test test/index.ts",
         "test-cov-html": "node ./bin/_lab -f -L -r html -m 10000 -o coverage.html"
     },
     "license": "BSD-3-Clause"

@@ -334,7 +334,7 @@ describe('Reporter', () => {
             expect(code).to.equal(0);
             expect(output).to.contain('1 tests complete');
             expect(output).to.contain('Test duration:');
-            expect(output).to.contain('No global variable leaks detected');
+            expect(output).to.contain('Leaks: \u001b[32mNo issues');
         });
 
         it('generate a report with stable diff of actual/expected objects of a failed test', async () => {
@@ -353,7 +353,7 @@ describe('Reporter', () => {
             expect(output).to.contain('e: 665');
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Test duration:');
-            expect(output).to.contain('No global variable leaks detected');
+            expect(output).to.contain('Leaks: No issues');
         });
 
         it('counts "todo" tests as skipped', async () => {
@@ -597,7 +597,7 @@ describe('Reporter', () => {
                 const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, timeout: 1, output: false, assert: false });
                 expect(code).to.equal(1);
                 const result = output.replace(/\/[\/\w]+\.js\:\d+\:\d+/g, '<trace>');
-                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Timed out \(\d+ms\) - test works\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+                expect(result).to.match(/^\n  \n  x\n\nFailed tests:\n\n  1\) test works:\n\n      Timed out \(\d+ms\) - test works\n\n\n\n1 of 1 tests failed\nTest duration: \d+ ms\nLeaks: No issues\n\n$/);
             });
 
             const tests = [
@@ -703,7 +703,7 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false });
-            expect(output).to.match(/^(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\n(\u001b\[32m)?No global variable leaks detected(\u001b\[0m)?\n\n$/);
+            expect(output).to.match(/^(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\n(\u001b\[32m)?Leaks: \u001b\[32mNo issues(\u001b\[0m)?\n\n$/);
         });
 
         it('generates a report with verbose progress', async () => {
@@ -715,7 +715,7 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false });
-            expect(output).to.match(/^test\n  (\u001b\[32m)?[✔√](\u001b\[0m)? (\u001b\[90m)?1\) works \(\d+ ms\)(\u001b\[0m)?\n\n\n(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\n(\u001b\[32m)?No global variable leaks detected(\u001b\[0m)?\n\n$/);
+            expect(output).to.match(/^test\n  (\u001b\[32m)?[✔√](\u001b\[0m)? (\u001b\[90m)?1\) works \(\d+ ms\)(\u001b\[0m)?\n\n\n(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\n(\u001b\[32m)?Leaks: \u001b\[32mNo issues(\u001b\[0m)?\n\n$/);
         });
 
         it('generates a report with verbose progress with experiments with same named tests', async () => {
@@ -783,7 +783,7 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false });
-            expect(output).to.match(/^test\n  (\u001b\[32m)?[✔√](\u001b\[0m)? (\u001b\[90m)?1\) works \(\d+ ms and \d+ assertions\)(\u001b\[0m)?\n\n\n(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n(\u001b\[32m)?No global variable leaks detected(\u001b\[0m)?\n\n$/);
+            expect(output).to.match(/^test\n  (\u001b\[32m)?[✔√](\u001b\[0m)? (\u001b\[90m)?1\) works \(\d+ ms and \d+ assertions\)(\u001b\[0m)?\n\n\n(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n(\u001b\[32m)?Leaks: \u001b\[32mNo issues(\u001b\[0m)?\n\n$/);
         });
 
         it('generates a report with verbose progress that displays well on windows', async () => {
@@ -882,7 +882,7 @@ describe('Reporter', () => {
             });
 
             const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false });
-            expect(output).to.contain('Coverage: 64.86% (26/74)');
+            expect(output).to.contain('Coverage: \u001b[31m64.86% (26/74)');
             expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17-19, 22, 23');
             expect(output).to.contain('test/coverage/console-large-file.js missing coverage on line(s): 13, 17, 20, 25, 26, 29, 35-37, 40, 47-50, 53, 61-65');
             expect(output).to.not.contain('console-full');
@@ -1016,7 +1016,7 @@ describe('Reporter', () => {
             process.stdout.isTTY = orig.isTTY;
             process.env = orig.env;
             expect(code).to.equal(0);
-            expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nNo global variable leaks detected\n\n$/);
+            expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nLeaks: No issues\n\n$/);
         });
 
         it('includes colors when terminal supports', async () => {
@@ -1049,7 +1049,7 @@ describe('Reporter', () => {
             process.stdout.isTTY = orig.isTTY;
             process.env = orig.env;
             expect(code).to.equal(1);
-            expect(output).to.match(/^\n  \n  \.\u001b\[31mx\u001b\[0m\n\nFailed tests:\n\n  2\) test does not work:\n\n      \u001b\[37;41mactual\u001b\[0m \u001b\[30;42mexpected\u001b\[0m\n\n      \u001b\[37;41mtrue\u001b\[0m\u001b\[30;42mfalse\u001b\[0m\n\n      \u001b\[33mExpected true to equal specified value: false\u001b\[0m\n\n.*?\u001b\[0m\n\n\n\u001b\[31m1 of 2 tests failed\u001b\[0m\nTest duration: \d+ ms\n\u001b\[32mNo global variable leaks detected\u001b\[0m\n\n$/);
+            expect(output).to.contain('\u001b[31m');
         });
 
         it('displays custom error messages in expect', async () => {
@@ -1963,7 +1963,7 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
             expect(output.html).to.equal(htmlRecorder.content);
-            expect(consoleRecorder.content).to.contain('Coverage: 100.00%');
+            expect(consoleRecorder.content).to.contain('Coverage: \u001b[32m100.00%');
 
             Fs.unlinkSync(filename);
         });
@@ -2000,7 +2000,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: ['console'], output: [consoleRecorder], verbose: true, coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
             expect(code).to.equal(0);
-            expect(consoleRecorder.content).to.contain('Coverage: 100.00%');
+            expect(consoleRecorder.content).to.contain('Coverage: \u001b[32m100.00%');
             expect(consoleRecorder.content).to.equal(output);
         });
 
