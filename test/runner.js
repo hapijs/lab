@@ -623,6 +623,7 @@ describe('Runner', () => {
                     script.experiment('level 4a', () => {
 
                         script.test('test a', () => {
+
                             throw new Error();
                         });
 
@@ -638,6 +639,7 @@ describe('Runner', () => {
                     script.experiment('level 4b', () => {
 
                         script.test('test a', () => {
+
                             throw new Error();
                         });
 
@@ -688,6 +690,26 @@ describe('Runner', () => {
         const notebook = await Lab.execute(script, {}, null);
         expect(notebook.tests).to.have.length(5);
         expect(notebook.tests.filter((test) => test.skipped)).to.have.length(3);
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('skips "only" tests when ancestor experiment is skipped', async () => {
+
+        const script = Lab.script();
+        script.experiment.skip('test', () => {
+
+            script.experiment('subexperiment1', () => {
+
+                script.test.only('s1', () => {
+
+                    throw new Error();
+                });
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.tests.filter((test) => test.skipped)).to.have.length(1);
         expect(notebook.failures).to.equal(0);
     });
 
