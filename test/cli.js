@@ -578,7 +578,7 @@ describe('CLI', () => {
 
         const result = await RunCli(['test/cli_only-skip/onlyMultiple.js']);
 
-        expect(result.combinedOutput).to.contain('8 skipped');
+        expect(result.combinedOutput).to.contain('7 skipped');
         expect(result.code).to.equal(0);
     });
 
