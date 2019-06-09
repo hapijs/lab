@@ -250,6 +250,40 @@ describe('Coverage', () => {
         expect(cov.hits).to.equal(12);
     });
 
+    it('uses a stack to bypass marked code', async () => {
+
+        const Test = require('./coverage/bypass-stack');
+
+        expect(Test.getIsSet()).to.be.a.function();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-stack') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(22);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(22);
+    });
+
+    it('uses a stack to bypass marked code and reports misses correctly', async () => {
+
+        const Test = require('./coverage/bypass-stack-alt');
+
+        expect(Test.getIsSet(Test.withTypes)).to.equal('isSet-shim');
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-stack') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(40);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(40);
+    });
+
+    it('asserts that bypass marked code does not violate the stack bounds', async () => {
+
+        expect(() => require('./coverage/bypass-empty-stack')).to.throw(/stack/);
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-empty-stack') });
+        expect(cov.sloc).to.equal(0);
+    });
+
     it('ignores non-matching files', async () => {
 
         require('./coverage/exclude/ignore');
