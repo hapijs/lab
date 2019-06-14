@@ -469,6 +469,42 @@ if (typeof value === 'symbol') {
 /* $lab:coverage:on$ */
 ```
 
+#### Coverage Bypass Stack
+
+Disabling code coverage becomes tricky when dealing with machine-generated or machine-altered code. For example, `babel` can be configured to disable coverage for generated code using the `auxiliaryCommentBefore` and `auxiliaryCommentAfter` options. The naïve approach to this uses `$lab:coverage:on$` and `$lab:coverage:off$`, but these directives overwrite any user-specified directives, so that a block where coverage should be disabled may have that coverage unintentionally re-enabled. To work around this issue, `lab` supports pushing the current code coverage bypass state onto an internal stack using the `$lab:coverage:push$` directive, and supports restoring the top of the stack using the `$lab:coverage:pop$` directive:
+<!-- eslint-disable no-undef -->
+```javascript
+// There is no way to cover this in node < 10.0.0
+/* $lab:coverage:off$ */
+const { types } = Util;
+const isSet = (types && types.isSet) || (set) => set instanceof Set;
+/* $lab:coverage:on$ */
+
+// When Util is imported using import and babel transpiles to cjs, babel can be
+// configured to use the stack:
+/* $lab:coverage:off$ */
+const {
+  types
+} =
+/*$lab:coverage:push$/
+/*$lab:coverage:off$*/
+_util
+/*$lab:coverage:pop$/
+.
+/*$lab:coverage:push$/
+/*$lab:coverage:off$*/
+default
+/*$lab:coverage:pop$*/
+;
+const isSet = types && types.isSet || (set) => set instanceof Set;
+/* $lab:coverage:on$ */
+```
+
+Semantics:
+
+- `$lab:coverage:push$` copies the current skip state to the top of the stack, and leaves it as the current state as well
+- `$lab:coverage:pop$` replaces the current skip state with the the top of the stack, and removes the top of the stack
+  - if the stack is empty, `lab` will tell you by throwing the error `"unable to pop coverage bypass stack"`
 
 ## `.labrc.js` file
 
