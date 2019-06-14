@@ -582,7 +582,138 @@ describe('Runner', () => {
         expect(notebook.failures).to.equal(0);
     });
 
-    it('reports an error if there is more than one "only", even accross multiple scripts', async () => {
+    it('skips everything except "only" tests when multiple "only" tests are in the same experiment', async () => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('subexperiment', () => {
+
+                script.test('s1', () => {
+
+                    throw new Error();
+                });
+
+                script.test.only('s2', () => {});
+
+                script.test.only('s3', () => {});
+            });
+
+            script.test('a', () => {
+
+                throw new Error();
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(4);
+        expect(notebook.tests.filter((test) => test.skipped)).to.have.length(2);
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('skips everything except "only" tests when multiple "only" tests are deeply nested in the same experiment', async () => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('level 2a', () => {
+
+                script.experiment('level 3a', () => {
+
+                    script.experiment('level 4a', () => {
+
+                        script.test('test a', () => {
+
+                            throw new Error();
+                        });
+
+                        script.test.only('test b', () => {});
+                    });
+                });
+            });
+
+            script.experiment('level 2b', () => {
+
+                script.experiment('level 3b', () => {
+
+                    script.experiment('level 4b', () => {
+
+                        script.test('test a', () => {
+
+                            throw new Error();
+                        });
+
+                        script.test.only('test b', () => {});
+                    });
+                });
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(4);
+        expect(notebook.tests.filter((test) => test.skipped)).to.have.length(2);
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('skips everything except "only" tests when "only" tests are in different experiments', async () => {
+
+        const script = Lab.script();
+        script.experiment('test', () => {
+
+            script.experiment('subexperiment1', () => {
+
+                script.test('s1', () => {
+
+                    throw new Error();
+                });
+
+                script.test.only('s2', () => {});
+            });
+
+            script.experiment('subexperiment2', () => {
+
+                script.test('s1', () => {
+
+                    throw new Error();
+                });
+
+                script.test.only('s2', () => {});
+
+            });
+
+            script.test('a', () => {
+
+                throw new Error();
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(5);
+        expect(notebook.tests.filter((test) => test.skipped)).to.have.length(3);
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('skips "only" tests when ancestor experiment is skipped', async () => {
+
+        const script = Lab.script();
+        script.experiment.skip('test', () => {
+
+            script.experiment('subexperiment1', () => {
+
+                script.test.only('s1', () => {
+
+                    throw new Error();
+                });
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests).to.have.length(1);
+        expect(notebook.tests.filter((test) => test.skipped)).to.have.length(1);
+        expect(notebook.failures).to.equal(0);
+    });
+
+    it('skips everything except "only" tests when "only" tests are in different scripts', async () => {
 
         const script1 = Lab.script();
         script1.experiment('test', () => {
@@ -608,24 +739,15 @@ describe('Runner', () => {
             });
         });
         const script2 = Lab.script();
-        script2.experiment.only('test2', () => {
+        script2.experiment('test2', () => {
 
-            script2.test('x1', () => {
-
-                throw new Error();
-            });
+            script2.test.only('x1', () => {});
         });
 
-        try {
-            await Lab.execute([script1, script2], {}, null);
-        }
-        catch (ex) {
-            expect(ex.message).to.contain([
-                'Multiple tests are marked as "only":',
-                'Test: test a',
-                'Experiment: test2'
-            ]);
-        }
+        const notebook = await Lab.execute([script1, script2] , {}, null);
+        expect(notebook.tests).to.have.length(5);
+        expect(notebook.tests.filter((test) => test.skipped)).to.have.length(3);
+        expect(notebook.failures).to.equal(0);
     });
 
     it('skips before function in non-run experiment', async () => {

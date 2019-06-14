@@ -187,7 +187,7 @@ lab.experiment('math', () => {
 
 Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
 - `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
-- `skip` - skip execution. Cannot be overridden in children once parent is set to skip.
+- `skip` - skip execution. When used on an experiment, all children will be skipped - even if they are marked with `only`.
 - `only` - marks all other tests or experiments with `skip`.
 
 You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using `options`:
