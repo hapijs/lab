@@ -153,39 +153,6 @@ describe('Leaks', () => {
         expect(leaks.length).to.equal(0);
     });
 
-    it('ignores Harmony globals', () => {
-
-        const harmonyGlobals = internals.harmonyGlobals;
-        testedKeys = internals.harmonyGlobals;
-
-        harmonyGlobals.forEach((harmonyGlobal) => {
-
-            global[harmonyGlobal] = global[harmonyGlobal] || 1;
-        });
-
-        const leaks = Lab.leaks.detect();
-        expect(leaks.length).to.equal(0);
-    });
-
-    it('handles case where Harmony globals do not exist', () => {
-
-        const harmonyGlobals = internals.harmonyGlobals;
-        const originalValues = {};
-
-        harmonyGlobals.forEach((harmonyGlobal) => {
-
-            originalValues[harmonyGlobal] = global[harmonyGlobal];
-            delete global[harmonyGlobal];
-        });
-
-        const leaks = Lab.leaks.detect();
-        expect(leaks.length).to.equal(0);
-
-        for (const harmonyGlobal in originalValues) {
-            global[harmonyGlobal] = originalValues[harmonyGlobal];
-        }
-    });
-
     it('identifies custom globals', () => {
 
         testedKeys.push('abc');

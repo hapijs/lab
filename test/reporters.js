@@ -1028,7 +1028,7 @@ describe('Reporter', () => {
             };
             process.stdout.isTTY = true;
             process.env = {
-                FORCE_COLOR: true
+                FORCE_COLOR: 'true'
             };
 
             const script = Lab.script();

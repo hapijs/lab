@@ -20,7 +20,7 @@ const expect = Code.expect;
 
 
 process.stdout.isTTY = true;
-process.env.FORCE_COLOR = true;
+process.env.FORCE_COLOR = 'true';
 
 describe('Test CLI', () => {
 
