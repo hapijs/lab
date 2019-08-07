@@ -60,7 +60,7 @@ describe('Types', () => {
 
         process.chdir(Path.join(__dirname, 'types', 'errors'));
         const errors = await Lab.types.validate();
-        expect(errors).to.equal([
+        expect(errors).to.only.contain([
             {
                 column: 4,
                 filename: 'test/index.ts',

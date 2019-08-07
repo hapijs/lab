@@ -237,6 +237,19 @@ describe('Coverage', () => {
         expect(cov.hits).to.equal(12);
     });
 
+    it('ignores marked code', async () => {
+
+        const Test = require('./coverage/ignore');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/ignore') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(5);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(5);
+    });
+
     it('bypasses marked code and reports misses correctly', async () => {
 
         const Test = require('./coverage/bypass-misses');
