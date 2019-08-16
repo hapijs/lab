@@ -12,3 +12,9 @@ os:
   - windows
 
 sudo: false
+
+cache:
+    npm: false
+    directories:
+        - $HOME/.npm
+
