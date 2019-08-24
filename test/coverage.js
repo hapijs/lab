@@ -1,17 +1,15 @@
 'use strict';
 
-// Load modules
-
 const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
 const Module = require('module');
+
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
+const SupportsColor = require('supports-color');
 
-
-// Declare internals
 
 const internals = {
     transform: [
@@ -29,8 +27,6 @@ const internals = {
     ]
 };
 
-
-// Test shortcuts
 
 const lab = exports.lab = _Lab.script();
 const describe = lab.describe;
@@ -220,7 +216,7 @@ describe('Coverage', () => {
             { filename: 'while.js', lineNumber: '3', originalLineNumber: 11 }
         ]);
         expect(missedChunks).to.include([
-            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12 }
         ]);
     });
 
@@ -451,7 +447,7 @@ describe('Coverage', () => {
         expect(Test.method(true, 0, 1)).to.equal(1);
         expect(Test.method(true, 0, 0)).to.equal(0);
 
-        const cov = await  Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-value') });
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-value') });
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(missedLines).to.be.empty();
@@ -471,7 +467,7 @@ describe('Coverage', () => {
         expect(missedLines).to.equal(['7']);
     });
 
-    describe('#analyze', () => {
+    describe('analyze()', () => {
 
         it('sorts file paths in report', async () => {
 
@@ -564,6 +560,46 @@ describe('Coverage', () => {
             expect(cov.percent).to.equal(100);
         });
     });
+
+    describe('coverage-module option', () => {
+
+        it('reports external coverage', async () => {
+
+            const coveragePath = Path.join(__dirname, 'coverage/module');
+            Lab.coverage.instrument({ coveragePath, 'coverage-module': ['@hapi/lab-external-module-test'] });
+
+            require(coveragePath);
+
+            const cov = await Lab.coverage.analyze({ coveragePath });
+
+            expect(cov.percent).to.equal(100);
+            expect(cov.externals).to.equal(2);
+            expect(cov.files[0].externals).to.equal([
+                {
+                    line: 9,
+                    message: 'Checker missing tests for 2, 3',
+                    source: 'Ext',
+                    severity: 'error'
+                },
+                {
+                    line: 12,
+                    message: 'Checker missing tests for 3',
+                    source: 'Ext',
+                    severity: 'warning'
+                }
+            ]);
+
+            const script = Lab.script();
+            const { output, code } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, 'coverage'), 'coverage-module': ['@hapi/lab-external-module-test'], output: false });
+            expect(code).to.equal(1);
+            expect(output).to.contain(internals.colors('External coverage:\u001b[90m\n' +
+                'test/coverage/module.js:\u001b[0m\u001b[90m\n' +
+                '\tExt:\u001b[0m\u001b[31m\n' +
+                '\t\tLine 9: Checker missing tests for 2, 3\u001b[0m\u001b[33m\n' +
+                '\t\tLine 12: Checker missing tests for 3\u001b[0m\n' +
+                '\n'));
+        });
+    });
 });
 
 describe('Coverage via Transform API', () => {
@@ -622,7 +658,17 @@ describe('Coverage via Transform API', () => {
             { filename: 'while.js', lineNumber: '3', originalLineNumber: 11 }
         ]);
         expect(missedChunks).to.include([
-            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12  }
+            { filename: 'while.js', lineNumber: '3', originalLineNumber: 13, originalColumn: 12 }
         ]);
     });
 });
+
+
+internals.colors = function (string) {
+
+    if (SupportsColor.stdout) {
+        return string;
+    }
+
+    return string.replace(/\u001b\[\d+m/g, '');
+};

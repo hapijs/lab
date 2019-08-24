@@ -4,6 +4,7 @@
 
 const Code = require('@hapi/code');
 const _Lab = require('../../test_runner');
+const SupportsColor = require('supports-color');
 
 
 // Declare internals
@@ -19,8 +20,8 @@ const it = lab.it;
 const expect = Code.expect;
 
 
-process.stdout.isTTY = true;
-process.env.FORCE_COLOR = 'true';
+SupportsColor.stdout = true;
+
 
 describe('Test CLI', () => {
 

@@ -1,25 +1,22 @@
 'use strict';
 
-// Load modules
-
 const Crypto = require('crypto');
 const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
-const Rimraf = require('rimraf');
 const Stream = require('stream');
+
+const Rimraf = require('rimraf');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
+const SupportsColor = require('supports-color');
+
 const Reporters = require('../lib/reporters');
 
 
-// Declare internals
-
 const internals = {};
 
-
-// Test shortcuts
 
 const lab = exports.lab = _Lab.script();
 const describe = lab.describe;
@@ -334,7 +331,7 @@ describe('Reporter', () => {
             expect(code).to.equal(0);
             expect(output).to.contain('1 tests complete');
             expect(output).to.contain('Test duration:');
-            expect(output).to.contain('Leaks: \u001b[32mNo issues');
+            expect(output).to.contain(internals.colors('Leaks: \u001b[32mNo issues'));
         });
 
         it('generate a report with stable diff of actual/expected objects of a failed test', async () => {
@@ -702,7 +699,7 @@ describe('Reporter', () => {
                 script.test('works', () => { });
             });
 
-            const { output } = await Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 0, output: false, assert: false, colors: true });
             expect(output).to.match(/^(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\n(\u001b\[32m)?Leaks: \u001b\[32mNo issues(\u001b\[0m)?\n\n$/);
         });
 
@@ -714,7 +711,7 @@ describe('Reporter', () => {
                 script.test('works', () => { });
             });
 
-            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, output: false, assert: false, colors: true });
             expect(output).to.match(/^test\n  (\u001b\[32m)?[✔√](\u001b\[0m)? (\u001b\[90m)?1\) works \(\d+ ms\)(\u001b\[0m)?\n\n\n(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\n(\u001b\[32m)?Leaks: \u001b\[32mNo issues(\u001b\[0m)?\n\n$/);
         });
 
@@ -782,7 +779,7 @@ describe('Reporter', () => {
                 script.test('works', () => { });
             });
 
-            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false });
+            const { output } = await Lab.report(script, { reporter: 'console', progress: 2, assert: Code, output: false, colors: true });
             expect(output).to.match(/^test\n  (\u001b\[32m)?[✔√](\u001b\[0m)? (\u001b\[90m)?1\) works \(\d+ ms and \d+ assertions\)(\u001b\[0m)?\n\n\n(\u001b\[32m)?1 tests complete(\u001b\[0m)?\nTest duration: \d+ ms\nAssertions count\: \d+ \(verbosity\: \d+\.\d+\)\n(\u001b\[32m)?Leaks: \u001b\[32mNo issues(\u001b\[0m)?\n\n$/);
         });
 
@@ -881,7 +878,7 @@ describe('Reporter', () => {
                 });
             });
 
-            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false });
+            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false, 'coverage-module': ['@hapi/lab-external-module-test'], colors: true });
             expect(output).to.contain('Coverage: \u001b[31m64.86% (26/74)');
             expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17-19, 22, 23');
             expect(output).to.contain('test/coverage/console-large-file.js missing coverage on line(s): 13, 17, 20, 25, 26, 29, 35-37, 40, 47-50, 53, 61-65');
@@ -994,13 +991,8 @@ describe('Reporter', () => {
 
         it('excludes colors when terminal does not support', async () => {
 
-            delete require.cache[require.resolve('supports-color')];
-            const orig = {
-                isTTY: process.stdout.isTTY,
-                env: process.env
-            };
-            process.stdout.isTTY = false;
-            process.env = {};
+            const orig = SupportsColor.stdout;
+            SupportsColor.stdout = false;
 
             const script = Lab.script();
             script.experiment('test', () => {
@@ -1013,8 +1005,8 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: 'console', output: false, assert: false });
 
-            process.stdout.isTTY = orig.isTTY;
-            process.env = orig.env;
+            SupportsColor.stdout = orig;
+
             expect(code).to.equal(0);
             expect(output).to.match(/^\n  \n  \.\n\n1 tests complete\nTest duration: \d+ ms\nLeaks: No issues\n\n$/);
         });
@@ -2070,3 +2062,13 @@ describe('Reporter', () => {
         });
     });
 });
+
+
+internals.colors = function (string) {
+
+    if (SupportsColor.stdout) {
+        return string;
+    }
+
+    return string.replace(/\u001b\[\d+m/g, '');
+};
