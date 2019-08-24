@@ -1,16 +1,18 @@
 'use strict';
 
-const Path = require('path');
+// Load modules
 
 const Code = require('@hapi/code');
-const Lab = require('..');
 const _Lab = require('../test_runner');
-
 const Utils = require('../lib/utils');
 
 
+// Declare internals
+
 const internals = {};
 
+
+// Test shortcuts
 
 const lab = exports.lab = _Lab.script();
 const describe = lab.describe;
@@ -92,16 +94,5 @@ describe('Utils', () => {
 
         Utils.applyOptions(parent, child);
         expect(parent).to.equal({ a: 1, b: 3, c: 4, e: 5, f: 6 });
-    });
-
-    describe('location()', () => {
-
-        it('returns current location', () => {
-
-            expect(Lab.utils.location()).to.equal({
-                filename: Path.join(__dirname, 'utils.js'),
-                line: 101
-            });
-        });
     });
 });
