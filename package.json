@@ -1,7 +1,7 @@
 {
     "name": "@hapi/lab",
     "description": "Test utility",
-    "version": "20.2.1",
+    "version": "20.2.2",
     "repository": "git://github.com/hapijs/lab",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
