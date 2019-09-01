@@ -62,69 +62,89 @@ describe('Types', () => {
         const errors = await Lab.types.validate();
         expect(errors).to.only.contain([
             {
-                column: 4,
                 filename: 'test/index.ts',
+                message: 'No overload matches this call.\n' +
+                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
+                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
+                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
+                    `    Argument of type '"x"' is not assignable to parameter of type 'number'.`,
                 line: 3,
-                message: 'Argument of type \'"x"\' is not assignable to parameter of type \'number\'.'
+                column: 0
             },
             {
-                column: 7,
                 filename: 'test/index.ts',
+                message: 'No overload matches this call.\n' +
+                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
+                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
+                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
+                    `    Argument of type '"x"' is not assignable to parameter of type 'number'.`,
                 line: 4,
-                message: 'Argument of type \'"x"\' is not assignable to parameter of type \'number\'.'
+                column: 0
             },
             {
-                column: 7,
                 filename: 'test/nested.ts',
+                message: 'No overload matches this call.\n' +
+                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
+                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
+                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
+                    `    Argument of type 'true' is not assignable to parameter of type 'number'.`,
                 line: 8,
-                message: 'Argument of type \'true\' is not assignable to parameter of type \'number\'.'
+                column: 0
             },
             {
-                column: 49,
                 filename: 'test/nested.ts',
+                message: 'No overload matches this call.\n' +
+                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
+                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
+                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
+                    `    Argument of type 'true' is not assignable to parameter of type 'number'.`,
                 line: 8,
-                message: 'Argument of type \'true\' is not assignable to parameter of type \'number\'.'
+                column: 42
             },
             {
-                column: 4,
                 filename: 'test/other.ts',
+                message: 'No overload matches this call.\n' +
+                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
+                    `    Argument of type 'true' is not assignable to parameter of type 'string'.\n` +
+                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
+                    `    Argument of type 'true' is not assignable to parameter of type 'number'.`,
                 line: 3,
-                message: 'Argument of type \'true\' is not assignable to parameter of type \'number\'.'
+                column: 4
             },
             {
-                column: 26,
                 filename: 'test/syntax.ts',
+                message: `')' expected.`,
                 line: 8,
-                message: '\')\' expected.'
+                column: 26
             },
             {
-                column: 21,
                 filename: 'test/syntax.ts',
+                message: `',' expected.`,
                 line: 9,
-                message: '\',\' expected.'
+                column: 21
             },
             {
-                column: 0,
                 filename: 'test/syntax.ts',
                 line: 8,
+                column: 0,
                 message: 'Expected an error'
             },
             {
-                column: 0,
                 filename: 'test/syntax.ts',
                 line: 9,
+                column: 0,
                 message: 'Expected an error'
             },
             {
-                column: 0,
                 filename: 'test/value.ts',
                 line: 9,
+                column: 0,
                 message: 'Expected an error'
             },
             {
-                column: 8,
                 filename: 'test/value.ts',
                 line: 17,
+                column: 8,
                 message: 'Expected an error'
             }
         ]);
