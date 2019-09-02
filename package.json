@@ -29,7 +29,7 @@
         "source-map": "0.7.x",
         "source-map-support": "0.5.x",
         "supports-color": "7.x.x",
-        "typescript": "3.x.x",
+        "typescript": "3.6.x",
         "will-call": "1.x.x"
     },
     "devDependencies": {
