@@ -423,6 +423,27 @@ describe('Reporter', () => {
             expect(output).to.contain('Expected');
         });
 
+        it('generates a report with long diff', async () => {
+
+            const script = Lab.script();
+
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    const a = '"value" at position 1 fails because [child "hello" fails because ["hello" is required]]. "value" position 1 contains a duplicate value';
+                    const b = '"[1].hello" is required. "[1]" contains a duplicate value';
+
+                    expect(a).to.equal(b);
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
+
+            expect(code).to.equal(1);
+            expect(output).to.not.contain('+');
+        });
+
         it('generates a report with caught error', async () => {
 
             const script = Lab.script();
