@@ -5,6 +5,7 @@ const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
 const Stream = require('stream');
+const Util = require('util');
 
 const Rimraf = require('rimraf');
 const Code = require('@hapi/code');
@@ -119,7 +120,8 @@ describe('Reporter', () => {
 
         expect(code).to.equal(0);
         expect(output).to.equal(Fs.readFileSync(filename).toString());
-        Rimraf.sync(folder);
+
+        await Util.promisify(Rimraf)(folder);
     });
 
     it('outputs to a file with output is passed as an array and reporter is an array', async () => {
