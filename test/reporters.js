@@ -1955,7 +1955,7 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
             expect(output.html).to.equal(htmlRecorder.content);
-            expect(consoleRecorder.content).to.contain('Coverage: \u001b[32m100.00%');
+            expect(consoleRecorder.content).to.contain(internals.colors('Coverage: \u001b[32m100.00%'));
 
             Fs.unlinkSync(filename);
         });
@@ -1992,7 +1992,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: ['console'], output: [consoleRecorder], verbose: true, coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
             expect(code).to.equal(0);
-            expect(consoleRecorder.content).to.contain('Coverage: \u001b[32m100.00%');
+            expect(consoleRecorder.content).to.contain(internals.colors('Coverage: \u001b[32m100.00%'));
             expect(consoleRecorder.content).to.equal(output);
         });
 
