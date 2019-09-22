@@ -1041,7 +1041,7 @@ describe('Reporter', () => {
             process.stdout.isTTY = orig.isTTY;
             process.env = orig.env;
             expect(code).to.equal(1);
-            expect(output).to.contain('\u001b[31m');
+            expect(output).to.contain(internals.colors('\u001b[31m'));
         });
 
         it('displays custom error messages in expect', async () => {
