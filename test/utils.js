@@ -95,4 +95,12 @@ describe('Utils', () => {
         Utils.applyOptions(parent, child);
         expect(parent).to.equal({ a: 1, b: 3, c: 4, e: 5, f: 6 });
     });
+
+    describe('position()', () => {
+
+        it('ignores invalid stack', () => {
+
+            expect(Utils.position({ stack: '' })).to.equal({});
+        });
+    });
 });

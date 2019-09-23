@@ -5,6 +5,7 @@ const Path = require('path');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('..');
+const SupportsColor = require('supports-color');
 
 
 const internals = {
@@ -246,5 +247,24 @@ describe('Types', () => {
             expect(code).to.equal(0);
             expect(output).to.contain('No issues');
         });
+
+        it('reports execution errors', async () => {
+
+            process.chdir(Path.join(__dirname, 'types', 'broken'));
+            const script = Lab.script();
+            const { output, code } = await Lab.report(script, { output: false, types: true }, null);
+            expect(code).to.equal(1);
+            expect(output).to.contain(internals.colors('index.ts:6:15: \u001b[0m\u001b[31mBad argument'));
+        });
     });
 });
+
+
+internals.colors = function (string) {
+
+    if (SupportsColor.stdout) {
+        return string;
+    }
+
+    return string.replace(/\u001b\[\d+m/g, '');
+};

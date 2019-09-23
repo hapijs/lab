@@ -17,6 +17,7 @@
         "@hapi/bossy": "4.x.x",
         "@hapi/eslint-config-hapi": "12.x.x",
         "@hapi/eslint-plugin-hapi": "4.x.x",
+        "@hapi/file": "1.x.x",
         "@hapi/hoek": "8.x.x",
         "diff": "4.x.x",
         "eslint": "6.x.x",
