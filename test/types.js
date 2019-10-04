@@ -248,6 +248,15 @@ describe('Types', () => {
             expect(output).to.contain('No issues');
         });
 
+        it('reports no issues with skipped execution', async () => {
+
+            process.chdir(Path.join(__dirname, 'types', 'skip'));
+            const script = Lab.script();
+            const { output, code } = await Lab.report(script, { output: false, types: true }, null);
+            expect(code).to.equal(0);
+            expect(output).to.contain('No issues');
+        });
+
         it('reports execution errors', async () => {
 
             process.chdir(Path.join(__dirname, 'types', 'broken'));
