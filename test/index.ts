@@ -8,7 +8,7 @@ const { expect } = _Lab.types;
 // script()
 
 const lab = Lab.script();
-expect.type<Lab.Script>(lab);
+expect.type<Lab.script.Script>(lab);
 
 
 // describe()

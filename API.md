@@ -1,10 +1,260 @@
-
 ## Introduction
 
 **lab** is a simple test utility for Node.js. Unlike other test utilities, lab uses only async/await features and includes everything you should expect from a modern Node.js test utility. Our goal with **lab** is to keep the execution engine as simple as possible, and not try to build an extensible framework.
 
-**lab** works with any assertion library that throws an error when a condition isn't met.
+**lab** works best with the [**code** assertion library](https://hapi.dev/family/code) but can be used with any assertion library that throws an error when a condition isn't met.
 
+## Usage
+
+By default, **lab** loads all the '\*.js' files inside the local 'test' directory and executes the tests found. To use different directories or files, pass the file or directories as arguments:
+
+```bash
+$ lab unit.js
+```
+
+Test files must require the **lab** module, and export a test script:
+
+```javascript
+const Code = require('@hapi/code');
+const Lab = require('@hapi/lab');
+
+const { expect } = Code;
+const { it } = exports.lab = Lab.script();
+
+it('returns true when 1 + 1 equals 2', () => {
+
+    expect(1 + 1).to.equal(2);
+});
+```
+
+Or
+
+```javascript
+const Code = require('@hapi/code');
+const Lab = require('@hapi/lab');
+
+const { expect } = Code;
+const lab = exports.lab = Lab.script();
+
+lab.test('returns true when 1 + 1 equals 2', () => {
+
+    expect(1 + 1).to.equal(2);
+});
+```
+
+If a test is performing an asynchronous operation then it should use the `async` / `await` keywords or return a Promise. For example:
+
+```javascript
+lab.test('config file has correct value', async () => {
+
+    const file = await fs.readFile('config');
+    expect(file.toString()).to.contain('something');
+});
+```
+
+Tests can be organized into experiments:
+
+```javascript
+lab.experiment('math', () => {
+
+    lab.test('returns true when 1 + 1 equals 2', () => {
+
+        expect(1 + 1).to.equal(2);
+    });
+});
+```
+
+If you need to perform some setup operations before or after executing the tests inside an experiment, the `before()` and `after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
+
+```javascript
+lab.experiment('math', () => {
+
+    lab.before(() => {
+
+        return new Promise((resolve) => {
+
+            // Wait 1 second
+            setTimeout(() => {
+
+                resolve();
+            }, 1000);
+        });
+    });
+
+    lab.beforeEach(() => {
+
+        // Run before every single test
+    });
+
+    lab.test('returns true when 1 + 1 equals 2', () => {
+
+        expect(1 + 1).to.equal(2);
+    });
+});
+
+```
+
+`test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises just as tests do:
+
+```javascript
+lab.experiment('math', () => {
+
+    lab.before(() => {
+
+        return aFunctionReturningAPromise();
+    });
+
+    lab.test('returns true when 1 + 1 equals 2', () => {
+
+        return aFunctionReturningAPromise()
+            .then((aValue) => {
+
+                expect(aValue).to.equal(expectedValue);
+            });
+    });
+});
+```
+
+Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
+- `timeout` - set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
+- `skip` - skip execution. When used on an experiment, all children will be skipped - even if they are marked with `only`.
+- `only` - marks all other tests or experiments with `skip`.
+
+You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using `options`:
+
+```javascript
+lab.experiment('with only', () => {
+
+    lab.test.only('only this test will run', () => {
+
+        expect(1 + 1).to.equal(2);
+    });
+
+    lab.test('another test that will not be executed', () => {});
+});
+```
+
+### Behavior Driven Development
+
+To make **lab** look like BDD:
+
+```javascript
+const Code = require('@hapi/code');
+const Lab = require('@hapi/lab');
+
+const { expect } = Code;
+const { after, before, describe, it } = exports.lab = Lab.script();
+
+describe('math', () => {
+
+    before(() => {});
+
+    after(() => {});
+
+    it('returns true when 1 + 1 equals 2', () => {
+
+        expect(1 + 1).to.equal(2);
+    });
+});
+```
+
+### Test Driven Development
+
+To make **lab** look like TDD:
+
+```javascript
+const Code = require('@hapi/code');
+const Lab = require('@hapi/lab');
+
+const { expect } = Code;
+const { suite, test } = exports.lab = Lab.script();
+
+suite('math', () => {
+
+    test('returns true when 1 + 1 equals 2', () => {
+
+        expect(1 + 1).to.equal(2);
+    });
+});
+```
+
+### Best practices
+
+- Add lab as a dev dependency to your project's `package.json` along with a `test` script:
+
+```json
+{
+  "devDependencies": {
+    "lab": "21.x.x"
+  },
+  "scripts": {
+    "test": "lab -t 100",
+    "test-cov-html": "lab -r html -o coverage.html"
+  }
+}
+```
+
+Note that `npm test` will execute **lab** with the `-t 100` option which will require 100% code coverage. Run `npm run test-cov-html` and check the `coverage.html` file to figure out where coverage is lacking. When coverage is below the threshold, the CLI will exit with code `1` and will result in an npm Error message.
+
+- Run your tests with
+
+```bash
+$ npm test
+```
+
+### Timeouts
+
+`before()`, `after()`, `beforeEach()`, `afterEach()` accept an optional `options` argument which must be an object with the following optional keys:
+- `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
+
+```javascript
+lab.experiment('math', { timeout: 1000 }, () => {
+
+    lab.before({ timeout: 500 }, () =>  {
+
+        doSomething();
+    });
+
+    lab.test('returns true when 1 + 1 equals 2', () =>  {
+
+        expect(1 + 1).to.equal(2);
+    });
+});
+```
+
+### Transforms
+
+To use source transforms, you must specify a file with the `-T` command line option that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.ts` or `.jsx`.
+
+#### TypeScript
+
+A TypeScript definition file is included with **lab** to make it easier to use inside of an existing TypeScript project. Below is a TypeScript test example that uses the [lab-transform-typescript](https://www.npmjs.com/package/lab-transform-typescript) module to manage the transform:
+
+```typescript
+import * as Lab from 'lab';
+import { expect } from '@hapi/code';
+
+const lab = Lab.script();
+const { describe, it, before } = lab;
+export { lab };
+
+
+describe('experiment', () => {
+
+    before(() => {});
+
+    it('verifies 1 equals 1', () => {
+
+        expect(1).to.equal(1);
+    });
+});
+```
+
+Then the test can be executed using the following command line:
+
+```sh
+$ lab --sourcemaps --transform node_modules/lab-transform-typescript
+```
 
 ## Command Line
 
@@ -60,150 +310,88 @@
 - `-Y`, `--types` - validate the module TypeScript types definitions. This is designed exclusively for JavaScript modules that export a TypeScript definition file.
 
 
-## Usage
+## Methods
 
-To install locally:
-```bash
-$ npm install --save-dev @hapi/lab
-```
+### `Lab.script([options])`
 
-By default, **lab** loads all the '\*.js' files inside the local 'test' directory and executes the tests found.  To use different directories or files, pass the file or directories as arguments:
+Generates a test script interface which is used to add experiments and tests, where:
+- `options` - an optional object with the following optional keys:
+    - `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly with Node.js without having to use the CLI (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and can be turned off by setting `schedule` to `false`. If you need to see the output with schedule disabled you should set `output` to `process.stdout`.  Defaults to `true`.
+    - `cli` - allows setting command line options within the script. Note that the last script file loaded wins and usage of this is recommended only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute the first test loaded.
 
-```bash
-$ lab unit.js
-```
+### `script.after([options], action)`
 
-Test files must require the **lab** module, and export a test script:
+Executes the provided action after the current experiment block is finished where:
+- `options` - optional flags as describe in [`script.test()`](#scripttesttitle-options-test).
+- `action` - a sync or async function using the signature `function(flags)` where:
+    - `flags` - see [Flags](#flags)
 
-<!-- eslint-disable no-undef -->
-```javascript
-const { expect } = require('@hapi/code');
-const { it } = exports.lab = require('@hapi/lab').script();
+### `script.afterEach()`
 
-it('returns true when 1 + 1 equals 2', () => {
+Executes the provided action after each test is executed in the current experiment block where:
+- `options` - optional flags as describe in [`script.test()`](#scripttesttitle-options-test).
+- `action` - a sync or async function using the signature `function(flags)` where:
+    - `flags` - see [Flags](#flags)
 
-    expect(1 + 1).to.equal(2);
-});
-```
+### `script.before()`
 
-Or
+Executes the provided action before the current experiment block is started where:
+- `options` - optional flags as describe in [`script.test()`](#scripttesttitle-options-test).
+- `action` - a sync or async function using the signature `function(flags)` where:
+    - `flags` - see [Flags](#flags)
 
-<!-- eslint-disable no-undef -->
-```javascript
-const { expect } = require('@hapi/code');
-const Lab = require('@hapi/lab');
-const lab = exports.lab = Lab.script();
+### `script.beforeEach()`
 
-lab.test('returns true when 1 + 1 equals 2', () => {
+Executes the provided action before each test is executed in the current experiment block where:
+- `options` - optional flags as describe in [`script.test()`](#scripttesttitle-options-test).
+- `action` - a sync or async function using the signature `function(flags)` where:
+    - `flags` - see [Flags](#flags)
 
-    expect(1 + 1).to.equal(2);
-});
-```
+### `script.describe(title, [options], content)`
 
-If a test is performing an asynchronous operation then it should use the new `async`/`await` keywords or return a Promise. For example:
+Same as [`script.experiment()`](#scriptexperimenttitle-options-content).
 
-<!-- eslint-disable no-undef -->
-```javascript
-lab.test('config file has correct value', async () => {
+### `script.experiment(title, [options], content)`
 
-    const file = await fs.readFile('config');
-    expect(file.toString()).to.contain('something');
-});
-```
+Sets up an experiment (a group of tests) where:
+- `title` - the experiment description.
+- `options` - optional settings:
+    - `skip` - if `true`, sets the entire experiment content to be skipped during execution. Defaults to `false`.
+    - `only` - if `true`, sets all other experiments to `skip`. Default to `false`.
+    - `timeout` - overrides the default test timeout for tests and other timed operations. Defaults to `2000`.
+- `content` - a function with signature `function()` which can setup other experiments or tests.
 
+### `script.experiment.only(title, [options], content)`
 
-Tests can be organized into experiments:
-<!-- eslint-disable no-undef -->
-```javascript
-lab.experiment('math', () => {
+Same as [`script.experiment()`](#scriptexperimenttitle-options-content) with the `only` option set to `true`.
 
-    lab.test('returns true when 1 + 1 equals 2', () => {
+### `script.experiment.skip(title, [options], content)`
 
-        expect(1 + 1).to.equal(2);
-    });
-});
-```
+Same as [`script.experiment()`](#scriptexperimenttitle-options-content) with the `skip` option set to `true`.
 
-If you need to perform some async actions before or after executing the tests inside an experiment, the `before()` and
-`after()` methods can be used. To execute code before or after each test in an experiment, use `beforeEach()` and `afterEach()`.
+### `script.it(title, [options], test)`
 
-<!-- eslint-disable no-undef -->
-```javascript
-lab.experiment('math', () => {
+Same as [`script.test()`](#scripttesttitle-options-test).
 
-    lab.before(() => {
+### `script.suite(title, [options], content)`
 
-        return new Promise((resolve) => {
+Same as [`script.experiment()`](#scriptexperimenttitle-options-content).
 
-            // Wait 1 second
-            setTimeout(() => {
+### `script.test(title, [options], test)`
 
-                resolve();
-            }, 1000);
-        });
-    });
-
-    lab.beforeEach(() => {
-
-        // Run before every single test
-    });
-
-    lab.test('returns true when 1 + 1 equals 2', () => {
-
-        expect(1 + 1).to.equal(2);
-    });
-});
-
-```
-
-`test()`, `before()`, `beforeEach()`, `after()` and `afterEach()` also support returning promises just as tests do:
-
-<!-- eslint-disable no-undef -->
-```javascript
-lab.experiment('math', () => {
-
-    lab.before(() => {
-
-        return aFunctionReturningAPromise();
-    });
-
-    lab.test('returns true when 1 + 1 equals 2', () => {
-
-        return aFunctionReturningAPromise()
-            .then((aValue) => {
-
-                expect(aValue).to.equal(expectedValue);
-            });
-    });
-});
-```
-
-Both `test()` and `experiment()` accept an optional `options` argument which must be an object with the following optional keys:
-- `timeout` -  set a test or experiment specific timeout in milliseconds. Defaults to the global timeout (`2000`ms or the value of `-m`).
-- `skip` - skip execution. When used on an experiment, all children will be skipped - even if they are marked with `only`.
-- `only` - marks all other tests or experiments with `skip`.
-
-You can also append `.only(…)` or `.skip(…)` to `test` and `experiment` instead of using `options`:
-
-<!-- eslint-disable no-undef -->
-```javascript
-lab.experiment('with only', () => {
-
-    lab.test.only('only this test will run', () => {
-
-        expect(1 + 1).to.equal(2);
-    });
-
-    lab.test('another test that will not be executed', () => {});
-});
-```
-
-
-### `plan`
-
-The test function options support a `plan` property, used to specify the expected number of assertions for your test to execute. This setting should only be used with an assertion library that supports a `count()` function, like [`code`](http://npmjs.com/package/code).
-
-<!-- eslint-disable no-undef -->
+Sets up a test where:
+- `title` - the test description.
+- `options` - optional settings:
+    - `skip` - if `true`, sets the entire experiment content to be skipped during execution. Defaults to `false`.
+    - `only` - if `true`, sets all other experiments to `skip`. Default to `false`.
+    - `timeout` - overrides the default test timeout for tests and other timed operations in milliseconds. Defaults to `2000`.
+    - `plan` - the expected number of assertions the test must execute. This setting should only be used with an assertion library that supports a `count()` function, like [**code**](https://hapi.dev/family/code).
+- `test` - a function with signature `function(flags)` where:
+    - the function can throw if the test failed.
+    - the function can return a Promise which either resolves (success) or rejects (fails).
+    - all other return value is ignored.
+    - `flags` - a set of test utilities described in [Flags](#flags).
+    
 ```javascript
 lab.experiment('my plan', () => {
 
@@ -214,34 +402,44 @@ lab.experiment('my plan', () => {
 });
 ```
 
+### `script.test.only(title, [options], test)`
 
-### `flags`
+Same as calling [`script.test()`](#scripttesttitle-options-test) with `only` option set to `true`.
+
+### `script.test.skip(title, [options], test)`
+
+Same as calling [`script.test()`](#scripttesttitle-options-test) with `skip` option set to `true`.
+
+#### `Flags`
 
 The `test` function is passed a `flags` object that can be used to create notes or set a function to execute for cleanup operations after the test is complete.
 
+#### `context`
 
-#### `note()`
+An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
 
-Notes are included in the console reporter at the end of the output. For example, if you would like to add a note with the current time, your test case may look like the following:
-
-<!-- eslint-disable no-undef -->
 ```javascript
-lab.test('attaches notes', (flags) => {
+lab.before(({ context }) => {
 
-    expect(1 + 1).to.equal(2);
-    flags.note(`The current time is ${Date.now()}`);
+    context.foo = 'bar';
+})
+
+lab.test('contains context', ({ context }) => {
+
+    expect(context.foo).to.equal('bar');
 });
 ```
 
-Multiple notes can be appended for the same test case by simply calling `note()` repeatedly.
+#### `mustCall(func, count)`
 
-#### `mustCall()`
+Sets a requirement that a function must be called a certain number of times where:
+- `func` - the function to be called.
+- `count` - the number of required invocations.
 
-Declare that a particular function must be called a certain number of times. The signature to `mustCall` is `(fn, numberOfExecutions)` and it returns a wrapped copy of the `fn`. After the test is complete, each `mustCall` assertion will be checked and the test will fail if any function was called the incorrect number of times.
+Returns a wrapped copy of the function. After the test is complete, each `mustCall` assertion will be checked and the test will fail if any function was called the incorrect number of times.
 
 Below is an example demonstrating how to use `mustCall` to verify that `fn` is called exactly two times.
 
-<!-- eslint-disable no-undef -->
 ```javascript
 lab.test('fn must be called twice', async (flags) => {
 
@@ -254,12 +452,27 @@ lab.test('fn must be called twice', async (flags) => {
 });
 ```
 
+#### `note(note)`
 
-#### `onCleanup()`
+Adds notes to the test log where:
+- `note` - a string to be included in the console reporter at the end of the output.
 
-You can assign a function to the `flags` object `onCleanup` property to register a runtime cleanup function to be executed after the test completed. The cleanup function will execute even in the event of a timeout. Note that the cleanup function will be executed as-is without any timers. Like the test, `onCleanup` can return a Promise that will be evaluated.
+For example, if you would like to add a note with the current time, your test case may look like the following:
 
-<!-- eslint-disable no-undef -->
+```javascript
+lab.test('attaches notes', (flags) => {
+
+    expect(1 + 1).to.equal(2);
+    flags.note(`The current time is ${Date.now()}`);
+});
+```
+
+Multiple notes can be appended for the same test case by simply calling `note()` repeatedly.
+
+#### `onCleanup`
+
+A property that can be assigned a cleanup function registered at runtime to be executed after the test completes. The cleanup function will execute even in the event of a timeout or error. Note that the cleanup function will be executed as-is without any timers. The function assigned to `onCleanup` can return a Promise that will be evaluated.
+
 ```javascript
 lab.test('cleanups after test', (flags) => {
 
@@ -272,36 +485,10 @@ lab.test('cleanups after test', (flags) => {
 });
 ```
 
-#### `flags.onUnhandledRejection()`
+#### `onUncaughtException`
 
-You can assign a synchronous function to the `flags` object `onUnhandledRejection` property to register an override for global rejection handling. This can be used to test the code that is explicitly meant to result in unhandled rejections.
+A property that can be assigned an override for global exception handling. This can be used to test the code that is explicitly meant to result in uncaught exceptions.
 
-<!-- eslint-disable no-undef -->
-```javascript
-lab.test('leaves an unhandled rejection', (flags) => {
-
-    return new Promise((resolve) => {
-
-        flags.onUnhandledRejection = (err) => {
-
-            expect(err).to.be.an.error('I want this rejection to remain unhandled in production');
-            resolve(); // finish the test
-        };
-
-        // sample production code
-        setTimeout(() => {
-
-            Promise.reject(new Error('I want this rejection to remain unhandled in production'));
-        });
-    });
-});
-```
-
-#### `flags.onUncaughtException()`
-
-You can assign a synchronous function to the `flags` object `onUncaughtException` property to register an override for global exception handling. This can be used to test the code that is explicitly meant to result in uncaught exceptions.
-
-<!-- eslint-disable no-undef -->
 ```javascript
 lab.test('leaves an uncaught rejection', (flags) => {
 
@@ -322,191 +509,33 @@ lab.test('leaves an uncaught rejection', (flags) => {
 });
 ```
 
-#### `context`
+#### `onUnhandledRejection`
 
-`context` is an object that is passed to `before` and `after` functions in addition to tests themselves. The intent is to be able to set properties on `context` inside of a before function that can be used by a test function later. This should help reduce module level variables that are set by `before`/`beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
+A property that can be assigned an override function for global rejection handling. This can be used to test the code that is explicitly meant to result in unhandled rejections.
 
-<!-- eslint-disable no-undef -->
 ```javascript
-lab.before(({ context }) => {
+lab.test('leaves an unhandled rejection', (flags) => {
 
-    context.foo = 'bar';
-})
+    return new Promise((resolve) => {
 
-lab.test('contains context', ({ context }) => {
+        flags.onUnhandledRejection = (err) => {
 
-    expect(context.foo).to.equal('bar');
-});
-```
+            expect(err).to.be.an.error('I want this rejection to remain unhandled in production');
+            resolve(); // finish the test
+        };
 
+        // sample production code
+        setTimeout(() => {
 
-### Timeouts
-
-`before()`, `after()`, `beforeEach()`, `afterEach()` accept an optional `options` argument which must be an object with the following optional keys:
-- `timeout` -  set a specific timeout in milliseconds. Disabled by default or the value of `-M`.
-
-<!-- eslint-disable no-undef -->
-```javascript
-lab.experiment('math', { timeout: 1000 }, () => {
-
-    lab.before({ timeout: 500 }, () =>  {
-
-        doSomething();
-    });
-
-    lab.test('returns true when 1 + 1 equals 2', () =>  {
-
-        expect(1 + 1).to.equal(2);
+            Promise.reject(new Error('I want this rejection to remain unhandled in production'));
+        });
     });
 });
 ```
 
+## `.labrc.js` File
 
-### Script options
-
-The `script([options])` method takes an optional `options` argument where `options` is an object with the following optional keys:
-- `schedule` - if `false`, an automatic execution of the script is disabled. Automatic execution allows running lab test scripts directly
-  with Node.js without having to use the CLI (e.g. `node test/script.js`). When using **lab** programmatically, this behavior is undesired and
-  can be turned off by setting `schedule` to `false`. If you need to see the output with schedule disabled you should set `output` to `process.stdout`.  Defaults to `true`.
-- `cli` - allows setting command line options within the script. Note that the last script file loaded wins and usage of this is recommended
-  only for temporarily changing the execution of tests. This option is useful for code working with an automatic test engine that run tests
-  on commits. Setting this option has no effect when not using the CLI runner. For example setting `cli` to `{ ids: [1] }` will only execute
-  the first test loaded.
-
-
-### Behavior Driven Development
-
-To make **lab** look like BDD:
-<!-- eslint-disable no-undef -->
-```javascript
-const { expect } = require('@hapi/code');
-const Lab = require('@hapi/lab');
-const { after, before, describe, it } = exports.lab = Lab.script();
-
-describe('math', () => {
-
-    before(() => {});
-
-    after(() => {});
-
-    it('returns true when 1 + 1 equals 2', () => {
-
-        expect(1 + 1).to.equal(2);
-    });
-});
-```
-
-
-### Test Driven Development
-
-To make **lab** look like TDD:
-<!-- eslint-disable no-undef -->
-```javascript
-const { expect } = require('@hapi/code');
-const Lab = require('@hapi/lab');
-const { suite, test } = exports.lab = Lab.script();
-
-suite('math', () => {
-
-    test('returns true when 1 + 1 equals 2', () => {
-
-        expect(1 + 1).to.equal(2);
-    });
-});
-```
-
-
-### Transforms
-
-To use source transforms, you must specify a file with the `-T` command line option that tells Lab how to do the transformation. You can specify many extensions with different transform functions such as `.ts` or `.jsx`.
-
-
-#### TypeScript
-
-A TypeScript definition file is included with **lab** to make it easier to use inside of an existing TypeScript project. Below is a TypeScript test example that uses the [lab-transform-typescript](https://www.npmjs.com/package/lab-transform-typescript) module to manage the transform:
-
-```typescript
-import * as Lab from 'lab';
-
-const { expect } = require('@hapi/code');
-const lab = Lab.script();
-const { describe, it, before } = lab;
-export { lab };
-
-describe('experiment', () => {
-    before(() => {});
-
-    it('verifies 1 equals 1', () => {
-        expect(1).to.equal(1);
-    });
-});
-```
-
-Then the test can be be executed using the following command line:
-
-```sh
-$ lab --sourcemaps --transform node_modules/lab-transform-typescript
-```
-
-
-### Disable Code Coverage
-
-Sometimes you want to disable code coverage for specific lines, and have the coverage report omit them entirely. To do so, use the `$lab:coverage:(off|on)$` comments. For example:
-<!-- eslint-disable no-undef -->
-```javascript
-// There is no way to cover this in node 0.10
-/* $lab:coverage:off$ */
-if (typeof value === 'symbol') {
-    // do something with value
-}
-/* $lab:coverage:on$ */
-```
-
-#### Coverage Bypass Stack
-
-Disabling code coverage becomes tricky when dealing with machine-generated or machine-altered code. For example, `babel` can be configured to disable coverage for generated code using the `auxiliaryCommentBefore` and `auxiliaryCommentAfter` options. The naïve approach to this uses `$lab:coverage:on$` and `$lab:coverage:off$`, but these directives overwrite any user-specified directives, so that a block where coverage should be disabled may have that coverage unintentionally re-enabled. To work around this issue, `lab` supports pushing the current code coverage bypass state onto an internal stack using the `$lab:coverage:push$` directive, and supports restoring the top of the stack using the `$lab:coverage:pop$` directive:
-<!-- eslint-disable no-undef -->
-```javascript
-// There is no way to cover this in node < 10.0.0
-/* $lab:coverage:off$ */
-const { types } = Util;
-const isSet = (types && types.isSet) || (set) => set instanceof Set;
-/* $lab:coverage:on$ */
-
-// When Util is imported using import and babel transpiles to cjs, babel can be
-// configured to use the stack:
-/* $lab:coverage:off$ */
-const {
-  types
-} =
-/*$lab:coverage:push$/
-/*$lab:coverage:off$*/
-_util
-/*$lab:coverage:pop$/
-.
-/*$lab:coverage:push$/
-/*$lab:coverage:off$*/
-default
-/*$lab:coverage:pop$*/
-;
-const isSet = types && types.isSet || (set) => set instanceof Set;
-/* $lab:coverage:on$ */
-```
-
-Semantics:
-
-- `$lab:coverage:push$` copies the current skip state to the top of the stack, and leaves it as the current state as well
-- `$lab:coverage:pop$` replaces the current skip state with the the top of the stack, and removes the top of the stack
-  - if the stack is empty, `lab` will tell you by throwing the error `"unable to pop coverage bypass stack"`
-
-## `.labrc.js` file
-
-**lab** supports a `.labrc.js` configuration file for centralizing lab settings.
-The `.labrc.js` file can be located in the current working directory, any
-directory that is the parent of the current working directory, or in the user's
-home directory.  The `.labrc.js` file needs to be able to be required by
-Node.js.  Therefore, either format it as a JSON file or with a `module.exports`
-that exports an object with the keys that are the settings.
+**lab** supports a `.labrc.js` configuration file for centralizing lab settings. The `.labrc.js` file can be located in the current working directory, any directory that is the parent of the current working directory, or in the user's home directory.  The `.labrc.js` file needs to be able to be required by Node.js.  Therefore, either format it as a JSON file or with a `module.exports` that exports an object with the keys that are the settings.
 
 Below is an example of a `.labrc.js` file to enable linting and test coverage checking:
 
@@ -518,12 +547,9 @@ module.exports = {
 };
 ```
 
+### Setting precedent
 
-### `.labrc.js` setting precedent
-
-The `.labrc.js` file will override the **lab** default settings. Any options passed
-to the **lab** runner will override the settings found in `.labrc.js`.  For example,
-assume you have the following `.labrc.js` file:
+The `.labrc.js` file will override the **lab** default settings. Any options passed to the **lab** runner will override the settings found in `.labrc.js`.  For example, assume you have the following `.labrc.js` file:
 
 ```js
 module.exports = {
@@ -532,19 +558,15 @@ module.exports = {
 };
 ```
 
-If you need to reduce the coverage threshold for a single run, you can execute
-**lab** as follows:
+If you need to reduce the coverage threshold for a single run, you can execute **lab** as follows:
 
 ```sh
 lab -t 80
 ```
 
+### Available settings
 
-### `.labrc.js` available settings
-
-The `.labrc.js` file supports configuration keys that are named with the long name
-of the command line settings.  Therefore, if you need to specify an assert
-library, you would export a key named "assert" with the desired value.
+The `.labrc.js` file supports configuration keys that are named with the long name of the command line settings.  Therefore, if you need to specify an assert library, you would export a key named "assert" with the desired value.
 
 In addition, you can use the `paths` parameter to override the default test directory (i.e. `./test`):
 ```js
@@ -555,7 +577,7 @@ module.exports = {
 
 As stated at the beginning of the document, `--ignore` parameter is an alias for `globals` option in the `.labrc` file. Therefore if you wish to ignore specific files you'll need to append a `globals` setting, **not** an `ignore` one, as stated on #641.
 
-## Extending the linter
+## Linting
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
 
@@ -565,8 +587,7 @@ As stated at the beginning of the document, `--ignore` parameter is an alias for
 
 Your project's eslint configuration will now extend the default **lab** configuration.
 
-
-## Ignoring files in linting
+### Ignoring files in linting
 
 Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
 ```
@@ -574,8 +595,7 @@ node_modules/*
 **/vendor/*.js
 ```
 
-
-## Only run linting
+### Only run linting
 
 In order to run linting and not to execute tests you can combine the `dry` run
 flag with the `lint` flag.
@@ -588,7 +608,6 @@ lab -dL
 
 Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. Aside from `--assert` from the CLI you can change the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
 
-<!-- eslint-disable no-undef -->
 ```js
 const lab = exports.lab = Lab.script();
 const { describe, it } = lab;
@@ -616,7 +635,6 @@ $ lab --assert code
 
 If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you have any missing assertions. An example of this is:
 
-<!-- eslint-disable no-undef -->
 ```js
 describe('expectation', () => {
 
@@ -629,8 +647,7 @@ describe('expectation', () => {
 });
 ```
 
-This is an invalid test but it will pass as the `.false` assertion was not actually called. Lab will report the
-number of incomplete assertions, their location in your code and return a failure of the tests.
+This is an invalid test but it will pass as the `.false` assertion was not actually called. Lab will report the number of incomplete assertions, their location in your code and return a failure of the tests.
 
 Similarly, if you use an assertion library, **lab** will be able to report the verbosity of your tests. This is a measure of the number of assertions divided by the number of tests. The value will be output when using the console reporter and can be helpful in determining if too many or too few assertions exist in each test. What is too many or too few assertions is entirely up to you.
 
@@ -643,33 +660,6 @@ This debugger can be accessed using the URL that is printed in the console, or u
 As you may know, if your tests are associated with the command `npm test`, you can already run `npm test -- --inspect` to run it with the inspector and avoid creating another command. If you want to listen on a specific port for the inspector, pass `--inspect={port}`.
 
 **lab** also has automatic support for the [WebStorm](https://www.jetbrains.com/webstorm/) debugger, just start a normal debugging session on your npm test script.
-
-## Best practices
-
-- Add lab as a dev dependency to your project's `package.json` along with a `test` script:
-
-```json
-{
-  "devDependencies": {
-    "lab": "15.x.x"
-  },
-  "scripts": {
-    "test": "lab -t 100",
-    "test-cov-html": "lab -r html -o coverage.html"
-  }
-}
-```
-
-Note that `npm test` will execute **lab** with the `-t 100` option which will
-require 100% code coverage. Run `npm run test-cov-html` and check the `coverage.html`
-file to figure out where coverage is lacking. When coverage is below the threshold,
-the CLI will exit with code `1` and will result in an npm Error message.
-
-- Run your tests with
-
-```bash
-$ npm test
-```
 
 ## Multiple Reporters
 
@@ -703,15 +693,61 @@ $ lab -r console -o stdout -r console -o console.log
 
 ## Custom Reporters
 
-If the value passed for `reporter` isn't included with Lab, it is loaded from the filesystem.
-If the string starts with a period (`'./custom-reporter'`), it will be loaded relative to the current working directory.
-If it doesn't start with a period (`'custom-reporter'`), it will be loaded from the `node_modules` directory, just like any module installed using `npm install`.
+If the value passed for `reporter` isn't included with Lab, it is loaded from the filesystem. If the string starts with a period (`'./custom-reporter'`), it will be loaded relative to the current working directory. If it doesn't start with a period (`'custom-reporter'`), it will be loaded from the `node_modules` directory, just like any module installed using `npm install`.
 
 Reporters must be a class with the following methods: `start`, `test` and `end`. `options` are passed to the class constructor upon initialization.
 
 See the [json reporter](lib/reporters/json.js) for a good starting point.
 
-## Excluding paths from coverage reporting
+## Coverage
+
+Sometimes you want to disable code coverage for specific lines, and have the coverage report omit them entirely. To do so, use the `$lab:coverage:(off|on)$` comments. For example:
+```javascript
+// There is no way to cover this in node 0.10
+/* $lab:coverage:off$ */
+if (typeof value === 'symbol') {
+    // do something with value
+}
+/* $lab:coverage:on$ */
+```
+
+### Coverage Bypass Stack
+
+Disabling code coverage becomes tricky when dealing with machine-generated or machine-altered code. For example, `babel` can be configured to disable coverage for generated code using the `auxiliaryCommentBefore` and `auxiliaryCommentAfter` options. The naïve approach to this uses `$lab:coverage:on$` and `$lab:coverage:off$`, but these directives overwrite any user-specified directives, so that a block where coverage should be disabled may have that coverage unintentionally re-enabled. To work around this issue, `lab` supports pushing the current code coverage bypass state onto an internal stack using the `$lab:coverage:push$` directive, and supports restoring the top of the stack using the `$lab:coverage:pop$` directive:
+```javascript
+// There is no way to cover this in node < 10.0.0
+/* $lab:coverage:off$ */
+const { types } = Util;
+const isSet = (types && types.isSet) || (set) => set instanceof Set;
+/* $lab:coverage:on$ */
+
+// When Util is imported using import and babel transpiles to cjs, babel can be
+// configured to use the stack:
+/* $lab:coverage:off$ */
+const {
+  types
+} =
+/*$lab:coverage:push$/
+/*$lab:coverage:off$*/
+_util
+/*$lab:coverage:pop$/
+.
+/*$lab:coverage:push$/
+/*$lab:coverage:off$*/
+default
+/*$lab:coverage:pop$*/
+;
+const isSet = types && types.isSet || (set) => set instanceof Set;
+/* $lab:coverage:on$ */
+```
+
+Semantics:
+
+- `$lab:coverage:push$` copies the current skip state to the top of the stack, and leaves it as the current state as well
+- `$lab:coverage:pop$` replaces the current skip state with the top of the stack, and removes the top of the stack
+  - if the stack is empty, `lab` will tell you by throwing the error `"unable to pop coverage bypass stack"`
+  
+### Excluding paths from coverage reporting
 
 The `--coverage-exclude` argument can be repeated multiple times in order to add multiple paths to exclude.  By default the `node_modules` and `test` directories are excluded.  If you want to exclude those as well as a directory named `public` you can run lab as follows:
 
@@ -721,6 +757,4 @@ lab -c --coverage-exclude test --coverage-exclude node_modules --coverage-exclud
 
 ## Acknowledgements
 
-**lab** initial code borrowed heavily from [mocha](http://mochajs.org/), including the actual code used to render
-the coverage report into HTML. **lab** coverage code was originally adapted from [blanket](https://github.com/alex-seville/blanket)
-which in turn uses [falafel](https://github.com/substack/node-falafel).
+**lab** initial code borrowed heavily from [mocha](http://mochajs.org/), including the actual code used to render the coverage report into HTML. **lab** coverage code was originally adapted from [blanket](https://github.com/alex-seville/blanket) which in turn uses [falafel](https://github.com/substack/node-falafel).
