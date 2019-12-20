@@ -308,26 +308,26 @@ declare namespace script {
 
     interface Experiment {
 
-        (title: String, content: () => void): void;
-        (title: String, options: Omit<TestOptions, 'plan'>, content: () => void): void;
+        (title: string, content: () => void): void;
+        (title: string, options: Omit<TestOptions, 'plan'>, content: () => void): void;
 
-        only(title: String, content: () => void): void;
-        only(title: String, options: Omit<TestOptions, 'plan'>, content: () => void): void;
+        only(title: string, content: () => void): void;
+        only(title: string, options: Omit<TestOptions, 'plan'>, content: () => void): void;
 
-        skip(title: String, content: () => void): void;
-        skip(title: String, options: Omit<TestOptions, 'plan'>, content: () => void): void;
+        skip(title: string, content: () => void): void;
+        skip(title: string, options: Omit<TestOptions, 'plan'>, content: () => void): void;
     }
 
     interface Test {
 
-        (title: String, test: Action): void;
-        (title: String, options: TestOptions, test: Action): void;
+        (title: string, test: Action): void;
+        (title: string, options: TestOptions, test: Action): void;
 
-        only(title: String, test: Action): void;
-        only(title: String, options: TestOptions, test: Action): void;
+        only(title: string, test: Action): void;
+        only(title: string, options: TestOptions, test: Action): void;
 
-        skip(title: String, test: Action): void;
-        skip(title: String, options: TestOptions, test: Action): void;
+        skip(title: string, test: Action): void;
+        skip(title: string, options: TestOptions, test: Action): void;
     }
 
     interface Action {
