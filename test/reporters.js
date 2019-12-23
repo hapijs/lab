@@ -1213,7 +1213,7 @@ describe('Reporter', () => {
 
             const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
             expect(output).to.contain('Failed tests:');
-            expect(output).to.contain('[Circular]');
+            expect(output).to.match(/\[Circular( \*1)?\]/);
             expect(output).to.contain('Fail');
         });
 
