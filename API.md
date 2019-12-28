@@ -298,6 +298,7 @@ $ lab --sourcemaps --transform node_modules/lab-transform-typescript
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
     - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
+- `-R`, `--retries` - the number of times to retry a failing test that is explicitly marked with `retry`. Defaults to `5`.
 - `--shuffle` - randomize the order that test scripts are executed.  Will not work with `--id`.
 - `--seed` - use this seed to randomize the order with `--shuffle`. This is useful to debug order dependent test failures.
 - `-s`, `--silence` - silence test output, defaults to false.
@@ -386,6 +387,7 @@ Sets up a test where:
     - `only` - if `true`, sets all other experiments to `skip`. Default to `false`.
     - `timeout` - overrides the default test timeout for tests and other timed operations in milliseconds. Defaults to `2000`.
     - `plan` - the expected number of assertions the test must execute. This setting should only be used with an assertion library that supports a `count()` function, like [**code**](https://hapi.dev/family/code).
+    - `retry` - when `true` or set to a number greater than `0`, if the test fails it will be retried `retries` (defaults to `5`) number of times until it passes.
 - `test` - a function with signature `function(flags)` where:
     - the function can throw if the test failed.
     - the function can return a Promise which either resolves (success) or rejects (fails).

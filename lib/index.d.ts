@@ -115,6 +115,13 @@ declare namespace script {
         readonly environment?: string;
 
         /**
+         * Number of times to retry failing tests (marked explicitly for retry).
+         * 
+         * @default 5
+         */
+        readonly retries?: number;
+
+        /**
          * Prevent recursive collection of tests within the provided path.
          * 
          * @default false
@@ -363,6 +370,13 @@ declare namespace script {
          * The expected number of assertions the test must execute.
          */
         readonly plan?: number;
+
+        /**
+         * Set the test to be retried a few times when it fails. Can be set to true to used the default number of retries or an exact number of maximum retries.
+         *
+         * @default false
+         */
+        readonly retry?: number | boolean;
     }
 
     interface Flags {

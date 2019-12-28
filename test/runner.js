@@ -1641,6 +1641,40 @@ describe('Runner', () => {
         expect(output.match(/assertion failed !/g)).to.have.length(1);
     });
 
+    it('retries failing test (default)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            let count = 0;
+            script.test('1', { retry: true }, () => {
+
+                assertions.expect(++count === 5).to.be.true();
+            });
+        });
+
+        const { code } = await Lab.report(script, { output: false, assert: assertions });
+        expect(code).to.equal(0);
+    });
+
+    it('retries failing test (specific)', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        script.experiment('test', () => {
+
+            let count = 0;
+            script.test('1', { retry: 4 }, () => {
+
+                assertions.expect(++count === 5).to.be.true();
+            });
+        });
+
+        const { code } = await Lab.report(script, { output: false, assert: assertions });
+        expect(code).to.equal(1);
+    });
+
     describe('global timeout functions', () => {
 
         // We can't poison global.Date because the normal implementation of
