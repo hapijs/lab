@@ -381,6 +381,40 @@ describe('Reporter', () => {
             ]);
         });
 
+        it('reports retries (under 10)', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                let count = 0;
+                script.test('1', { retry: true }, () => {
+
+                    expect(++count === 5).to.be.true();
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', output: false });
+            expect(code).to.equal(0);
+            expect(output).to.contain('5');
+        });
+
+        it('reports retries (over 9)', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                let count = 0;
+                script.test('1', { retry: 10 }, () => {
+
+                    expect(++count === 10).to.be.true();
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', output: false });
+            expect(code).to.equal(0);
+            expect(output).to.contain('!');
+        });
+
         it('generates a report with errors', async () => {
 
             const script = Lab.script();
