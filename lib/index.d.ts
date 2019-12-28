@@ -380,7 +380,7 @@ declare namespace script {
          * 
          * @returns a wrapped function.
          */
-        mustCall(func: Function, count: number): Function;
+        mustCall<T extends (...args: any[]) => any>(func: T, count: number): T;
 
         /**
          * Adds notes to the test log.
