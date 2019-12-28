@@ -1,9 +1,9 @@
 'use strict';
 
 const Fs = require('fs');
+const Module = require('module');
 const Os = require('os');
 const Path = require('path');
-const Module = require('module');
 
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
@@ -119,6 +119,17 @@ describe('Coverage', () => {
 
         const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules', 'test-name.js'] });
         expect(cov.percent).to.equal(0);
+    });
+
+    it('handles comma operator', async () => {
+
+        const Test = require('./coverage/comma');
+
+        expect(Test.method1(1)).to.equal(1);
+        expect(Test.method2(1)(2)).to.equal(2);
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/comma') });
+        expect(cov.percent).to.equal(100);
     });
 
     it('logs to stderr when coverageExclude file has fs.stat issue', async () => {

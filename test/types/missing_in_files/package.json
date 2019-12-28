@@ -2,5 +2,6 @@
     "name": "test",
     "version": "1.0.0",
     "types": "types/index.d.ts",
-    "files": ["lib", "types/*.js"]
+    "files": [ "lib", "types/*.js" ],
+    "main": "lib/index.js"
 }

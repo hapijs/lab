@@ -5,6 +5,7 @@ const Fs = require('fs');
 const Os = require('os');
 const Path = require('path');
 const Stream = require('stream');
+const Util = require('util');
 
 const Rimraf = require('rimraf');
 const Code = require('@hapi/code');
@@ -119,7 +120,8 @@ describe('Reporter', () => {
 
         expect(code).to.equal(0);
         expect(output).to.equal(Fs.readFileSync(filename).toString());
-        Rimraf.sync(folder);
+
+        await Util.promisify(Rimraf)(folder);
     });
 
     it('outputs to a file with output is passed as an array and reporter is an array', async () => {
@@ -419,6 +421,27 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output).to.contain('The following leaks were detected:x1');
             expect(output).to.contain('Expected');
+        });
+
+        it('generates a report with long diff', async () => {
+
+            const script = Lab.script();
+
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    const a = '"value" at position 1 fails because [child "hello" fails because ["hello" is required]]. "value" position 1 contains a duplicate value';
+                    const b = '"[1].hello" is required. "[1]" contains a duplicate value';
+
+                    expect(a).to.equal(b);
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
+
+            expect(code).to.equal(1);
+            expect(output).to.not.contain('+');
         });
 
         it('generates a report with caught error', async () => {
@@ -1041,7 +1064,7 @@ describe('Reporter', () => {
             process.stdout.isTTY = orig.isTTY;
             process.env = orig.env;
             expect(code).to.equal(1);
-            expect(output).to.contain('\u001b[31m');
+            expect(output).to.contain(internals.colors('\u001b[31m'));
         });
 
         it('displays custom error messages in expect', async () => {
@@ -1190,7 +1213,7 @@ describe('Reporter', () => {
 
             const { output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, assert: false });
             expect(output).to.contain('Failed tests:');
-            expect(output).to.contain('[Circular]');
+            expect(output).to.match(/\[Circular( \*1)?\]/);
             expect(output).to.contain('Fail');
         });
 
@@ -1955,7 +1978,7 @@ describe('Reporter', () => {
             expect(code).to.equal(1);
             expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
             expect(output.html).to.equal(htmlRecorder.content);
-            expect(consoleRecorder.content).to.contain('Coverage: \u001b[32m100.00%');
+            expect(consoleRecorder.content).to.contain(internals.colors('Coverage: \u001b[32m100.00%'));
 
             Fs.unlinkSync(filename);
         });
@@ -1992,7 +2015,7 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: ['console'], output: [consoleRecorder], verbose: true, coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
             expect(code).to.equal(0);
-            expect(consoleRecorder.content).to.contain('Coverage: \u001b[32m100.00%');
+            expect(consoleRecorder.content).to.contain(internals.colors('Coverage: \u001b[32m100.00%'));
             expect(consoleRecorder.content).to.equal(output);
         });
 
