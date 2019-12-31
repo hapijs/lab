@@ -185,7 +185,7 @@ suite('math', () => {
 ```json
 {
   "devDependencies": {
-    "lab": "21.x.x"
+    "@hapi/lab": "21.x.x"
   },
   "scripts": {
     "test": "lab -t 100",
@@ -231,7 +231,7 @@ To use source transforms, you must specify a file with the `-T` command line opt
 A TypeScript definition file is included with **lab** to make it easier to use inside of an existing TypeScript project. Below is a TypeScript test example that uses the [lab-transform-typescript](https://www.npmjs.com/package/lab-transform-typescript) module to manage the transform:
 
 ```typescript
-import * as Lab from 'lab';
+import * as Lab from '@hapi/lab';
 import { expect } from '@hapi/code';
 
 const lab = Lab.script();
@@ -583,9 +583,9 @@ As stated at the beginning of the document, `--ignore` parameter is an alias for
 
 **lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
 
-1. Add `eslint-plugin-hapi` and `eslint-config-hapi` as dependencies in your `package.json`. You must add both the plugin and the config because eslint treats them as peer dependencies. For more background, see [eslint/eslint#3458](https://github.com/eslint/eslint/issues/3458) and [eslint/eslint#2518](https://github.com/eslint/eslint/issues/2518).
+1. Add `@hapi/eslint-plugin-hapi` and `@hapi/eslint-config-hapi` as dependencies in your `package.json`. You must add both the plugin and the config because eslint treats them as peer dependencies. For more background, see [eslint/eslint#3458](https://github.com/eslint/eslint/issues/3458) and [eslint/eslint#2518](https://github.com/eslint/eslint/issues/2518).
 
-2. In your project's eslint configuration, add `"extends": "eslint-config-hapi"`. eslint will automatically infer the `eslint-config-`, so technically you can just write `"extends": "hapi"`.
+2. In your project's eslint configuration, add `"extends": "@hapi/eslint-config-hapi"`.
 
 Your project's eslint configuration will now extend the default **lab** configuration.
 
