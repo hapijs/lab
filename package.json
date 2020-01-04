@@ -14,10 +14,10 @@
         "lib"
     ],
     "dependencies": {
-        "@hapi/bossy": "4.x.x",
+        "@hapi/bossy": "5.x.x",
         "@hapi/eslint-config-hapi": "13.x.x",
         "@hapi/eslint-plugin-hapi": "4.x.x",
-        "@hapi/hoek": "8.x.x",
+        "@hapi/hoek": "9.x.x",
         "babel-eslint": "10.x.x",
         "diff": "4.x.x",
         "eslint": "6.x.x",
@@ -34,7 +34,7 @@
     },
     "devDependencies": {
         "@hapi/lab-external-module-test": "1.x.x",
-        "@hapi/code": "7.x.x",
+        "@hapi/code": "8.x.x",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
         "rimraf": "2.x.x",
