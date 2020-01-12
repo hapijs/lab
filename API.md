@@ -412,7 +412,7 @@ Same as calling [`script.test()`](#scripttesttitle-options-test) with `only` opt
 
 Same as calling [`script.test()`](#scripttesttitle-options-test) with `skip` option set to `true`.
 
-#### `Flags`
+### `Flags`
 
 The `test` function is passed a `flags` object that can be used to create notes or set a function to execute for cleanup operations after the test is complete.
 
