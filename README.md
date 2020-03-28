@@ -15,3 +15,7 @@
 - [Changelog](https://hapi.dev/family/lab/changelog/)
 - [Project policies](https://hapi.dev/policies/)
 - [Free and commercial support options](https://hapi.dev/support/)
+
+
+# Notes
+- Replacing Handlebars with template strings.  Implement similar to https://medium.com/your-majesty-co/frameworkless-javascript-template-literals-the-best-thing-since-sliced-bread-d97f000ce955

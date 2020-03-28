@@ -1385,6 +1385,193 @@ describe('Reporter', () => {
     });
 
     describe('html', () => {
+        
+        it('generates corresponding lint-file parital when there are errors', () => {
+
+            const { lintFile } = require('../lib/reporters/html/partials/lint-file');
+
+            const options = {
+                errors: [
+                    {
+                        line: 19,
+                        severity: 'high',
+                        message: 'some message'
+                    }
+                ],
+                filename: 'some-file-name.js'
+
+            };
+            expect(lintFile(options)).to.include('<li class="lint-entry">L19 - <span class="level-high">high</span> - some message</li>');
+        });
+
+        it('generates corresponding lint-file partial when there are no errors', () => {
+
+            const { lintFile } = require('../lib/reporters/html/partials/lint-file');
+
+            const options = {
+                filename: 'some-file-name.js'
+
+            };
+            expect(lintFile(options)).to.include('<div class="lint-file">\n    \n</div>');
+        });
+
+        it('generates corresponding lint partial when there are lint errors', () => {
+
+            const { lint } = require('../lib/reporters/html/partials/lint');
+
+            const options = {
+                errors: ['error 1','error 2', 'error 3', 'error 4']
+            };
+            expect(lint(options)).to.include('<span class="errors" data-tooltip="error 1&#xa;error 2&#xa;error 3&#xa;error 4"></span>');
+        });
+
+        it('generates corresponding lint partial when there are lint warnings', () => {
+
+            const { lint } = require('../lib/reporters/html/partials/lint');
+
+            const options = {
+                warnings: ['warning 1', 'warning 2']
+            };
+            expect(lint(options)).to.include('<span class="warnings" data-tooltip="warning 1&#xa;warning 2"></span>');
+        });
+
+        it('generates corresponding linting partial when lint is disabled', () => {
+
+            const { linting } = require('../lib/reporters/html/partials/linting');
+
+            const options = {
+                disabled: true
+            };
+            expect(linting(options)).to.include('<span>Nothing to show here, linting is disabled.</span>');
+        });
+
+        it('generates corresponding linting partial when lint is enabled ', () => {
+
+            const { linting } = require('../lib/reporters/html/partials/linting');
+
+            const options = {
+                errorClass: 'error',
+                totalErrors: 10,
+                warningClass: 'warning',
+                totalWarnings: 13,
+                lint: [
+                    {
+                        errors: ['error1'],
+                        warnings: ['warning 1', 'warning 2']
+                    }
+                ],
+                total: 23
+            };
+
+            expect(linting(options)).to.include('<span class="lint-errors error">10</span>');
+        });
+
+        it('generates corresponding linting partial when total is undefined', () => {
+
+            const { linting } = require('../lib/reporters/html/partials/linting');
+
+            const options = {
+                errorClass: 'error',
+                totalErrors: 10,
+                warningClass: 'warning',
+                totalWarnings: 13,
+                lint: [
+                    {
+                        warnings: ['warning 1', 'warning 2']
+                    }
+                ]
+            };
+
+            expect(linting(options)).to.not.include('<div class="lint-file">');
+        });
+
+        it('generates corresponding tests partial when there are failures', () => {
+
+            const { tests } = require('../lib/reporters/html/partials/tests');
+
+            const options = {
+                failures: ['failure 1, failure 2'],
+                skipped: ['s1', 's2', 's3'],
+                tests: [{
+                    path: ['p1', 'p2']
+                }],
+                duration: 10,
+                paths: [],
+                errors: []
+            };
+
+            expect(tests(options.failures, options.skipped, options.tests, options.duration, options.paths, options.errors)).to.include('<div class="stats terrible">');
+        });
+
+        it('generates corresponding tests partial for errors with stack', () => {
+
+            const { tests } = require('../lib/reporters/html/partials/tests');
+
+            const options = {
+                failures: ['failure 1, failure 2'],
+                skipped: ['s1', 's2', 's3'],
+                tests: [{
+                    path: ['p1', 'p2']
+                }],
+                duration: 10,
+                paths: [],
+                errors: [
+                    {
+                        message: 'some error message',
+                        stack: `Unexpected identifier
+                        at wrapSafe (internal/modules/cjs/loader.js:1072:16)
+                        at Module._compile (internal/modules/cjs/loader.js:1122:27)
+                        at Object.require.extensions.<computed> [as .js] (/Users/aorinevo/Repositories/hapi/lab/lib/coverage.js:127:113)
+                        at Module.load (internal/modules/cjs/loader.js:1002:32)`
+                    }
+                ]
+
+            };
+            const compiledTests = tests(options.failures, options.skipped, options.tests, options.duration, options.paths, options.errors);
+            expect(compiledTests).to.include('<div>some error message</div>');
+            expect(compiledTests).to.include('<pre>  at wrapSafe &#x28;internal&#x2f;modules&#x2f;cjs&#x2f;loader.js:1072:16&#x29;&#x0a;');
+        });
+
+        it('generates corresponding tests partial for errors without stack', () => {
+
+            const { tests } = require('../lib/reporters/html/partials/tests');
+
+            const options = {
+                failures: [],
+                skipped: ['s1', 's2', 's3'],
+                tests: [{
+                    path: ['p1', 'p2']
+                }],
+                duration: 10,
+                paths: [],
+                errors: [
+                    {
+                        message: 'some error message'
+                    }
+                ]
+            };
+            const compiledTests = tests(options.failures, options.skipped, options.tests, options.duration, options.paths, options.errors);
+            expect(compiledTests).to.include('<div>some error message</div>');
+            expect(compiledTests).to.not.include('<pre');
+        });
+
+        it('generates corresponding tests partial when there are no failures', () => {
+
+            const { tests } = require('../lib/reporters/html/partials/tests');
+
+            const options = {
+                failures: [],
+                skipped: ['s1', 's2', 's3'],
+                tests: [{
+                    path: ['p1', 'p2']
+                }],
+                duration: 10,
+                paths: [],
+                errors: []
+            };
+
+            expect(tests(options.failures, options.skipped, options.tests, options.duration, options.paths, options.errors)).to.include('<div class="stats low">');
+        });
 
         it('generates a coverage report', async () => {
 
@@ -1427,7 +1614,7 @@ describe('Reporter', () => {
                 '<td class="source"><div>    while ( </div><div class="miss false" data-tooltip>value ) </div><div>{</div></td>']);
             expect(output, 'missed original line not included').to.contains([
                 '<tr id="while.js__14" class="miss">',
-                '<td class="source" data-tooltip>        value &#x3D; false;</td>']);
+                '<td class="source" data-tooltip>        value = false;</td>']);
             delete global.__$$testCovHtml;
         });
 

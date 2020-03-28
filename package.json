@@ -23,7 +23,7 @@
         "eslint": "6.x.x",
         "find-rc": "4.x.x",
         "globby": "10.x.x",
-        "handlebars": "4.x.x",
+        "handlebars": "^4.7.3",
         "seedrandom": "3.x.x",
         "source-map": "0.7.x",
         "source-map-support": "0.5.x",
@@ -44,7 +44,8 @@
     },
     "scripts": {
         "test": "node ./bin/_lab -f -L -t 100 -m 10000 --types-test test/index.ts",
-        "test-cov-html": "node ./bin/_lab -f -L -r html -m 10000 -o coverage.html"
+        "test-cov-html": "node ./bin/_lab -f -L -r html -m 10000 -o coverage.html",
+        "lint": "node ./bin/_lab -d -f -L"
     },
     "license": "BSD-3-Clause"
 }
