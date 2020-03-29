@@ -1385,7 +1385,7 @@ describe('Reporter', () => {
     });
 
     describe('html', () => {
-        
+
         it('generates corresponding lint-file parital when there are errors', () => {
 
             const { lintFile } = require('../lib/reporters/html/partials/lint-file');
