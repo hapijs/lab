@@ -23,7 +23,7 @@
         "eslint": "6.x.x",
         "find-rc": "4.x.x",
         "globby": "10.x.x",
-        "handlebars": "^4.7.3",
+        "handlebars": "4.x.x",
         "seedrandom": "3.x.x",
         "source-map": "0.7.x",
         "source-map-support": "0.5.x",
