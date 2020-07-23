@@ -36,8 +36,8 @@
         "@hapi/code": "8.x.x",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
-        "rimraf": "2.x.x",
-        "semver": "6.x.x"
+        "rimraf": "3.x.x",
+        "semver": "7.x.x"
     },
     "bin": {
         "lab": "./bin/lab"
