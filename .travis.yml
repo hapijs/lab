@@ -1,18 +1,7 @@
-language: node_js
+version: ~> 1.0
 
-node_js:
-  - "12"
-  - "node"
 
-os:
-  - linux
-  - osx
-  - windows
-
-sudo: false
-
-cache:
-    npm: false
-    directories:
-        - $HOME/.npm
-
+import:
+  - hapijs/ci-config-travis:node_js.yml@main
+  - hapijs/ci-config-travis:install.yml@main
+  - hapijs/ci-config-travis:os.yml@main
