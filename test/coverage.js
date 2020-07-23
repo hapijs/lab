@@ -505,11 +505,11 @@ describe('Coverage', () => {
 
             const cacheBackup = require.cache; // backup require cache
             const filename = Path.resolve(__dirname, './coverage/basic.js');
-            let file = require('./coverage/basic'); //eslint-disable-line no-unused-vars
+            let file = require('./coverage/basic');
 
             const fileCovBefore = global.__$$labCov.files[filename];
             require.cache = Module._cache = {}; // clear require cache before additional require
-            file = require('./coverage/basic');
+            file = require('./coverage/basic'); //eslint-disable-line no-unused-vars
             require.cache = Module._cache = cacheBackup; // restore require cache
 
             const fileCovAfter = global.__$$labCov.files[filename];

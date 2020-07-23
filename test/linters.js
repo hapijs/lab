@@ -63,9 +63,9 @@ describe('Linters - eslint', () => {
         expect(result).to.include('lint');
 
         const eslintResults = result.lint;
-        expect(eslintResults).to.have.length(1);
+        expect(eslintResults).to.have.length(2);
 
-        const checkedFile = eslintResults[0];
+        const checkedFile = eslintResults[1];
         expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
         expect(checkedFile.errors).to.include([
             { line: 14, severity: 'ERROR', message: 'eol-last - Newline required at end of file but not found.' }]);
