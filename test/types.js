@@ -59,56 +59,42 @@ describe('Types', () => {
 
     it('identifies errors', async () => {
 
+        const stripDetails = function (info) {
+
+            info.message = info.message.split('\n')[0];
+            return info;
+        };
+
         process.chdir(Path.join(__dirname, 'types', 'errors'));
         const errors = await Lab.types.validate();
-        expect(errors).to.only.contain([
+        expect(errors.map(stripDetails)).to.only.contain([
             {
                 filename: 'test/index.ts',
-                message: 'No overload matches this call.\n' +
-                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
-                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
-                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
-                    `    Argument of type '"x"' is not assignable to parameter of type 'number'.`,
+                message: 'No overload matches this call.',
                 line: 3,
                 column: 0
             },
             {
                 filename: 'test/index.ts',
-                message: 'No overload matches this call.\n' +
-                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
-                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
-                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
-                    `    Argument of type '"x"' is not assignable to parameter of type 'number'.`,
+                message: 'No overload matches this call.',
                 line: 4,
                 column: 0
             },
             {
                 filename: 'test/nested.ts',
-                message: 'No overload matches this call.\n' +
-                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
-                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
-                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
-                    `    Argument of type 'true' is not assignable to parameter of type 'number'.`,
+                message: 'No overload matches this call.',
                 line: 8,
                 column: 0
             },
             {
                 filename: 'test/nested.ts',
-                message: 'No overload matches this call.\n' +
-                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
-                    `    Argument of type '1' is not assignable to parameter of type 'string'.\n` +
-                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
-                    `    Argument of type 'true' is not assignable to parameter of type 'number'.`,
+                message: 'No overload matches this call.',
                 line: 8,
                 column: 42
             },
             {
                 filename: 'test/other.ts',
-                message: 'No overload matches this call.\n' +
-                    `  Overload 1 of 2, '(a: string, b: string): string', gave the following error.\n` +
-                    `    Argument of type 'true' is not assignable to parameter of type 'string'.\n` +
-                    `  Overload 2 of 2, '(a: number, b: number): number', gave the following error.\n` +
-                    `    Argument of type 'true' is not assignable to parameter of type 'number'.`,
+                message: 'No overload matches this call.',
                 line: 3,
                 column: 4
             },
