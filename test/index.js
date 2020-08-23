@@ -108,6 +108,84 @@ describe('Lab', () => {
         expect(notebook.failures).to.equal(0);
     });
 
+    it('should throw on experiments with asynchronous functions', () => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(() => {
+
+            script.experiment('async function', async () => {
+
+                await Promise.resolve();
+            });
+        }).to.throw(/must be a synchronous function/);
+    });
+
+    it('should throw on experiments with asynchronous functions (BDD)', () => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(() => {
+
+            script.describe('async function', async () => {
+
+                await Promise.resolve();
+            });
+        }).to.throw(/must be a synchronous function/);
+    });
+
+    it('should throw on experiments with asynchronous functions (TDD)', () => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(() => {
+
+            script.suite('async function', async () => {
+
+                await Promise.resolve();
+            });
+        }).to.throw(/must be a synchronous function/);
+    });
+
+    it('should throw on experiments with generator functions', () => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(() => {
+
+            script.experiment('generator function', function*() {
+
+                yield 1;
+            });
+        }).to.throw(/cannot be a generator/);
+    });
+
+    it('should throw on experiments with genertor functions (BDD)', () => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(() => {
+
+            script.describe('generator function', function*() {
+
+                yield 1;
+            });
+        }).to.throw(/cannot be a generator/);
+    });
+
+    it('should throw on experiments with genertor functions (TDD)', () => {
+
+        const script = Lab.script({ schedule: false });
+
+        expect(() => {
+
+            script.suite('generator function', function*() {
+
+                yield 1;
+            });
+        }).to.throw(/cannot be a generator/);
+    });
+
     it('executes beforeEach and afterEach', async () => {
 
         let a = 0;
