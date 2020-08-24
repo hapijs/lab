@@ -1849,4 +1849,38 @@ describe('Runner', () => {
 
         notebook.tests.forEach(assertNulledContext);
     });
+
+    it('runs when typescript fails to load', async () => {
+
+        const desc = Object.getOwnPropertyDescriptor(_Lab, 'types');
+        try {
+            Object.defineProperty(_Lab, 'types', {
+                configurable: true,
+                enumerable: true,
+                get() {
+
+                    throw new Error(`Cannot find module 'typescript'`);
+                }
+            });
+
+            const script = Lab.script();
+
+            script.test('a', () => {
+
+                return true;
+            });
+
+            const res1 = await Lab.report(script, { output: false, assert: false, types: true });
+
+            expect(res1.code).to.equal(1);
+            expect(res1.output).to.contain([`Cannot find module 'typescript'`]);
+
+            const res2 = await Lab.report(script, { output: false, assert: false, types: false });
+            expect(res2.code).to.equal(0);
+            expect(res2.output).to.not.contain([`Cannot find module 'typescript'`]);
+        }
+        finally {
+            Object.defineProperty(_Lab, 'types', desc);
+        }
+    });
 });
