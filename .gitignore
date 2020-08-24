@@ -2,8 +2,8 @@
 **/package-lock.json
 **/npm-shrinkwrap.json
 
-coverage.*
-results.*
+/coverage.*
+/results.*
 
 **/.DS_Store
 **/._*
@@ -17,4 +17,3 @@ results.*
 !test/cli_coverage/node_modules
 test_runner
 test/cli/test/leaks.js
-

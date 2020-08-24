@@ -6,7 +6,7 @@ const Fs = require('fs');
 const Path = require('path');
 const _Lab = require('../test_runner');
 const Code = require('@hapi/code');
-const Linters = require('../lib/lint');
+const Linters = require('../lib/modules/lint');
 
 
 // Test shortcuts
