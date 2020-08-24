@@ -28,16 +28,24 @@
         "source-map": "0.7.x",
         "source-map-support": "0.5.x",
         "supports-color": "7.x.x",
-        "typescript": "~4.0.2",
         "will-call": "1.x.x"
     },
+    "peerDependencies": {
+        "typescript": ">=3.6.5"
+    },
+    "peerDependenciesMeta": {
+        "typescript": {
+            "optional": true
+        }
+    },
     "devDependencies": {
-        "@hapi/lab-external-module-test": "1.x.x",
         "@hapi/code": "8.x.x",
+        "@hapi/lab-external-module-test": "1.x.x",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
         "rimraf": "3.x.x",
-        "semver": "7.x.x"
+        "semver": "7.x.x",
+        "typescript": "~4.0.2"
     },
     "bin": {
         "lab": "./bin/lab"
