@@ -418,7 +418,7 @@ The `test` function is passed a `flags` object that can be used to create notes 
 
 #### `context`
 
-An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
+An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. The context object may only be modified in `before`, `beforeEach`, `after`, and `afterEach` functions. The object is passed to tests as a shallow clone, so any data added to the context in a test function will be lost.
 
 ```javascript
 lab.before(({ context }) => {

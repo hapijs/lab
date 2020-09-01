@@ -1812,6 +1812,78 @@ describe('Runner', () => {
         expect(notebook.failures).to.equal(1);
     });
 
+    it('passes shallow clones of context to tests', async () => {
+
+        const script = Lab.script({ schedule: false });
+
+        const testContext = {
+            testData: { hello: 'there' }
+        };
+
+        const innerContext = {
+            testData: { goodbye: 'you' },
+            additionalData: { another: 'object' }
+        };
+
+        script.experiment('test', () => {
+
+            script.before(({ context }) => {
+
+                context.testData = testContext.testData;
+            });
+
+            script.test('has test context', ({ context }) => {
+
+                expect(context,'has proper context').to.equal(testContext);
+                expect(context,'is a shallow clone').to.not.shallow.equal(testContext);
+                expect(context.testData,'is a reference').to.shallow.equal(testContext.testData);
+                context.anotherProperty = { something: 'random' };
+            });
+
+            script.test('does not see changes to context from previous test', ({ context }) => {
+
+                expect(context,'has proper context').to.equal(testContext);
+                expect(context,'is a shallow clone').to.not.shallow.equal(testContext);
+                expect(context.testData,'is a reference').to.shallow.equal(testContext.testData);
+                expect(context.anotherProperty,'uses the original clone').to.not.exist();
+            });
+
+            script.experiment('inner test', () => {
+
+                script.before(({ context }) => {
+
+                    context.testData = innerContext.testData;
+                    context.additionalData = innerContext.additionalData;
+                });
+
+                script.test('still has test context', ({ context }) => {
+
+                    expect(context,'has proper context').to.equal(innerContext);
+                    expect(context,'is a shallow clone').to.not.shallow.equal(innerContext);
+                    expect(context.testData,'is a reference').to.shallow.equal(innerContext.testData);
+                    expect(context.additionalData,'is a reference').to.shallow.equal(innerContext.additionalData);
+                });
+
+                script.after(({ context }) => {
+
+                    context.addedAfter = { another: 'object' };
+                });
+            });
+
+            script.test(({ context }) => {
+
+                expect(context,'is a shallow clone').to.not.shallow.equal(innerContext);
+                expect(context.testData,'is a reference').to.shallow.equal(innerContext.testData);
+                expect(context.additionalData,'is a reference').to.shallow.equal(innerContext.additionalData);
+                expect(context.addedAfter,'keeps references from after').to.equal({ another: 'object' });
+            });
+        });
+
+        const notebook = await Lab.execute(script, {}, null);
+        expect(notebook.tests.length,'has 4 tests').to.equal(4);
+        expect(notebook.failures,'has 0 failures').to.equal(0);
+    });
+
     it('nullifies test context on finish', async () => {
 
         const script = Lab.script({ schedule: false });
