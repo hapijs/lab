@@ -418,17 +418,49 @@ The `test` function is passed a `flags` object that can be used to create notes 
 
 #### `context`
 
-An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. The context object may only be modified in `before`, `beforeEach`, `after`, and `afterEach` functions. The object is passed to tests as a shallow clone, so any data added to the context in a test function will be lost.
+An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. The context object is shallow cloned when passed to tests, as well as to child experiments, allowing you to modify it for each experiment individually without conflict through the use of `before`, `beforeEach`, `after` and `afterEach`.
 
 ```javascript
-lab.before(({ context }) => {
+lab.experiment('my experiment', () => {
 
-    context.foo = 'bar';
-})
+  lab.before(({ context }) => {
 
-lab.test('contains context', ({ context }) => {
+      context.foo = 'bar';
+  })
 
-    expect(context.foo).to.equal('bar');
+  lab.test('contains context', ({ context }) => {
+
+      expect(context.foo).to.equal('bar');
+  });
+
+  lab.experiment('a nested experiment', () => {
+
+    lab.before(({ context }) => {
+
+      context.foo = 'baz';
+    });
+
+    lab.test('has the correct context', ({ context }) => {
+
+      expect(context.foo).to.equal('baz');
+      // since this is a shallow clone, changes will not be carried to
+      // future tests or experiments
+      context.foo = 'fizzbuzz';
+    });
+
+    lab.test('receives a clean context', ({ context }) => {
+
+      expect(context.foo).to.equal('baz');
+    });
+  });
+
+  lab.experiment('another nested experiment', () => {
+
+    lab.test('maintains the original context', ({ context }) => {
+
+      expect(context.foo).to.equal('bar');
+    });
+  });
 });
 ```
 
