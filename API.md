@@ -393,7 +393,7 @@ Sets up a test where:
     - the function can return a Promise which either resolves (success) or rejects (fails).
     - all other return value is ignored.
     - `flags` - a set of test utilities described in [Flags](#flags).
-    
+
 ```javascript
 lab.experiment('my plan', () => {
 
@@ -748,7 +748,7 @@ Semantics:
 - `$lab:coverage:push$` copies the current skip state to the top of the stack, and leaves it as the current state as well
 - `$lab:coverage:pop$` replaces the current skip state with the top of the stack, and removes the top of the stack
   - if the stack is empty, `lab` will tell you by throwing the error `"unable to pop coverage bypass stack"`
-  
+
 ### Excluding paths from coverage reporting
 
 The `--coverage-exclude` argument can be repeated multiple times in order to add multiple paths to exclude.  By default the `node_modules` and `test` directories are excluded.  If you want to exclude those as well as a directory named `public` you can run lab as follows:
