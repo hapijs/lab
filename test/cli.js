@@ -889,4 +889,13 @@ describe('CLI', () => {
         expect(result.output).to.contain('1 of 2 tests failed');
         expect(result.output).to.contain('oops');
     });
+
+    it('awaits any pending ticks started by test before starting next test', async () => {
+
+        const { code, output } = await RunCli(['test/cli_nexttick/test.js']);
+
+        expect(code).to.equal(1);
+        expect(output).to.contain('does not crash lab');
+        expect(output).to.not.contain('has another test');
+    });
 });
