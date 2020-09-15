@@ -581,7 +581,7 @@ As stated at the beginning of the document, `--ignore` parameter is an alias for
 
 ## Linting
 
-**lab** uses a shareable [eslint](http://eslint.org/) config, and a plugin containing several **hapi** specific linting rules. If you want to extend the default linter you must:
+**lab** uses a shareable [eslint](http://eslint.org/) plugin containing a recommended config and several **hapi** specific linting rules. If you want to extend the default linter you must:
 
 1. Add `@hapi/eslint-plugin` as a dependency in your `package.json`.
 
