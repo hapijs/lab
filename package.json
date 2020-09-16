@@ -15,8 +15,7 @@
     ],
     "dependencies": {
         "@hapi/bossy": "5.x.x",
-        "@hapi/eslint-config-hapi": "13.x.x",
-        "@hapi/eslint-plugin-hapi": "4.x.x",
+        "@hapi/eslint-plugin": "5.x.x",
         "@hapi/hoek": "9.x.x",
         "babel-eslint": "10.x.x",
         "diff": "4.x.x",
