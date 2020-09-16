@@ -7,7 +7,7 @@ const Path = require('path');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
-const Transform = require('../lib/transform');
+const Transform = require('../lib/modules/transform');
 
 
 // Declare internals
