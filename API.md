@@ -393,7 +393,7 @@ Sets up a test where:
     - the function can return a Promise which either resolves (success) or rejects (fails).
     - all other return value is ignored.
     - `flags` - a set of test utilities described in [Flags](#flags).
-    
+
 ```javascript
 lab.experiment('my plan', () => {
 
@@ -418,17 +418,49 @@ The `test` function is passed a `flags` object that can be used to create notes 
 
 #### `context`
 
-An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. Tests aren't able to manipulate the context object for other tests.
+An object that is passed to `before` and `after` functions in addition to tests themselves. `context` is used to set properties inside the before function that can be used by a test function later. It is meant to reduce module level variables that are set by the `before` / `beforeEach` functions. The context object is shallow cloned when passed to tests, as well as to child experiments, allowing you to modify it for each experiment individually without conflict through the use of `before`, `beforeEach`, `after` and `afterEach`.
 
 ```javascript
-lab.before(({ context }) => {
+lab.experiment('my experiment', () => {
 
-    context.foo = 'bar';
-})
+  lab.before(({ context }) => {
 
-lab.test('contains context', ({ context }) => {
+      context.foo = 'bar';
+  })
 
-    expect(context.foo).to.equal('bar');
+  lab.test('contains context', ({ context }) => {
+
+      expect(context.foo).to.equal('bar');
+  });
+
+  lab.experiment('a nested experiment', () => {
+
+    lab.before(({ context }) => {
+
+      context.foo = 'baz';
+    });
+
+    lab.test('has the correct context', ({ context }) => {
+
+      expect(context.foo).to.equal('baz');
+      // since this is a shallow clone, changes will not be carried to
+      // future tests or experiments
+      context.foo = 'fizzbuzz';
+    });
+
+    lab.test('receives a clean context', ({ context }) => {
+
+      expect(context.foo).to.equal('baz');
+    });
+  });
+
+  lab.experiment('another nested experiment', () => {
+
+    lab.test('maintains the original context', ({ context }) => {
+
+      expect(context.foo).to.equal('bar');
+    });
+  });
 });
 ```
 
@@ -748,7 +780,7 @@ Semantics:
 - `$lab:coverage:push$` copies the current skip state to the top of the stack, and leaves it as the current state as well
 - `$lab:coverage:pop$` replaces the current skip state with the top of the stack, and removes the top of the stack
   - if the stack is empty, `lab` will tell you by throwing the error `"unable to pop coverage bypass stack"`
-  
+
 ### Excluding paths from coverage reporting
 
 The `--coverage-exclude` argument can be repeated multiple times in order to add multiple paths to exclude.  By default the `node_modules` and `test` directories are excluded.  If you want to exclude those as well as a directory named `public` you can run lab as follows:
