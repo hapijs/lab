@@ -2,8 +2,11 @@
 
 // Load modules
 
-const Code = require('@hapi/code');
 const Path = require('path');
+
+const Code = require('@hapi/code');
+const Hoek = require('@hapi/hoek');
+
 const _Lab = require('../test_runner');
 const Lab = require('../');
 
@@ -1673,6 +1676,26 @@ describe('Runner', () => {
 
         const { code } = await Lab.report(script, { output: false, assert: assertions });
         expect(code).to.equal(1);
+    });
+
+    it('does not retry non-failing test', async () => {
+
+        const script = Lab.script();
+        const assertions = Code;
+        let count = 0;
+        script.experiment('test', () => {
+
+            script.test('1', { retry: true }, () => {
+
+                ++count;
+            });
+        });
+
+        const { code } = await Lab.report(script, { output: false, assert: assertions });
+        expect(code).to.equal(0);
+
+        await Hoek.wait(1);
+        expect(count).to.equal(1);
     });
 
     describe('global timeout functions', () => {
