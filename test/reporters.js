@@ -336,7 +336,7 @@ describe('Reporter', () => {
             expect(output).to.contain(internals.colors('Leaks: \u001b[32mNo issues'));
         });
 
-        it('generate a report with stable diff of actual/expected objects of a failed test', async () => {
+        it('generates a report with stable diff of actual/expected objects of a failed test', async () => {
 
             const script = Lab.script();
             script.experiment('test', () => {
@@ -350,6 +350,44 @@ describe('Reporter', () => {
             const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
             expect(code).to.equal(1);
             expect(output).to.contain('e: 665');
+            expect(output).to.contain('1 of 1 tests failed');
+            expect(output).to.contain('Test duration:');
+            expect(output).to.contain('Leaks: No issues');
+        });
+
+        it('truncates actual/expected if necessary', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    expect({ a: 1 }).to.equal({ b: 1 });
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, 'max-diff-length': 8 });
+            expect(code).to.equal(1);
+            expect(output).to.contain('ab: 1[truncated]');
+            expect(output).to.contain('1 of 1 tests failed');
+            expect(output).to.contain('Test duration:');
+            expect(output).to.contain('Leaks: No issues');
+        });
+
+        it('does not truncate if max diff length is set to 0', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    expect({ a: 1 }).to.equal({ b: 1 });
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, 'max-diff-length': 0 });
+            expect(code).to.equal(1);
+            expect(output).to.contain('ab: 1\n');
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Test duration:');
             expect(output).to.contain('Leaks: No issues');
