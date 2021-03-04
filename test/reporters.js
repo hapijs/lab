@@ -393,6 +393,25 @@ describe('Reporter', () => {
             expect(output).to.contain('Leaks: No issues');
         });
 
+        it('does not truncate if diff length less than the maximum', async () => {
+
+            const script = Lab.script();
+            script.experiment('test', () => {
+
+                script.test('works', () => {
+
+                    expect({ a: 1 }).to.equal({ b: 1 });
+                });
+            });
+
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, 'max-diff-length': 10 * 1024 });
+            expect(code).to.equal(1);
+            expect(output).to.not.contain('[truncated]');
+            expect(output).to.contain('1 of 1 tests failed');
+            expect(output).to.contain('Test duration:');
+            expect(output).to.contain('Leaks: No issues');
+        });
+
         it('counts "todo" tests as skipped', async () => {
 
             const script = Lab.script();
