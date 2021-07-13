@@ -1,7 +1,7 @@
 {
     "name": "@hapi/lab",
     "description": "Test utility",
-    "version": "24.1.1",
+    "version": "24.3.1",
     "repository": "git://github.com/hapijs/lab",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -13,11 +13,17 @@
         "bin/lab",
         "lib"
     ],
+    "eslintConfig": {
+        "extends": [
+            "plugin:@hapi/module"
+        ]
+    },
     "dependencies": {
+        "@babel/core": "^7.14.3",
+        "@babel/eslint-parser": "^7.14.3",
         "@hapi/bossy": "5.x.x",
-        "@hapi/eslint-plugin": "5.x.x",
+        "@hapi/eslint-plugin": "^5.1.0",
         "@hapi/hoek": "9.x.x",
-        "babel-eslint": "10.x.x",
         "diff": "4.x.x",
         "eslint": "7.x.x",
         "find-rc": "4.x.x",
