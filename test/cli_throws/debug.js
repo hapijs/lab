@@ -26,12 +26,16 @@ describe('Test CLI domain error debug', () => {
 
     it('throws badly', () => {
 
-        setTimeout(() => {
+        setImmediate(() => {
+            // See timing in runner's internals.protect():
+            // we want to land error after this test completes but before the
+            // whole test suite completes, in particular before after() completes.
+            setImmediate(() => {
 
-            throw new Error('throwing later');
-        }, 0);
+                throw new Error('throwing later');
+            });
+        });
 
         return Promise.resolve();
     });
 });
-

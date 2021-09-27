@@ -16,7 +16,7 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     const args = [];
 
     if (process.env.NODE_DEBUG_OPTION) { // WebStorm debugger
-        args.push.apply(args, process.env.NODE_DEBUG_OPTION.split(' '));
+        args.push(...process.env.NODE_DEBUG_OPTION.split(' '));
         delete process.env.NODE_DEBUG_OPTION;
     }
     else { // V8 inspector
@@ -26,7 +26,7 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
     args.push(lab);
 
     // Remove node, lab, and the --inspect that might have been provided in the options
-    args.push.apply(args, process.argv.slice(2).filter((argument) => !inspectPattern.test(argument)));
+    args.push(...process.argv.slice(2).filter((argument) => !inspectPattern.test(argument)));
 
     const options = {
         stdio: 'inherit'
@@ -53,10 +53,8 @@ if (process.env.NODE_DEBUG_OPTION || inspectArg) {
 
 const main = async () => {
 
-    let { code } = await require('../lib/cli').run();
+    const { code } = await require('../lib/cli').run();
     process.exit(code);
 };
 
 main();
-
-
