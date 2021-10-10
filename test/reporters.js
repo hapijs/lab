@@ -25,9 +25,9 @@ const it = lab.it;
 const expect = Code.expect;
 
 
-describe('Reporter', () => {
+describe('Reporter', async () => {
 
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage/'), coverageExclude: 'exclude' });
+    await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage/'), coverageExclude: 'exclude' });
 
     it('outputs to a stream', async () => {
 
