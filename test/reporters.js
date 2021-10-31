@@ -20,14 +20,18 @@ const internals = {};
 
 
 const lab = exports.lab = _Lab.script();
+const before = lab.before;
 const describe = lab.describe;
 const it = lab.it;
 const expect = Code.expect;
 
 
-describe('Reporter', async () => {
+describe('Reporter', () => {
 
-    await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage/'), coverageExclude: 'exclude' });
+    before({}, async () => {
+
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './coverage/'), coverageExclude: 'exclude' });
+    });
 
     it('outputs to a stream', async () => {
 

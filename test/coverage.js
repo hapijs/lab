@@ -29,6 +29,7 @@ const internals = {
 
 
 const lab = exports.lab = _Lab.script();
+const before = lab.before;
 const describe = lab.describe;
 const it = lab.it;
 const expect = Code.expect;
@@ -36,7 +37,10 @@ const expect = Code.expect;
 
 describe('Coverage', () => {
 
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+    before({}, async () => {
+
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+    });
 
     it('computes sloc without comments', async () => {
 
@@ -577,7 +581,7 @@ describe('Coverage', () => {
         it('reports external coverage', async () => {
 
             const coveragePath = Path.join(__dirname, 'coverage/module');
-            Lab.coverage.instrument({ coveragePath, 'coverage-module': ['@hapi/lab-external-module-test'] });
+            await Lab.coverage.instrument({ coveragePath, 'coverage-module': ['@hapi/lab-external-module-test'] });
 
             require(coveragePath);
 
@@ -615,12 +619,12 @@ describe('Coverage', () => {
 
 describe('Coverage via Transform API', () => {
 
-    lab.before(() => {
+    lab.before(async () => {
 
         internals.js = require.extensions['.js'];
         internals.inl = require.extensions['.inl'];
 
-        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
     });
 
     lab.after(() => {

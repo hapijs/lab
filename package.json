@@ -9,6 +9,9 @@
         "test",
         "runner"
     ],
+    "exports": {
+        ".": "./lib/index.js"
+    },
     "files": [
         "bin/lab",
         "lib"
@@ -19,8 +22,8 @@
         ]
     },
     "dependencies": {
-        "@babel/core": "^7.15.8",
-        "@babel/eslint-parser": "^7.15.8",
+        "@babel/core": "^7.16.0",
+        "@babel/eslint-parser": "^7.16.0",
         "@hapi/bossy": "5.x.x",
         "@hapi/eslint-plugin": "^5.1.0",
         "@hapi/hoek": "9.x.x",
