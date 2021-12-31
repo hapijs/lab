@@ -1964,7 +1964,7 @@ describe('Runner', () => {
         notebook.tests.forEach(assertNulledContext);
     });
 
-    it('runs when typescript fails to load', async () => {
+    it('runs when typescript fails to load in types module', async () => {
 
         // Override the _Lab runner because it's the one loading the transplier extension used
         const desc = Object.getOwnPropertyDescriptor(_Lab, 'types');
