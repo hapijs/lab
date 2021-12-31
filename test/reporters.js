@@ -362,51 +362,14 @@ describe('Reporter', () => {
 
                 script.test('works', () => {
 
-                    expect({ a: 1 }).to.equal({ b: 1 });
+                    const long = new Array(21 * 1024).fill('a');
+                    expect({ a: long }).to.equal({ b: long });
                 });
             });
 
-            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, 'max-diff-length': 8 });
+            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false });
             expect(code).to.equal(1);
-            expect(output).to.contain('ab: 1[truncated]');
-            expect(output).to.contain('1 of 1 tests failed');
-            expect(output).to.contain('Test duration:');
-            expect(output).to.contain('Leaks: No issues');
-        });
-
-        it('does not truncate if max diff length is set to 0', async () => {
-
-            const script = Lab.script();
-            script.experiment('test', () => {
-
-                script.test('works', () => {
-
-                    expect({ a: 1 }).to.equal({ b: 1 });
-                });
-            });
-
-            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, 'max-diff-length': 0 });
-            expect(code).to.equal(1);
-            expect(output).to.contain('ab: 1\n');
-            expect(output).to.contain('1 of 1 tests failed');
-            expect(output).to.contain('Test duration:');
-            expect(output).to.contain('Leaks: No issues');
-        });
-
-        it('does not truncate if diff length less than the maximum', async () => {
-
-            const script = Lab.script();
-            script.experiment('test', () => {
-
-                script.test('works', () => {
-
-                    expect({ a: 1 }).to.equal({ b: 1 });
-                });
-            });
-
-            const { code, output } = await Lab.report(script, { reporter: 'console', colors: false, output: false, 'max-diff-length': 10 * 1024 });
-            expect(code).to.equal(1);
-            expect(output).to.not.contain('[truncated]');
+            expect(output).to.contain('[truncated]');
             expect(output).to.contain('1 of 1 tests failed');
             expect(output).to.contain('Test duration:');
             expect(output).to.contain('Leaks: No issues');
