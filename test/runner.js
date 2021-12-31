@@ -1964,9 +1964,11 @@ describe('Runner', () => {
         notebook.tests.forEach(assertNulledContext);
     });
 
-    it('runs when typescript fails to load', async () => {
+    it('runs when typescript fails to load in types module', async () => {
 
+        // Override the _Lab runner because it's the one loading the transplier extension used
         const desc = Object.getOwnPropertyDescriptor(_Lab, 'types');
+
         try {
             Object.defineProperty(_Lab, 'types', {
                 configurable: true,
@@ -1978,14 +1980,9 @@ describe('Runner', () => {
             });
 
             const script = Lab.script();
+            script.test('a', () => true);
 
-            script.test('a', () => {
-
-                return true;
-            });
-
-            const res1 = await Lab.report(script, { output: false, assert: false, types: true });
-
+            const res1 = await Lab.report(script, { output: false, assert: false, types: true, 'types-test': 'test/*.ts' });
             expect(res1.code).to.equal(1);
             expect(res1.output).to.contain([`Cannot find module 'typescript'`]);
 
