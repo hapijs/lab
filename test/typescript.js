@@ -40,6 +40,17 @@ describe('TypeScript', () => {
         expect(result.output).to.contain('error.ts:10:26');
     });
 
+    it('supports coverage', async () => {
+
+        process.chdir(Path.join(__dirname, 'cli_typescript'));
+        const result = await RunCli(['simple.ts', '-m', '2000', '-t', '100', '--typescript']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
+        expect(result.output).to.contain('Coverage: 100.00%');
+    });
+
     describe('transform', () => {
 
         it('generates embedded sourcemap with sourcesContent', () => {
