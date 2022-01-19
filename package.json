@@ -36,7 +36,8 @@
         "will-call": "1.x.x"
     },
     "peerDependencies": {
-        "typescript": ">=3.6.5"
+        "typescript": ">=3.6.5",
+        "@hapi/eslint-plugin": "^5.1.0"
     },
     "peerDependenciesMeta": {
         "typescript": {
