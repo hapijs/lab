@@ -955,7 +955,7 @@ describe('Reporter', () => {
                 });
             });
 
-            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false, 'coverage-module': ['@hapi/lab-external-module-test'], colors: true });
+            const { output } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, './coverage/console'), output: false, colors: true });
             expect(output).to.contain('Coverage: \u001b[31m64.86% (26/74)');
             expect(output).to.contain('test/coverage/console.js missing coverage on line(s): 14, 17-19, 22, 23');
             expect(output).to.contain('test/coverage/console-large-file.js missing coverage on line(s): 13, 17, 20, 25, 26, 29, 35-37, 40, 47-50, 53, 61-65');

@@ -47,7 +47,6 @@
     },
     "devDependencies": {
         "@hapi/code": "8.x.x",
-        "@hapi/lab-external-module-test": "1.x.x",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
         "rimraf": "3.x.x",
