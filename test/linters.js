@@ -72,6 +72,24 @@ describe('Linters - eslint', () => {
         expect(checkedFile.errors).to.not.include({ line: 8, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });
     });
 
+    it('should list ESM files', async () => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'esm');
+        const result = await Linters.lint({ lintingPath: path });
+
+        expect(result).to.include('lint');
+
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(1);
+
+        const checkedFile = eslintResults[0];
+        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
+        expect(checkedFile.errors).to.include([
+            { line: 11, severity: 'ERROR', message: 'semi - Missing semicolon.' },
+            { line: 12, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+        ]);
+    });
+
     it('displays success message if no issues found', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'clean');

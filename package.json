@@ -29,6 +29,7 @@
         "find-rc": "4.x.x",
         "globby": "10.x.x",
         "handlebars": "4.x.x",
+        "mo-walk": "^1.2.0",
         "seedrandom": "3.x.x",
         "source-map": "0.7.x",
         "source-map-support": "0.5.x",
@@ -36,8 +37,8 @@
         "will-call": "1.x.x"
     },
     "peerDependencies": {
-        "typescript": ">=3.6.5",
-        "@hapi/eslint-plugin": "^5.1.0"
+        "@hapi/eslint-plugin": "^5.1.0",
+        "typescript": ">=3.6.5"
     },
     "peerDependenciesMeta": {
         "typescript": {
