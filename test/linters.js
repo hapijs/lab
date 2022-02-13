@@ -72,7 +72,7 @@ describe('Linters - eslint', () => {
         expect(checkedFile.errors).to.not.include({ line: 8, severity: 'ERROR', message: 'no-unused-vars - internals is defined but never used' });
     });
 
-    it('should list ESM files', async () => {
+    it('should lint ESM files', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'esm');
         const result = await Linters.lint({ lintingPath: path });
