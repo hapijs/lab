@@ -898,4 +898,16 @@ describe('CLI', () => {
         expect(output).to.contain('does not crash lab');
         expect(output).to.not.contain('has another test');
     });
+
+    it('supports test suites that use ESM.', async () => {
+
+        const result = await RunCli(['test/cli_esm', '-m', '2000', '-a', '@hapi/code']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 of 5 tests failed');
+
+        // Ensure scripts are run together, not independently
+        expect(result.output.split('Test duration').length - 1).to.equal(1);
+    });
 });
