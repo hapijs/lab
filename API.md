@@ -6,7 +6,7 @@
 
 ## Usage
 
-By default, **lab** loads all the '\*.js' files inside the local 'test' directory and executes the tests found. To use different directories or files, pass the file or directories as arguments:
+By default, **lab** loads all the '\*.js|cjs|mjs' files inside the local 'test' directory and executes the tests found. To use different directories or files, pass the file or directories as arguments:
 
 ```bash
 $ lab unit.js
@@ -641,7 +641,7 @@ lab -dL
 
 ## Integration with an assertion library
 
-Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. Aside from `--assert` from the CLI you can change the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert code`:
+Using the `--assert` argument allows you to integrate Lab with your favorite assertion library. Aside from `--assert` from the CLI you can change the `assert` option when executing `report`. Whatever assertion library you specify is imported and assigned to the `Lab.assertions` property. Here is an example using `lab --assert @hapi/code`:
 
 ```js
 const lab = exports.lab = Lab.script();
@@ -665,7 +665,7 @@ describe('expectation', () => {
 ```
 
 ```
-$ lab --assert code
+$ lab --assert @hapi/code
 ```
 
 If you use the [Code](https://github.com/hapijs/code) assertion library Lab will let you know if you have any missing assertions. An example of this is:
@@ -736,6 +736,27 @@ See the [json reporter](lib/reporters/json.js) for a good starting point.
 
 ## Coverage
 
+### ESM support
+
+Lab does not support code coverage for ES modules.  There are two reasons for this: in order to implement this we would either use [V8's builtin coverage](https://v8.dev/blog/javascript-code-coverage) or an [ESM Loader](https://nodejs.org/api/esm.html#loaders).  Unfortunately the former [doesn't support](https://bugs.chromium.org/p/v8/issues/detail?id=10627) granular branch coverage as we do in lab, and the latter is an experimental API that is still settling.  We hope to provide ESM coverage support in the future once one or both of these issues are resolved.
+
+In the meantime, we recomming using lab with [c8](https://github.com/bcoe/c8) in order to provide code coverage in ESM projects.  Note that c8 does not support granular branch coverage the way we do in lab, for the same reasons listed above.  It's pretty simple to use c8 with lab, though.
+
+First install c8:
+```
+npm install --save-dev c8
+```
+
+Next update your test command to start with c8. Here's an example in a package.json file switching from lab's coverage to c8's coverage:
+```diff
+   "scripts": {
+-      "test": "lab -a @hapi/code -t 100"
++      "test": "c8 --100 lab -a @hapi/code"
+   },
+```
+
+### Inline enabling/disabling
+
 Sometimes you want to disable code coverage for specific lines, and have the coverage report omit them entirely. To do so, use the `$lab:coverage:(off|on)$` comments. For example:
 ```javascript
 // There is no way to cover this in node 0.10
@@ -746,7 +767,7 @@ if (typeof value === 'symbol') {
 /* $lab:coverage:on$ */
 ```
 
-### Coverage Bypass Stack
+### Coverage bypass stack
 
 Disabling code coverage becomes tricky when dealing with machine-generated or machine-altered code. For example, `babel` can be configured to disable coverage for generated code using the `auxiliaryCommentBefore` and `auxiliaryCommentAfter` options. The naïve approach to this uses `$lab:coverage:on$` and `$lab:coverage:off$`, but these directives overwrite any user-specified directives, so that a block where coverage should be disabled may have that coverage unintentionally re-enabled. To work around this issue, `lab` supports pushing the current code coverage bypass state onto an internal stack using the `$lab:coverage:push$` directive, and supports restoring the top of the stack using the `$lab:coverage:pop$` directive:
 ```javascript
