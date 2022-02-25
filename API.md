@@ -740,7 +740,7 @@ See the [json reporter](lib/reporters/json.js) for a good starting point.
 
 Lab does not support code coverage for ES modules.  There are two reasons for this: in order to implement this we would either use [V8's builtin coverage](https://v8.dev/blog/javascript-code-coverage) or an [ESM Loader](https://nodejs.org/api/esm.html#loaders).  Unfortunately the former [doesn't support](https://bugs.chromium.org/p/v8/issues/detail?id=10627) granular branch coverage as we do in lab, and the latter is an experimental API that is still settling.  We hope to provide ESM coverage support in the future once one or both of these issues are resolved.
 
-In the meantime, we recomming using lab with [c8](https://github.com/bcoe/c8) in order to provide code coverage in ESM projects.  Note that c8 does not support granular branch coverage the way we do in lab, for the same reasons listed above.  It's pretty simple to use c8 with lab, though.
+In the meantime, we recommend using lab with [c8](https://github.com/bcoe/c8) in order to provide code coverage in ESM projects.  Note that c8 does not support granular branch coverage the way we do in lab, for the same reasons listed above.  It's pretty simple to use c8 with lab, though.
 
 First install c8:
 ```
