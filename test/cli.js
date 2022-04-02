@@ -898,4 +898,43 @@ describe('CLI', () => {
         expect(output).to.contain('does not crash lab');
         expect(output).to.not.contain('has another test');
     });
+
+    it('supports test suites that use ESM.', async () => {
+
+        const result = await RunCli(['test/cli_esm']);
+
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.output).to.contain('1 of 5 tests failed');
+
+        // Ensure scripts are run together, not independently
+        expect(result.output.split('Test duration').length - 1).to.equal(1);
+    });
+
+    it('does not allow using coverage with ESM test scripts.', async () => {
+
+        const result = await RunCli(['test/cli_esm', '-c', '--coverage-path', 'test/cli_esm']);
+
+        expect(result.output).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.errorOutput).to.contain('Cannot use code coverage with ES modules. Consider using c8: instructions can be found in lab\'s docs.');
+    });
+
+    it('does not allow using transform with ESM test scripts.', async () => {
+
+        const result = await RunCli(['test/cli_esm', '-T', 'test/transform/exclude/lab-transform']);
+
+        expect(result.output).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.errorOutput).to.contain('Cannot use transform with ES modules.');
+    });
+
+    it('does not allow using typescript with ESM test scripts.', async () => {
+
+        const result = await RunCli(['test/cli_esm', '--typescript']);
+
+        expect(result.output).to.equal('');
+        expect(result.code).to.equal(1);
+        expect(result.errorOutput).to.contain('Cannot use typescript with ES modules.');
+    });
 });
