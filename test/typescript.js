@@ -60,7 +60,7 @@ describe('TypeScript', () => {
 
             expect(
                 () => Typescript.extensions[0].transform(Fs.readFileSync(path, { encoding: 'utf8' }), path)
-            ).to.throw(/^Cannot find a tsconfig file for .+cli\/simple\.js/);
+            ).to.throw(/^Cannot find a tsconfig file for .+cli[\/\\]simple\.js/);
         });
 
         it('errors when unable to read a tsconfig file', (flags) => {
