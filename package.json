@@ -9,9 +9,6 @@
         "test",
         "runner"
     ],
-    "exports": {
-        ".": "./lib/index.js"
-    },
     "files": [
         "bin/lab",
         "lib"
