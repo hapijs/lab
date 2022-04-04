@@ -3,6 +3,7 @@ name: ci
 on:
   push:
     branches:
+      - v25
       - master
   pull_request:
 
