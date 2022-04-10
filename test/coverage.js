@@ -464,6 +464,20 @@ describe('Coverage', () => {
         expect(missedLines).to.be.empty();
     });
 
+    it('should measure coverage on nullish coalescing operator', async () => {
+
+        const Test = require('./coverage/conditional-coalesce');
+
+        expect(Test.method(false)).to.equal(false);
+        expect(Test.method()).to.equal('nullish');
+        expect(Test.method(null)).to.equal('nullish');
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-coalesce') });
+        const source = cov.files[0].source;
+        const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+        expect(missedLines).to.be.empty();
+    });
+
     it('should measure missing coverage on conditional value', async () => {
 
         const Test = require('./coverage/conditional-value2');
