@@ -8,7 +8,6 @@ const Path = require('path');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
-const SupportsColor = require('supports-color');
 
 
 const internals = {
@@ -633,13 +632,3 @@ describe('Coverage via Transform API', () => {
         ]);
     });
 });
-
-
-internals.colors = function (string) {
-
-    if (SupportsColor.stdout) {
-        return string;
-    }
-
-    return string.replace(/\u001b\[\d+m/g, '');
-};
