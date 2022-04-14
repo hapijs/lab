@@ -8,6 +8,7 @@ const Path = require('path');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
+const Somever = require('@hapi/somever');
 const SupportsColor = require('supports-color');
 
 
@@ -36,6 +37,7 @@ const expect = Code.expect;
 
 describe('Coverage', () => {
 
+    const supportsNullishCoalescing = Somever.match(process.version, '>=14');
     Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
 
     it('computes sloc without comments', async () => {
@@ -464,7 +466,7 @@ describe('Coverage', () => {
         expect(missedLines).to.be.empty();
     });
 
-    it('should measure coverage on nullish coalescing operator', async () => {
+    it('should measure coverage on nullish coalescing operator', { skip: !supportsNullishCoalescing }, async () => {
 
         const Test = require('./coverage/conditional-coalesce');
 
@@ -492,7 +494,7 @@ describe('Coverage', () => {
         expect(missedLines).to.equal(['7']);
     });
 
-    it('should measure missing coverage on nullish coalescing operator', async () => {
+    it('should measure missing coverage on nullish coalescing operator', { skip: !supportsNullishCoalescing }, async () => {
 
         const Test = require('./coverage/conditional-coalesce2');
 
