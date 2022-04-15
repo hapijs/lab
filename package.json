@@ -38,14 +38,10 @@
     },
     "peerDependencies": {
         "@hapi/eslint-plugin": "^5.1.0",
-        "typescript": ">=3.6.5",
-        "tsconfig-paths": "^3.14.1"
+        "typescript": ">=3.6.5"
     },
     "peerDependenciesMeta": {
         "typescript": {
-            "optional": true
-        },
-        "tsconfig-paths": {
             "optional": true
         }
     },
