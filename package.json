@@ -38,10 +38,14 @@
     },
     "peerDependencies": {
         "@hapi/eslint-plugin": "^5.1.0",
-        "typescript": ">=3.6.5"
+        "typescript": ">=3.6.5",
+        "tsconfig-paths": "^3.14.1"
     },
     "peerDependenciesMeta": {
         "typescript": {
+            "optional": true
+        },
+        "tsconfig-paths": {
             "optional": true
         }
     },
@@ -52,7 +56,8 @@
         "lab-event-reporter": "1.x.x",
         "rimraf": "3.x.x",
         "semver": "7.x.x",
-        "typescript": "^4.5.4"
+        "typescript": "^4.5.4",
+        "tsconfig-paths": "^3.14.1"
     },
     "bin": {
         "lab": "./bin/lab"
