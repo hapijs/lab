@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es2021",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "nested/*": ["./really/super/nested/*"]
+        }
+    },
+    "include": [
+        "./*",
+        "../../node_modules"
+    ]
+}

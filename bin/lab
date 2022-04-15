@@ -2,6 +2,8 @@
 
 'use strict';
 
+require('tsconfig-paths/register');
+
 const inspectPattern = /^(--inspect|--inspect-brk)(=\d+)?$/;
 const inspectArg = process.argv.find((argument) => {
 

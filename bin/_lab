@@ -2,10 +2,13 @@
 
 'use strict';
 
+require('tsconfig-paths/register');
+
+// console.log(process.cwd());
+
 const Util = require('util');
 const Cpr = require('cpr');
 const Rimraf = require('rimraf');
-
 
 if (process.env.ROOT_SPAWN) {
     (async () => {
