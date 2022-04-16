@@ -48,6 +48,7 @@
     "devDependencies": {
         "@hapi/code": "8.x.x",
         "@hapi/lab-external-module-test": "1.x.x",
+        "@hapi/somever": "^3.0.1",
         "@types/node": "^17.0.23",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
