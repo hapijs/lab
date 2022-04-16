@@ -91,6 +91,11 @@ declare namespace script {
         readonly 'coverage-path'?: string;
 
         /**
+         * Set code coverage predicates.
+         */
+        readonly 'coverage-predicate'?: string[];
+
+        /**
          * File pattern to use for locating files for coverage.
          */
         readonly coveragePattern?: RegExp;
