@@ -3,8 +3,8 @@
 const Somever = require('@hapi/somever');
 
 module.exports = {
-    'coverage-predicate': [
-        process.platform,
-        Somever.match(process.version, '>=14') && 'has-nullish'
-    ]
+    'coverage-predicates': {
+        win32: process.platform === 'win32',
+        'has-nullish': Somever.match(process.version, '>=14')
+    }
 };

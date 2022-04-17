@@ -93,7 +93,7 @@ declare namespace script {
         /**
          * Set code coverage predicates.
          */
-        readonly 'coverage-predicate'?: string[];
+        readonly 'coverage-predicates'?: { [key: string]: boolean };
 
         /**
          * File pattern to use for locating files for coverage.

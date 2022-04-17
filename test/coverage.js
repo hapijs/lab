@@ -41,7 +41,7 @@ describe('Coverage', () => {
 
     lab.before(() => {
 
-        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', 'coverage-predicate': ['testing'] });
+        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', 'coverage-predicates': { testing: true } });
     });
 
     it('computes sloc without comments', async () => {
