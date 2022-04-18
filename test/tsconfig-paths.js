@@ -19,7 +19,16 @@ const expect = Code.expect;
 
 const cwd = Path.join(__dirname, 'cli_tsconfig_paths');
 
-const commands = (file, ...extra) => [file, '-m', '2000', '--typescript', '--dep', 'tsconfig-paths/register', ...extra];
+const commands = (file, ...extra) => [
+    file,
+    '-m',
+    '2000',
+    '--typescript',
+    '--require', 'tsconfig-paths/register',
+    '--require', './includeMe.js',
+    '-I', 'shouldExist',
+    ...extra
+];
 
 describe('TypeScript Paths', () => {
 
@@ -32,7 +41,7 @@ describe('TypeScript Paths', () => {
         const result = await RunCli(commands('simple.ts'), cwd);
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
-        expect(result.output).to.contain('2 tests complete');
+        expect(result.output).to.contain('3 tests complete');
     });
 
     it('handles errors', async () => {
@@ -51,7 +60,7 @@ describe('TypeScript Paths', () => {
 
         expect(result.errorOutput).to.equal('');
         expect(result.code).to.equal(0);
-        expect(result.output).to.contain('2 tests complete');
+        expect(result.output).to.contain('3 tests complete');
         expect(result.output).to.contain('Coverage: 100.00%');
     });
 

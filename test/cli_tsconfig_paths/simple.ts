@@ -1,5 +1,3 @@
-import 'tsconfig-paths/register';
-
 import { expect } from '@hapi/code';
 import * as _Lab from '../../test_runner';
 
@@ -18,5 +16,10 @@ describe('Test CLI', () => {
     it('subtracts two numbers', () => {
 
         expect(add(2, - 2)).to.equal(0);
+    });
+
+    it('should have included a global via require option', () => {
+
+        expect(global.shouldExist).to.be.true();
     });
 });
