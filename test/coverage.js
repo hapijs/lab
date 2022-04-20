@@ -29,6 +29,7 @@ const internals = {
 
 
 const lab = exports.lab = _Lab.script();
+const before = lab.before;
 const describe = lab.describe;
 const it = lab.it;
 const expect = Code.expect;
@@ -36,7 +37,10 @@ const expect = Code.expect;
 
 describe('Coverage', () => {
 
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+    before({}, async () => {
+
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+    });
 
     it('computes sloc without comments', async () => {
 
@@ -132,7 +136,7 @@ describe('Coverage', () => {
         expect(cov.percent).to.equal(100);
     });
 
-    it('logs to stderr when coverageExclude file has fs.stat issue', async () => {
+    it('logs to stderr when coverageExclude file has fs.stat issue', async (flags) => {
 
         const Test = require('./coverage/test-folder/test-name.js');
 
@@ -141,7 +145,14 @@ describe('Coverage', () => {
         const origStatSync = Fs.statSync;
         const origErrorLog = console.error;
 
+        let calls = 0;
         Fs.statSync = () => {
+
+            calls++;
+            if (calls === 3) {
+                // Only mock for first 3 calls
+                Fs.statSync = origStatSync;
+            }
 
             const err = new Error();
             err.code = 'BOOM';
@@ -153,9 +164,13 @@ describe('Coverage', () => {
             expect(data.code).to.equal('BOOM');
         };
 
+        flags.onCleanup = () => {
+
+            Fs.statSync = origStatSync;
+            console.error = origErrorLog;
+        };
+
         const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules', 'test-name.js'] });
-        Fs.statSync = origStatSync;
-        console.error = origErrorLog;
         expect(cov.percent).to.equal(100);
     });
 
@@ -577,7 +592,7 @@ describe('Coverage', () => {
         it('reports external coverage', async () => {
 
             const coveragePath = Path.join(__dirname, 'coverage/module');
-            Lab.coverage.instrument({ coveragePath, 'coverage-module': ['@hapi/lab-external-module-test'] });
+            await Lab.coverage.instrument({ coveragePath, 'coverage-module': ['@hapi/lab-external-module-test'] });
 
             require(coveragePath);
 
@@ -615,12 +630,12 @@ describe('Coverage', () => {
 
 describe('Coverage via Transform API', () => {
 
-    lab.before(() => {
+    lab.before(async () => {
 
         internals.js = require.extensions['.js'];
         internals.inl = require.extensions['.inl'];
 
-        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
     });
 
     lab.after(() => {

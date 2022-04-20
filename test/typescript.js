@@ -6,6 +6,7 @@ const Path = require('path');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const RunCli = require('./run_cli');
+const Ts = require('typescript');
 const Typescript = require('../lib/modules/typescript');
 
 
@@ -53,6 +54,31 @@ describe('TypeScript', () => {
 
     describe('transform', () => {
 
+        it('errors when failing to find a tsconfig file', () => {
+
+            const path = Path.join(__dirname, 'cli', 'simple.js');
+
+            expect(
+                () => Typescript.extensions[0].transform(Fs.readFileSync(path, { encoding: 'utf8' }), path)
+            ).to.throw(/^Cannot find a tsconfig file for .+cli[\/\\]simple\.js/);
+        });
+
+        it('errors when unable to read a tsconfig file', (flags) => {
+
+            const path = Path.join(__dirname, 'cli_typescript', 'simple.ts');
+
+            const origReadFile = Ts.sys.readFile;
+            flags.onCleanup = () => Object.assign(Ts.sys, { readFile: origReadFile });
+            Ts.sys.readFile = () => {
+
+                throw new Error('Oops!');
+            };
+
+            expect(
+                () => Typescript.extensions[0].transform(Fs.readFileSync(path, { encoding: 'utf8' }), path)
+            ).to.throw(/^TypeScript config error in .+?cli_typescript\/tsconfig\.json: Cannot read file \'.+?\/cli_typescript\/tsconfig\.json\': Oops!/);
+        });
+
         it('generates embedded sourcemap with sourcesContent', () => {
 
             const smre = /\/\/\#\s*sourceMappingURL=data:application\/json[^,]+base64,(.*)\r?\n?$/;
@@ -64,6 +90,13 @@ describe('TypeScript', () => {
             expect(sourcemap.sources).to.equal(['simple.ts']);
             expect(sourcemap.sourcesContent).to.exist();
             expect(sourcemap.sourcesContent).to.have.length(1);
+        });
+
+        it('transforms identically when called multiple times', () => {
+            // This covers config file caching behavior, which is not directly observable by consumers.
+            const path = Path.join(__dirname, 'cli_typescript', 'simple.ts');
+            const transform = () => Typescript.extensions[0].transform(Fs.readFileSync(path, { encoding: 'utf8' }), path);
+            expect(transform()).to.equal(transform());
         });
     });
 });
