@@ -24,7 +24,7 @@
         "@hapi/bossy": "5.x.x",
         "@hapi/eslint-plugin": "^5.1.0",
         "@hapi/hoek": "9.x.x",
-        "diff": "4.x.x",
+        "diff": "^5.0.0",
         "eslint": "8.x.x",
         "find-rc": "4.x.x",
         "globby": "10.x.x",
