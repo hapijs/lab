@@ -38,7 +38,11 @@ const expect = Code.expect;
 describe('Coverage', () => {
 
     const supportsNullishCoalescing = Somever.match(process.version, '>=14');
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+
+    lab.before(() => {
+
+        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', 'coverage-predicates': { testing: true } });
+    });
 
     it('computes sloc without comments', async () => {
 
@@ -257,6 +261,45 @@ describe('Coverage', () => {
         expect(cov.sloc).to.equal(5);
         expect(cov.misses).to.equal(0);
         expect(cov.hits).to.equal(5);
+    });
+
+    it('ignores marked code when predicated', async () => {
+
+        const Test = require('./coverage/ignore-predicated');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/ignore-predicated') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(4);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(4);
+    });
+
+    it('does not ignore marked code when predicate fails', async () => {
+
+        const Test = require('./coverage/ignore-predicated-fail');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/ignore-predicated-fail') });
+        expect(Math.floor(cov.percent)).to.equal(75);
+        expect(cov.sloc).to.equal(4);
+        expect(cov.misses).to.equal(1);
+        expect(cov.hits).to.equal(3);
+    });
+
+    it('bypasses marked code when predicated', async () => {
+
+        const Test = require('./coverage/bypass-predicated');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-predicated') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(7);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(7);
     });
 
     it('bypasses marked code and reports misses correctly', async () => {
