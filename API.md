@@ -256,6 +256,12 @@ Then the test can be executed using the following command line:
 $ lab --typescript
 ```
 
+If your typescript project has custom paths, Lab can be passed `tsconfig-paths/register` as a requirement before running and it will resolve based on your path config.
+
+```sh
+$ lab --typescript --require 'tsconfig-paths/register'
+```
+
 ## Command Line
 
 **lab** supports the following command line options:
@@ -299,6 +305,7 @@ $ lab --typescript
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
     - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
+- `--req`, `--require` - dependencies to require and run before tests run (useful for things like `babel`, `tsconfig-paths`, test setup, etc).
 - `-R`, `--retries` - the number of times to retry a failing test that is explicitly marked with `retry`. Defaults to `5`.
 - `--shuffle` - randomize the order that test scripts are executed.  Will not work with `--id`.
 - `--seed` - use this seed to randomize the order with `--shuffle`. This is useful to debug order dependent test failures.

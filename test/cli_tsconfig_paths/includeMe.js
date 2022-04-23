@@ -1,0 +1,1 @@
+global.shouldExist = true
