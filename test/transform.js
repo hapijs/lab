@@ -38,13 +38,17 @@ const internals = {
 // Test shortcuts
 
 const lab = exports.lab = _Lab.script();
+const before = lab.before;
 const describe = lab.describe;
 const it = lab.it;
 const expect = Code.expect;
 
 describe('Transform', () => {
 
-    Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', transform: internals.transform });
+    before({}, async () => {
+
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, './transform/'), coverageExclude: 'exclude', transform: internals.transform });
+    });
 
     it('instruments and measures coverage', async () => {
 
