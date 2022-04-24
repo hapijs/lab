@@ -256,6 +256,12 @@ Then the test can be executed using the following command line:
 $ lab --typescript
 ```
 
+If your typescript project has custom paths, Lab can be passed `tsconfig-paths/register` as a requirement before running and it will resolve based on your path config.
+
+```sh
+$ lab --typescript --require 'tsconfig-paths/register'
+```
+
 ## Command Line
 
 **lab** supports the following command line options:
@@ -267,6 +273,7 @@ $ lab --typescript
 - `--coverage-all` - report coverage for all matched files, not just those tested.
 - `--coverage-flat` - do not perform a recursive find of files for coverage report. Requires `--coverage-all`
 - `--coverage-pattern` - only report coverage for files with the given pattern in the name. Defaults to `pattern`. Requires `--coverage-all`
+- `--coverage-predicates` - sets custom code coverage predicates.
 - `-C`, `--colors` - enables or disables color output. Defaults to console capabilities.
 - `-d`, `--dry` - dry run. Skips all tests. Use with `-v` to generate a test catalog. Defaults to `false`.
 - `-e`, `--environment` - value to set the `NODE_ENV` environment variable to, defaults to 'test'.
@@ -298,6 +305,7 @@ $ lab --typescript
     - `clover` - output results in [Clover XML](https://confluence.atlassian.com/display/CLOVER) format.
     - [Multiple Reporters](#multiple-reporters) - See Below
     - [Custom Reporters](#custom-reporters) - See Below
+- `--req`, `--require` - dependencies to require and run before tests run (useful for things like `babel`, `tsconfig-paths`, test setup, etc).
 - `-R`, `--retries` - the number of times to retry a failing test that is explicitly marked with `retry`. Defaults to `5`.
 - `--shuffle` - randomize the order that test scripts are executed.  Will not work with `--id`.
 - `--seed` - use this seed to randomize the order with `--shuffle`. This is useful to debug order dependent test failures.

@@ -8,6 +8,7 @@ const Path = require('path');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
+const Somever = require('@hapi/somever');
 
 
 const internals = {
@@ -36,9 +37,11 @@ const expect = Code.expect;
 
 describe('Coverage', () => {
 
+    const supportsNullishCoalescing = Somever.match(process.version, '>=14');
+
     before({}, async () => {
 
-        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude' });
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', 'coverage-predicates': { testing: true } });
     });
 
     it('computes sloc without comments', async () => {
@@ -271,6 +274,45 @@ describe('Coverage', () => {
         expect(cov.hits).to.equal(5);
     });
 
+    it('ignores marked code when predicated', async () => {
+
+        const Test = require('./coverage/ignore-predicated');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/ignore-predicated') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(4);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(4);
+    });
+
+    it('does not ignore marked code when predicate fails', async () => {
+
+        const Test = require('./coverage/ignore-predicated-fail');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/ignore-predicated-fail') });
+        expect(Math.floor(cov.percent)).to.equal(75);
+        expect(cov.sloc).to.equal(4);
+        expect(cov.misses).to.equal(1);
+        expect(cov.hits).to.equal(3);
+    });
+
+    it('bypasses marked code when predicated', async () => {
+
+        const Test = require('./coverage/bypass-predicated');
+
+        Test.method();
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/bypass-predicated') });
+        expect(Math.floor(cov.percent)).to.equal(100);
+        expect(cov.sloc).to.equal(7);
+        expect(cov.misses).to.equal(0);
+        expect(cov.hits).to.equal(7);
+    });
+
     it('bypasses marked code and reports misses correctly', async () => {
 
         const Test = require('./coverage/bypass-misses');
@@ -478,6 +520,20 @@ describe('Coverage', () => {
         expect(missedLines).to.be.empty();
     });
 
+    it('should measure coverage on nullish coalescing operator', { skip: !supportsNullishCoalescing }, async () => {
+
+        const Test = require('./coverage/conditional-coalesce');
+
+        expect(Test.method(false)).to.equal(false);
+        expect(Test.method()).to.equal('nullish');
+        expect(Test.method(null)).to.equal('nullish');
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-coalesce') });
+        const source = cov.files[0].source;
+        const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+        expect(missedLines).to.be.empty();
+    });
+
     it('should measure missing coverage on conditional value', async () => {
 
         const Test = require('./coverage/conditional-value2');
@@ -490,6 +546,18 @@ describe('Coverage', () => {
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
         expect(missedLines).to.equal(['7']);
+    });
+
+    it('should measure missing coverage on nullish coalescing operator', { skip: !supportsNullishCoalescing }, async () => {
+
+        const Test = require('./coverage/conditional-coalesce2');
+
+        expect(Test.method(1, null)).to.equal('1secondMissing');
+
+        const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/conditional-coalesce2') });
+        const source = cov.files[0].source;
+        const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
+        expect(missedLines).to.equal(['13', '14']);
     });
 
     describe('analyze()', () => {
