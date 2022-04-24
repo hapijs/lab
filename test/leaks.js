@@ -52,50 +52,50 @@ describe('Leaks', () => {
         });
     });
 
-    it('identifies global leaks', () => {
+    it('identifies global leaks', async () => {
 
         testedKeys.push('abc');
         global.abc = 1;
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(1);
     });
 
-    it('identifies global leaks (symbol)', () => {
+    it('identifies global leaks (symbol)', async () => {
 
         const symbol = Symbol('test');
         global[symbol] = 1;
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(1);
         delete global[symbol];
     });
 
-    it('identifies global leaks for non-enumerable properties', () => {
+    it('identifies global leaks for non-enumerable properties', async () => {
 
         testedKeys.push('abc');
         Object.defineProperty(global, 'abc', { enumerable: false, configurable: true, value: 1 });
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(1);
     });
 
-    it('verifies no leaks', () => {
+    it('verifies no leaks', async () => {
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
     });
 
-    it('ignores DTrace globals', () => {
+    it('ignores DTrace globals', async () => {
 
         testedKeys.push('DTRACE_HTTP_SERVER_RESPONSE');
         global.DTRACE_HTTP_SERVER_RESPONSE = global.DTRACE_HTTP_SERVER_RESPONSE || 1;
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
     });
 
-    it('works with missing DTrace globals', () => {
+    it('works with missing DTrace globals', async () => {
 
         delete global.DTRACE_HTTP_SERVER_RESPONSE;
         delete global.DTRACE_HTTP_CLIENT_REQUEST;
@@ -106,12 +106,12 @@ describe('Leaks', () => {
         delete global.DTRACE_NET_SOCKET_WRITE;
         delete global.DTRACE_NET_SERVER_CONNECTION;
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
 
         expect(leaks.length).to.equal(0);
     });
 
-    it('ignores Counter globals', { skip: process.platform === 'win32' && Semver.gte(process.version, '11.0.0') }, () => {
+    it('ignores Counter globals', { skip: process.platform === 'win32' && Semver.gte(process.version, '11.0.0') }, async () => {
 
         const counterGlobals = internals.counterGlobals;
         testedKeys = internals.counterGlobals;
@@ -121,11 +121,11 @@ describe('Leaks', () => {
             global[counterGlobal] = global[counterGlobal] || 1;
         });
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
     });
 
-    it('handles case where Counter globals do not exist', () => {
+    it('handles case where Counter globals do not exist', async () => {
 
         const counterGlobals = internals.counterGlobals;
         const originalValues = {};
@@ -136,7 +136,7 @@ describe('Leaks', () => {
             delete global[counterGlobal];
         });
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
 
         for (const counterGlobal in originalValues) {
@@ -144,20 +144,20 @@ describe('Leaks', () => {
         }
     });
 
-    it('ignores WebAssembly global', () => {
+    it('ignores WebAssembly global', async () => {
 
         testedKeys.push('WebAssembly');
         global.WebAssembly = global.WebAssembly || 1;
 
-        const leaks = Lab.leaks.detect();
+        const leaks = await Lab.leaks.detect();
         expect(leaks.length).to.equal(0);
     });
 
-    it('identifies custom globals', () => {
+    it('identifies custom globals', async () => {
 
         testedKeys.push('abc');
         global.abc = 1;
-        const leaks = Lab.leaks.detect(['abc']);
+        const leaks = await Lab.leaks.detect(['abc']);
         expect(leaks.length).to.equal(0);
     });
 });
