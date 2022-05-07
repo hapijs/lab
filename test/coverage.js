@@ -9,7 +9,6 @@ const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
 const Somever = require('@hapi/somever');
-const SupportsColor = require('supports-color');
 
 
 const internals = {
@@ -30,6 +29,7 @@ const internals = {
 
 
 const lab = exports.lab = _Lab.script();
+const before = lab.before;
 const describe = lab.describe;
 const it = lab.it;
 const expect = Code.expect;
@@ -39,9 +39,9 @@ describe('Coverage', () => {
 
     const supportsNullishCoalescing = Somever.match(process.version, '>=14');
 
-    lab.before(() => {
+    before({}, async () => {
 
-        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', 'coverage-predicates': { testing: true } });
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', 'coverage-predicates': { testing: true } });
     });
 
     it('computes sloc without comments', async () => {
@@ -138,7 +138,7 @@ describe('Coverage', () => {
         expect(cov.percent).to.equal(100);
     });
 
-    it('logs to stderr when coverageExclude file has fs.stat issue', async () => {
+    it('logs to stderr when coverageExclude file has fs.stat issue', async (flags) => {
 
         const Test = require('./coverage/test-folder/test-name.js');
 
@@ -147,7 +147,14 @@ describe('Coverage', () => {
         const origStatSync = Fs.statSync;
         const origErrorLog = console.error;
 
+        let calls = 0;
         Fs.statSync = () => {
+
+            calls++;
+            if (calls === 3) {
+                // Only mock for first 3 calls
+                Fs.statSync = origStatSync;
+            }
 
             const err = new Error();
             err.code = 'BOOM';
@@ -159,9 +166,13 @@ describe('Coverage', () => {
             expect(data.code).to.equal('BOOM');
         };
 
+        flags.onCleanup = () => {
+
+            Fs.statSync = origStatSync;
+            console.error = origErrorLog;
+        };
+
         const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/test-folder'), coverageExclude: ['test', 'node_modules', 'test-name.js'] });
-        Fs.statSync = origStatSync;
-        console.error = origErrorLog;
         expect(cov.percent).to.equal(100);
     });
 
@@ -642,56 +653,16 @@ describe('Coverage', () => {
             expect(cov.percent).to.equal(100);
         });
     });
-
-    describe('coverage-module option', () => {
-
-        it('reports external coverage', async () => {
-
-            const coveragePath = Path.join(__dirname, 'coverage/module');
-            Lab.coverage.instrument({ coveragePath, 'coverage-module': ['@hapi/lab-external-module-test'] });
-
-            require(coveragePath);
-
-            const cov = await Lab.coverage.analyze({ coveragePath });
-
-            expect(cov.percent).to.equal(100);
-            expect(cov.externals).to.equal(2);
-            expect(cov.files[0].externals).to.equal([
-                {
-                    line: 9,
-                    message: 'Checker missing tests for 2, 3',
-                    source: 'Ext',
-                    severity: 'error'
-                },
-                {
-                    line: 12,
-                    message: 'Checker missing tests for 3',
-                    source: 'Ext',
-                    severity: 'warning'
-                }
-            ]);
-
-            const script = Lab.script();
-            const { output, code } = await Lab.report(script, { reporter: 'console', coverage: true, coveragePath: Path.join(__dirname, 'coverage'), 'coverage-module': ['@hapi/lab-external-module-test'], output: false });
-            expect(code).to.equal(1);
-            expect(output).to.contain(internals.colors('External coverage:\u001b[90m\n' +
-                'test/coverage/module.js:\u001b[0m\u001b[90m\n' +
-                '\tExt:\u001b[0m\u001b[31m\n' +
-                '\t\tLine 9: Checker missing tests for 2, 3\u001b[0m\u001b[33m\n' +
-                '\t\tLine 12: Checker missing tests for 3\u001b[0m\n' +
-                '\n'));
-        });
-    });
 });
 
 describe('Coverage via Transform API', () => {
 
-    lab.before(() => {
+    lab.before(async () => {
 
         internals.js = require.extensions['.js'];
         internals.inl = require.extensions['.inl'];
 
-        Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
+        await Lab.coverage.instrument({ coveragePath: Path.join(__dirname, 'coverage'), coverageExclude: 'exclude', transform: internals.transform });
     });
 
     lab.after(() => {
@@ -744,13 +715,3 @@ describe('Coverage via Transform API', () => {
         ]);
     });
 });
-
-
-internals.colors = function (string) {
-
-    if (SupportsColor.stdout) {
-        return string;
-    }
-
-    return string.replace(/\u001b\[\d+m/g, '');
-};

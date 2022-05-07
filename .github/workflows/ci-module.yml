@@ -5,7 +5,10 @@ on:
     branches:
       - master
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
     uses: hapijs/.github/.github/workflows/ci-module.yml@master
+    with:
+      min-node-version: 14

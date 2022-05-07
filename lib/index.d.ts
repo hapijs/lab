@@ -81,11 +81,6 @@ declare namespace script {
         readonly 'coverage-flat'?: boolean;
 
         /**
-         * Enables coverage on external modules.
-         */
-        readonly 'coverage-module'?: string[];
-
-        /**
          * Sets code coverage path.
          */
         readonly 'coverage-path'?: string;
