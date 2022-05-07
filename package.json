@@ -22,7 +22,7 @@
         "@babel/core": "^7.16.0",
         "@babel/eslint-parser": "^7.16.0",
         "@hapi/bossy": "^6.0.0",
-        "@hapi/eslint-plugin": "^5.1.0",
+        "@hapi/eslint-plugin": "^6.0.0",
         "@hapi/hoek": "^10.0.0",
         "diff": "^5.0.0",
         "eslint": "8.x.x",
