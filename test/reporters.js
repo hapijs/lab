@@ -458,7 +458,7 @@ describe('Reporter', () => {
             const result = output.replace(/at.*\.js\:\d+\:\d+\)?/g, 'at <trace>');
             expect(result).to.contain('Expected true to equal specified value');
             expect(result).to.contain('1 of 1 tests failed');
-            expect(result).to.contain('The following leaks were detected:x1');
+            expect(result).to.contain('The following leaks were detected: x1');
         });
 
         it('generates a report with multi-line diff', async () => {
@@ -477,7 +477,7 @@ describe('Reporter', () => {
 
             delete global.x1;
             expect(code).to.equal(1);
-            expect(output).to.contain('The following leaks were detected:x1');
+            expect(output).to.contain('The following leaks were detected: x1');
             expect(output).to.contain('Expected');
         });
 
