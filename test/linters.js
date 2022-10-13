@@ -80,13 +80,41 @@ describe('Linters - eslint', () => {
         expect(result).to.include('lint');
 
         const eslintResults = result.lint;
-        expect(eslintResults).to.have.length(1);
+        expect(eslintResults).to.have.length(2);
 
-        const checkedFile = eslintResults[0];
-        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.js') });
-        expect(checkedFile.errors).to.include([
+        const checkedModuleFile = eslintResults.find(({ filename }) => filename === Path.join(path, 'fail.js'));
+        expect(checkedModuleFile.errors).to.include([
             { line: 11, severity: 'ERROR', message: 'semi - Missing semicolon.' },
             { line: 12, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
+        ]);
+
+        const checkedCjsFile = eslintResults.find(({ filename }) => filename === Path.join(path, '.eslintrc.cjs'));
+        expect(checkedCjsFile.errors).to.be.empty();
+    });
+
+    it('should lint files with all js extensions', async () => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'extensions');
+        const result = await Linters.lint({ lintingPath: path });
+
+        expect(result).to.include('lint');
+
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(3);
+
+        const checkedCjs = eslintResults.find(({ filename }) => filename === Path.join(path, 'index.cjs'));
+        expect(checkedCjs.errors).to.include([
+            { line: 3, severity: 'ERROR', message: 'semi - Missing semicolon.' }
+        ]);
+
+        const checkedJs = eslintResults.find(({ filename }) => filename === Path.join(path, 'index.js'));
+        expect(checkedJs.errors).to.include([
+            { line: 3, severity: 'ERROR', message: 'semi - Missing semicolon.' }
+        ]);
+
+        const checkedMjs = eslintResults.find(({ filename }) => filename === Path.join(path, 'index.mjs'));
+        expect(checkedMjs.errors).to.include([
+            { line: 1, severity: 'ERROR', message: 'semi - Missing semicolon.' }
         ]);
     });
 
