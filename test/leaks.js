@@ -153,6 +153,15 @@ describe('Leaks', () => {
         expect(leaks.length).to.equal(0);
     });
 
+    it('ignores undici global', async () => {
+
+        // trigger a lazy require of Undici, where supported, to expose a `Symbol(undici.globalDispatcher.1)`
+        typeof FormData;
+
+        const leaks = await Lab.leaks.detect();
+        expect(leaks.length).to.equal(0);
+    });
+
     it('identifies custom globals', async () => {
 
         testedKeys.push('abc');
