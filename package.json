@@ -48,7 +48,7 @@
     "devDependencies": {
         "@hapi/code": "^9.0.0",
         "@hapi/somever": "^4.0.0",
-        "@types/node": "^17.0.23",
+        "@types/node": "^18.11.17",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
         "rimraf": "3.x.x",
