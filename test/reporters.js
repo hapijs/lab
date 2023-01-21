@@ -1,13 +1,11 @@
 'use strict';
 
 const Crypto = require('crypto');
-const Fs = require('fs');
+const Fs = require('fs/promises');
 const Os = require('os');
 const Path = require('path');
 const Stream = require('stream');
-const Util = require('util');
 
-const Rimraf = require('rimraf');
 const Code = require('@hapi/code');
 const _Lab = require('../test_runner');
 const Lab = require('../');
@@ -105,8 +103,8 @@ describe('Reporter', () => {
         const filename = Path.join(Os.tmpdir(), [Date.now(), process.pid, Crypto.randomBytes(8).toString('hex')].join('-'));
         const { code, output } = await Lab.report(script, { output: filename });
         expect(code).to.equal(0);
-        expect(output).to.equal(Fs.readFileSync(filename).toString());
-        Fs.unlinkSync(filename);
+        expect(output).to.equal(await Fs.readFile(filename, 'utf8'));
+        await Fs.unlink(filename);
     });
 
     it('outputs to a file in a directory', async () => {
@@ -123,9 +121,9 @@ describe('Reporter', () => {
         const { code, output } = await Lab.report(script, { output: filename });
 
         expect(code).to.equal(0);
-        expect(output).to.equal(Fs.readFileSync(filename).toString());
+        expect(output).to.equal(await Fs.readFile(filename, 'utf8'));
 
-        await Util.promisify(Rimraf)(folder);
+        await Fs.rmdir(folder, { recursive: true });
     });
 
     it('outputs to a file with output is passed as an array and reporter is an array', async () => {
@@ -140,8 +138,8 @@ describe('Reporter', () => {
         const { code, output } = await Lab.report(script, { reporter: ['console'], output: [filename] });
 
         expect(code).to.equal(0);
-        expect(output).to.equal(Fs.readFileSync(filename).toString());
-        Fs.unlinkSync(filename);
+        expect(output).to.equal(await Fs.readFile(filename, 'utf8'));
+        await Fs.unlink(filename);
     });
 
     it('exits with error code when leak detected', async () => {
@@ -1990,9 +1988,9 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: ['lcov', 'console'], output: [filename, recorder], coverage: true });
             expect(code).to.equal(0);
-            expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
+            expect(output.lcov).to.equal(await Fs.readFile(filename, 'utf8'));
             expect(output.console).to.equal(recorder.content);
-            Fs.unlinkSync(filename);
+            await Fs.unlink(filename);
         });
 
         it('has correct exit code when test fails', async () => {
@@ -2034,11 +2032,11 @@ describe('Reporter', () => {
 
             const { code, output } = await Lab.report(script, { reporter: ['lcov', 'html', 'console'], output: [filename, htmlRecorder, consoleRecorder], coverage: true, coveragePath: Path.join(__dirname, './coverage/basic.js') });
             expect(code).to.equal(1);
-            expect(output.lcov).to.equal(Fs.readFileSync(filename).toString());
+            expect(output.lcov).to.equal(await Fs.readFile(filename, 'utf8'));
             expect(output.html).to.equal(htmlRecorder.content);
             expect(consoleRecorder.content).to.contain(internals.colors('Coverage: \u001b[32m100.00%'));
 
-            Fs.unlinkSync(filename);
+            await Fs.unlink(filename);
         });
 
         it('can run a single reporter', async () => {
@@ -2106,9 +2104,9 @@ describe('Reporter', () => {
             const { code, output } = await Lab.report(script, { reporter: ['console', 'console'], output: [filename, recorder], coverage: true });
 
             expect(code).to.equal(0);
-            expect(output.console).to.equal(Fs.readFileSync(filename).toString());
+            expect(output.console).to.equal(await Fs.readFile(filename, 'utf8'));
             expect(output.console2).to.equal(recorder.content);
-            Fs.unlinkSync(filename);
+            await Fs.unlink(filename);
         });
     });
 
