@@ -46,5 +46,5 @@ main();
 
 process.on('exit', async () => {
 
-    await Fs.rmdir('./test_runner', { recursive: true });
+    await Fs.rm('./test_runner', { recursive: true, force: true });
 });
