@@ -23,7 +23,7 @@
         "@babel/eslint-parser": "^7.16.0",
         "@hapi/bossy": "^6.0.0",
         "@hapi/eslint-plugin": "^6.0.0",
-        "@hapi/hoek": "^10.0.0",
+        "@hapi/hoek": "^11.0.2",
         "diff": "^5.0.0",
         "eslint": "8.x.x",
         "find-rc": "4.x.x",
@@ -37,7 +37,7 @@
         "will-call": "1.x.x"
     },
     "peerDependencies": {
-        "@hapi/eslint-plugin": "^5.1.0",
+        "@hapi/eslint-plugin": "^6.0.0",
         "typescript": ">=3.6.5"
     },
     "peerDependenciesMeta": {
@@ -51,10 +51,9 @@
         "@types/node": "^18.11.17",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
-        "rimraf": "3.x.x",
         "semver": "7.x.x",
-        "typescript": "^4.5.4",
-        "tsconfig-paths": "^4.0.0"
+        "tsconfig-paths": "^4.0.0",
+        "typescript": "^4.5.4"
     },
     "bin": {
         "lab": "./bin/lab"

@@ -2,9 +2,9 @@
 
 'use strict';
 
+const Fs = require('fs/promises');
 const Util = require('util');
 const Cpr = require('cpr');
-const Rimraf = require('rimraf');
 
 
 if (process.env.ROOT_SPAWN) {
@@ -46,6 +46,5 @@ main();
 
 process.on('exit', async () => {
 
-    const rimraf = Util.promisify(Rimraf);
-    await rimraf('./test_runner');
+    await Fs.rm('./test_runner', { recursive: true, force: true });
 });
