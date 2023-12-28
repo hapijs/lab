@@ -7,9 +7,9 @@ const exact: UsesExactOptionalPropertyTypes = { a: true };
 
 exact.a = undefined;
 exact.b = 'ok';
-expect.error(exact.b = undefined);
+exact.b = undefined;      // Fails
 
 const unchecked: UncheckedIndexedAccess = { a: exact, b: {} };
 
 unchecked.a.a;
-expect.error(unchecked.b.a);
+unchecked.b.a;      // Fails
