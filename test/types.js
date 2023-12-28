@@ -99,6 +99,18 @@ describe('Types', () => {
                 column: 4
             },
             {
+                filename: 'test/restrict.ts',
+                message: `Type 'undefined' is not assignable to type 'string' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the type of the target.`,
+                line: 10,
+                column: 0
+            },
+            {
+                filename: 'test/restrict.ts',
+                message: `'unchecked.b' is possibly 'undefined'.`,
+                line: 15,
+                column: 0
+            },
+            {
                 filename: 'test/syntax.ts',
                 message: `')' expected.`,
                 line: 8,
