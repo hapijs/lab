@@ -123,7 +123,7 @@ describe('Reporter', () => {
         expect(code).to.equal(0);
         expect(output).to.equal(await Fs.readFile(filename, 'utf8'));
 
-        await Fs.rmdir(folder, { recursive: true });
+        await Fs.rm(folder, { recursive: true });
     });
 
     it('outputs to a file with output is passed as an array and reporter is an array', async () => {
