@@ -25,9 +25,11 @@ const expect = Code.expect;
 
 // save references to timer globals
 
+/* eslint-disable no-redeclare */
 const setTimeout = global.setTimeout;
 const clearTimeout = global.clearTimeout;
 const setImmediate = global.setImmediate;
+/* eslint-enable no-redeclare */
 
 describe('Runner', () => {
 
