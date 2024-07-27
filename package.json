@@ -49,6 +49,7 @@
         "@hapi/code": "^9.0.0",
         "@hapi/somever": "^4.0.0",
         "@types/node": "^18.11.17",
+        "@typescript-eslint/parser": "^5.62.0",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
         "semver": "7.x.x",

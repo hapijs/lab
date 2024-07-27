@@ -118,6 +118,25 @@ describe('Linters - eslint', () => {
         ]);
     });
 
+    it('should lint typescript files in a folder', async () => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'typescript');
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint', typescript: true });
+
+        expect(result).to.include('lint');
+
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(2);
+
+        const checkedFile = eslintResults.find(({ filename }) => filename.endsWith('.ts'));
+        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.ts') });
+        expect(checkedFile.errors).to.include([
+            { line: 1, severity: 'ERROR', message: `strict - Use the global form of 'use strict'.` },
+            { line: 6, severity: 'ERROR', message: 'indent - Expected indentation of 4 spaces but found 1 tab.' },
+            { line: 6, severity: 'ERROR', message: 'semi - Missing semicolon.' }
+        ]);
+    });
+
     it('displays success message if no issues found', async () => {
 
         const path = Path.join(__dirname, 'lint', 'eslint', 'clean');
