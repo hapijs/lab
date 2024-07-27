@@ -3,6 +3,7 @@
 // Load modules
 
 const ChildProcess = require('child_process');
+// eslint-disable-next-line no-redeclare
 const Crypto = require('crypto');
 const Fs = require('fs');
 const Http = require('http');
@@ -702,7 +703,7 @@ describe('CLI', () => {
         try {
             await unlink(outputPath);
         }
-        catch (err) {
+        catch {
 
             // Error is ok here
         }
