@@ -32,6 +32,18 @@ describe('TypeScript', () => {
         expect(result.output).to.contain('2 tests complete');
     });
 
+    it('supports TypeScript with ESM', async () => {
+
+        process.chdir(Path.join(__dirname, 'cli_typescript_esm'));
+        const result = await RunCli(['simple.ts', '-m', '2000', '--typescript']);
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('2 tests complete');
+
+        // Ensure scripts are run together, not independently
+        expect(result.output.split('Test duration').length - 1).to.equal(1);
+    });
+
     it('handles errors', async () => {
 
         process.chdir(Path.join(__dirname, 'cli_typescript'));

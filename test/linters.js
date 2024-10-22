@@ -88,7 +88,7 @@ describe('Linters - eslint', () => {
             { line: 12, severity: 'WARNING', message: 'eol-last - Newline required at end of file but not found.' }
         ]);
 
-        const checkedCjsFile = eslintResults.find(({ filename }) => filename === Path.join(path, '.eslintrc.cjs'));
+        const checkedCjsFile = eslintResults.find(({ filename }) => filename === Path.join(path, 'eslint.config.cjs'));
         expect(checkedCjsFile.errors).to.be.empty();
     });
 
@@ -115,6 +115,24 @@ describe('Linters - eslint', () => {
         const checkedMjs = eslintResults.find(({ filename }) => filename === Path.join(path, 'index.mjs'));
         expect(checkedMjs.errors).to.include([
             { line: 1, severity: 'ERROR', message: 'semi - Missing semicolon.' }
+        ]);
+    });
+
+    it('should lint typescript files in a folder', async () => {
+
+        const path = Path.join(__dirname, 'lint', 'eslint', 'typescript');
+        const result = await Linters.lint({ lintingPath: path, linter: 'eslint', typescript: true });
+
+        expect(result).to.include('lint');
+
+        const eslintResults = result.lint;
+        expect(eslintResults).to.have.length(2);
+
+        const checkedFile = eslintResults.find(({ filename }) => filename.endsWith('.ts'));
+        expect(checkedFile).to.include({ filename: Path.join(path, 'fail.ts') });
+        expect(checkedFile.errors).to.include([
+            { line: 6, severity: 'ERROR', message: 'indent - Expected indentation of 4 spaces but found 1 tab.' },
+            { line: 6, severity: 'ERROR', message: 'semi - Missing semicolon.' }
         ]);
     });
 
@@ -176,7 +194,7 @@ describe('Linters - eslint', () => {
 
     it('should pass options and not find any files', async () => {
 
-        const lintOptions = JSON.stringify({ extensions: ['.jsx'] });
+        const lintOptions = JSON.stringify({ extensions: ['.jsx'], ignores: ['**/*.js'] });
         const path = Path.join(__dirname, 'lint', 'eslint', 'basic');
         const result = await Linters.lint({ lintingPath: path, linter: 'eslint', 'lint-options': lintOptions });
 
@@ -184,7 +202,7 @@ describe('Linters - eslint', () => {
 
         const eslintResults = result.lint;
         expect(eslintResults).to.have.length(1);
-        expect(eslintResults[0].errors[0].message).to.contain('No files');
+        expect(eslintResults[0].errors[0].message).to.contain('All files matched by \'.\' are ignored.');
     });
 
     it('should fix lint rules when --lint-fix used', async (flags) => {

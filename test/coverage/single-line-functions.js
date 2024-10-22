@@ -54,3 +54,6 @@ exports.method10NotCalled = (a, b) => exports.method9NotCalled(a, b);
 
 exports.method11 = (a, b) => a || b;
 exports.method11Partial = (a, b) => a || b;
+
+exports.method12 = () => 42;
+exports.method12NotCalled = () => 42;

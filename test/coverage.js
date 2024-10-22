@@ -484,12 +484,13 @@ describe('Coverage', () => {
         results.push(Test.method11(5, 10));
         results.push(Test.method11(0, 10));
         results.push(Test.method11Partial(5, 10));
+        results.push(Test.method12());
 
         const cov = await Lab.coverage.analyze({ coveragePath: Path.join(__dirname, 'coverage/single-line-functions') });
         const source = cov.files[0].source;
         const missedLines = Object.keys(source).filter((lineNumber) => source[lineNumber].miss);
-        expect(results).to.equal([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 10, 5]);
-        expect(missedLines).to.equal(['12', '15', '21', '27', '30', '33', '39', '46', '50', '53', '56']);
+        expect(results).to.equal([7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 10, 5, 42]);
+        expect(missedLines).to.equal(['12', '15', '21', '27', '30', '33', '39', '46', '50', '53', '56', '59']);
     });
 
     it('should measure missing coverage on trailing function declarations correctly', async () => {
@@ -565,19 +566,19 @@ describe('Coverage', () => {
         it('sorts file paths in report', async () => {
 
             const files = global.__$$labCov.files;
-            const paths = ['/a/b', '/a/b/c', '/a/c/b', '/a/c', '/a/b/c', '/a/b/a'];
+            const paths = ['./a/b', './a/b/c', './a/c/b', './a/c', './a/b/c', './a/b/a'];
             paths.forEach((path) => {
 
                 files[path] = { source: [] };
             });
 
-            const cov = await Lab.coverage.analyze({ coveragePath: '/a' });
+            const cov = await Lab.coverage.analyze({ coveragePath: './a' });
             const sorted = cov.files.map((file) => {
 
                 return file.filename;
             });
 
-            expect(sorted).to.equal(['/a/b', '/a/c', '/a/b/a', '/a/b/c', '/a/c/b']);
+            expect(sorted).to.equal(['./a/b', './a/c', './a/b/a', './a/b/c', './a/c/b']);
         });
     });
 
