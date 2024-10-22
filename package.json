@@ -5,6 +5,9 @@
     "repository": "git://github.com/hapijs/lab",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "engines": {
+        "node": ">=18"
+    },
     "keywords": [
         "test",
         "runner"
