@@ -632,10 +632,17 @@ Your project's eslint configuration will now extend the default **lab** configur
 
 ### Ignoring files in linting
 
-Since [eslint](http://eslint.org/) is used to lint, you can create an `.eslintignore` containing paths to be ignored:
-```
-node_modules/*
-**/vendor/*.js
+Since [eslint](http://eslint.org/) is used to lint, if you don't already have an `eslint.config.{js|cjs|mjs|ts|mts|cts}` you can create one,
+and add an `ignores` rule containing paths to be ignored. Here is an example preserving default hapi rules:
+```javascript
+import HapiPlugin from '@hapi/eslint-plugin';
+
+export default [
+    {
+        ignores: ['node_modules/*', '**/vendor/*.js'],
+    },
+    ...HapiPlugin.configs.module,
+];
 ```
 
 ### Only run linting

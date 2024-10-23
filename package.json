@@ -5,6 +5,9 @@
     "repository": "git://github.com/hapijs/lab",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
+    "engines": {
+        "node": ">=18"
+    },
     "keywords": [
         "test",
         "runner"
@@ -13,19 +16,14 @@
         "bin/lab",
         "lib"
     ],
-    "eslintConfig": {
-        "extends": [
-            "plugin:@hapi/module"
-        ]
-    },
     "dependencies": {
         "@babel/core": "^7.16.0",
-        "@babel/eslint-parser": "^7.16.0",
+        "@babel/eslint-parser": "^7.25.1",
         "@hapi/bossy": "^6.0.0",
-        "@hapi/eslint-plugin": "^6.0.0",
+        "@hapi/eslint-plugin": "^7.0.0",
         "@hapi/hoek": "^11.0.2",
         "diff": "^5.0.0",
-        "eslint": "8.x.x",
+        "eslint": "9.x.x",
         "find-rc": "4.x.x",
         "globby": "^11.1.0",
         "handlebars": "4.x.x",
@@ -37,8 +35,8 @@
         "will-call": "1.x.x"
     },
     "peerDependencies": {
-        "@hapi/eslint-plugin": "^6.0.0",
-        "typescript": ">=3.6.5"
+        "@hapi/eslint-plugin": "^7.0.0",
+        "typescript": ">=4.4.0"
     },
     "peerDependenciesMeta": {
         "typescript": {
@@ -48,13 +46,14 @@
     "devDependencies": {
         "@hapi/code": "^9.0.0",
         "@hapi/somever": "^4.0.0",
+        "@types/eslint": "^9.6.0",
         "@types/node": "^18.11.17",
-        "@typescript-eslint/parser": "^5.62.0",
         "cpr": "3.x.x",
         "lab-event-reporter": "1.x.x",
         "semver": "7.x.x",
         "tsconfig-paths": "^4.0.0",
-        "typescript": "^4.5.4"
+        "typescript": "^4.5.4",
+        "typescript-eslint": "^8.1.0"
     },
     "bin": {
         "lab": "./bin/lab"
