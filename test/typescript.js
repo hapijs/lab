@@ -4,6 +4,7 @@ const Fs = require('fs');
 const Path = require('path');
 
 const Code = require('@hapi/code');
+const Somever = require('@hapi/somever');
 const _Lab = require('../test_runner');
 const RunCli = require('./run_cli');
 const Ts = require('typescript');
@@ -42,6 +43,15 @@ describe('TypeScript', () => {
 
         // Ensure scripts are run together, not independently
         expect(result.output.split('Test duration').length - 1).to.equal(1);
+    });
+
+    it('supports TypeScript with ESM dependencies', { skip: !Somever.match(process.version, '>=20') }, async () => {
+
+        process.chdir(Path.join(__dirname, 'cli_typescript_esm_dep'));
+        const result = await RunCli(['simple.ts', '-m', '2000', '--typescript']);
+        expect(result.errorOutput).to.equal('');
+        expect(result.code).to.equal(0);
+        expect(result.output).to.contain('1 tests complete');
     });
 
     it('handles errors', async () => {
