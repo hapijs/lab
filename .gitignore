@@ -15,5 +15,6 @@
 **/.idea
 
 !test/cli_coverage/node_modules
+!test/cli_typescript_esm_dep/node_modules
 test_runner
 test/cli/test/leaks.js
